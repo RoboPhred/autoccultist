@@ -5,7 +5,7 @@ namespace Autoccultist.Brain.Preconfigured
 {
     public static class TestSolutions
     {
-        public readonly static SituationSolution HardLaborSolution = new SituationSolution
+        public readonly static Imperative HardLaborSolution = new Imperative
         {
             SituationID = "work",
             StartingRecipeSolution = new RecipeSolution

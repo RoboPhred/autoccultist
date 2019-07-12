@@ -1,7 +1,6 @@
 namespace Autoccultist.Brain.Config
 {
-    public class SlotSolution
+    public class SlotSolution : CardChoice
     {
-        public string ElementID;
     }
 }
