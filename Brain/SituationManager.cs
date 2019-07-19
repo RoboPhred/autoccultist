@@ -6,10 +6,22 @@ namespace Autoccultist.Brain
 {
     public class SituationManager
     {
+        // TODO: We can probably get rid of this class and just check the situation clock states.
+
         private IDictionary<string, SituationSolutionExecutor> executingSituations = new Dictionary<string, SituationSolutionExecutor>();
 
         public bool SituationIsAvailable(string id)
         {
+            var controller = GameAPI.GetSituation(id);
+            if (controller == null)
+            {
+                return false;
+            }
+            if (controller.SituationClock.State != SituationState.Unstarted && controller.SituationClock.State != SituationState.Complete)
+            {
+                return false;
+            }
+
             return !this.executingSituations.ContainsKey(id);
         }
 
