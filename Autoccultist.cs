@@ -1,9 +1,17 @@
-﻿namespace Autoccultist
+﻿using System.Collections.Generic;
+using Autoccultist.Brain;
+using Autoccultist.Brain.Config;
+using Autoccultist.Preconfigured;
+using UnityEngine;
+
+namespace Autoccultist
 {
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.Autoccultist", "Autoccultist", "0.0.1")]
     public class AutoccultistMod : BepInEx.BaseUnityPlugin
     {
         private bool isRunning = false;
+
+        private AutoccultistBrain brain;
 
         public static AutoccultistMod Instance
         {
@@ -14,17 +22,72 @@
         void Start()
         {
             Instance = this;
-            this.Logger.LogInfo("Autoccultist initialized.");
-            this.isRunning = true;
+
+            var config = this.LoadConfig();
+            this.brain = new AutoccultistBrain(config);
+
+            this.Info("Autoccultist initialized.");
+        }
+
+        BrainConfig LoadConfig()
+        {
+            // Unity is refusing to load YamlDotNet
+            // var binPath = this.GetType().Assembly.Location;
+            // binPath = System.IO.Path.GetDirectoryName(binPath);
+            // var configPath = System.IO.Path.Combine(binPath, "brain.yml");
+            // this.Info(string.Format("Loading config from {0}", configPath));
+            // return BrainConfig.Load(configPath);
+            return Aspirant.Config;
         }
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.F11))
+            {
+                if (this.isRunning)
+                {
+                    this.Info("Stopping brain");
+                    this.brain.Stop();
+                    this.isRunning = false;
+                }
+                else
+                {
+                    this.Info("Starting brain");
+                    this.brain.Start();
+                    this.isRunning = true;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.F10))
+            {
+                // Ensure not running
+                this.isRunning = false;
+                this.Info("Step");
+                this.brain.Start();
+                GameAPI.DoHeartbeat();
+                this.brain.Stop();
+
+            }
+            if (Input.GetKeyDown(KeyCode.F9))
+            {
+                this.Info("Dumping status");
+                this.brain.LogStatus();
+            }
+
             if (!this.isRunning)
             {
                 return;
             }
             GameAPI.DoHeartbeat();
+        }
+
+        public void Info(string message)
+        {
+            this.Logger.LogInfo(message);
+        }
+
+        public void Trace(string message)
+        {
+            this.Logger.LogInfo(message);
         }
 
         public void Warn(string message)

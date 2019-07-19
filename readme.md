@@ -2,6 +2,10 @@
 
 An experimental AI for playing Cultist Simulator.
 
+## Current Status
+
+Capable of handling an aspirant start.  Currently reads the bequest, finds the aquaintance, then levels up health until it gets to the Iron Physique.
+
 ## Notes
 
 Slot solutions - support by element id, and by aspects (required and rejected).
@@ -16,14 +20,30 @@ Locking can just be done by keeping a count of reserved cards, and subtracting a
 
 If asked for a card type that is expirable, the card manager should return the card with the shortest expiration time.
 
+## Issues
+
+Aspirant brain died to health because it uses health instantly from the completion of one verb to the start of another, giving the magnet slot no time to yank the card.
+Need to satisfy the magnet slots, which means waiting the 20 ticks for them to trigger.  Might be cheating if I force the card into the magnet slot, but instantanious
+card movement is already cheaty.
+Probably something for the card manager / slotting scheduler to handle.
+
+
+## Slotting manager
+
+Need a way to schedule card movement and let it take place a few ticks after.  Few advantages for this:
+
+- Give magnet slots a chance to act.
+    This is critical for things like sickness, where the bot might happily commit its health card straight out of
+    another verb's output slot and prevent sickness from ever seeing healt.  This ends in death.
+- Make the bot more interesting to look at.
+    The bot should open and close verb windows, and slot cards one after the other.  Makes it more pleasing to watch.
+
 ## Proposed architecture
 
 The AI will have no state to track the game.  Instead, it uses the existance or nonexistance of cards to determine what to do next.
 This will allow it to never get caught off guard by random events or card draws, and let it react to any occurance.
 
-### Plan
-
-Think of a better name for this.
+### BrainConfig
 
 A set of goals to accomplish.  This drives the playthrough the AI will make.
 The goals are not in any particular order.  Instead, they will get chosen depending on their conditions and the available cards.

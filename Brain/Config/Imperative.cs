@@ -5,24 +5,66 @@ namespace Autoccultist.Brain.Config
 {
     public class Imperative
     {
-        public string SituationID;
-        public ImperativePriority Priority;
+        public string Name { get; set; }
+        public string Verb { get; set; }
+        public ImperativePriority Priority { get; set; }
 
-        public RecipeSolution StartingRecipeSolution;
-        public IDictionary<string, RecipeSolution> OngoingRecipeSolutions;
+        public IGameStateCondition RequiredCards { get; set; }
+        public IGameStateCondition ForbidWhenCardsPresent { get; set; }
+
+        public RecipeSolution StartingRecipe { get; set; }
+        public Dictionary<string, RecipeSolution> OngoingRecipes { get; set; }
 
         public bool CanExecute(IGameState state)
         {
-            if (!state.SituationIsAvailable(this.SituationID))
+            if (!state.SituationIsAvailable(this.Verb))
             {
                 return false;
             }
 
-            // Ideally, IDictionary.Values would be a IReadOnlyCollection, but it predates that interface.
-            if (!state.CardsCanBeSatisfied(this.StartingRecipeSolution.SlotSolutions.Values.Cast<ICardMatcher>().ToArray()))
+            // Optionally check required cards for starting the imperative
+            if (this.RequiredCards != null)
             {
-                return false;
+                if (!this.RequiredCards.IsConditionMet(state))
+                {
+                    return false;
+                }
             }
+
+            if (this.ForbidWhenCardsPresent != null)
+            {
+                // Sometimes, we want to stop an imperative if other cards are present.
+                if (this.ForbidWhenCardsPresent.IsConditionMet(state))
+                {
+                    return false;
+                }
+            }
+
+            // TODO: Have a way for cards to be optional - not required when checking if this imperative should execute.
+
+
+            // Ideally, IDictionary.Values would be a IReadOnlyCollection, but it predates that interface.
+            if (this.StartingRecipe != null)
+            {
+                var cardMatchers = this.StartingRecipe.Slots.Values.Cast<ICardMatcher>().ToArray();
+                if (!state.CardsCanBeSatisfied(cardMatchers))
+                {
+                    return false;
+                }
+            }
+
+            if (this.OngoingRecipes != null)
+            {
+                foreach (var ongoing in this.OngoingRecipes.Values)
+                {
+                    var cardMatchers = ongoing.Slots.Values.Cast<ICardMatcher>().ToArray();
+                    if (!state.CardsCanBeSatisfied(cardMatchers))
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return true;
         }
     }

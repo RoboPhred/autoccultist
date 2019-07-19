@@ -1,0 +1,58 @@
+# This is a mockup of how I want the data to be parsed.
+# Currently, I cannot get YamlDotNet working in unity, so
+# the logic is being hard coded into the classes intended to eventually
+# deserialize this file.
+
+## TODO: Need a way to break into multiple files
+# Either by convention, or a !import directive.  Used this before in other parsers
+# but cant find support for directives it in YamlDotNet
+
+goals:
+  - name: Get a Stronger Physique
+    requiredCards:
+      allOf:
+        - elementId: skillhealtha
+        - elementId: health
+    completedByCards:
+      anyOf:
+        - elementId: skillhealthb
+        - elementId: skillhealthc
+    imperatives:
+      - name: Level up health
+        priority: goal
+        requiredCards:
+          allOf:
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+        verb: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: skillhealtha
+            V1:
+              elementId: vitalityplus
+            V2:
+              elementId: vitalityplus
+      - name: Excersize
+        priority: maintenance
+        requiredCards:
+          allOf:
+            - elementId: health
+      - name: Work
+        priority: maintenance
+        requiredCards:
+          allOf:
+            - elementId: skillhealtha
+            - elementId: health
+        forbidWhenCardsPresent:
+          # Don't take the skillhealtha card when we are ready to level up
+          allOf:
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+        verb: work
+        startingRecipe:
+          slots:
+            work:
+              elementId: skillhealtha
+            Health:
+              elementId: health

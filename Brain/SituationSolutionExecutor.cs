@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.CS.TabletopUI;
 using Assets.TabletopUi;
 using Autoccultist.Brain.Config;
@@ -8,8 +9,7 @@ namespace Autoccultist.Brain
 {
     public class SituationSolutionExecutor
     {
-        private Imperative situationSolution;
-        private bool isStarted = false;
+        private Imperative imperative;
 
         public event EventHandler Completed;
 
@@ -17,7 +17,7 @@ namespace Autoccultist.Brain
         {
             get
             {
-                return this.situationSolution;
+                return this.imperative;
             }
         }
 
@@ -25,22 +25,23 @@ namespace Autoccultist.Brain
         {
             get
             {
-                var situation = GameAPI.GetSituation(this.situationSolution.SituationID);
+                var situation = GameAPI.GetSituation(this.imperative.Verb);
                 if (situation == null)
                 {
-                    AutoccultistMod.Instance.Warn(string.Format("Cannot start solution - Situation {0} not found.", this.situationSolution.SituationID));
+                    AutoccultistMod.Instance.Warn(string.Format("Cannot start solution - Situation {0} not found.", this.imperative.Verb));
                 }
                 return situation;
             }
         }
 
-        public SituationSolutionExecutor(Imperative solution)
+        public SituationSolutionExecutor(Imperative imperative)
         {
-            this.situationSolution = solution;
+            this.imperative = imperative;
         }
 
         public void Start()
         {
+            AutoccultistMod.Instance.Trace("Starting imperative " + this.imperative.Name);
             var situation = this.Situation;
             if (situation == null)
             {
@@ -56,14 +57,12 @@ namespace Autoccultist.Brain
                     situation.situationWindow.DumpAllResultingCardsToDesktop();
                     break;
                 default:
-                    AutoccultistMod.Instance.Warn(string.Format("Cannot start solution - Situation {0} in improper state.", this.situationSolution.SituationID));
+                    AutoccultistMod.Instance.Warn(string.Format("Cannot start solution - Situation {0} in improper state.", this.imperative.Verb));
                     return;
             }
 
             // TODO: Reserve cards we are going to use, especially those for ongoing slots.
-
-            var startingSlots = situation.situationWindow.GetStartingSlots();
-            this.ExecuteRecipeSolution(this.situationSolution.StartingRecipeSolution, startingSlots);
+            this.ExecuteRecipeSolution(this.imperative.StartingRecipe, () => situation.situationWindow.GetStartingSlots());
 
             situation.AttemptActivateRecipe();
             if (situation.SituationClock.State == SituationState.Unstarted)
@@ -72,7 +71,6 @@ namespace Autoccultist.Brain
                 this.Abort();
             }
 
-            this.isStarted = true;
             GameAPI.Heartbeat += this.OnHeartbeat;
         }
 
@@ -105,35 +103,56 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            var recipeId = situation.SituationClock.RecipeId;
-            RecipeSolution recipeSolution;
-            if (!this.situationSolution.OngoingRecipeSolutions.TryGetValue(recipeId, out recipeSolution))
+            if (this.imperative.OngoingRecipes == null)
             {
                 return;
             }
 
-            var ongoingSlots = situation.situationWindow.GetOngoingSlots();
-            this.ExecuteRecipeSolution(recipeSolution, ongoingSlots);
+            var recipeId = situation.SituationClock.RecipeId;
+            RecipeSolution recipeSolution;
+            if (!this.imperative.OngoingRecipes.TryGetValue(recipeId, out recipeSolution))
+            {
+                return;
+            }
+
+            this.ExecuteRecipeSolution(recipeSolution, () => situation.situationWindow.GetOngoingSlots());
         }
 
-        private void ExecuteRecipeSolution(RecipeSolution recipeSolution, IList<RecipeSlot> slots)
+        private void ExecuteRecipeSolution(RecipeSolution recipeSolution, Func<IList<RecipeSlot>> slotsRetriever)
         {
-            foreach (var slot in slots)
+            // First slot controls what the rest of the slots are.
+            var firstSlot = slotsRetriever().First();
+            if (!TryResolveSlot(recipeSolution, firstSlot))
             {
-                SlotSolution slotSolution;
-                if (!recipeSolution.SlotSolutions.TryGetValue(slot.GoverningSlotSpecification.Id, out slotSolution))
-                {
-                    continue;
-                }
+                AutoccultistMod.Instance.Warn("First slot rejected card, skipping remaining slots.");
+                return;
+            }
 
-                this.ExecuteSlotSolution(slotSolution, slot);
+            var remainingSlots = slotsRetriever().Skip(1);
+            foreach (var slot in remainingSlots)
+            {
+                TryResolveSlot(recipeSolution, slot);
             }
         }
 
-        private void ExecuteSlotSolution(SlotSolution slotSolution, RecipeSlot slot)
+        private bool TryResolveSlot(RecipeSolution recipeSolution, RecipeSlot slot)
+        {
+            CardChoice cardChoice;
+            if (!recipeSolution.Slots.TryGetValue(slot.GoverningSlotSpecification.Id, out cardChoice))
+            {
+                return false;
+            }
+
+            this.ExecuteSlotSolution(cardChoice, slot);
+            return true;
+        }
+
+        private void ExecuteSlotSolution(CardChoice slotSolution, RecipeSlot slot)
         {
             // TODO: Choose previously reserved card and clear its reservation.
-            var card = GameAPI.GetSingleCard(slotSolution.ElementID);
+            // TODO: Move this logic to a card manager and take care of reservations there
+            var cards = GameAPI.GetTabletopCards();
+            var card = cards.FirstOrDefault(x => slotSolution.CardMatches(x));
             if (card == null)
             {
                 return;
