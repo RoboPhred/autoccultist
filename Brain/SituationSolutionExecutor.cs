@@ -10,6 +10,7 @@ namespace Autoccultist.Brain
     public class SituationSolutionExecutor
     {
         private Imperative imperative;
+        private CardManager cardManager;
 
         public event EventHandler Completed;
 
@@ -34,9 +35,10 @@ namespace Autoccultist.Brain
             }
         }
 
-        public SituationSolutionExecutor(Imperative imperative)
+        public SituationSolutionExecutor(Imperative imperative, CardManager cardManager)
         {
             this.imperative = imperative;
+            this.cardManager = cardManager;
         }
 
         public void Start()
@@ -147,12 +149,11 @@ namespace Autoccultist.Brain
             return true;
         }
 
-        private void ExecuteSlotSolution(CardChoice slotSolution, RecipeSlot slot)
+        private void ExecuteSlotSolution(CardChoice cardChoice, RecipeSlot slot)
         {
             // TODO: Choose previously reserved card and clear its reservation.
             // TODO: Move this logic to a card manager and take care of reservations there
-            var cards = GameAPI.GetTabletopCards();
-            var card = cards.FirstOrDefault(x => slotSolution.CardMatches(x));
+            var card = this.cardManager.ChooseCard(cardChoice);
             if (card == null)
             {
                 return;

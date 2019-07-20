@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Autoccultist.Brain.Config;
+using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain
 {
@@ -10,6 +11,7 @@ namespace Autoccultist.Brain
         private BrainConfig config;
 
         private SituationManager situationManager = new SituationManager();
+        private CardManager cardManager = new CardManager();
 
         private Goal goal;
 
@@ -70,21 +72,7 @@ namespace Autoccultist.Brain
 
         public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
         {
-            // TODO: Take into account card reservations
-            var cards = GameAPI.GetTabletopCards().ToList();
-            foreach (var choice in choices)
-            {
-                var match = choice.GetMatch(cards);
-                if (match == null)
-                {
-                    return false;
-                }
-
-                // Remove the match so it is not double counted.
-                cards.Remove(match);
-            }
-
-            return true;
+            return this.cardManager.CardsCanBeSatisfied(choices);
         }
 
         private void OnHeartbeat(object sender, EventArgs e)

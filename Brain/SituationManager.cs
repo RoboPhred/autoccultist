@@ -9,6 +9,12 @@ namespace Autoccultist.Brain
         // TODO: We can probably get rid of this class and just check the situation clock states.
 
         private IDictionary<string, SituationSolutionExecutor> executingSituations = new Dictionary<string, SituationSolutionExecutor>();
+        private CardManager cardManager;
+
+        public SituationManager(CardManager cardManager)
+        {
+            this.cardManager = cardManager;
+        }
 
         public bool SituationIsAvailable(string id)
         {
@@ -44,7 +50,7 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            var executor = new SituationSolutionExecutor(situationSolution);
+            var executor = new SituationSolutionExecutor(situationSolution, this.cardManager);
             this.executingSituations[situationSolution.Verb] = executor;
             executor.Completed += this.OnExecutorCompleted;
             executor.Start();

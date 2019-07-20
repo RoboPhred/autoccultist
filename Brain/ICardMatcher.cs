@@ -11,7 +11,7 @@ namespace Autoccultist.Brain
 
     public static class CardMatcher
     {
-        public static IElementStack GetMatch(this ICardMatcher cardMatcher, ICollection<IElementStack> cards)
+        public static IElementStack GetMatch(this ICardMatcher cardMatcher, IEnumerable<IElementStack> cards)
         {
             return cards.FirstOrDefault(x => cardMatcher.CardMatches(x));
         }

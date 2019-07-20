@@ -6,19 +6,6 @@ An experimental AI for playing Cultist Simulator.
 
 Capable of handling an aspirant start.  Currently reads the bequest, finds the aquaintance, then levels up health until it gets to the Iron Physique.
 
-## Notes
-
-Slot solutions - support by element id, and by aspects (required and rejected).
-Also have optimistic slot solutions (do not lock cards, report readyness when cards are not available) and pessimistic slot solutions (lock cards, refuse to start situation solution until all cards are present)
-Ongoing slots should take into account the delay before they can slot cards, to calculate if cards will be available by the time we are ready.
-
-
-When asked for a card, card manager should return a stack of 1 of that type.
-
-Card manager should support taking reservations for cards, locking them from use by other solutions.  This will let solutions reserve cards when they need a card for an ongoing slot.
-Locking can just be done by keeping a count of reserved cards, and subtracting available card count from lock count, to determine if we have any cards available.
-
-If asked for a card type that is expirable, the card manager should return the card with the shortest expiration time.
 
 ## Issues
 
@@ -27,8 +14,27 @@ Need to satisfy the magnet slots, which means waiting the 20 ticks for them to t
 card movement is already cheaty.
 Probably something for the card manager / slotting scheduler to handle.
 
+## Notes
 
-## Slotting manager
+Slot solutions - support by element id, and by aspects (required and rejected).
+Also have optimistic slot solutions (do not lock cards, report readyness when cards are not available) and pessimistic slot solutions (lock cards, refuse to start situation solution until all cards are present)
+Ongoing slots should take into account the delay before they can slot cards, to calculate if cards will be available by the time we are ready.
+
+### Card Manager 
+Card manager should support taking reservations for cards, locking them from use by other solutions.  This will let solutions reserve cards when they need a card for an ongoing slot.
+Since card choosers can choose by aspects, we may need to pick out cards at lock-time to be the target card.  If it was just by element id, we could simply track the number of locks
+and make sure to leave that number of cards free.
+
+If asked for a card type that is expirable, the card manager should return the card with the shortest expiration time.
+
+### Imperatives should try to preemptively reserve cards
+
+This one is fiddly.  An imperative should, on seeing all cards it needs to run, reserve those cards even if its verb is still busy.
+This needs to take into account card expiration (fail to reserve if its verb will be busy for longer than the card exists), ongoing
+recipe duration (fail to reserve if the card will be gone by the time its called for), priority of the imperative (higher priority
+imperatives should be able to break the reservation).
+
+### Slotting manager
 
 Need a way to schedule card movement and let it take place a few ticks after.  Few advantages for this:
 

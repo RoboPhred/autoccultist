@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain.Config
 {
@@ -67,5 +68,6 @@ namespace Autoccultist.Brain.Config
 
             return true;
         }
+
     }
 }
