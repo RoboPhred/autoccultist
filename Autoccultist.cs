@@ -99,6 +99,7 @@ namespace Autoccultist
             this.Logger.LogError("Fatal - " + message);
             GameAPI.Notify("Autoccultist Fatal", message);
             this.isRunning = false;
+            this.brain.Stop();
         }
     }
 }

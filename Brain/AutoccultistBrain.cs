@@ -10,14 +10,15 @@ namespace Autoccultist.Brain
     {
         private BrainConfig config;
 
-        private SituationManager situationManager = new SituationManager();
-        private CardManager cardManager = new CardManager();
+        private readonly CardManager cardManager = new CardManager();
+        private readonly SituationManager situationManager;
 
         private Goal goal;
 
         public AutoccultistBrain(BrainConfig config)
         {
             this.config = config;
+            this.situationManager = new SituationManager(this.cardManager);
         }
 
         public void Start()

@@ -1,29 +1,171 @@
-# This is a mockup of how I want the data to be parsed.
-# Currently, I cannot get YamlDotNet working in unity, so
-# the logic is being hard coded into the classes intended to eventually
-# deserialize this file.
-
-## TODO: Need a way to break into multiple files
-# Either by convention, or a !import directive.  Used this before in other parsers
-# but cant find support for directives it in YamlDotNet
-
 goals:
-  - name: Get a Stronger Physique
+  - name: Begin the Intro
+    requiredCards:
+      allOf:
+        - elementId: introjob
+    completedByCards:
+      allOf:
+        - elementId: bequestintro
+    imperatives:
+      - name: Work the intro job
+        priority: goal
+        verb: work
+        startingRecipe:
+          slots:
+            work:
+              elementId: introjob
+  - name: Study Bequest
+    requiredCards:
+      allOf:
+        - elementId: bequestintro
+    completedByCards:
+      allOf:
+        - elementId: ascensionenlightenmenta
+    imperatives:
+      - name: Study the Bequest
+        priority: goal
+        verb: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: bequestintro
+            Approach:
+              elementId: reason
+  - name: Find a Collaborator
+    requiredCards:
+      allOf:
+        - elementId: contactintro
+    completedByCards:
+      allOf:
+        - aspects:
+            acquaintance: 1
+    imperatives:
+      - name: Work for a living
+        priority: maintenance
+        verb: work
+        startingRecipe:
+          slots:
+            work:
+              elementId: health
+      - &imperative-paint-away-restlessness
+        name: Paint away Restlessness
+        priority: critical
+        verb: work
+        startingRecipe:
+          slots:
+            work:
+              elementId: passion
+        ongoingRecipes:
+          paintbasic:
+            slots:
+              yearning:
+                elementId: restlessness
+      - &imperative-heal-affliction-with-funds
+        name: Heal Affliction with funds
+        priority: critical
+        verb: dream
+        startingRecipe:
+          slots:
+            dream:
+              elementId: affliction
+            medicine:
+              elementId: funds
+      - name: Contact Collaborator
+        priority: goal
+        verb: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: contactintro
+  - name: Get Health skill A
+    requiredCards:
+      allOf:
+        - elementId: health
+    completedByCards:
+      anyOf:
+        - elementId: skillhealtha
+        - elementId: skillhealthb
+        - elementId: skillhealthc
+    imperatives:
+      - name: Work for a living
+        priority: maintenance
+        verb: work
+        startingRecipe:
+          slots:
+            work:
+              elementId: health
+      - *imperative-paint-away-restlessness
+      - *imperative-heal-affliction-with-funds
+      - &imperative-refresh-health
+        name: Refresh health
+        priority: maintenance
+        verb: dream
+        startingRecipe:
+          slots:
+            dream:
+              elementId: fatigue
+      - name: Increase health from Vitality
+        priority: goal
+        verb: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: vitality
+            morevitality:
+              elementId: vitality
+  - name: Get Health skill B
     requiredCards:
       allOf:
         - elementId: skillhealtha
-        - elementId: health
     completedByCards:
       anyOf:
         - elementId: skillhealthb
         - elementId: skillhealthc
     imperatives:
-      - name: Level up health
+      - *imperative-refresh-health
+      - *imperative-paint-away-restlessness
+      - *imperative-heal-affliction-with-funds
+      - &imperative-excersize
+        name: Excersize
+        priority: maintenance
+        verb: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: health
+      - &imperative-learn-from-vitality
+        name: Learn from Vitality
         priority: goal
-        requiredCards:
+        verb: study
+        forbidWhenCardsPresent:
+          # Do not monopolize study when we have vitality lessons to study
+          # This might be a sign we need more than 3 priority levels,
+          #   but this is more flexible in the long run
           allOf:
             - elementId: vitalityplus
             - elementId: vitalityplus
+        startingRecipe:
+          slots:
+            study:
+              elementId: vitality
+            morevitality:
+              elementId: vitality
+      - name: Stronger Physique work
+        priority: maintenance
+        verb: work
+        forbidWhenCardsPresent:
+          # Don't steal away our health skill card when we need it to upgrade.
+          allOf:
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+        startingRecipe:
+          slots:
+            work:
+              elementId: skillhealtha
+            Health:
+              elementId: health
+      - name: Increase health skill
+        priority: goal
         verb: study
         startingRecipe:
           slots:
@@ -33,26 +175,50 @@ goals:
               elementId: vitalityplus
             V2:
               elementId: vitalityplus
-      - name: Excersize
-        priority: maintenance
-        requiredCards:
-          allOf:
-            - elementId: health
-      - name: Work
-        priority: maintenance
-        requiredCards:
-          allOf:
-            - elementId: skillhealtha
-            - elementId: health
+  - name: Get Health skill C
+    requiredCards:
+      allOf:
+        - elementId: skillhealthb
+    completedByCards:
+      allOf:
+        - elementId: skillhealthc
+    imperatives:
+      - *imperative-refresh-health
+      - *imperative-paint-away-restlessness
+      - *imperative-heal-affliction-with-funds
+      - *imperative-excersize
+      - <<: *imperative-learn-from-vitality
         forbidWhenCardsPresent:
-          # Don't take the skillhealtha card when we are ready to level up
+          # Stop gaining lessons when we have enough
           allOf:
             - elementId: vitalityplus
             - elementId: vitalityplus
+            - elementId: vitalityplus
+      - name: Hardened Physique work
+        priority: maintenance
         verb: work
+        forbidWhenCardsPresent:
+          # Stop using our skill card when we have enough lessons
+          allOf:
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+            - elementId: vitalityplus
         startingRecipe:
           slots:
             work:
-              elementId: skillhealtha
+              elementId: skillhealthb
             Health:
               elementId: health
+      - name: Increase health skill
+        priority: goal
+        verb: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: skillhealtha
+            V1:
+              elementId: vitalityplus
+            V2:
+              elementId: vitalityplus
+            V3:
+              elementId: vitalityplus
