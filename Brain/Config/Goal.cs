@@ -6,8 +6,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
 
-        public IGameStateCondition RequiredCards { get; set; }
-        public IGameStateCondition CompletedByCards { get; set; }
+        public GameStateCondition RequiredCards { get; set; }
+        public GameStateCondition CompletedByCards { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
 

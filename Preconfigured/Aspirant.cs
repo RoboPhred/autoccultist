@@ -14,14 +14,14 @@ namespace Autoccultist.Preconfigured
                     Goals = new List<Goal> {
                         new Goal {
                             Name = "Begin the Intro",
-                            RequiredCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "introjob"}
+                            RequiredCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "introjob"}
                                 }
                             },
-                            CompletedByCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "bequestintro"}
+                            CompletedByCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "bequestintro"}
                                 },
                             },
                             Imperatives = new List<Imperative> {
@@ -31,7 +31,7 @@ namespace Autoccultist.Preconfigured
                                     Verb = "work",
                                     StartingRecipe = new RecipeSolution {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"work", new CardChoice { ElementID = "introjob"}}
+                                            {"work", new CardChoice { ElementId = "introjob"}}
                                         }
                                     },
                                 }
@@ -39,14 +39,14 @@ namespace Autoccultist.Preconfigured
                         },
                         new Goal {
                             Name = "Study Bequest",
-                            RequiredCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "bequestintro"}
+                            RequiredCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "bequestintro"}
                                 }
                             },
-                            CompletedByCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "ascensionenlightenmenta"}
+                            CompletedByCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "ascensionenlightenmenta"}
                                 }
                             },
                             Imperatives = new List<Imperative> {
@@ -57,8 +57,8 @@ namespace Autoccultist.Preconfigured
                                     Verb = "study",
                                     StartingRecipe = new RecipeSolution {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice { ElementID = "bequestintro"}},
-                                            {"Approach", new CardChoice { ElementID = "reason"}}
+                                            {"study", new CardChoice { ElementId = "bequestintro"}},
+                                            {"Approach", new CardChoice { ElementId = "reason"}}
                                         }
                                     }
                                 }
@@ -66,13 +66,13 @@ namespace Autoccultist.Preconfigured
                         },
                         new Goal {
                             Name = "Find a Collaborator",
-                            RequiredCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "contactintro"}
+                            RequiredCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "contactintro"}
                                 }
                             },
-                            CompletedByCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
+                            CompletedByCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
                                     new CardChoice {
                                         Aspects = new Dictionary<string, int> {
                                             {"acquaintance", 1}
@@ -89,7 +89,7 @@ namespace Autoccultist.Preconfigured
                                     Verb = "study",
                                     StartingRecipe = new RecipeSolution {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice { ElementID = "contactintro"}}
+                                            {"study", new CardChoice { ElementId = "contactintro"}}
                                         }
                                     }
                                 }
@@ -97,17 +97,16 @@ namespace Autoccultist.Preconfigured
                         },
                         new Goal {
                             Name = "Get Swole 1",
-                            RequiredCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "health"}
+                            RequiredCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "health"}
                                 }
                             },
-                            CompletedByCards = new CardsSatisfiedCondition {
-                                Mode = CardsSatisfiedMode.Any,
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "skillhealtha"},
-                                    new CardChoice { ElementID = "skillhealthb"},
-                                    new CardChoice { ElementID = "skillhealthc"}
+                            CompletedByCards = new GameStateCondition {
+                                AnyOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "skillhealtha"},
+                                    new CardChoice { ElementId = "skillhealthb"},
+                                    new CardChoice { ElementId = "skillhealthc"}
                                 }
                             },
                             Imperatives = new List<Imperative> {
@@ -120,8 +119,8 @@ namespace Autoccultist.Preconfigured
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice{ElementID = "vitality"}},
-                                            {"morevitality", new CardChoice {ElementID = "vitality"}}
+                                            {"study", new CardChoice{ElementId = "vitality"}},
+                                            {"morevitality", new CardChoice {ElementId = "vitality"}}
                                         }
                                     }
                                 },
@@ -130,16 +129,15 @@ namespace Autoccultist.Preconfigured
                         },
                         new Goal {
                             Name = "Get Swole 2",
-                            RequiredCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "skillhealtha"}
+                            RequiredCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "skillhealtha"}
                                 }
                             },
-                            CompletedByCards = new CardsSatisfiedCondition {
-                                Mode = CardsSatisfiedMode.Any,
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "skillhealthb"},
-                                    new CardChoice { ElementID = "skillhealthc"}
+                            CompletedByCards = new GameStateCondition {
+                                AnyOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "skillhealthb"},
+                                    new CardChoice { ElementId = "skillhealthc"}
                                 }
                             },
                             Imperatives = new List<Imperative> {
@@ -148,17 +146,17 @@ namespace Autoccultist.Preconfigured
                                     Name = "Excersize",
                                     Priority = ImperativePriority.Maintenance,
                                     Verb = "study",
-                                    ForbidWhenCardsPresent = new CardsSatisfiedCondition {
-                                        Cards = new List<CardChoice> {
+                                    ForbidWhenCardsPresent = new GameStateCondition {
+                                        AllOf = new List<CardChoice> {
                                             // Do not monopolize our study verb if we have two vitality waiting to be upgraded.
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
                                         }
                                     },
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            { "study", new CardChoice{ElementID = "health"}}
+                                            { "study", new CardChoice{ElementId = "health"}}
                                         }
                                     }
                                 },
@@ -168,18 +166,18 @@ namespace Autoccultist.Preconfigured
                                     Name = "Learn a lesson from Vitality",
                                     Priority = ImperativePriority.Goal,
                                     Verb = "study",
-                                    ForbidWhenCardsPresent = new CardsSatisfiedCondition {
-                                        Cards = new List<CardChoice> {
+                                    ForbidWhenCardsPresent = new GameStateCondition {
+                                        AllOf = new List<CardChoice> {
                                             // Do not monopolize our study verb if we have two vitality waiting to be upgraded.
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
                                         }
                                     },
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice{ElementID = "vitality"}},
-                                            {"morevitality", new CardChoice {ElementID = "vitality"}}
+                                            {"study", new CardChoice{ElementId = "vitality"}},
+                                            {"morevitality", new CardChoice {ElementId = "vitality"}}
                                         }
                                     }
                                 },
@@ -187,18 +185,18 @@ namespace Autoccultist.Preconfigured
                                     Name = "Stronger Physique work",
                                     Priority = ImperativePriority.Maintenance,
                                     Verb = "work",
-                                    ForbidWhenCardsPresent = new CardsSatisfiedCondition {
-                                        Cards = new List<CardChoice> {
+                                    ForbidWhenCardsPresent = new GameStateCondition {
+                                        AllOf = new List<CardChoice> {
                                             // Do not monopolize our skill card if we have two vitality waiting to be upgraded.
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
                                         }
                                     },
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"work", new CardChoice { ElementID = "skillhealtha"}},
-                                            {"Health", new CardChoice { ElementID = "health"}}
+                                            {"work", new CardChoice { ElementId = "skillhealtha"}},
+                                            {"Health", new CardChoice { ElementId = "health"}}
                                         }
                                     }
                                 },
@@ -208,9 +206,9 @@ namespace Autoccultist.Preconfigured
                                     Verb = "study",
                                     StartingRecipe = new RecipeSolution {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice { ElementID = "skillhealtha"}},
-                                            {"V1", new CardChoice {ElementID="vitalityplus"}},
-                                            {"V2", new CardChoice {ElementID="vitalityplus"}}
+                                            {"study", new CardChoice { ElementId = "skillhealtha"}},
+                                            {"V1", new CardChoice {ElementId="vitalityplus"}},
+                                            {"V2", new CardChoice {ElementId="vitalityplus"}}
                                         }
                                     }
                                 }
@@ -218,15 +216,14 @@ namespace Autoccultist.Preconfigured
                         },
                         new Goal {
                             Name = "Get Swole 3",
-                            RequiredCards = new CardsSatisfiedCondition {
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "skillhealthb" }
+                            RequiredCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "skillhealthb" }
                                 }
                             },
-                            CompletedByCards = new CardsSatisfiedCondition {
-                                Mode = CardsSatisfiedMode.Any,
-                                Cards = new List<CardChoice> {
-                                    new CardChoice { ElementID = "skillhealthc" }
+                            CompletedByCards = new GameStateCondition {
+                                AllOf = new List<CardChoice> {
+                                    new CardChoice { ElementId = "skillhealthc" }
                                 }
                             },
                             Imperatives = new List<Imperative> {
@@ -237,18 +234,18 @@ namespace Autoccultist.Preconfigured
                                     Name = "Excersize",
                                     Priority = ImperativePriority.Maintenance,
                                     Verb = "study",
-                                    ForbidWhenCardsPresent = new CardsSatisfiedCondition {
-                                        Cards = new List<CardChoice> {
+                                    ForbidWhenCardsPresent = new GameStateCondition {
+                                        AllOf = new List<CardChoice> {
                                             // Do not monopolize our study verb if we have two vitality waiting to be upgraded.
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
                                         }
                                     },
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            { "study", new CardChoice{ElementID = "health"}}
+                                            { "study", new CardChoice{ElementId = "health"}}
                                         }
                                     }
                                 },
@@ -256,19 +253,19 @@ namespace Autoccultist.Preconfigured
                                     Name = "Learn a lesson from Vitality",
                                     Priority = ImperativePriority.Goal,
                                     Verb = "study",
-                                    ForbidWhenCardsPresent = new CardsSatisfiedCondition {
-                                        Cards = new List<CardChoice> {
+                                    ForbidWhenCardsPresent = new GameStateCondition {
+                                        AllOf = new List<CardChoice> {
                                             // Do not monopolize our study verb if we have two vitality waiting to be upgraded.
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
                                         }
                                     },
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice{ElementID = "vitality"}},
-                                            {"morevitality", new CardChoice {ElementID = "vitality"}}
+                                            {"study", new CardChoice{ElementId = "vitality"}},
+                                            {"morevitality", new CardChoice {ElementId = "vitality"}}
                                         }
                                     }
                                 },
@@ -276,19 +273,19 @@ namespace Autoccultist.Preconfigured
                                     Name = "Hardened Physique work",
                                     Priority = ImperativePriority.Maintenance,
                                     Verb = "work",
-                                    ForbidWhenCardsPresent = new CardsSatisfiedCondition {
-                                        Cards = new List<CardChoice> {
+                                    ForbidWhenCardsPresent = new GameStateCondition {
+                                        AllOf = new List<CardChoice> {
                                             // Do not monopolize our skill card if we have two vitality waiting to be upgraded.
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
-                                            new CardChoice { ElementID = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
+                                            new CardChoice { ElementId = "vitalityplus"},
                                         }
                                     },
                                     StartingRecipe = new RecipeSolution
                                     {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"work", new CardChoice { ElementID = "skillhealthb"}},
-                                            {"Health", new CardChoice { ElementID = "health"}}
+                                            {"work", new CardChoice { ElementId = "skillhealthb"}},
+                                            {"Health", new CardChoice { ElementId = "health"}}
                                         }
                                     }
                                 },
@@ -298,10 +295,10 @@ namespace Autoccultist.Preconfigured
                                     Verb = "study",
                                     StartingRecipe = new RecipeSolution {
                                         Slots = new Dictionary<string, CardChoice> {
-                                            {"study", new CardChoice { ElementID = "skillhealthb"}},
-                                            {"V1", new CardChoice {ElementID="vitalityplus"}},
-                                            {"V2", new CardChoice {ElementID="vitalityplus"}},
-                                            {"V3", new CardChoice {ElementID="vitalityplus"}}
+                                            {"study", new CardChoice { ElementId = "skillhealthb"}},
+                                            {"V1", new CardChoice {ElementId="vitalityplus"}},
+                                            {"V2", new CardChoice {ElementId="vitalityplus"}},
+                                            {"V3", new CardChoice {ElementId="vitalityplus"}}
                                         }
                                     }
                                 }
@@ -320,7 +317,7 @@ namespace Autoccultist.Preconfigured
             StartingRecipe = new RecipeSolution
             {
                 Slots = new Dictionary<string, CardChoice> {
-                    {"work", new CardChoice { ElementID = "health"}}
+                    {"work", new CardChoice { ElementId = "health"}}
                 }
             }
         };
@@ -332,7 +329,7 @@ namespace Autoccultist.Preconfigured
             StartingRecipe = new RecipeSolution
             {
                 Slots = new Dictionary<string, CardChoice> {
-                    {"dream", new CardChoice{ElementID = "fatigue"}}
+                    {"dream", new CardChoice{ElementId = "fatigue"}}
                 }
             }
         };
@@ -345,13 +342,13 @@ namespace Autoccultist.Preconfigured
             StartingRecipe = new RecipeSolution
             {
                 Slots = new Dictionary<string, CardChoice> {
-                    {"work", new CardChoice {ElementID = "passion"}}
+                    {"work", new CardChoice {ElementId = "passion"}}
                 }
             },
             OngoingRecipes = new Dictionary<string, RecipeSolution> {
                 {"paintbasic", new RecipeSolution {
                     Slots = new Dictionary<string, CardChoice> {
-                        {"Yearning", new CardChoice {ElementID = "restlessness"}}
+                        {"Yearning", new CardChoice {ElementId = "restlessness"}}
                     }
                 }}
             }
@@ -365,8 +362,8 @@ namespace Autoccultist.Preconfigured
             StartingRecipe = new RecipeSolution
             {
                 Slots = new Dictionary<string, CardChoice> {
-                    {"dream", new CardChoice { ElementID = "affliction"}},
-                    {"medicine", new CardChoice { ElementID = "funds"}}
+                    {"dream", new CardChoice { ElementId = "affliction"}},
+                    {"medicine", new CardChoice { ElementId = "funds"}}
                 }
             }
         };

@@ -53,6 +53,14 @@ namespace Autoccultist.Brain
                     }
                 }
             }
+            else
+            {
+                foreach (var goal in this.config.Goals)
+                {
+                    AutoccultistMod.Instance.Info("Goal " + goal.Name);
+                    // TODO: dump goal requirements and completions
+                }
+            }
         }
 
         public bool SituationIsAvailable(string situationId)

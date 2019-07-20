@@ -31,13 +31,11 @@ namespace Autoccultist
 
         BrainConfig LoadConfig()
         {
-            // Unity is refusing to load YamlDotNet
-            // var binPath = this.GetType().Assembly.Location;
-            // binPath = System.IO.Path.GetDirectoryName(binPath);
-            // var configPath = System.IO.Path.Combine(binPath, "brain.yml");
-            // this.Info(string.Format("Loading config from {0}", configPath));
-            // return BrainConfig.Load(configPath);
-            return Aspirant.Config;
+            var binPath = this.GetType().Assembly.Location;
+            binPath = System.IO.Path.GetDirectoryName(binPath);
+            var configPath = System.IO.Path.Combine(binPath, "brain.yml");
+            this.Info(string.Format("Loading config from {0}", configPath));
+            return BrainConfig.Load(configPath);
         }
 
         void Update()

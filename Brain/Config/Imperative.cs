@@ -9,8 +9,8 @@ namespace Autoccultist.Brain.Config
         public string Verb { get; set; }
         public ImperativePriority Priority { get; set; }
 
-        public IGameStateCondition RequiredCards { get; set; }
-        public IGameStateCondition ForbidWhenCardsPresent { get; set; }
+        public GameStateCondition RequiredCards { get; set; }
+        public GameStateCondition ForbidWhenCardsPresent { get; set; }
 
         public RecipeSolution StartingRecipe { get; set; }
         public Dictionary<string, RecipeSolution> OngoingRecipes { get; set; }
