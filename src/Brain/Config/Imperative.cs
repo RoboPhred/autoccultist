@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain.Config
 {
     public class Imperative
     {
         public string Name { get; set; }
-        public string Verb { get; set; }
+        public string Situation { get; set; }
         public ImperativePriority Priority { get; set; }
 
         public GameStateCondition RequiredCards { get; set; }
@@ -18,7 +17,7 @@ namespace Autoccultist.Brain.Config
 
         public bool CanExecute(IGameState state)
         {
-            if (!state.SituationIsAvailable(this.Verb))
+            if (!state.SituationIsAvailable(this.Situation))
             {
                 return false;
             }

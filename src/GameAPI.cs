@@ -19,22 +19,11 @@ namespace Autoccultist
                     var tabletopManager = (TabletopManager)Registry.Retrieve<ITabletopManager>();
                     if (tabletopManager == null)
                     {
-                        AutoccultistMod.Instance.Fatal("Could not retrieve ITabletopManager");
+                        AutoccultistPlugin.Instance.Fatal("Could not retrieve ITabletopManager");
                     }
 
                     return tabletopManager._tabletop;
                 }
-            }
-        }
-
-        public static event EventHandler Heartbeat;
-
-        // Without the ability to inject code, we have to rely on external sources for this.
-        public static void DoHeartbeat()
-        {
-            if (Heartbeat != null)
-            {
-                Heartbeat(null, EventArgs.Empty);
             }
         }
 

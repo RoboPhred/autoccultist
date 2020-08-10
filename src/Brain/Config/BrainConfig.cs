@@ -10,12 +10,14 @@ namespace Autoccultist.Brain.Config
         public static BrainConfig Load(string filePath)
         {
             var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(new CamelCaseNamingConvention())
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .IgnoreUnmatchedProperties()
                 .Build();
             var fileContents = File.ReadAllText(filePath);
             return deserializer.Deserialize<BrainConfig>(fileContents);
         }
+
+        // TODO: Verify config is valid
 
         public List<Goal> Goals { get; set; }
     }

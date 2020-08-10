@@ -1,8 +1,6 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using Autoccultist.Brain.Config;
-using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain
 {
@@ -10,26 +8,21 @@ namespace Autoccultist.Brain
     {
         private BrainConfig config;
 
-        private readonly CardManager cardManager = new CardManager();
-        private readonly SituationManager situationManager;
-
-        private Goal goal;
+        private Goal currentGoal;
 
         public AutoccultistBrain(BrainConfig config)
         {
             this.config = config;
-            this.situationManager = new SituationManager(this.cardManager);
         }
 
         public void Start()
         {
-            GameAPI.Heartbeat += OnHeartbeat;
             if (this.IsGoalSatisfied())
             {
-                this.goal = null;
+                this.currentGoal = null;
             }
 
-            if (this.goal == null)
+            if (this.currentGoal == null)
             {
                 this.ObtainNextGoal();
             }
@@ -37,22 +30,64 @@ namespace Autoccultist.Brain
 
         public void Stop()
         {
-            GameAPI.Heartbeat -= OnHeartbeat;
+        }
+
+        public void Update()
+        {
+            if (this.IsGoalSatisfied())
+            {
+                this.currentGoal = null;
+            }
+
+            if (this.currentGoal == null)
+            {
+                this.ObtainNextGoal();
+                if (this.currentGoal == null)
+                {
+                    return;
+                }
+            }
+
+            var imperatives = this.GetSatisfiableImperatives().ToArray();
+
+            // Scan through all possible imperatives and invoke the ones that can start.
+            //  Where multiple imperatives try for the same verb, invoke the highest priority
+            var candidateGroups =
+                from imperative in imperatives
+                orderby imperative.Priority descending
+                group imperative by imperative.Situation into situationGroup
+                select situationGroup;
+
+            foreach (var group in candidateGroups)
+            {
+                var candidate = group.FirstOrDefault();
+                if (candidate == null)
+                {
+                    continue;
+                }
+
+                if (!SituationSolutionRunner.SituationIsAvailable(candidate.Situation))
+                {
+                    continue;
+                }
+
+                SituationSolutionRunner.ExecuteSituationSolution(candidate);
+            }
         }
 
         public void LogStatus()
         {
-            AutoccultistMod.Instance.Info(string.Format("My goal is {0}", this.goal != null ? this.goal.Name : "<none>"));
-            AutoccultistMod.Instance.Info(string.Format("I have {0} satisfiable imperatives", this.GetSatisfiableImperatives().Count));
-            if (this.goal != null)
+            AutoccultistPlugin.Instance.LogInfo(string.Format("My goal is {0}", this.currentGoal != null ? this.currentGoal.Name : "<none>"));
+            AutoccultistPlugin.Instance.LogInfo(string.Format("I have {0} satisfiable imperatives", this.GetSatisfiableImperatives().Count));
+            if (this.currentGoal != null)
             {
-                foreach (var imperative in this.goal.Imperatives.OrderByDescending(x => x.Priority))
+                foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
-                    AutoccultistMod.Instance.Info(string.Format("Imperative - {0}", imperative.Name));
-                    AutoccultistMod.Instance.Info("-- Verb available: " + this.SituationIsAvailable(imperative.Verb));
+                    AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
+                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Situation} available: {this.SituationIsAvailable(imperative.Situation)}");
                     foreach (var choice in imperative.StartingRecipe.Slots)
                     {
-                        AutoccultistMod.Instance.Info(string.Format("-- Slot {0} satisfied: {1}", choice.Key, this.CardsCanBeSatisfied(new[] { choice.Value })));
+                        AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {this.CardsCanBeSatisfied(new[] { choice.Value })}");
                     }
                 }
             }
@@ -60,75 +95,64 @@ namespace Autoccultist.Brain
             {
                 foreach (var goal in this.config.Goals)
                 {
-                    AutoccultistMod.Instance.Info("Goal " + goal.Name);
-                    // TODO: dump goal requirements and completions
+                    AutoccultistPlugin.Instance.LogInfo("Goal " + goal.Name);
+                    if (goal.RequiredCards.AllOf != null)
+                    {
+                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (allof):");
+                        foreach (var card in goal.RequiredCards.AllOf)
+                        {
+                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
+                        }
+                    }
+                    if (goal.RequiredCards.AnyOf != null)
+                    {
+                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (anyof):");
+                        foreach (var card in goal.RequiredCards.AllOf)
+                        {
+                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
+                        }
+                    }
+
+                    if (goal.CompletedByCards.AllOf != null)
+                    {
+                        AutoccultistPlugin.Instance.LogInfo("-- CompletedByCards cards (allof):");
+                        foreach (var card in goal.CompletedByCards.AllOf)
+                        {
+                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
+                        }
+                    }
+
+                    if (goal.CompletedByCards.AnyOf != null)
+                    {
+                        AutoccultistPlugin.Instance.LogInfo("-- CompletedByCards cards (anyof):");
+                        foreach (var card in goal.CompletedByCards.AnyOf)
+                        {
+                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
+                        }
+                    }
                 }
             }
         }
 
         public bool SituationIsAvailable(string situationId)
         {
-            return this.situationManager.SituationIsAvailable(situationId);
+            return SituationSolutionRunner.SituationIsAvailable(situationId);
         }
 
         public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
         {
-            return this.cardManager.CardsCanBeSatisfied(choices);
-        }
-
-        private void OnHeartbeat(object sender, EventArgs e)
-        {
-            this.situationManager.ClearCompletedSituations();
-
-            if (this.IsGoalSatisfied())
-            {
-                this.goal = null;
-            }
-
-            if (this.goal == null)
-            {
-                this.ObtainNextGoal();
-                if (this.goal == null)
-                {
-                    return;
-                }
-                else
-                {
-                    AutoccultistMod.Instance.Info(string.Format("My goal is now {0}", this.goal.Name));
-                }
-            }
-
-            // Scan through all possible imperatives and invoke the ones that can start.
-            //  Where multiple imperatives try for the same verb, invoke the highest priority
-            var candidateGroups =
-                from imperative in this.GetSatisfiableImperatives()
-                orderby imperative.Priority descending
-                group imperative by imperative.Verb into situationGroup
-                select situationGroup;
-
-
-            foreach (var group in candidateGroups)
-            {
-                var candidate = group.FirstOrDefault();
-                if (candidate == null)
-                {
-                    return;
-                }
-
-                AutoccultistMod.Instance.Trace(string.Format("Starting imperative {0}", candidate.Name));
-                this.situationManager.ExecuteSituationSolution(candidate);
-            }
+            return CardManager.CardsCanBeSatisfied(choices);
         }
 
         private IList<Imperative> GetSatisfiableImperatives()
         {
-            if (this.goal == null)
+            if (this.currentGoal == null)
             {
                 return new Imperative[0];
             }
 
             var imperatives =
-                from imperative in this.goal.Imperatives
+                from imperative in this.currentGoal.Imperatives
                 where imperative.CanExecute(this)
                 select imperative;
             return imperatives.ToList();
@@ -136,11 +160,11 @@ namespace Autoccultist.Brain
 
         private bool IsGoalSatisfied()
         {
-            if (this.goal == null)
+            if (this.currentGoal == null)
             {
                 return true;
             }
-            return this.goal.IsSatisfied(this);
+            return this.currentGoal.IsSatisfied(this);
         }
 
         private void ObtainNextGoal()
@@ -149,7 +173,8 @@ namespace Autoccultist.Brain
                 from goal in this.config.Goals
                 where goal.CanActivate(this)
                 select goal;
-            this.goal = goals.FirstOrDefault();
+            this.currentGoal = goals.FirstOrDefault();
+            AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
         }
     }
 }

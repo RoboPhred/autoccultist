@@ -9,7 +9,7 @@ goals:
     imperatives:
       - name: Work the intro job
         priority: goal
-        verb: work
+        situation: work
         startingRecipe:
           slots:
             work:
@@ -24,7 +24,7 @@ goals:
     imperatives:
       - name: Study the Bequest
         priority: goal
-        verb: study
+        situation: study
         startingRecipe:
           slots:
             study:
@@ -42,7 +42,7 @@ goals:
     imperatives:
       - name: Work for a living
         priority: maintenance
-        verb: work
+        situation: work
         startingRecipe:
           slots:
             work:
@@ -50,7 +50,7 @@ goals:
       - &imperative-paint-away-restlessness
         name: Paint away Restlessness
         priority: critical
-        verb: work
+        situation: work
         startingRecipe:
           slots:
             work:
@@ -58,12 +58,12 @@ goals:
         ongoingRecipes:
           paintbasic:
             slots:
-              yearning:
+              Yearning:
                 elementId: restlessness
       - &imperative-heal-affliction-with-funds
         name: Heal Affliction with funds
         priority: critical
-        verb: dream
+        situation: dream
         startingRecipe:
           slots:
             dream:
@@ -72,7 +72,7 @@ goals:
               elementId: funds
       - name: Contact Collaborator
         priority: goal
-        verb: study
+        situation: study
         startingRecipe:
           slots:
             study:
@@ -89,7 +89,7 @@ goals:
     imperatives:
       - name: Work for a living
         priority: maintenance
-        verb: work
+        situation: work
         startingRecipe:
           slots:
             work:
@@ -99,14 +99,14 @@ goals:
       - &imperative-refresh-health
         name: Refresh health
         priority: maintenance
-        verb: dream
+        situation: dream
         startingRecipe:
           slots:
             dream:
               elementId: fatigue
       - name: Increase health from Vitality
         priority: goal
-        verb: study
+        situation: study
         startingRecipe:
           slots:
             study:
@@ -128,7 +128,7 @@ goals:
       - &imperative-excersize
         name: Excersize
         priority: maintenance
-        verb: study
+        situation: study
         startingRecipe:
           slots:
             study:
@@ -136,7 +136,7 @@ goals:
       - &imperative-learn-from-vitality
         name: Learn from Vitality
         priority: goal
-        verb: study
+        situation: study
         forbidWhenCardsPresent:
           # Do not monopolize study when we have vitality lessons to study
           # This might be a sign we need more than 3 priority levels,
@@ -152,7 +152,7 @@ goals:
               elementId: vitality
       - name: Stronger Physique work
         priority: maintenance
-        verb: work
+        situation: work
         forbidWhenCardsPresent:
           # Don't steal away our health skill card when we need it to upgrade.
           allOf:
@@ -166,7 +166,7 @@ goals:
               elementId: health
       - name: Increase health skill
         priority: goal
-        verb: study
+        situation: study
         startingRecipe:
           slots:
             study:
@@ -196,7 +196,7 @@ goals:
             - elementId: vitalityplus
       - name: Hardened Physique work
         priority: maintenance
-        verb: work
+        situation: work
         forbidWhenCardsPresent:
           # Stop using our skill card when we have enough lessons
           allOf:
@@ -211,7 +211,7 @@ goals:
               elementId: health
       - name: Increase health skill
         priority: goal
-        verb: study
+        situation: study
         startingRecipe:
           slots:
             study:

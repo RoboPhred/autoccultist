@@ -1,5 +1,8 @@
-﻿using Autoccultist.Brain;
+﻿using System.IO;
+using System.Threading.Tasks;
+using Autoccultist.Brain;
 using Autoccultist.Brain.Config;
+using Autoccultist.Hand;
 using UnityEngine;
 
 namespace Autoccultist
@@ -17,22 +20,34 @@ namespace Autoccultist
             private set;
         }
 
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                var assemblyLocation = typeof(AutoccultistPlugin).Assembly.Location;
+                var assemblyDir = Path.GetDirectoryName(assemblyLocation);
+                return assemblyDir;
+            }
+        }
+
         void Start()
         {
             Instance = this;
 
-            var config = this.LoadConfig();
-            this.brain = new AutoccultistBrain(config);
+            Dispatcher.Initialize();
 
-            this.Info("Autoccultist initialized.");
+            var brainConfig = this.LoadBrainConfig();
+            LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
+
+            this.brain = new AutoccultistBrain(brainConfig);
+
+            this.LogInfo("Autoccultist initialized.");
         }
 
-        BrainConfig LoadConfig()
+        BrainConfig LoadBrainConfig()
         {
-            var binPath = this.GetType().Assembly.Location;
-            binPath = System.IO.Path.GetDirectoryName(binPath);
-            var configPath = System.IO.Path.Combine(binPath, "brain.yml");
-            this.Info(string.Format("Loading config from {0}", configPath));
+            var configPath = System.IO.Path.Combine(AssemblyDirectory, "brain.yml");
+            this.LogInfo(string.Format("Loading config from {0}", configPath));
             return BrainConfig.Load(configPath);
         }
 
@@ -42,13 +57,13 @@ namespace Autoccultist
             {
                 if (this.isRunning)
                 {
-                    this.Info("Stopping brain");
+                    this.LogInfo("Stopping brain");
                     this.brain.Stop();
                     this.isRunning = false;
                 }
                 else
                 {
-                    this.Info("Starting brain");
+                    this.LogInfo("Starting brain");
                     this.brain.Start();
                     this.isRunning = true;
                 }
@@ -57,47 +72,72 @@ namespace Autoccultist
             {
                 // Ensure not running
                 this.isRunning = false;
-                this.Info("Step");
+                this.LogInfo("Step");
                 this.brain.Start();
-                GameAPI.DoHeartbeat();
+                UpdateChildren();
                 this.brain.Stop();
 
             }
             if (Input.GetKeyDown(KeyCode.F9))
             {
-                this.Info("Dumping status");
+                this.LogInfo("Dumping status");
                 this.brain.LogStatus();
+            }
+            if (Input.GetKeyDown(KeyCode.F8))
+            {
+                this.LogInfo("Dumping situations");
+                SituationLogger.LogSituations();
             }
 
             if (!this.isRunning)
             {
                 return;
             }
-            GameAPI.DoHeartbeat();
+            UpdateChildren();
         }
 
-        public void Info(string message)
+        public void LogInfo(string message)
         {
-            this.Logger.LogInfo(message);
+            Dispatcher.RunOnMainThread(() =>
+            {
+                this.Logger.LogInfo(message);
+            });
         }
 
-        public void Trace(string message)
+        public void LogTrace(string message)
         {
-            this.Logger.LogInfo(message);
+            Dispatcher.RunOnMainThread(() =>
+            {
+                this.Logger.LogInfo(message);
+            });
+
         }
 
-        public void Warn(string message)
+        public void LogWarn(string message)
         {
-            this.Logger.LogWarning(message);
-            GameAPI.Notify("Autoccultist Warning", message);
+            Dispatcher.RunOnMainThread(() =>
+            {
+                this.Logger.LogWarning(message);
+                GameAPI.Notify("Autoccultist Warning", message);
+            });
         }
 
         public void Fatal(string message)
         {
-            this.Logger.LogError("Fatal - " + message);
-            GameAPI.Notify("Autoccultist Fatal", message);
-            this.isRunning = false;
-            this.brain.Stop();
+            Dispatcher.RunOnMainThread(() =>
+            {
+                this.Logger.LogError("Fatal - " + message);
+                GameAPI.Notify("Autoccultist Fatal", message);
+                this.isRunning = false;
+                this.brain.Stop();
+            });
+        }
+
+        private void UpdateChildren()
+        {
+            this.brain.Update();
+            SituationSolutionRunner.Update();
+            AutoccultistHand.Update();
         }
     }
 }

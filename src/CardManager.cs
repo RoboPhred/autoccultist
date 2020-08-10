@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Core.Interfaces;
 
-namespace Autoccultist.Brain
+namespace Autoccultist
 {
-    public class CardManager
+    public static class CardManager
     {
-        public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
+        public static bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
         {
-            var cards = this.GetAvailableCards().ToList();
+            var cards = GetAvailableCards().ToList();
             foreach (var choice in choices)
             {
                 var match = choice.GetMatch(cards);
@@ -24,14 +24,14 @@ namespace Autoccultist.Brain
             return true;
         }
 
-        public IElementStack ChooseCard(ICardMatcher choice)
+        public static IElementStack ChooseCard(ICardMatcher choice)
         {
-            var cards = this.GetAvailableCards();
+            var cards = GetAvailableCards();
             var match = choice.GetMatch(cards);
             return match;
         }
 
-        private IEnumerable<IElementStack> GetAvailableCards()
+        private static IEnumerable<IElementStack> GetAvailableCards()
         {
             // TODO: take into account card reservations
             // Order lifetime ascending so cards closer to expiration get chosen first.

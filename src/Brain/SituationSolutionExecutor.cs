@@ -4,13 +4,14 @@ using System.Linq;
 using Assets.CS.TabletopUI;
 using Assets.TabletopUi;
 using Autoccultist.Brain.Config;
+using Autoccultist.Hand;
+using Autoccultist.Hand.Actions;
 
 namespace Autoccultist.Brain
 {
     public class SituationSolutionExecutor
     {
         private Imperative imperative;
-        private CardManager cardManager;
 
         public event EventHandler Completed;
 
@@ -26,142 +27,169 @@ namespace Autoccultist.Brain
         {
             get
             {
-                var situation = GameAPI.GetSituation(this.imperative.Verb);
+                var situation = GameAPI.GetSituation(this.imperative.Situation);
                 if (situation == null)
                 {
-                    AutoccultistMod.Instance.Warn(string.Format("Cannot start solution - Situation {0} not found.", this.imperative.Verb));
+                    AutoccultistPlugin.Instance.LogWarn(string.Format("Cannot start solution - Situation {0} not found.", this.imperative.Situation));
                 }
                 return situation;
             }
         }
 
-        public SituationSolutionExecutor(Imperative imperative, CardManager cardManager)
+        public SituationSolutionExecutor(Imperative imperative)
         {
             this.imperative = imperative;
-            this.cardManager = cardManager;
         }
 
         public void Start()
         {
-            AutoccultistMod.Instance.Trace("Starting imperative " + this.imperative.Name);
             var situation = this.Situation;
             if (situation == null)
             {
-                return;
+                throw new Exception("Tried to start a situation solution with no situation.");
             }
 
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Unstarted:
-                    situation.situationWindow.DumpAllStartingCardsToDesktop();
-                    break;
-                case SituationState.Complete:
-                    situation.situationWindow.DumpAllResultingCardsToDesktop();
-                    break;
-                default:
-                    AutoccultistMod.Instance.Warn(string.Format("Cannot start solution - Situation {0} in improper state.", this.imperative.Verb));
-                    return;
-            }
-
-            // TODO: Reserve cards we are going to use, especially those for ongoing slots.
-            this.ExecuteRecipeSolution(this.imperative.StartingRecipe, () => situation.situationWindow.GetStartingSlots());
-
-            situation.AttemptActivateRecipe();
-            if (situation.SituationClock.State == SituationState.Unstarted)
-            {
-                AutoccultistMod.Instance.Warn("Cannot start solution - Situation failed to activate");
-                this.Abort();
-            }
-
-            GameAPI.Heartbeat += this.OnHeartbeat;
+            AutoccultistPlugin.Instance.LogTrace("Starting imperative " + this.imperative.Name);
+            this.RunCoroutine(this.StartSituationCoroutine());
         }
 
-        private void OnHeartbeat(object sender, EventArgs e)
+        public void Update()
         {
             var situation = this.Situation;
             if (situation == null)
             {
-                this.Abort();
-                return;
+                throw new Exception("Tried to update a situation solution with no situation.");
             }
+
+            // TODO: We want to hook into the completion of the situation rather than scanning it every update.
 
             switch (this.Situation.SituationClock.State)
             {
                 case SituationState.Ongoing:
-                    this.TrySlotOngoing();
+                    this.ContinueSituation();
                     break;
                 case SituationState.Complete:
-                case SituationState.Unstarted:
                     this.Complete();
                     break;
             }
         }
 
-        private void TrySlotOngoing()
+        private void ContinueSituation()
         {
-            var situation = this.Situation;
-            if (situation == null)
-            {
-                return;
-            }
-
             if (this.imperative.OngoingRecipes == null)
             {
+                // No recipes to continue
                 return;
             }
 
-            var recipeId = situation.SituationClock.RecipeId;
-            RecipeSolution recipeSolution;
-            if (!this.imperative.OngoingRecipes.TryGetValue(recipeId, out recipeSolution))
+            var slots = this.Situation.situationWindow.GetOngoingSlots();
+            if (slots.Count == 0)
             {
+                // Nothing to do.
                 return;
             }
 
-            this.ExecuteRecipeSolution(recipeSolution, () => situation.situationWindow.GetOngoingSlots());
+            var firstSlot = slots.First();
+            if (firstSlot.GetTokenInSlot() != null)
+            {
+                // Already filled
+                return;
+            }
+
+            var recipeId = Situation.SituationClock.RecipeId;
+            if (!this.imperative.OngoingRecipes.TryGetValue(recipeId, out var recipeSolution))
+            {
+                // Imperative does not know this recipe.
+                return;
+            }
+
+            this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution));
         }
 
-        private void ExecuteRecipeSolution(RecipeSolution recipeSolution, Func<IList<RecipeSlot>> slotsRetriever)
+        private IEnumerable<IAutoccultistAction> StartSituationCoroutine()
         {
-            // First slot controls what the rest of the slots are.
-            var firstSlot = slotsRetriever().First();
-            if (!TryResolveSlot(recipeSolution, firstSlot))
+            var situationId = this.Situation.GetTokenId();
+
+            yield return new OpenSituationAction(situationId);
+            yield return new DumpSituationAction(situationId);
+
+            // TODO: Use reserved cards
+
+            // Get the first card.  Slotting this will usually create additional slots
+            var slots = this.Situation.situationWindow.GetStartingSlots();
+            var firstSlot = slots.First();
+            yield return CreateSlotActionFromRecipe(firstSlot, this.imperative.StartingRecipe);
+
+            // Refresh the slots and get the rest of the cards
+            slots = this.Situation.situationWindow.GetStartingSlots();
+            foreach (var slot in slots.Skip(1))
             {
-                AutoccultistMod.Instance.Warn("First slot rejected card, skipping remaining slots.");
-                return;
+                yield return CreateSlotActionFromRecipe(slot, this.imperative.StartingRecipe);
             }
 
-            var remainingSlots = slotsRetriever().Skip(1);
-            foreach (var slot in remainingSlots)
-            {
-                TryResolveSlot(recipeSolution, slot);
-            }
+            // Start the situation
+            yield return new StartSituationRecipeAction(situationId);
+            yield return new CloseSituationAction(situationId);
         }
 
-        private bool TryResolveSlot(RecipeSolution recipeSolution, RecipeSlot slot)
+        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe)
         {
-            CardChoice cardChoice;
-            if (!recipeSolution.Slots.TryGetValue(slot.GoverningSlotSpecification.Id, out cardChoice))
+            var slots = this.Situation.situationWindow.GetOngoingSlots();
+            if (slots.Count == 0)
             {
-                return false;
+                // Nothing to do.
+                yield break;
             }
 
-            this.ExecuteSlotSolution(cardChoice, slot);
-            return true;
+            var firstSlot = slots.First();
+
+            if (firstSlot.GetTokenInSlot() != null)
+            {
+                // Something is already slotted in, we already handled this.
+                yield break;
+            }
+
+            // Get the first card.  Slotting this will usually create additional slots
+            yield return CreateSlotActionFromRecipe(firstSlot, recipe);
+
+            // Refresh the slots and get the rest of the cards
+            slots = this.Situation.situationWindow.GetOngoingSlots();
+            foreach (var slot in slots.Skip(1))
+            {
+                yield return CreateSlotActionFromRecipe(slot, recipe);
+            }
         }
 
-        private void ExecuteSlotSolution(CardChoice cardChoice, RecipeSlot slot)
+        private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, RecipeSolution recipe)
         {
-            // TODO: Choose previously reserved card and clear its reservation.
-            // TODO: Move this logic to a card manager and take care of reservations there
-            var card = this.cardManager.ChooseCard(cardChoice);
-            if (card == null)
+            var slotId = slot.GoverningSlotSpecification.Id;
+            if (!recipe.Slots.TryGetValue(slotId, out var firstCardChoice))
             {
-                return;
+                throw new RecipeRejectedException($"Error in imperative {this.imperative.Name}: Slot id {slotId} has no card choice.");
             }
 
-            GameAPI.SlotCard(slot, card);
+            var situationId = this.Situation.GetTokenId();
+
+            return new SlotCardAction(situationId, slotId, firstCardChoice);
         }
 
+        private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
+        {
+            AutoccultistPlugin.Instance.LogTrace("Running coroutine");
+            // Note: PerformActions gives us a Task that crawls along on the main thread.
+            //  Because of this, Waiting this task will create a deadlock.
+            // Async functions are fine, as they are broken up into state machines with Continue
+            try
+            {
+                await AutoccultistHand.PerformActions(coroutine);
+            }
+            catch (Exception ex)
+            {
+                AutoccultistPlugin.Instance.LogWarn($"Failed to run imperative {this.imperative.Name}: {ex.Message}");
+                this.Abort();
+            }
+            AutoccultistPlugin.Instance.LogTrace("Done Running coroutine");
+        }
 
         void Abort()
         {
@@ -170,18 +198,13 @@ namespace Autoccultist.Brain
 
         void Complete()
         {
-            var situation = this.Situation;
-            if (situation != null)
-            {
-                this.Situation.situationWindow.DumpAllResultingCardsToDesktop();
-            }
+            this.Situation.situationWindow.DumpAllResultingCardsToDesktop();
             this.End();
         }
 
         void End()
         {
-            // TODO: Cancel remaining unused reservations
-            GameAPI.Heartbeat -= this.OnHeartbeat;
+            AutoccultistPlugin.Instance.LogTrace($"Ending imperative {this.imperative.Name}");
             if (this.Completed != null)
             {
                 this.Completed(this, EventArgs.Empty);

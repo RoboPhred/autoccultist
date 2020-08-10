@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Core.Interfaces;
 
-namespace Autoccultist.Brain
+namespace Autoccultist
 {
     public interface ICardMatcher
     {
