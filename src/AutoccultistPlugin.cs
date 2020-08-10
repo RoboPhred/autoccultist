@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-using Autoccultist.Brain;
+﻿using Autoccultist.Brain;
 using Autoccultist.Brain.Config;
-using Autoccultist.Preconfigured;
 using UnityEngine;
 
 namespace Autoccultist
 {
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.Autoccultist", "Autoccultist", "0.0.1")]
-    public class AutoccultistMod : BepInEx.BaseUnityPlugin
+    public class AutoccultistPlugin : BepInEx.BaseUnityPlugin
     {
         private bool isRunning = false;
 
         private AutoccultistBrain brain;
 
-        public static AutoccultistMod Instance
+        public static AutoccultistPlugin Instance
         {
             get;
             private set;
