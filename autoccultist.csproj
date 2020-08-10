@@ -21,6 +21,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>.\externals\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>.\externals\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <PropertyGroup>
