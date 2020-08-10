@@ -215,7 +215,7 @@ goals:
         startingRecipe:
           slots:
             study:
-              elementId: skillhealtha
+              elementId: skillhealthb
             V1:
               elementId: vitalityplus
             V2:
