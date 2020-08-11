@@ -114,13 +114,32 @@ namespace Autoccultist.Brain
             // Get the first card.  Slotting this will usually create additional slots
             var slots = this.Situation.situationWindow.GetStartingSlots();
             var firstSlot = slots.First();
-            yield return CreateSlotActionFromRecipe(firstSlot, this.imperative.StartingRecipe);
+            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, this.imperative.StartingRecipe);
+            if (firstSlotAction == null)
+            {
+                // First slot of starting situation is required.
+                throw new RecipeRejectedException($"Error in imperative {this.imperative.Name}: Slot id {firstSlot.GoverningSlotSpecification.Id} has no card choice.");
+            }
+            yield return firstSlotAction;
 
             // Refresh the slots and get the rest of the cards
             slots = this.Situation.situationWindow.GetStartingSlots();
+            if (situationId == "dream")
+            {
+                AutoccultistPlugin.Instance.LogTrace($"Dream has {slots.Count} slots.");
+                foreach (var slot in slots)
+                {
+                    AutoccultistPlugin.Instance.LogTrace($"-- {slot.GoverningSlotSpecification.Id}.");
+                }
+            }
+
             foreach (var slot in slots.Skip(1))
             {
-                yield return CreateSlotActionFromRecipe(slot, this.imperative.StartingRecipe);
+                var slotAction = CreateSlotActionFromRecipe(slot, this.imperative.StartingRecipe);
+                if (slotAction != null)
+                {
+                    yield return slotAction;
+                }
             }
 
             // Start the situation
@@ -166,13 +185,23 @@ namespace Autoccultist.Brain
             }
 
             // Get the first card.  Slotting this will usually create additional slots
-            yield return CreateSlotActionFromRecipe(firstSlot, recipe);
+            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, recipe);
+            if (firstSlotAction == null)
+            {
+                // Not sure if the first slot of ongoing actions is always required...
+                throw new RecipeRejectedException($"Error in imperative {this.imperative.Name}: Slot id {firstSlot.GoverningSlotSpecification.Id} has no card choice.");
+            }
+            yield return firstSlotAction;
 
             // Refresh the slots and get the rest of the cards
             slots = this.Situation.situationWindow.GetOngoingSlots();
             foreach (var slot in slots.Skip(1))
             {
-                yield return CreateSlotActionFromRecipe(slot, recipe);
+                var slotAction = CreateSlotActionFromRecipe(slot, recipe);
+                if (slotAction != null)
+                {
+                    yield return slotAction;
+                }
             }
 
             if (standalone)
@@ -185,14 +214,14 @@ namespace Autoccultist.Brain
         private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, RecipeSolution recipe)
         {
             var slotId = slot.GoverningSlotSpecification.Id;
-            if (!recipe.Slots.TryGetValue(slotId, out var firstCardChoice))
+            if (!recipe.Slots.TryGetValue(slotId, out var cardChoice))
             {
-                throw new RecipeRejectedException($"Error in imperative {this.imperative.Name}: Slot id {slotId} has no card choice.");
+                return null;
             }
 
             var situationId = this.Situation.GetTokenId();
 
-            return new SlotCardAction(situationId, slotId, firstCardChoice);
+            return new SlotCardAction(situationId, slotId, cardChoice);
         }
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
