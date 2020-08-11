@@ -11,6 +11,9 @@ namespace Autoccultist.Brain
 {
     public class SituationSolutionExecutor
     {
+        // We need to wait to see if we are really complete, or just transitioning.
+        public static TimeSpan CompleteAwaitTime { get; set; } = TimeSpan.FromSeconds(0.2);
+
         private Imperative imperative;
 
         public event EventHandler Completed;
@@ -36,7 +39,9 @@ namespace Autoccultist.Brain
             }
         }
 
+        private bool hasBeenOngoing = false;
         private string ongoingRecipe;
+        private DateTime? timeCompleted = null;
 
         public SituationSolutionExecutor(Imperative imperative)
         {
@@ -65,14 +70,33 @@ namespace Autoccultist.Brain
 
             // TODO: We want to hook into the completion of the situation rather than scanning it every update.
 
-            switch (this.Situation.SituationClock.State)
+            var state = this.Situation.SituationClock.State;
+
+            if (state == SituationState.Ongoing)
             {
-                case SituationState.Ongoing:
-                    this.ContinueSituation();
-                    break;
-                case SituationState.Complete:
-                    this.Complete();
-                    break;
+                timeCompleted = null;
+                hasBeenOngoing = true;
+                this.ContinueSituation();
+            }
+            else if (hasBeenOngoing)
+            {
+                // Only check completion if we have ticked enough to start.
+                switch (state)
+                {
+                    case SituationState.Complete:
+                    // Recipes without output can jump to Unstarted
+                    case SituationState.Unstarted:
+                        // We need to delay on completion to make sure the situation is entirely done, and not just transitioning.
+                        if (timeCompleted == null)
+                        {
+                            timeCompleted = DateTime.Now;
+                        }
+                        else if (timeCompleted + CompleteAwaitTime < DateTime.Now)
+                        {
+                            this.Complete();
+                        }
+                        break;
+                }
             }
         }
 
@@ -242,18 +266,20 @@ namespace Autoccultist.Brain
 
         void Abort()
         {
+            AutoccultistPlugin.Instance.LogTrace($"Aborting imperative {this.imperative.Name}");
             this.End();
         }
 
         void Complete()
         {
+            AutoccultistPlugin.Instance.LogTrace($"Completing imperative {this.imperative.Name}");
+            // TODO: open/dump/close window with actor
             this.Situation.situationWindow.DumpAllResultingCardsToDesktop();
             this.End();
         }
 
         void End()
         {
-            AutoccultistPlugin.Instance.LogTrace($"Ending imperative {this.imperative.Name}");
             if (this.Completed != null)
             {
                 this.Completed(this, EventArgs.Empty);

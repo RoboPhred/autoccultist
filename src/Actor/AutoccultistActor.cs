@@ -7,7 +7,7 @@ namespace Autoccultist.Actor
 {
     static class AutoccultistActor
     {
-        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.4);
+        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.2);
         private static DateTime lastUpdate = DateTime.Now;
 
         private static Queue<PendingActionSet> pendingActionSets = new Queue<PendingActionSet>();
