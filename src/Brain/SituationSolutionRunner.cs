@@ -64,7 +64,6 @@ namespace Autoccultist.Brain
             var executor = sender as SituationSolutionExecutor;
             executor.Completed -= OnExecutorCompleted;
             executingSituations.Remove(executor.Solution.Situation);
-            AutoccultistPlugin.Instance.LogTrace($"Freeing up situation {executor.Solution.Situation}");
         }
     }
 }

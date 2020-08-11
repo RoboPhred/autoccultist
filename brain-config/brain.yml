@@ -40,13 +40,24 @@ goals:
         - aspects:
             acquaintance: 1
     imperatives:
-      - name: Work for a living
+      - &imperative-work-for-a-living
+        name: Work for a living
         priority: maintenance
         situation: work
         startingRecipe:
           slots:
             work:
               elementId: health
+      - &imperative-heal-injury-with-funds
+        name: Heal injury
+        priority: critical
+        situation: dream
+        startingRecipe:
+          slots:
+            dream:
+              elementId: injury
+            medicines:
+              elementId: funds
       - &imperative-paint-away-restlessness
         name: Paint away Restlessness
         priority: critical
@@ -77,6 +88,23 @@ goals:
           slots:
             study:
               elementId: contactintro
+      - &imperative-refresh-health
+        name: Refresh health
+        priority: maintenance
+        situation: dream
+        startingRecipe:
+          slots:
+            dream:
+              elementId: fatigue
+  - name: Wait for health refresh
+    requiredCards:
+      allOf:
+        - elementId: fatigue
+    completedByCards:
+      allOf:
+        - elementId: health
+    imperatives:
+      - *imperative-refresh-health
   - name: Get Health skill A
     requiredCards:
       allOf:
@@ -87,24 +115,13 @@ goals:
         - elementId: skillhealthb
         - elementId: skillhealthc
     imperatives:
-      - name: Work for a living
-        priority: maintenance
-        situation: work
-        startingRecipe:
-          slots:
-            work:
-              elementId: health
+      - *imperative-work-for-a-living
+      - *imperative-heal-injury-with-funds
       - *imperative-paint-away-restlessness
       - *imperative-heal-affliction-with-funds
-      - &imperative-refresh-health
-        name: Refresh health
-        priority: maintenance
-        situation: dream
-        startingRecipe:
-          slots:
-            dream:
-              elementId: fatigue
-      - name: Increase health from Vitality
+      - *imperative-refresh-health
+      - &imperative-learn-from-vitality
+        name: Learn health from Vitality
         priority: goal
         situation: study
         startingRecipe:
@@ -125,6 +142,7 @@ goals:
       - *imperative-refresh-health
       - *imperative-paint-away-restlessness
       - *imperative-heal-affliction-with-funds
+      - *imperative-heal-injury-with-funds
       - &imperative-excersize
         name: Excersize
         priority: maintenance
@@ -133,10 +151,17 @@ goals:
           slots:
             study:
               elementId: health
-      - &imperative-learn-from-vitality
-        name: Learn from Vitality
+      # YamlDotNet merging is broken
+      #- <<: *imperative-learn-from-vitality
+      - name: Learn health from Vitality
         priority: goal
         situation: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: vitality
+            morevitality:
+              elementId: vitality
         forbidWhenCardsPresent:
           # Do not monopolize study when we have vitality lessons to study
           # This might be a sign we need more than 3 priority levels,
@@ -144,12 +169,6 @@ goals:
           allOf:
             - elementId: vitalityplus
             - elementId: vitalityplus
-        startingRecipe:
-          slots:
-            study:
-              elementId: vitality
-            morevitality:
-              elementId: vitality
       - name: Stronger Physique work
         priority: maintenance
         situation: work
@@ -186,8 +205,19 @@ goals:
       - *imperative-refresh-health
       - *imperative-paint-away-restlessness
       - *imperative-heal-affliction-with-funds
+      - *imperative-heal-injury-with-funds
       - *imperative-excersize
-      - <<: *imperative-learn-from-vitality
+      # YamlDotNet merging is broken
+      #- <<: *imperative-learn-from-vitality
+      - name: Learn health from Vitality
+        priority: goal
+        situation: study
+        startingRecipe:
+          slots:
+            study:
+              elementId: vitality
+            morevitality:
+              elementId: vitality
         forbidWhenCardsPresent:
           # Stop gaining lessons when we have enough
           allOf:
@@ -222,3 +252,21 @@ goals:
               elementId: vitalityplus
             V3:
               elementId: vitalityplus
+  - name: Survive
+    requiredCards:
+      allOf:
+        - elementId: skillhealthc
+    imperatives:
+      - *imperative-refresh-health
+      - *imperative-paint-away-restlessness
+      - *imperative-heal-affliction-with-funds
+      - *imperative-heal-injury-with-funds
+      - name: Hardened Physique work
+        priority: maintenance
+        situation: work
+        startingRecipe:
+          slots:
+            work:
+              elementId: skillhealthc
+            Health:
+              elementId: health

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.CS.TabletopUI;
 
-namespace Autoccultist.Hand.Actions
+namespace Autoccultist.Actor.Actions
 {
     class SlotCardAction : IAutoccultistAction
     {
@@ -33,6 +33,32 @@ namespace Autoccultist.Hand.Actions
                 case SituationState.FreshlyStarted:
                     return false;
             }
+
+            IList<RecipeSlot> slots;
+            switch (situation.SituationClock.State)
+            {
+                case SituationState.Unstarted:
+                    slots = situation.situationWindow.GetStartingSlots();
+                    break;
+                case SituationState.Ongoing:
+                    slots = situation.situationWindow.GetOngoingSlots();
+                    break;
+                default:
+                    throw new ActionFailureException(this, "Situation is not in an appropriate state to slot cards.");
+            }
+
+            var slot = slots.FirstOrDefault(x => x.GoverningSlotSpecification.Id == this.SlotId);
+            if (!slot)
+            {
+                return false;
+            }
+
+            var card = CardManager.ChooseCard(this.CardMatcher);
+            if (card == null)
+            {
+                return false;
+            }
+
 
             return true;
         }

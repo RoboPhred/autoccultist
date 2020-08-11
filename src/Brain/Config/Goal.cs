@@ -18,7 +18,7 @@ namespace Autoccultist.Brain.Config
                 return false;
             }
 
-            if (!this.RequiredCards.IsConditionMet(state))
+            if (this.RequiredCards != null && !this.RequiredCards.IsConditionMet(state))
             {
                 return false;
             }
@@ -28,7 +28,7 @@ namespace Autoccultist.Brain.Config
 
         public bool IsSatisfied(IGameState state)
         {
-            return this.CompletedByCards.IsConditionMet(state);
+            return this.CompletedByCards != null && this.CompletedByCards.IsConditionMet(state);
         }
     }
 }

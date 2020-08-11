@@ -1,4 +1,4 @@
-namespace Autoccultist.Hand.Actions
+namespace Autoccultist.Actor.Actions
 {
     class CloseSituationAction : IAutoccultistAction
     {
@@ -11,7 +11,7 @@ namespace Autoccultist.Hand.Actions
         }
         public bool CanExecute()
         {
-            return GameAPI.GetSituation(this.SituationId) != null;
+            return GameAPI.IsInteractable && GameAPI.GetSituation(this.SituationId) != null;
         }
 
         public void Execute()

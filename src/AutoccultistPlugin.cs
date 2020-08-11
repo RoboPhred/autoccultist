@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Autoccultist.Brain;
 using Autoccultist.Brain.Config;
-using Autoccultist.Hand;
+using Autoccultist.Actor;
 using UnityEngine;
 
 namespace Autoccultist
@@ -137,7 +137,7 @@ namespace Autoccultist
         {
             this.brain.Update();
             SituationSolutionRunner.Update();
-            AutoccultistHand.Update();
+            AutoccultistActor.Update();
         }
     }
 }

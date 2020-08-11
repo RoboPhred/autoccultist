@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Autoccultist.Hand
+namespace Autoccultist.Actor
 {
-    static class AutoccultistHand
+    static class AutoccultistActor
     {
         public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.4);
         private static DateTime lastUpdate = DateTime.Now;
@@ -13,12 +13,12 @@ namespace Autoccultist.Hand
         private static Queue<PendingActionSet> pendingActionSets = new Queue<PendingActionSet>();
         private static PendingActionSet currentActionSet;
 
-        public static Task<bool> PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
+        public static Task<ActorResult> PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
         {
             var pendingAction = new PendingActionSet
             {
                 PendingActions = actions.GetEnumerator(),
-                TaskCompletion = new TaskCompletionSource<bool>(),
+                TaskCompletion = new TaskCompletionSource<ActorResult>(),
                 CancellationToken = cancellationToken ?? CancellationToken.None
             };
             pendingActionSets.Enqueue(pendingAction);
@@ -64,11 +64,13 @@ namespace Autoccultist.Hand
 
             try
             {
-                if (!nextAction.CanExecute())
-                {
-                    // Cant execute yet, dont add a delay but keep trying.
-                    return;
-                }
+                // Initially, this waited until we could execute to execute,
+                //  but because things can happen that are never recoverable,
+                //  we should throw instead.
+                // if (!nextAction.CanExecute())
+                // {
+                //     return;
+                // }
 
                 // Execute the action, clear it out, and update the last update time
                 //  to delay for the next action.
@@ -90,7 +92,7 @@ namespace Autoccultist.Hand
             if (!currentActionSet.PendingActions.MoveNext())
             {
                 // No more actions, we are complete.
-                currentActionSet.TaskCompletion.TrySetResult(true);
+                currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
                 currentActionSet = null;
             }
         }
@@ -98,7 +100,7 @@ namespace Autoccultist.Hand
         class PendingActionSet
         {
             public IEnumerator<IAutoccultistAction> PendingActions;
-            public TaskCompletionSource<bool> TaskCompletion;
+            public TaskCompletionSource<ActorResult> TaskCompletion;
             public CancellationToken CancellationToken;
         }
     }

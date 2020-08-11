@@ -1,4 +1,4 @@
-namespace Autoccultist.Hand.Actions
+namespace Autoccultist.Actor.Actions
 {
     class DumpSituationAction : IAutoccultistAction
     {
@@ -11,6 +11,11 @@ namespace Autoccultist.Hand.Actions
         }
         public bool CanExecute()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                return false;
+            }
+
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {

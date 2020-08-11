@@ -1,6 +1,6 @@
 using System;
 
-namespace Autoccultist.Hand
+namespace Autoccultist.Actor
 {
 
     class ActionFailureException : Exception

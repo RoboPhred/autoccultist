@@ -17,7 +17,7 @@ namespace Autoccultist.Brain.Config
             return deserializer.Deserialize<BrainConfig>(fileContents);
         }
 
-        // TODO: Verify config is valid
+        // TODO: Verify required properties
 
         public List<Goal> Goals { get; set; }
     }

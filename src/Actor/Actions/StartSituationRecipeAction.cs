@@ -1,16 +1,17 @@
-namespace Autoccultist.Hand.Actions
+namespace Autoccultist.Actor.Actions
 {
-    class OpenSituationAction : IAutoccultistAction
+    class StartSituationRecipeAction : IAutoccultistAction
     {
         public string SituationId { get; private set; }
 
 
-        public OpenSituationAction(string situationId)
+        public StartSituationRecipeAction(string situationId)
         {
             this.SituationId = situationId;
         }
         public bool CanExecute()
         {
+            // TODO: Return false if unable to start.
             return GameAPI.GetSituation(this.SituationId) != null;
         }
 
@@ -22,7 +23,11 @@ namespace Autoccultist.Hand.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
-            situation.OpenWindow();
+            situation.AttemptActivateRecipe();
+            if (situation.SituationClock.State == SituationState.Unstarted)
+            {
+                throw new ActionFailureException(this, "Failed to start situation.");
+            }
         }
     }
 }

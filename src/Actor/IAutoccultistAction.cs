@@ -1,4 +1,4 @@
-namespace Autoccultist.Hand
+namespace Autoccultist.Actor
 {
     interface IAutoccultistAction
     {

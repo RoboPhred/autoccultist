@@ -11,20 +11,37 @@ namespace Autoccultist
 {
     public static class GameAPI
     {
+        private static TabletopManager TabletopManager
+        {
+            get
+            {
+                var tabletopManager = (TabletopManager)Registry.Retrieve<ITabletopManager>();
+                if (tabletopManager == null)
+                {
+                    AutoccultistPlugin.Instance.Fatal("Could not retrieve ITabletopManager");
+                }
+                return tabletopManager;
+            }
+        }
         private static TabletopTokenContainer TabletopTokenContainer
         {
             get
             {
-                {
-                    var tabletopManager = (TabletopManager)Registry.Retrieve<ITabletopManager>();
-                    if (tabletopManager == null)
-                    {
-                        AutoccultistPlugin.Instance.Fatal("Could not retrieve ITabletopManager");
-                    }
-
-                    return tabletopManager._tabletop;
-                }
+                return TabletopManager._tabletop;
             }
+        }
+
+        public static bool IsInteractable
+        {
+            get
+            {
+                return !TabletopManager.IsInMansus();
+            }
+        }
+
+        public static void SetPaused(bool paused)
+        {
+            TabletopManager.SetPausedState(paused);
         }
 
         public static SituationController GetSituation(string situationId)

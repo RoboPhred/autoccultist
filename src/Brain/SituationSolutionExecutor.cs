@@ -4,8 +4,8 @@ using System.Linq;
 using Assets.CS.TabletopUI;
 using Assets.TabletopUi;
 using Autoccultist.Brain.Config;
-using Autoccultist.Hand;
-using Autoccultist.Hand.Actions;
+using Autoccultist.Actor;
+using Autoccultist.Actor.Actions;
 
 namespace Autoccultist.Brain
 {
@@ -35,6 +35,8 @@ namespace Autoccultist.Brain
                 return situation;
             }
         }
+
+        private string ongoingRecipe;
 
         public SituationSolutionExecutor(Imperative imperative)
         {
@@ -76,28 +78,21 @@ namespace Autoccultist.Brain
 
         private void ContinueSituation()
         {
+            var currentRecipe = this.Situation.SituationClock.RecipeId;
+            if (this.ongoingRecipe == currentRecipe)
+            {
+                // Recipe has not changed.
+                return;
+            }
+            this.ongoingRecipe = currentRecipe;
+
             if (this.imperative.OngoingRecipes == null)
             {
                 // No recipes to continue
                 return;
             }
 
-            var slots = this.Situation.situationWindow.GetOngoingSlots();
-            if (slots.Count == 0)
-            {
-                // Nothing to do.
-                return;
-            }
-
-            var firstSlot = slots.First();
-            if (firstSlot.GetTokenInSlot() != null)
-            {
-                // Already filled
-                return;
-            }
-
-            var recipeId = Situation.SituationClock.RecipeId;
-            if (!this.imperative.OngoingRecipes.TryGetValue(recipeId, out var recipeSolution))
+            if (!this.imperative.OngoingRecipes.TryGetValue(currentRecipe, out var recipeSolution))
             {
                 // Imperative does not know this recipe.
                 return;
@@ -110,6 +105,7 @@ namespace Autoccultist.Brain
         {
             var situationId = this.Situation.GetTokenId();
 
+            yield return new SetPausedAction(true);
             yield return new OpenSituationAction(situationId);
             yield return new DumpSituationAction(situationId);
 
@@ -129,11 +125,25 @@ namespace Autoccultist.Brain
 
             // Start the situation
             yield return new StartSituationRecipeAction(situationId);
+
+            // Accept the current recipe and fill its needs
+            this.ongoingRecipe = this.Situation.SituationClock.RecipeId;
+            if (this.imperative.OngoingRecipes != null && this.imperative.OngoingRecipes.TryGetValue(this.ongoingRecipe, out var ongoingRecipeSolution))
+            {
+                foreach (var item in this.ContinueSituationCoroutine(ongoingRecipeSolution, false))
+                {
+                    yield return item;
+                }
+            }
+
             yield return new CloseSituationAction(situationId);
+            yield return new SetPausedAction(false);
         }
 
-        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe)
+        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe, bool standalone = true)
         {
+            var situationId = this.Situation.GetTokenId();
+
             var slots = this.Situation.situationWindow.GetOngoingSlots();
             if (slots.Count == 0)
             {
@@ -149,6 +159,12 @@ namespace Autoccultist.Brain
                 yield break;
             }
 
+            if (standalone)
+            {
+                yield return new SetPausedAction(true);
+                yield return new OpenSituationAction(situationId);
+            }
+
             // Get the first card.  Slotting this will usually create additional slots
             yield return CreateSlotActionFromRecipe(firstSlot, recipe);
 
@@ -157,6 +173,12 @@ namespace Autoccultist.Brain
             foreach (var slot in slots.Skip(1))
             {
                 yield return CreateSlotActionFromRecipe(slot, recipe);
+            }
+
+            if (standalone)
+            {
+                yield return new CloseSituationAction(situationId);
+                yield return new SetPausedAction(false);
             }
         }
 
@@ -175,20 +197,18 @@ namespace Autoccultist.Brain
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
         {
-            AutoccultistPlugin.Instance.LogTrace("Running coroutine");
             // Note: PerformActions gives us a Task that crawls along on the main thread.
             //  Because of this, Waiting this task will create a deadlock.
             // Async functions are fine, as they are broken up into state machines with Continue
             try
             {
-                await AutoccultistHand.PerformActions(coroutine);
+                await AutoccultistActor.PerformActions(coroutine);
             }
             catch (Exception ex)
             {
                 AutoccultistPlugin.Instance.LogWarn($"Failed to run imperative {this.imperative.Name}: {ex.Message}");
                 this.Abort();
             }
-            AutoccultistPlugin.Instance.LogTrace("Done Running coroutine");
         }
 
         void Abort()
