@@ -1,0 +1,6 @@
+name: Refresh health
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: fatigue

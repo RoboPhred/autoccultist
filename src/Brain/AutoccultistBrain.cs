@@ -48,30 +48,28 @@ namespace Autoccultist.Brain
                 }
             }
 
-            var imperatives = this.GetSatisfiableImperatives().ToArray();
-
             // Scan through all possible imperatives and invoke the ones that can start.
             //  Where multiple imperatives try for the same verb, invoke the highest priority
             var candidateGroups =
-                from imperative in imperatives
+                from imperative in this.GetSatisfiableImperatives()
                 orderby imperative.Priority descending
-                group imperative by imperative.Situation into situationGroup
+                group imperative.Operation by imperative.Operation.Situation into situationGroup
                 select situationGroup;
 
             foreach (var group in candidateGroups)
             {
-                var candidate = group.FirstOrDefault();
-                if (candidate == null)
+                var operation = group.FirstOrDefault();
+                if (operation == null)
                 {
                     continue;
                 }
 
-                if (!SituationSolutionRunner.SituationIsAvailable(candidate.Situation))
+                if (!OperationOrchestrator.SituationIsAvailable(operation.Situation))
                 {
                     continue;
                 }
 
-                SituationSolutionRunner.ExecuteSituationSolution(candidate);
+                OperationOrchestrator.ExecuteOperation(operation);
             }
         }
 
@@ -84,8 +82,8 @@ namespace Autoccultist.Brain
                 foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
-                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Situation} available: {this.SituationIsAvailable(imperative.Situation)}");
-                    foreach (var choice in imperative.StartingRecipe.Slots)
+                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.SituationIsAvailable(imperative.Operation.Situation)}");
+                    foreach (var choice in imperative.Operation.StartingRecipe.Slots)
                     {
                         AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {this.CardsCanBeSatisfied(new[] { choice.Value })}");
                     }
@@ -136,7 +134,7 @@ namespace Autoccultist.Brain
 
         public bool SituationIsAvailable(string situationId)
         {
-            return SituationSolutionRunner.SituationIsAvailable(situationId);
+            return OperationOrchestrator.SituationIsAvailable(situationId);
         }
 
         public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)

@@ -1,68 +1,42 @@
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Autoccultist.Brain.Config
 {
     public class Imperative
     {
         public string Name { get; set; }
-        public string Situation { get; set; }
-        public ImperativePriority Priority { get; set; }
-
+        public ImperativePriority Priority { get; set; } = ImperativePriority.Maintenance;
         public GameStateCondition RequiredCards { get; set; }
         public GameStateCondition ForbidWhenCardsPresent { get; set; }
 
-        public RecipeSolution StartingRecipe { get; set; }
-        public Dictionary<string, RecipeSolution> OngoingRecipes { get; set; }
+        public Operation Operation { get; set; }
+
+        public void Validate()
+        {
+            if (this.Operation == null)
+            {
+                throw new InvalidConfigException($"Imperative {this.Name} must have an operation.");
+            }
+
+            this.Operation.Validate();
+        }
 
         public bool CanExecute(IGameState state)
         {
-            if (!state.SituationIsAvailable(this.Situation))
+            // Optionally check required cards for starting the imperative
+            if (this.RequiredCards != null && !this.RequiredCards.IsConditionMet(state))
             {
                 return false;
             }
 
-            // Optionally check required cards for starting the imperative
-            if (this.RequiredCards != null)
+            // Sometimes, we want to stop an imperative if other cards are present.
+            if (this.ForbidWhenCardsPresent != null && this.ForbidWhenCardsPresent.IsConditionMet(state))
             {
-                if (!this.RequiredCards.IsConditionMet(state))
-                {
-                    return false;
-                }
+                return false;
             }
 
-            if (this.ForbidWhenCardsPresent != null)
+            if (!this.Operation.CanExecute(state))
             {
-                // Sometimes, we want to stop an imperative if other cards are present.
-                if (this.ForbidWhenCardsPresent.IsConditionMet(state))
-                {
-                    return false;
-                }
-            }
-
-            // TODO: Have a way for cards to be optional - not required when checking if this imperative should execute.
-
-
-            // Ideally, IDictionary.Values would be a IReadOnlyCollection, but it predates that interface.
-            if (this.StartingRecipe != null)
-            {
-                var cardMatchers = this.StartingRecipe.Slots.Values.Cast<ICardMatcher>().ToArray();
-                if (!state.CardsCanBeSatisfied(cardMatchers))
-                {
-                    return false;
-                }
-            }
-
-            if (this.OngoingRecipes != null)
-            {
-                foreach (var ongoing in this.OngoingRecipes.Values)
-                {
-                    var cardMatchers = ongoing.Slots.Values.Cast<ICardMatcher>().ToArray();
-                    if (!state.CardsCanBeSatisfied(cardMatchers))
-                    {
-                        return false;
-                    }
-                }
+                return false;
             }
 
             return true;

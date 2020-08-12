@@ -1,0 +1,6 @@
+name: Study Health
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: health

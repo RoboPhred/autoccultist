@@ -96,11 +96,6 @@ namespace Autoccultist.Actor.Actions
                 throw new ActionFailureException(this, "No matching card was found.");
             }
 
-            if (this.SituationId == "dream")
-            {
-                AutoccultistPlugin.Instance.LogTrace($"Slotting situation {this.SituationId} slot id {this.SlotId}");
-            }
-
             GameAPI.SlotCard(slot, card);
         }
     }

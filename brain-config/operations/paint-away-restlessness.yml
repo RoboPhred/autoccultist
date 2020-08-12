@@ -1,0 +1,11 @@
+name: Paint away Restlessness
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: passion
+ongoingRecipes:
+  paintbasic:
+    slots:
+      Yearning:
+        elementId: restlessness

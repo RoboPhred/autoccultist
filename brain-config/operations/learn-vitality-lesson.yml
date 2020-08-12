@@ -1,0 +1,8 @@
+name: Learn lesson from vitality
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: vitality
+    morevitality:
+      elementId: vitality

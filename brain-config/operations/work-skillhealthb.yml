@@ -1,0 +1,8 @@
+name: Work with Hardened Physique
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: skillhealthb
+    Health:
+      elementId: health

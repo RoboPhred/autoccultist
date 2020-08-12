@@ -1,0 +1,10 @@
+name: Upgrade Stronger Physique
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: skillhealtha
+    V1:
+      elementId: vitalityplus
+    V2:
+      elementId: vitalityplus

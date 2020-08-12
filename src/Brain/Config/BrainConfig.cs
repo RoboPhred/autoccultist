@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Autoccultist.Brain.Config
 {
@@ -9,16 +7,31 @@ namespace Autoccultist.Brain.Config
     {
         public static BrainConfig Load(string filePath)
         {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .IgnoreUnmatchedProperties()
+            var config = Deserializer.Deserialize<BrainConfig>(filePath);
+            var serializer = new SerializerBuilder()
                 .Build();
-            var fileContents = File.ReadAllText(filePath);
-            return deserializer.Deserialize<BrainConfig>(fileContents);
+            AutoccultistPlugin.Instance.LogTrace("Config is\n\n" + serializer.Serialize(config) + "\n\n");
+
+            config.Validate();
+
+            return config;
         }
 
-        // TODO: Verify required properties
+        // Unused; here because YamlDotNet ignores anchors on unparsed properties
+        public List<Imperative> SharedImperatives { get; set; }
 
         public List<Goal> Goals { get; set; }
+
+        public void Validate()
+        {
+            if (this.Goals == null || this.Goals.Count == 0)
+            {
+                throw new InvalidConfigException("Brain must have at least one goal.");
+            }
+            foreach (var goal in this.Goals)
+            {
+                goal.Validate();
+            }
+        }
     }
 }

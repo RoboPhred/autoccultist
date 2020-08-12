@@ -1,0 +1,8 @@
+name: Work with Stronger Physique
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: skillhealtha
+    Health:
+      elementId: health

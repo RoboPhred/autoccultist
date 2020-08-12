@@ -1,0 +1,6 @@
+name: Work for a living
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: health
