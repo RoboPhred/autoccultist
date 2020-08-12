@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
 using Autoccultist.Brain;
 using Autoccultist.Brain.Config;
 using Autoccultist.Actor;
@@ -68,7 +67,7 @@ namespace Autoccultist
                     this.isRunning = true;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.F10))
+            else if (Input.GetKeyDown(KeyCode.F10))
             {
                 // Ensure not running
                 this.isRunning = false;
@@ -78,12 +77,12 @@ namespace Autoccultist
                 this.brain.Stop();
 
             }
-            if (Input.GetKeyDown(KeyCode.F9))
+            else if (Input.GetKeyDown(KeyCode.F9))
             {
                 this.LogInfo("Dumping status");
                 this.brain.LogStatus();
             }
-            if (Input.GetKeyDown(KeyCode.F8))
+            else if (Input.GetKeyDown(KeyCode.F8))
             {
                 this.LogInfo("Dumping situations");
                 SituationLogger.LogSituations();
