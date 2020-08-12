@@ -94,36 +94,16 @@ namespace Autoccultist.Brain
                 foreach (var goal in this.config.Goals)
                 {
                     AutoccultistPlugin.Instance.LogInfo("Goal " + goal.Name);
-                    if (goal.RequiredCards.AllOf != null)
+                    if (goal.CompletedWhen.Requirements != null)
                     {
-                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (allof):");
-                        foreach (var card in goal.RequiredCards.AllOf)
+                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.mode.ToString() + "):");
+                        foreach (CardChoice card in goal.RequiredCards.Requirements)
                         {
                             AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
                         }
-                    }
-                    if (goal.RequiredCards.AnyOf != null)
-                    {
-                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (anyof):");
-                        foreach (var card in goal.RequiredCards.AllOf)
-                        {
-                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
-                        }
-                    }
 
-                    if (goal.CompletedByCards.AllOf != null)
-                    {
-                        AutoccultistPlugin.Instance.LogInfo("-- CompletedByCards cards (allof):");
-                        foreach (var card in goal.CompletedByCards.AllOf)
-                        {
-                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
-                        }
-                    }
-
-                    if (goal.CompletedByCards.AnyOf != null)
-                    {
-                        AutoccultistPlugin.Instance.LogInfo("-- CompletedByCards cards (anyof):");
-                        foreach (var card in goal.CompletedByCards.AnyOf)
+                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.mode.ToString() + "):");
+                        foreach (CardChoice card in goal.CompletedWhen.Requirements)
                         {
                             AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
                         }

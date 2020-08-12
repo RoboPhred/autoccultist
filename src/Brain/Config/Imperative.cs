@@ -1,10 +1,14 @@
 
 namespace Autoccultist.Brain.Config
 {
+    /**
+     * An Imperative represents an action that cannot ever be truly satisfied.
+     * As long as the requirements of the Imperative allow for its execution, the task should execute.
+     */
     public class Imperative
     {
         public string Name { get; set; }
-        public ImperativePriority Priority { get; set; } = ImperativePriority.Maintenance;
+        public TaskPriority Priority { get; set; } = TaskPriority.Maintenance;
         public GameStateCondition RequiredCards { get; set; }
         public GameStateCondition ForbidWhenCardsPresent { get; set; }
 
@@ -41,6 +45,5 @@ namespace Autoccultist.Brain.Config
 
             return true;
         }
-
     }
 }

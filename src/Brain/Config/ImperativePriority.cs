@@ -1,6 +1,6 @@
 namespace Autoccultist.Brain.Config
 {
-    public enum ImperativePriority
+    public enum TaskPriority
     {
         Critical = 1,
         Goal = 0,

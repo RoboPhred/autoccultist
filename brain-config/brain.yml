@@ -31,10 +31,12 @@ sharedImperatives:
 goals:
   - name: Begin the Intro
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: introjob
-    completedByCards:
-      allOf:
+    completedWhen:
+      mode: ALL_OF
+      requirements:
         - elementId: bequestintro
     imperatives:
       - name: Work the intro job
@@ -47,11 +49,15 @@ goals:
                 elementId: introjob
   - name: Study Bequest
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: bequestintro
-    completedByCards:
-      allOf:
+    completedWhen:
+      mode: ANY_OF
+      requirements:
+        - elementId: ascensionpowera
         - elementId: ascensionenlightenmenta
+        - elementId: ascensionsensationa
     imperatives:
       - name: Study the Bequest
         priority: goal
@@ -62,13 +68,15 @@ goals:
               study:
                 elementId: bequestintro
               Approach:
-                elementId: reason
+                elementId: passion
   - name: Find a Collaborator
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: contactintro
-    completedByCards:
-      allOf:
+    completedWhen:
+      mode: ALL_OF
+      requirements:
         - aspects:
             acquaintance: 1
     imperatives:
@@ -87,22 +95,28 @@ goals:
                 elementId: contactintro
   - name: Wait for health refresh
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: fatigue
-    completedByCards:
-      allOf:
+    completedWhen:
+      mode: ALL_OF
+      requirements:
         - elementId: health
     imperatives:
       - *imp-maint-refresh-health
   - name: Get Health skill A
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: health
-    completedByCards:
-      anyOf:
+    completedWhen:
+      mode: ANY_OF
+      requirements:
         - elementId: skillhealtha
         - elementId: skillhealthb
         - elementId: skillhealthc
+        - elementId: skillhealthd_strength
+        - elementId: skillhealthd_grace
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
@@ -112,12 +126,16 @@ goals:
       - *imp-goal-vitality-lesson
   - name: Get Health skill B
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: skillhealtha
-    completedByCards:
-      anyOf:
+    completedWhen:
+      mode: ANY_OF
+      requirements:
         - elementId: skillhealthb
         - elementId: skillhealthc
+        - elementId: skillhealthd_strength
+        - elementId: skillhealthd_grace
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
@@ -127,7 +145,8 @@ goals:
       - <<: *imp-goal-vitality-lesson
         forbidWhenCardsPresent:
           # Do not monopolize study when we have vitality lessons to study
-          allOf:
+          mode: ALL_OF
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Stronger Physique work
@@ -135,7 +154,8 @@ goals:
         operation: !import operations/work-skillhealtha.yml
         forbidWhenCardsPresent:
           # Don't steal away our health skill card when we need it to upgrade.
-          allOf:
+          mode: ALL_OF
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Upgrade Stronger Physique to Hardened Physique
@@ -143,11 +163,15 @@ goals:
         operation: !import operations/upgrade-skillhealtha.yml
   - name: Get Health skill C
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: skillhealthb
-    completedByCards:
-      allOf:
+    completedWhen:
+      mode: ANY_OF
+      requirements:
         - elementId: skillhealthc
+        - elementId: skillhealthd_strength
+        - elementId: skillhealthd_grace
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
@@ -157,7 +181,8 @@ goals:
       - <<: *imp-goal-vitality-lesson
         forbidWhenCardsPresent:
           # Stop gaining lessons when we have enough
-          allOf:
+          mode: ALL_OF
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
@@ -166,7 +191,8 @@ goals:
         operation: !import operations/work-skillhealthb.yml
         forbidWhenCardsPresent:
           # Stop using our skill card when we have enough lessons
-          allOf:
+          mode: ALL_OF
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
@@ -175,7 +201,8 @@ goals:
         operation: !import operations/upgrade-skillhealthb.yml
   - name: Survive
     requiredCards:
-      allOf:
+      mode: ALL_OF
+      requirements:
         - elementId: skillhealthc
     imperatives:
       - *imp-maint-refresh-health
