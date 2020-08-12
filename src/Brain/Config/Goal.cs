@@ -1,8 +1,13 @@
+using Autoccultist.Brain.Util;
 using System.Collections.Generic;
 
 namespace Autoccultist.Brain.Config
 {
-    public class Goal
+    /**
+     * A Goal represents a set of actions that can be satisfied by a given board state.
+     * A Goal contains a set of Imperatives that will presumably cause the board to reach a win state.
+     */
+    public class Goal : ITask
     {
         public string Name { get; set; }
 
@@ -10,6 +15,11 @@ namespace Autoccultist.Brain.Config
         public GameStateCondition CompletedByCards { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
+
+        public bool ShouldExecute(IGameState state)
+        {
+            return CanActivate(state);
+        }
 
         public void Validate()
         {
