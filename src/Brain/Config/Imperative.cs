@@ -4,7 +4,7 @@ namespace Autoccultist.Brain.Config
     public class Imperative
     {
         public string Name { get; set; }
-        public ImperativePriority Priority { get; set; } = ImperativePriority.Maintenance;
+        public TaskPriority Priority { get; set; } = TaskPriority.Maintenance;
         public GameStateCondition RequiredCards { get; set; }
         public GameStateCondition ForbidWhenCardsPresent { get; set; }
 
