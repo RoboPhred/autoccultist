@@ -17,15 +17,12 @@ namespace Autoccultist.Brain
 
         public void Start()
         {
-            if (this.IsGoalSatisfied())
+            if (!this.CanGoalActivate())
             {
                 this.currentGoal = null;
             }
 
-            if (this.currentGoal == null)
-            {
-                this.ObtainNextGoal();
-            }
+            this.currentGoal = this.currentGoal ?? this.ObtainNextGoal();
         }
 
         public void Stop()
@@ -34,18 +31,10 @@ namespace Autoccultist.Brain
 
         public void Update()
         {
-            if (this.IsGoalSatisfied())
-            {
-                this.currentGoal = null;
-            }
-
+            Start();
             if (this.currentGoal == null)
             {
-                this.ObtainNextGoal();
-                if (this.currentGoal == null)
-                {
-                    return;
-                }
+                return;
             }
 
             // Scan through all possible imperatives and invoke the ones that can start.
@@ -145,7 +134,16 @@ namespace Autoccultist.Brain
             return this.currentGoal.IsSatisfied(this);
         }
 
-        private void ObtainNextGoal()
+        private bool CanGoalActivate()
+        {
+            if (this.currentGoal == null)
+            {
+                return false;
+            }
+            return this.currentGoal.CanActivate(this);
+        }
+
+        private Goal ObtainNextGoal(TaskPriority goalLevel = TaskPriority.Goal)
         {
             var goals =
                 from goal in this.config.Goals
@@ -153,6 +151,9 @@ namespace Autoccultist.Brain
                 select goal;
             this.currentGoal = goals.FirstOrDefault();
             AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
+            var ReturnValue = goals.FirstOrDefault();
+            AutoccultistPlugin.Instance.LogTrace($"Next {goalLevel.ToString()} goal is {ReturnValue?.Name ?? "[none]"}");
+            return ReturnValue;
         }
     }
 }
