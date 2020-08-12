@@ -59,6 +59,11 @@ namespace Autoccultist
                     this.LogInfo("Stopping brain");
                     this.brain.Stop();
                     this.isRunning = false;
+                    if (Input.GetKeyDown(KeyCode.LeftShift))
+                    {
+                        this.LogInfo("Reloading brain");
+                        LoadBrainConfig();
+                    }
                 }
                 else
                 {
