@@ -34,7 +34,7 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: introjob
-    completedByCards:
+    completedWhen:
       mode: ALL_OF
       requirements:
         - elementId: bequestintro
@@ -52,11 +52,12 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: bequestintro
-        - elementId: passion
-    completedByCards:
-      mode: ALL_OF
+    completedWhen:
+      mode: ANY_OF
       requirements:
         - elementId: ascensionpowera
+        - elementId: ascensionenlightenmenta
+        - elementId: ascensionsensationa
     imperatives:
       - name: Study the Bequest
         priority: goal
@@ -73,7 +74,7 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: contactintro
-    completedByCards:
+    completedWhen:
       mode: ALL_OF
       requirements:
         - aspects:
@@ -97,7 +98,7 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: fatigue
-    completedByCards:
+    completedWhen:
       mode: ALL_OF
       requirements:
         - elementId: health
@@ -108,7 +109,7 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: health
-    completedByCards:
+    completedWhen:
       mode: ANY_OF
       requirements:
         - elementId: skillhealtha
@@ -128,7 +129,7 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: skillhealtha
-    completedByCards:
+    completedWhen:
       mode: ANY_OF
       requirements:
         - elementId: skillhealthb
@@ -165,7 +166,7 @@ goals:
       mode: ALL_OF
       requirements:
         - elementId: skillhealthb
-    completedByCards:
+    completedWhen:
       mode: ANY_OF
       requirements:
         - elementId: skillhealthc
