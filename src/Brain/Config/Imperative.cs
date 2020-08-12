@@ -4,15 +4,13 @@ namespace Autoccultist.Brain.Config
     /**
      * An Imperative represents an action that cannot ever be truly satisfied.
      * As long as the requirements of the Imperative allow for its execution, the task should execute.
-     * In contrast to a Goal, an imperative having IsSatisfied return true does not mean it will always return true.
      */
-    public class Imperative : Util.ITask
+    public class Imperative
     {
         public string Name { get; set; }
         public TaskPriority Priority { get; set; } = TaskPriority.Maintenance;
         public GameStateCondition RequiredCards { get; set; }
         public GameStateCondition ForbidWhenCardsPresent { get; set; }
-        public GameStateCondition SatisfiedUnderCondition { get; set; }
 
         public Operation Operation { get; set; }
 
@@ -24,11 +22,6 @@ namespace Autoccultist.Brain.Config
             }
 
             this.Operation.Validate();
-        }
-
-        public bool ShouldExecute(IGameState state)
-        {
-            return CanExecute(state) && !IsSatisfied(state);
         }
 
         public bool CanExecute(IGameState state)
@@ -51,23 +44,6 @@ namespace Autoccultist.Brain.Config
             }
 
             return true;
-        }
-
-        public bool IsSatisfied(IGameState state)
-        {
-            if(SatisfiedUnderCondition != null)
-            {
-                return this.SatisfiedUnderCondition.IsConditionMet(state);
-            }
-            else if (this.RequiredCards != null)
-            {
-                if (!this.RequiredCards.IsConditionMet(state))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

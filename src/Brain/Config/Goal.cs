@@ -7,7 +7,7 @@ namespace Autoccultist.Brain.Config
      * A Goal represents a set of actions that can be satisfied by a given board state.
      * A Goal contains a set of Imperatives that will presumably reach the given state.
      */
-    public class Goal : ITask
+    public class Goal
     {
         public string Name { get; set; }
 
@@ -15,11 +15,6 @@ namespace Autoccultist.Brain.Config
         public GameStateCondition CompletedWhen { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
-
-        public bool ShouldExecute(IGameState state)
-        {
-            return CanActivate(state);
-        }
 
         public void Validate()
         {

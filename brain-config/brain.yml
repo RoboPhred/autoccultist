@@ -32,11 +32,11 @@ goals:
   - name: Begin the Intro
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: introjob
     completedByCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: bequestintro
     imperatives:
       - name: Work the intro job
@@ -50,12 +50,12 @@ goals:
   - name: Study Bequest
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: bequestintro
         - elementId: passion
     completedByCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: ascensionpowera
     imperatives:
       - name: Study the Bequest
@@ -71,11 +71,11 @@ goals:
   - name: Find a Collaborator
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: contactintro
     completedByCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - aspects:
             acquaintance: 1
     imperatives:
@@ -95,22 +95,22 @@ goals:
   - name: Wait for health refresh
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: fatigue
     completedByCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: health
     imperatives:
       - *imp-maint-refresh-health
   - name: Get Health skill A
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: health
     completedByCards:
       mode: ANY_OF
-      Requirements:
+      requirements:
         - elementId: skillhealtha
         - elementId: skillhealthb
         - elementId: skillhealthc
@@ -126,11 +126,11 @@ goals:
   - name: Get Health skill B
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: skillhealtha
     completedByCards:
       mode: ANY_OF
-      Requirements:
+      requirements:
         - elementId: skillhealthb
         - elementId: skillhealthc
         - elementId: skillhealthd_strength
@@ -145,7 +145,7 @@ goals:
         forbidWhenCardsPresent:
           # Do not monopolize study when we have vitality lessons to study
           mode: ALL_OF
-          Requirements:
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Stronger Physique work
@@ -154,7 +154,7 @@ goals:
         forbidWhenCardsPresent:
           # Don't steal away our health skill card when we need it to upgrade.
           mode: ALL_OF
-          Requirements:
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Upgrade Stronger Physique to Hardened Physique
@@ -163,11 +163,11 @@ goals:
   - name: Get Health skill C
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: skillhealthb
     completedByCards:
       mode: ANY_OF
-      Requirements:
+      requirements:
         - elementId: skillhealthc
         - elementId: skillhealthd_strength
         - elementId: skillhealthd_grace
@@ -181,7 +181,7 @@ goals:
         forbidWhenCardsPresent:
           # Stop gaining lessons when we have enough
           mode: ALL_OF
-          Requirements:
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
@@ -191,7 +191,7 @@ goals:
         forbidWhenCardsPresent:
           # Stop using our skill card when we have enough lessons
           mode: ALL_OF
-          Requirements:
+          requirements:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
@@ -201,7 +201,7 @@ goals:
   - name: Survive
     requiredCards:
       mode: ALL_OF
-      Requirements:
+      requirements:
         - elementId: skillhealthc
     imperatives:
       - *imp-maint-refresh-health
