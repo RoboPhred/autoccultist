@@ -9,7 +9,7 @@ using Autoccultist.Actor.Actions;
 
 namespace Autoccultist.Brain
 {
-    public class OperationExecutor
+    public class OperationOrchestration : ISituationOrchestration
     {
         // We need to wait to see if we are really complete, or just transitioning.
         public static TimeSpan CompleteAwaitTime { get; set; } = TimeSpan.FromSeconds(0.2);
@@ -18,11 +18,11 @@ namespace Autoccultist.Brain
 
         public event EventHandler Completed;
 
-        public Operation Operation
+        public string SituationId
         {
             get
             {
-                return this.operation;
+                return this.operation.Situation;
             }
         }
 
@@ -30,21 +30,20 @@ namespace Autoccultist.Brain
         {
             get
             {
-                var situationId = this.operation.Situation;
-                var situation = GameAPI.GetSituation(situationId);
+                var situation = GameAPI.GetSituation(this.SituationId);
                 if (situation == null)
                 {
-                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {situationId} not found.");
+                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} not found.");
                 }
                 return situation;
             }
         }
 
-        private bool hasBeenOngoing = false;
+        private OperationState operationState = OperationState.Starting;
         private string ongoingRecipe;
-        private DateTime? timeCompleted = null;
+        private DateTime? completionDebounceTime = null;
 
-        public OperationExecutor(Operation operation)
+        public OperationOrchestration(Operation operation)
         {
             this.operation = operation;
         }
@@ -63,8 +62,7 @@ namespace Autoccultist.Brain
 
         public void Update()
         {
-            var situation = this.Situation;
-            if (situation == null)
+            if (this.Situation == null)
             {
                 throw new Exception("Tried to update a situation solution with no situation.");
             }
@@ -75,29 +73,36 @@ namespace Autoccultist.Brain
 
             if (state == SituationState.Ongoing)
             {
-                timeCompleted = null;
-                hasBeenOngoing = true;
+                // The situation is running its recipe.
+                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
+                this.operationState = OperationState.Ongoing;
+                this.completionDebounceTime = null;
+
+                // See if we need to slot new cards.
                 this.ContinueOperation();
             }
-            else if (hasBeenOngoing)
+            else if (this.operationState == OperationState.Ongoing)
             {
-                // Only check completion if we have ticked enough to start.
-                switch (state)
+                // At this point, we have seen the situation go through a recipe, so we are clear to start tracking completions.
+
+                // We need to be careful, as this might be a transient state, and the situation may still have another recipe to run.
+
+                // We have two final states: Complete (has output cards) and Unstarted (no output cards).
+                if (state == SituationState.Complete || state == SituationState.Unstarted)
                 {
-                    // Complete is when a recipe is completed and holding onto tokens.
-                    case SituationState.Complete:
-                    // Recipes without output can jump to Unstarted
-                    case SituationState.Unstarted:
-                        // We need to delay on completion to make sure the situation is entirely done, and not just transitioning.
-                        if (timeCompleted == null)
-                        {
-                            timeCompleted = DateTime.Now;
-                        }
-                        else if (timeCompleted + CompleteAwaitTime < DateTime.Now)
-                        {
-                            this.Complete();
-                        }
-                        break;
+                    if (completionDebounceTime == null)
+                    {
+                        // Start the timer for waiting out to see if this is a real completion.
+                        // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
+                        //  so we need to delay to make sure this is a full and final completion.
+                        completionDebounceTime = DateTime.Now + CompleteAwaitTime;
+                    }
+                    else if (completionDebounceTime <= DateTime.Now)
+                    {
+                        // Enough time has passed that we can consider this operation completed.
+                        this.operationState = OperationState.Completing;
+                        this.Complete();
+                    }
                 }
             }
         }
@@ -149,11 +154,9 @@ namespace Autoccultist.Brain
 
         private IEnumerable<IAutoccultistAction> StartOperationCoroutine()
         {
-            var situationId = this.Situation.GetTokenId();
-
             yield return new SetPausedAction(true);
-            yield return new OpenSituationAction(situationId);
-            yield return new DumpSituationAction(situationId);
+            yield return new OpenSituationAction(this.SituationId);
+            yield return new DumpSituationAction(this.SituationId);
 
             // TODO: Use reserved cards
 
@@ -180,7 +183,7 @@ namespace Autoccultist.Brain
             }
 
             // Start the situation
-            yield return new StartSituationRecipeAction(situationId);
+            yield return new StartSituationRecipeAction(this.SituationId);
 
             // Accept the current recipe and fill its needs
             this.ongoingRecipe = this.Situation.SituationClock.RecipeId;
@@ -192,14 +195,12 @@ namespace Autoccultist.Brain
                 }
             }
 
-            yield return new CloseSituationAction(situationId);
+            yield return new CloseSituationAction(this.SituationId);
             yield return new SetPausedAction(false);
         }
 
         private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe, bool standalone = true)
         {
-            var situationId = this.Situation.GetTokenId();
-
             var slots = this.Situation.situationWindow.GetOngoingSlots();
             if (slots.Count == 0)
             {
@@ -218,7 +219,7 @@ namespace Autoccultist.Brain
             if (standalone)
             {
                 yield return new SetPausedAction(true);
-                yield return new OpenSituationAction(situationId);
+                yield return new OpenSituationAction(this.SituationId);
             }
 
             // Get the first card.  Slotting this will usually create additional slots
@@ -243,20 +244,18 @@ namespace Autoccultist.Brain
 
             if (standalone)
             {
-                yield return new CloseSituationAction(situationId);
+                yield return new CloseSituationAction(this.SituationId);
                 yield return new SetPausedAction(false);
             }
         }
 
         private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine()
         {
-            var situationId = this.Operation.Situation;
-            // TODO: open/dump/close window with actor
             try
             {
-                yield return new OpenSituationAction(situationId);
-                yield return new DumpSituationAction(situationId);
-                yield return new CloseSituationAction(situationId);
+                yield return new OpenSituationAction(this.SituationId);
+                yield return new DumpSituationAction(this.SituationId);
+                yield return new CloseSituationAction(this.SituationId);
             }
             finally
             {
@@ -272,9 +271,7 @@ namespace Autoccultist.Brain
                 return null;
             }
 
-            var situationId = this.Situation.GetTokenId();
-
-            return new SlotCardAction(situationId, slotId, cardChoice);
+            return new SlotCardAction(this.SituationId, slotId, cardChoice);
         }
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
@@ -291,6 +288,16 @@ namespace Autoccultist.Brain
                 AutoccultistPlugin.Instance.LogWarn($"Failed to run operation {this.operation.Name}: {ex.Message}");
                 this.Abort();
             }
+        }
+
+        enum OperationState
+        {
+            Starting,
+            // The operation is performing its recipes and waiting on the result
+            Ongoing,
+
+            // The operation has finished and we are waiting for the contents to dump.
+            Completing
         }
     }
 }

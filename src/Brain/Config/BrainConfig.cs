@@ -10,7 +10,6 @@ namespace Autoccultist.Brain.Config
             var config = Deserializer.Deserialize<BrainConfig>(filePath);
             var serializer = new SerializerBuilder()
                 .Build();
-            AutoccultistPlugin.Instance.LogTrace("Config is\n\n" + serializer.Serialize(config) + "\n\n");
 
             config.Validate();
 

@@ -136,7 +136,7 @@ namespace Autoccultist
         private void UpdateChildren()
         {
             this.brain.Update();
-            OperationOrchestrator.Update();
+            SituationOrchestrator.Update();
             AutoccultistActor.Update();
         }
     }

@@ -5,9 +5,9 @@ using Autoccultist.Brain.Config;
 
 namespace Autoccultist.Brain
 {
-    public static class OperationOrchestrator
+    public static class SituationOrchestrator
     {
-        private static IDictionary<string, OperationExecutor> executingOperationsBySituation = new Dictionary<string, OperationExecutor>();
+        private static IDictionary<string, ISituationOrchestration> executingOperationsBySituation = new Dictionary<string, ISituationOrchestration>();
 
         public static void Update()
         {
@@ -17,15 +17,28 @@ namespace Autoccultist.Brain
             }
 
             // After we update the existing situation handlers, dump any completed ones if any remain.
-            //  This is because we need to let the solution executor dump to know its done, but
-            //  other pop-up situations also need dumping
-            // TODO: We should animate this through AutoccultistActor
+            //  This is because some situations operate on their own volition, without an executor associated with them.
             foreach (var situation in GameAPI.GetAllSituations())
             {
-                if (situation.SituationClock.State == SituationState.Complete)
+                var situationId = situation.GetTokenId();
+
+                if (executingOperationsBySituation.ContainsKey(situationId))
                 {
-                    situation.situationWindow.DumpAllResultingCardsToDesktop();
+                    // Already orchestrating this
+                    continue;
                 }
+
+                if (situation.SituationClock.State != SituationState.Complete)
+                {
+                    // Situation is ongoing, no need to dump it.
+                    continue;
+                }
+
+                // We still want to dump even if the situation has nothing in it
+                //  This is particulary the case for situations that end with no output,
+                //  such as suspicion-free suspicion
+
+                DumpSituation(situationId);
             }
         }
 
@@ -48,9 +61,6 @@ namespace Autoccultist.Brain
             return !executingOperationsBySituation.ContainsKey(situationId);
         }
 
-        // This doesnt really belong here.
-        //  On one hand, we can have multiple imperatives running at once, but on the other
-        //  this just managed situations, and shouldn't care about what is running on them.
         public static void ExecuteOperation(Operation operation)
         {
             if (!SituationIsAvailable(operation.Situation))
@@ -63,17 +73,31 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            var executor = new OperationExecutor(operation);
+            var executor = new OperationOrchestration(operation);
             executingOperationsBySituation[operation.Situation] = executor;
+            executor.Completed += OnExecutorCompleted;
+            executor.Start();
+        }
+
+
+        private static void DumpSituation(string situationId)
+        {
+            if (executingOperationsBySituation.ContainsKey(situationId))
+            {
+                throw new OperationFailedException($"Cannot dump situation {situationId} because the situation already has an orchestration running.");
+            }
+
+            var executor = new DumpSituationOrchestration(situationId);
+            executingOperationsBySituation[situationId] = executor;
             executor.Completed += OnExecutorCompleted;
             executor.Start();
         }
 
         private static void OnExecutorCompleted(object sender, EventArgs e)
         {
-            var executor = sender as OperationExecutor;
+            var executor = sender as ISituationOrchestration;
             executor.Completed -= OnExecutorCompleted;
-            executingOperationsBySituation.Remove(executor.Operation.Situation);
+            executingOperationsBySituation.Remove(executor.SituationId);
         }
     }
 }

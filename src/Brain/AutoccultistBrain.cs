@@ -64,12 +64,12 @@ namespace Autoccultist.Brain
                     continue;
                 }
 
-                if (!OperationOrchestrator.SituationIsAvailable(operation.Situation))
+                if (!SituationOrchestrator.SituationIsAvailable(operation.Situation))
                 {
                     continue;
                 }
 
-                OperationOrchestrator.ExecuteOperation(operation);
+                SituationOrchestrator.ExecuteOperation(operation);
             }
         }
 
@@ -134,7 +134,7 @@ namespace Autoccultist.Brain
 
         public bool SituationIsAvailable(string situationId)
         {
-            return OperationOrchestrator.SituationIsAvailable(situationId);
+            return SituationOrchestrator.SituationIsAvailable(situationId);
         }
 
         public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
