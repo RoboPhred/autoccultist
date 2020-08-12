@@ -5,14 +5,14 @@ namespace Autoccultist.Brain.Config
 {
     /**
      * A Goal represents a set of actions that can be satisfied by a given board state.
-     * A Goal contains a set of Imperatives that will presumably cause the board to reach a win state.
+     * A Goal contains a set of Imperatives that will presumably reach the given state.
      */
     public class Goal : ITask
     {
         public string Name { get; set; }
 
         public GameStateCondition RequiredCards { get; set; }
-        public GameStateCondition CompletedByCards { get; set; }
+        public GameStateCondition CompletedWhen { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
 
@@ -55,7 +55,7 @@ namespace Autoccultist.Brain.Config
 
         public bool IsSatisfied(IGameState state)
         {
-            return this.CompletedByCards != null && this.CompletedByCards.IsConditionMet(state);
+            return this.CompletedWhen != null && this.CompletedWhen.IsConditionMet(state);
         }
     }
 }
