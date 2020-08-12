@@ -41,11 +41,6 @@ namespace Autoccultist.Brain.Config
             return true;
         }
 
-        public bool IsConditionMet(IGameState state)
-        {
-            return state.CardsCanBeSatisfied(new[] { this });
-        }
-
         public override string ToString()
         {
             return string.Format("[cardMatch ElementId = {0}]", this.ElementId);
