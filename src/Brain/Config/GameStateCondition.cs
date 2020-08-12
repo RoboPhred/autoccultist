@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Autoccultist.Brain.Config
 {
@@ -7,77 +9,54 @@ namespace Autoccultist.Brain.Config
         // The trend in yaml is to use properties for mode selectors.
         //  See kubernetes and docker compose files.
 
-        public ConditionMode mode { get; set; }
+        public ConditionMode Mode { get; set; }
         public List<CardChoice> Requirements { get; set; }
-
 
         public GameStateCondition()
         {
         }
 
-        public GameStateCondition(ConditionMode Mode, params CardChoice[] requirements)
+        public GameStateCondition(ConditionMode mode, params CardChoice[] requirements)
         {
-            mode = Mode;
-            Requirements = new List<CardChoice>(requirements);
+            this.Mode = mode;
+            this.Requirements = new List<CardChoice>(requirements);
         }
-
 
         public bool IsConditionMet(IGameState state)
         {
+            switch (this.Mode)
             {
-                return state.CardsCanBeSatisfied(this.AllOf);
+                case ConditionMode.AllOf:
+                    return state.CardsCanBeSatisfied(this.Requirements);
+                case ConditionMode.AnyOf:
+                    return this.Requirements.Any(card => state.CardsCanBeSatisfied(new[] { card }));
+                case ConditionMode.NoneOf:
+                    return !this.Requirements.Any(card => state.CardsCanBeSatisfied(new[] { card }));
+                default:
+                    throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }
-
-            if(mode == ConditionMode.NONE_OF)
-            {
-                foreach (var card in this.Requirements)
-                {
-                    if (state.CardsCanBeSatisfied(new[] { card }))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else if (mode == ConditionMode.ALL_OF)
-            {
-                return state.CardsCanBeSatisfied(this.Requirements);
-            }
-            else if (mode == ConditionMode.ANY_OF)
-            {
-                foreach (var card in this.Requirements)
-                {
-                    if (state.CardsCanBeSatisfied(new[] { card }))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            return false;
         }
 
         public static GameStateCondition NeedsAllOf(params CardChoice[] requirements)
         {
-            return new GameStateCondition(ConditionMode.ALL_OF, requirements);
+            return new GameStateCondition(ConditionMode.AllOf, requirements);
         }
 
         public static GameStateCondition NeedsAnyOf(params CardChoice[] requirements)
         {
-            return new GameStateCondition(ConditionMode.ANY_OF, requirements);
+            return new GameStateCondition(ConditionMode.AnyOf, requirements);
         }
 
         public static GameStateCondition NeedsNoneOf(params CardChoice[] requirements)
         {
-            return new GameStateCondition(ConditionMode.NONE_OF, requirements);
+            return new GameStateCondition(ConditionMode.NoneOf, requirements);
         }
     }
 
     public enum ConditionMode
     {
-        ANY_OF,
-        ALL_OF,
-        NONE_OF
+        AnyOf,
+        AllOf,
+        NoneOf
     }
 }

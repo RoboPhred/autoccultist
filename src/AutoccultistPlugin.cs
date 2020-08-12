@@ -109,7 +109,6 @@ namespace Autoccultist
             {
                 this.Logger.LogInfo(message);
             });
-
         }
 
         public void LogWarn(string message)

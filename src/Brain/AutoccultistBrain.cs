@@ -96,13 +96,13 @@ namespace Autoccultist.Brain
                     AutoccultistPlugin.Instance.LogInfo("Goal " + goal.Name);
                     if (goal.CompletedWhen.Requirements != null)
                     {
-                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.mode.ToString() + "):");
+                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.Mode.ToString() + "):");
                         foreach (CardChoice card in goal.RequiredCards.Requirements)
                         {
                             AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
                         }
 
-                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.mode.ToString() + "):");
+                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.Mode.ToString() + "):");
                         foreach (CardChoice card in goal.CompletedWhen.Requirements)
                         {
                             AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
