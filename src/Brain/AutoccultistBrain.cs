@@ -8,7 +8,9 @@ namespace Autoccultist.Brain
     {
         private BrainConfig config;
 
-        private Goal currentGoal;
+        private Goal currentInstinct;   // A "critical-level" Goal: any imperatives through this goal are always considered top priority.
+        private Goal currentGoal;       // A "goal-level" Goal: this is important, and prioritized over the aspiration.
+        private Goal currentAspiration; // A "maintenance-level" Goal: this is a Goal to work on with spare available resources.
 
         public AutoccultistBrain(BrainConfig config)
         {
@@ -22,7 +24,9 @@ namespace Autoccultist.Brain
                 this.currentGoal = null;
             }
 
+            this.currentInstinct = this.currentInstinct ?? this.ObtainNextGoal(TaskPriority.Critical);
             this.currentGoal = this.currentGoal ?? this.ObtainNextGoal();
+            this.currentAspiration = this.currentAspiration ?? this.ObtainNextGoal(TaskPriority.Maintenance);
         }
 
         public void Stop()
@@ -37,28 +41,31 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            // Scan through all possible imperatives and invoke the ones that can start.
-            //  Where multiple imperatives try for the same verb, invoke the highest priority
-            var candidateGroups =
-                from imperative in this.GetSatisfiableImperatives()
-                orderby imperative.Priority descending
-                group imperative.Operation by imperative.Operation.Situation into situationGroup
-                select situationGroup;
-
-            foreach (var group in candidateGroups)
+            foreach(Goal currGoal in new Goal[]{ currentInstinct, currentGoal, currentAspiration })
             {
-                var operation = group.FirstOrDefault();
-                if (operation == null)
-                {
-                    continue;
-                }
+                // Scan through all possible imperatives and invoke the ones that can start.
+                //  Where multiple imperatives try for the same verb, invoke the highest priority
+                var candidateGroups =
+                    from imperative in this.GetSatisfiableImperatives()
+                    orderby imperative.Priority descending
+                    group imperative.Operation by imperative.Operation.Situation into situationGroup
+                    select situationGroup;
 
-                if (!SituationOrchestrator.SituationIsAvailable(operation.Situation))
+                foreach (var group in candidateGroups)
                 {
-                    continue;
-                }
+                    var operation = group.FirstOrDefault();
+                    if (operation == null)
+                    {
+                        continue;
+                    }
 
-                SituationOrchestrator.ExecuteOperation(operation);
+                    if (!SituationOrchestrator.SituationIsAvailable(operation.Situation))
+                    {
+                        continue;
+                    }
+
+                    SituationOrchestrator.ExecuteOperation(operation);
+                }
             }
         }
 
@@ -113,16 +120,25 @@ namespace Autoccultist.Brain
 
         private IList<Imperative> GetSatisfiableImperatives()
         {
-            if (this.currentGoal == null)
+            foreach(Goal g in new Goal[] { this.currentInstinct, this.currentGoal, this.currentAspiration })
             {
-                return new Imperative[0];
+                if(g == null)
+                {
+                    continue;
+                }
+
+                IEnumerable<Imperative> imperatives =
+                    from imperative in (g.Imperatives)
+                    where imperative.CanExecute(this)
+                    select imperative;
+
+                if(imperatives.Count() > 0)
+                {
+                    return imperatives.ToList();
+                }
             }
 
-            var imperatives =
-                from imperative in this.currentGoal.Imperatives
-                where imperative.CanExecute(this)
-                select imperative;
-            return imperatives.ToList();
+            return new Imperative[0];
         }
 
         private bool IsGoalSatisfied()
@@ -148,9 +164,8 @@ namespace Autoccultist.Brain
             var goals =
                 from goal in this.config.Goals
                 where goal.CanActivate(this)
+                where goal.Priority == goalLevel
                 select goal;
-            this.currentGoal = goals.FirstOrDefault();
-            AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
             var ReturnValue = goals.FirstOrDefault();
             AutoccultistPlugin.Instance.LogTrace($"Next {goalLevel.ToString()} goal is {ReturnValue?.Name ?? "[none]"}");
             return ReturnValue;
