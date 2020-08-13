@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using YamlDotNet.Serialization;
+using Autoccultist.Yaml;
 
 namespace Autoccultist.Brain.Config
 {
@@ -8,9 +8,6 @@ namespace Autoccultist.Brain.Config
         public static BrainConfig Load(string filePath)
         {
             var config = Deserializer.Deserialize<BrainConfig>(filePath);
-            var serializer = new SerializerBuilder()
-                .Build();
-
             config.Validate();
 
             return config;

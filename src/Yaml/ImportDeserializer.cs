@@ -4,7 +4,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Yaml
 {
     class ImportDeserializer : INodeDeserializer
     {

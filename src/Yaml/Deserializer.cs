@@ -5,10 +5,11 @@ using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Yaml
 {
     static class Deserializer
     {
+        public static readonly INamingConvention NamingConvention = CamelCaseNamingConvention.Instance;
         private static Stack<string> parsingFiles = new Stack<string>();
 
         public static string CurrentFilePath
@@ -29,10 +30,14 @@ namespace Autoccultist.Brain.Config
             try
             {
                 var deserializer = new DeserializerBuilder()
-                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                    .WithNamingConvention(NamingConvention)
+                    // TODO: Remove this.  Currently needed because of merge keys.
+                    // We really do not want to ignore them, and instead should give the user an error.
+                    //  This is paritcularly useful for the duck typing mechanism.
                     .IgnoreUnmatchedProperties()
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnBottom())
                     .Build();
                 var fileContents = File.ReadAllText(filePath);
                 var parser = new MergingParser(new Parser(new StringReader(fileContents)));
