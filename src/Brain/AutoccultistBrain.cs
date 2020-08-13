@@ -37,8 +37,6 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            foreach(Goal currGoal in new Goal[]{ currentInstinct, currentGoal, currentAspiration })
-            {
                 // Scan through all possible imperatives and invoke the ones that can start.
                 //  Where multiple imperatives try for the same verb, invoke the highest priority
                 var candidateGroups =
@@ -62,7 +60,6 @@ namespace Autoccultist.Brain
 
                     SituationOrchestrator.ExecuteOperation(operation);
                 }
-            }
         }
 
         public void LogStatus()
@@ -124,7 +121,6 @@ namespace Autoccultist.Brain
             var imperatives =
                 from imperative in this.currentGoal.Imperatives
                 where imperative.CanExecute(this)
-                orderby goal.Priority, imperative.Priority
                 select imperative;
             return imperatives.ToList();
         }
@@ -152,7 +148,6 @@ namespace Autoccultist.Brain
             var goals =
                 from goal in this.config.Goals
                 where goal.CanActivate(this)
-                where goal.Priority == goalLevel
                 select goal;
             this.currentGoal = goals.FirstOrDefault();
             AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
