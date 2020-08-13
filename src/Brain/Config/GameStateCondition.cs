@@ -31,7 +31,7 @@ namespace Autoccultist.Brain.Config
             switch (this.Mode)
             {
                 case ConditionMode.AllOf:
-                    return this.Requirements.Any(condition => !condition.IsConditionMet(state));
+                    return this.Requirements.All(condition => condition.IsConditionMet(state));
                 case ConditionMode.AnyOf:
                     return this.Requirements.Any(condition => condition.IsConditionMet(state));
                 case ConditionMode.NoneOf:
@@ -58,7 +58,7 @@ namespace Autoccultist.Brain.Config
                     this.Mode = ConditionMode.NoneOf;
                     break;
                 default:
-                    throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
+                    throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"noneOf\".");
             }
 
             this.Requirements = (List<ICondition>)nestedObjectDeserializer(typeof(List<ICondition>));
