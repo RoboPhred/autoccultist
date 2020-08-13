@@ -129,18 +129,18 @@ goals:
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
       - *imp-crit-heal-injury
-      - *imp-vitality-from-health
-      - <<: *imp-goal-vitality-lesson
-        forbidWhenCardsPresent:
-          # Do not monopolize study when we have vitality lessons to study
-          allOf:
-            - elementId: vitalityplus
-            - elementId: vitalityplus
       - name: Stronger Physique work
         priority: maintenance
         operation: !import operations/work-skillhealtha.yml
         forbidWhenCardsPresent:
           # Don't steal away our health skill card when we need it to upgrade.
+          allOf:
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+      - *imp-vitality-from-health
+      - <<: *imp-goal-vitality-lesson
+        forbidWhenCardsPresent:
+          # Do not monopolize study when we have vitality lessons to study
           allOf:
             - elementId: vitalityplus
             - elementId: vitalityplus
@@ -161,17 +161,17 @@ goals:
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
       - *imp-crit-heal-injury
-      - *imp-vitality-from-health
-      - <<: *imp-goal-vitality-lesson
+      - name: Hardened Physique work
+        priority: maintenance
+        operation: !import operations/work-skillhealthb.yml
         forbidWhenCardsPresent:
           # Stop gaining lessons when we have enough
           allOf:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
-      - name: Hardened Physique work
-        priority: maintenance
-        operation: !import operations/work-skillhealthb.yml
+      - *imp-vitality-from-health
+      - <<: *imp-goal-vitality-lesson
         forbidWhenCardsPresent:
           # Stop using our skill card when we have enough lessons
           allOf:
