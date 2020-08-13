@@ -1,14 +1,15 @@
 using System.Collections.Generic;
+using Autoccultist.src.Brain.Util;
 
 namespace Autoccultist.Brain.Config
 {
-    public class GameStateCondition
+    public class GameStateCondition : ICondition
     {
         // The trend in yaml is to use properties for mode selectors.
         //  See kubernetes and docker compose files.
 
         public ConditionMode mode { get; set; }
-        public List<CardChoice> Requirements { get; set; }
+        public List<ICondition> Requirements { get; set; }
 
 
         public GameStateCondition()
@@ -18,21 +19,17 @@ namespace Autoccultist.Brain.Config
         public GameStateCondition(ConditionMode Mode, params CardChoice[] requirements)
         {
             mode = Mode;
-            Requirements = new List<CardChoice>(requirements);
+            Requirements = new List<ICondition>(requirements);
         }
 
 
         public bool IsConditionMet(IGameState state)
         {
-            {
-                return state.CardsCanBeSatisfied(this.AllOf);
-            }
-
             if(mode == ConditionMode.NONE_OF)
             {
-                foreach (var card in this.Requirements)
+                foreach (var condition in this.Requirements)
                 {
-                    if (state.CardsCanBeSatisfied(new[] { card }))
+                    if(condition.IsConditionMet(state))
                     {
                         return false;
                     }
@@ -41,13 +38,20 @@ namespace Autoccultist.Brain.Config
             }
             else if (mode == ConditionMode.ALL_OF)
             {
-                return state.CardsCanBeSatisfied(this.Requirements);
+                foreach(var condition in this.Requirements)
+                {
+                    if(!condition.IsConditionMet(state))
+                    {
+                        return false;
+                    }
+                }
+                return true;
             }
             else if (mode == ConditionMode.ANY_OF)
             {
-                foreach (var card in this.Requirements)
+                foreach(var condition in this.Requirements)
                 {
-                    if (state.CardsCanBeSatisfied(new[] { card }))
+                    if(condition.IsConditionMet(state))
                     {
                         return true;
                     }

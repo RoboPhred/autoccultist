@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using Assets.Core.Interfaces;
+using Autoccultist.src.Brain.Util;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardChoice : ICardMatcher
+    public class CardChoice : ICardMatcher, ICondition
     {
         public string ElementId { get; set; }
 
