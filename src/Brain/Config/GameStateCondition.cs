@@ -33,13 +33,25 @@ namespace Autoccultist.Brain.Config
             {
             case ConditionMode.AllOf:
                 List<CardChoice> cardsRequired = new List<CardChoice>();
-                foreach(ICondition condition in this.Requirements)
+                try
                 {
-                    cardsRequired.Add(condition as CardChoice);
-                    if(condition is GameStateCondition)
+                    foreach(ICondition condition in this.Requirements)
                     {
-                        cardsRequired.AddRange((condition as GameStateCondition).GetAllCardsNeeded(state));
+                        if(condition is CardChoice c)
+                        {
+                            cardsRequired.Add(c);
+                        }
+
+                        if(condition is GameStateCondition g)
+                        {
+                            cardsRequired.AddRange(g.GetAllCardsNeeded(state));
+                        }
                     }
+                }
+                catch(Exception e)
+                {
+                    AutoccultistPlugin.Instance.LogWarn(e.Message);
+                    return false;
                 }
                 return state.CardsCanBeSatisfied(cardsRequired);
             case ConditionMode.AnyOf:
@@ -61,11 +73,11 @@ namespace Autoccultist.Brain.Config
                 {
                     switch(condition)
                     {
-                    case GameStateCondition _:
-                        list.AddRange((condition as GameStateCondition).GetAllCardsNeeded(state));
+                    case GameStateCondition gsc:
+                        list.AddRange(gsc.GetAllCardsNeeded(state));
                         break;
-                    case CardChoice _:
-                        list.Add(condition as CardChoice);
+                    case CardChoice cc:
+                        list.Add(cc);
                         break;
                     }
                 }
