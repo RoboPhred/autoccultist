@@ -7,12 +7,12 @@ namespace Autoccultist.GameState
     {
         public static IEnumerable<TableCardState> GetTableCards(this IGameState state)
         {
-            return state.TableTokens.OfType<TableCardState>();
+            return state.TabledItems.OfType<TableCardState>();
         }
 
         public static IEnumerable<SituationState> GetSituations(this IGameState state)
         {
-            return state.TableTokens.OfType<SituationState>();
+            return state.TabledItems.OfType<SituationState>();
         }
 
         public static SituationState GetSituation(this IGameState state, string situationId)

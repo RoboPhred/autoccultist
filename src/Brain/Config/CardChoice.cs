@@ -11,7 +11,7 @@ namespace Autoccultist.Brain.Config
 
         public Dictionary<string, int> Aspects { get; set; }
 
-        public bool TryConsume(IGameState state, out ElementStackToken token)
+        public bool TryConsume(IGameState state, out IConsumedToken token)
         {
             var candidates =
                 from card in state.GetTableCards()

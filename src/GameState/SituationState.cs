@@ -1,6 +1,6 @@
 namespace Autoccultist.GameState
 {
-    public class SituationState : ITokenState, ITokenContainer, IHasAspects, IConsumableStateToken
+    public class SituationState : IGameItemState, ITokenContainer, IHasAspects, IConsumableStateToken
     {
         public string TokenId => throw new System.NotImplementedException();
 
