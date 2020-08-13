@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autoccultist.src.Brain.Util;
+using Autoccultist.src.Brain;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
@@ -37,7 +38,7 @@ namespace Autoccultist.Brain.Config
                     cardsRequired.Add(condition as CardChoice);
                     if(condition is GameStateCondition)
                     {
-                        cardsRequired.AddRange((condition as GameStateCondition).GetAllCardsNeeded());
+                        cardsRequired.AddRange((condition as GameStateCondition).GetAllCardsNeeded(state));
                     }
                 }
                 return state.CardsCanBeSatisfied(cardsRequired);
@@ -50,7 +51,41 @@ namespace Autoccultist.Brain.Config
             }
         }
 
-        private IEnumerable<CardChoice> GetAllCardsNeeded() => throw new NotImplementedException();
+        private IEnumerable<CardChoice> GetAllCardsNeeded(IGameState state)
+        {
+            switch(this.Mode)
+            {
+            case ConditionMode.AllOf:
+                List<CardChoice> list = new List<CardChoice>();
+                foreach(ICondition condition in Requirements)
+                {
+                    switch(condition)
+                    {
+                    case GameStateCondition _:
+                        list.AddRange((condition as GameStateCondition).GetAllCardsNeeded(state));
+                        break;
+                    case CardChoice _:
+                        list.Add(condition as CardChoice);
+                        break;
+                    }
+                }
+                return list;
+
+            case ConditionMode.NoneOf:
+                if(this.IsConditionMet(state))
+                {
+                    return new CardChoice[0];
+                }
+
+                throw new ConditionNotMetException("A 'NoneOf' requirement was not met: " + this.ToString());
+
+            case ConditionMode.AnyOf:
+                throw new NotImplementedException("AnyOf GameStateConditions are not (currently) allowed to be children of AllOf GameStateConditions.");
+
+            default:
+                throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
+            }
+        }
 
         void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
