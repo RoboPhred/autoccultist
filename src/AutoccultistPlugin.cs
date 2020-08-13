@@ -63,6 +63,8 @@ namespace Autoccultist
                     {
                         this.LogInfo("Reloading brain");
                         LoadBrainConfig();
+                        this.LogInfo("Restarting brain");
+                        this.brain.Reset();
                     }
                 }
                 else

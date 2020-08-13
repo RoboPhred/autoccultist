@@ -37,6 +37,19 @@ namespace Autoccultist.Brain
         {
         }
 
+        public void Reset()
+        {
+            if(!this.CanGoalActivate())
+            {
+                this.currentGoal = null;
+            }
+
+            if(this.currentGoal == null)
+            {
+                this.ObtainNextGoal();
+            }
+        }
+
         public void Update()
         {
             ResetGoalIfSatisfiedOrNull();
