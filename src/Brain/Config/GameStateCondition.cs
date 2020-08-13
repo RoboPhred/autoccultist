@@ -61,7 +61,7 @@ namespace Autoccultist.Brain.Config
                     throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"noneOf\".");
             }
 
-            this.Requirements = (List<ICondition>)nestedObjectDeserializer(typeof(List<ICondition>));
+            this.Requirements = (List<ICondition>)nestedObjectDeserializer(typeof(List<GameStateCondition>));
 
             if (parser.Accept<Scalar>(out var _))
             {
