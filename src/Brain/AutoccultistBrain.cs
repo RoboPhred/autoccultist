@@ -120,25 +120,14 @@ namespace Autoccultist.Brain
 
         private IList<Imperative> GetSatisfiableImperatives()
         {
-            foreach(Goal g in new Goal[] { this.currentInstinct, this.currentGoal, this.currentAspiration })
-            {
-                if(g == null)
-                {
-                    continue;
-                }
-
-                IEnumerable<Imperative> imperatives =
-                    from imperative in (g.Imperatives)
-                    where imperative.CanExecute(this)
-                    select imperative;
-
-                if(imperatives.Count() > 0)
-                {
-                    return imperatives.ToList();
-                }
-            }
-
-            return new Imperative[0];
+            Goal[] goals = new Goal[] { this.currentInstinct, this.currentGoal, this.currentAspiration };
+            IEnumerable<Imperative> imperatives =
+                from goal in goals
+                from imperative in (goal.Imperatives)
+                where imperative.CanExecute(this)
+                orderby goal.Priority, imperative.Priority
+                select imperative;
+            return new List<Imperative>(imperatives);
         }
 
         private bool IsGoalSatisfied()
