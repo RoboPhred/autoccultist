@@ -40,29 +40,29 @@ namespace Autoccultist.Brain
                 return;
             }
 
-                // Scan through all possible imperatives and invoke the ones that can start.
-                //  Where multiple imperatives try for the same verb, invoke the highest priority
-                var candidateGroups =
-                    from imperative in this.GetSatisfiableImperatives()
-                    orderby imperative.Priority descending
-                    group imperative.Operation by imperative.Operation.Situation into situationGroup
-                    select situationGroup;
+            // Scan through all possible imperatives and invoke the ones that can start.
+            //  Where multiple imperatives try for the same verb, invoke the highest priority
+            var candidateGroups =
+                from imperative in this.GetSatisfiableImperatives()
+                orderby imperative.Priority descending
+                group imperative.Operation by imperative.Operation.Situation into situationGroup
+                select situationGroup;
 
-                foreach(var group in candidateGroups)
+            foreach(var group in candidateGroups)
+            {
+                var operation = group.FirstOrDefault();
+                if(operation == null)
                 {
-                    var operation = group.FirstOrDefault();
-                    if(operation == null)
-                    {
-                        continue;
-                    }
-
-                    if(!SituationOrchestrator.SituationIsAvailable(operation.Situation))
-                    {
-                        continue;
-                    }
-
-                    SituationOrchestrator.ExecuteOperation(operation);
+                    continue;
                 }
+
+                if(!SituationOrchestrator.SituationIsAvailable(operation.Situation))
+                {
+                    continue;
+                }
+
+                SituationOrchestrator.ExecuteOperation(operation);
+            }
         }
 
         public void LogStatus()
