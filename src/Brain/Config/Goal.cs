@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Brain.Config
 {
@@ -10,8 +11,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
 
-        public GameStateCondition RequiredCards { get; set; }
-        public GameStateCondition CompletedWhen { get; set; }
+        public CardCondition RequiredCards { get; set; }
+        public CardCondition CompletedWhen { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
 

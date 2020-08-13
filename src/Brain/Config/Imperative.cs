@@ -1,4 +1,6 @@
 
+using Autoccultist.GameState;
+
 namespace Autoccultist.Brain.Config
 {
     /**
@@ -9,8 +11,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
         public TaskPriority Priority { get; set; } = TaskPriority.Maintenance;
-        public GameStateCondition RequiredCards { get; set; }
-        public GameStateCondition ForbidWhenCardsPresent { get; set; }
+        public CardCondition RequiredCards { get; set; }
+        public CardCondition ForbidWhenCardsPresent { get; set; }
 
         public Operation Operation { get; set; }
 

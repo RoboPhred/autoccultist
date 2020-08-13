@@ -6,6 +6,7 @@ using Assets.TabletopUi;
 using Autoccultist.Brain.Config;
 using Autoccultist.Actor;
 using Autoccultist.Actor.Actions;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Brain
 {
@@ -48,7 +49,7 @@ namespace Autoccultist.Brain
             this.operation = operation;
         }
 
-        public void Start()
+        public void Start(IGameState state)
         {
             var situation = this.Situation;
             if (situation == null)
@@ -57,10 +58,10 @@ namespace Autoccultist.Brain
             }
 
             AutoccultistPlugin.Instance.LogTrace("Starting operation " + this.operation.Name);
-            this.RunCoroutine(this.StartOperationCoroutine());
+            this.RunCoroutine(this.StartOperationCoroutine(state));
         }
 
-        public void Update()
+        public void Update(IGameState state)
         {
             if (this.Situation == null)
             {
@@ -69,9 +70,9 @@ namespace Autoccultist.Brain
 
             // TODO: We want to hook into the completion of the situation rather than scanning it every update.
 
-            var state = this.Situation.SituationClock.State;
+            var clockState = this.Situation.SituationClock.State;
 
-            if (state == SituationState.Ongoing)
+            if (clockState == SituationState.Ongoing)
             {
                 // The situation is running its recipe.
                 //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
@@ -79,7 +80,7 @@ namespace Autoccultist.Brain
                 this.completionDebounceTime = null;
 
                 // See if we need to slot new cards.
-                this.ContinueOperation();
+                this.ContinueOperation(state);
             }
             else if (this.operationState == OperationState.Ongoing)
             {
@@ -88,7 +89,7 @@ namespace Autoccultist.Brain
                 // We need to be careful, as this might be a transient state, and the situation may still have another recipe to run.
 
                 // We have two final states: Complete (has output cards) and Unstarted (no output cards).
-                if (state == SituationState.Complete || state == SituationState.Unstarted)
+                if (clockState == SituationState.Complete || clockState == SituationState.Unstarted)
                 {
                     if (completionDebounceTime == null)
                     {
@@ -127,7 +128,7 @@ namespace Autoccultist.Brain
             }
         }
 
-        private void ContinueOperation()
+        private void ContinueOperation(IGameState state)
         {
             var currentRecipe = this.Situation.SituationClock.RecipeId;
             if (this.ongoingRecipe == currentRecipe)
@@ -149,10 +150,10 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution));
+            this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution, state));
         }
 
-        private IEnumerable<IAutoccultistAction> StartOperationCoroutine()
+        private IEnumerable<IAutoccultistAction> StartOperationCoroutine(IGameState state)
         {
             yield return new SetPausedAction(true);
             yield return new OpenSituationAction(this.SituationId);
@@ -163,7 +164,7 @@ namespace Autoccultist.Brain
             // Get the first card.  Slotting this will usually create additional slots
             var slots = this.Situation.situationWindow.GetStartingSlots();
             var firstSlot = slots.First();
-            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, this.operation.StartingRecipe);
+            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, this.operation.StartingRecipe, state);
             if (firstSlotAction == null)
             {
                 // First slot of starting situation is required.
@@ -175,7 +176,7 @@ namespace Autoccultist.Brain
             slots = this.Situation.situationWindow.GetStartingSlots();
             foreach (var slot in slots.Skip(1))
             {
-                var slotAction = CreateSlotActionFromRecipe(slot, this.operation.StartingRecipe);
+                var slotAction = CreateSlotActionFromRecipe(slot, this.operation.StartingRecipe, state);
                 if (slotAction != null)
                 {
                     yield return slotAction;
@@ -189,7 +190,7 @@ namespace Autoccultist.Brain
             this.ongoingRecipe = this.Situation.SituationClock.RecipeId;
             if (this.operation.OngoingRecipes != null && this.operation.OngoingRecipes.TryGetValue(this.ongoingRecipe, out var ongoingRecipeSolution))
             {
-                foreach (var item in this.ContinueSituationCoroutine(ongoingRecipeSolution, false))
+                foreach (var item in this.ContinueSituationCoroutine(ongoingRecipeSolution, state, false))
                 {
                     yield return item;
                 }
@@ -199,7 +200,7 @@ namespace Autoccultist.Brain
             yield return new SetPausedAction(false);
         }
 
-        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe, bool standalone = true)
+        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe, IGameState state, bool standalone = true)
         {
             var slots = this.Situation.situationWindow.GetOngoingSlots();
             if (slots.Count == 0)
@@ -223,7 +224,7 @@ namespace Autoccultist.Brain
             }
 
             // Get the first card.  Slotting this will usually create additional slots
-            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, recipe);
+            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, recipe, state);
             if (firstSlotAction == null)
             {
                 // Not sure if the first slot of ongoing actions is always required...
@@ -235,7 +236,7 @@ namespace Autoccultist.Brain
             slots = this.Situation.situationWindow.GetOngoingSlots();
             foreach (var slot in slots.Skip(1))
             {
-                var slotAction = CreateSlotActionFromRecipe(slot, recipe);
+                var slotAction = CreateSlotActionFromRecipe(slot, recipe, state);
                 if (slotAction != null)
                 {
                     yield return slotAction;
@@ -263,7 +264,7 @@ namespace Autoccultist.Brain
             }
         }
 
-        private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, RecipeSolution recipe)
+        private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, RecipeSolution recipe, IGameState state)
         {
             var slotId = slot.GoverningSlotSpecification.Id;
             if (!recipe.Slots.TryGetValue(slotId, out var cardChoice))
@@ -271,7 +272,12 @@ namespace Autoccultist.Brain
                 return null;
             }
 
-            return new SlotCardAction(this.SituationId, slotId, cardChoice);
+            if (!cardChoice.TryConsume(state, out var token))
+            {
+                return null;
+            }
+
+            return new SlotCardAction(this.SituationId, slotId, token);
         }
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)

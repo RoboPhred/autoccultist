@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Brain.Config
 {
@@ -20,12 +21,16 @@ namespace Autoccultist.Brain.Config
 
         public bool CanExecute(IGameState state)
         {
-            if (!state.SituationIsAvailable(this.Situation))
+            if (!(state.GetSituation(this.Situation)?.IsBusy ?? false))
             {
                 return false;
             }
 
-            if (this.StartingRecipe != null && !this.StartingRecipe.CanExecute(state))
+            // We use the same consumption scope for starting recipe and ongoing recipies, as
+            //  each recipe will consume against the next.
+            var childState = state.CreateConsumptionScope();
+
+            if (this.StartingRecipe != null && !this.StartingRecipe.TryConsumeCards(childState, out var _))
             {
                 return false;
             }
@@ -34,9 +39,7 @@ namespace Autoccultist.Brain.Config
             {
                 foreach (var ongoing in this.OngoingRecipes.Values)
                 {
-                    // TODO: Should allow these to late-resolve their cards instead of requiring them up-front.
-                    //  maybe a allowIncomplete: true in RecipeSolution itself, or on the CardMatcher
-                    if (!ongoing.CanExecute(state))
+                    if (!ongoing.TryConsumeCards(childState, out var _))
                     {
                         return false;
                     }

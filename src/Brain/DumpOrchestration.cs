@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Autoccultist.Actor;
 using Autoccultist.Actor.Actions;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Brain
 {
@@ -16,12 +17,12 @@ namespace Autoccultist.Brain
             this.SituationId = situationId;
         }
 
-        public void Start()
+        public void Start(IGameState state)
         {
             AutoccultistActor.PerformActions(this.DumpSituationCoroutine());
         }
 
-        public void Update()
+        public void Update(IGameState state)
         {
             // Nothing to do here, waiting on the Actor to finish the dump.
         }

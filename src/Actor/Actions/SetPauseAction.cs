@@ -9,13 +9,13 @@ namespace Autoccultist.Actor.Actions
         {
             this.Paused = paused;
         }
-        public bool CanExecute()
-        {
-            return GameAPI.IsInteractable;
-        }
 
         public void Execute()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                return;
+            }
             GameAPI.SetPaused(Paused);
         }
     }

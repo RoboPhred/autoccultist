@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autoccultist.Brain.Config;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Brain
 {
@@ -9,11 +10,11 @@ namespace Autoccultist.Brain
     {
         private static IDictionary<string, ISituationOrchestration> executingOperationsBySituation = new Dictionary<string, ISituationOrchestration>();
 
-        public static void Update()
+        public static void Update(IGameState state)
         {
             foreach (var executor in executingOperationsBySituation.Values.ToArray())
             {
-                executor.Update();
+                executor.Update(state);
             }
 
             // After we update the existing situation handlers, dump any completed ones if any remain.
@@ -38,7 +39,7 @@ namespace Autoccultist.Brain
                 //  This is particulary the case for situations that end with no output,
                 //  such as suspicion-free suspicion
 
-                DumpSituation(situationId);
+                DumpSituation(situationId, state);
             }
         }
 
@@ -61,7 +62,7 @@ namespace Autoccultist.Brain
             return !executingOperationsBySituation.ContainsKey(situationId);
         }
 
-        public static void ExecuteOperation(Operation operation)
+        public static void ExecuteOperation(Operation operation, IGameState state)
         {
             if (!SituationIsAvailable(operation.Situation))
             {
@@ -76,11 +77,11 @@ namespace Autoccultist.Brain
             var executor = new OperationOrchestration(operation);
             executingOperationsBySituation[operation.Situation] = executor;
             executor.Completed += OnExecutorCompleted;
-            executor.Start();
+            executor.Start(state);
         }
 
 
-        private static void DumpSituation(string situationId)
+        private static void DumpSituation(string situationId, IGameState state)
         {
             if (executingOperationsBySituation.ContainsKey(situationId))
             {
@@ -90,7 +91,7 @@ namespace Autoccultist.Brain
             var executor = new DumpSituationOrchestration(situationId);
             executingOperationsBySituation[situationId] = executor;
             executor.Completed += OnExecutorCompleted;
-            executor.Start();
+            executor.Start(state);
         }
 
         private static void OnExecutorCompleted(object sender, EventArgs e)

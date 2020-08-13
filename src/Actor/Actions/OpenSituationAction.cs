@@ -4,23 +4,18 @@ namespace Autoccultist.Actor.Actions
     {
         public string SituationId { get; private set; }
 
-
         public OpenSituationAction(string situationId)
         {
             this.SituationId = situationId;
         }
-        public bool CanExecute()
-        {
-            if (!GameAPI.IsInteractable)
-            {
-                return false;
-            }
-
-            return GameAPI.GetSituation(this.SituationId) != null;
-        }
 
         public void Execute()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                return;
+            }
+
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {

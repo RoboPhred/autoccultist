@@ -1,19 +1,30 @@
 using System.Collections.Generic;
-using System.Linq;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Brain.Config
 {
     public class RecipeSolution
     {
+        // TODO: Choices should be able to be made optional
         public IDictionary<string, CardChoice> Slots;
 
-        public bool CanExecute(IGameState state)
+        // TODO: OperationOrchestration should use this directly.
+        public bool TryConsumeCards(IGameState state, out IReadOnlyDictionary<string, IConsumedToken> choices)
         {
-            var cardMatchers = this.Slots.Values.Cast<ICardMatcher>().ToArray();
-            if (!state.CardsCanBeSatisfied(cardMatchers))
+            choices = null;
+
+
+            var result = new Dictionary<string, IConsumedToken>();
+            foreach (var entry in this.Slots)
             {
-                return false;
+                if (!entry.Value.TryConsume(state, out var token))
+                {
+                    return false;
+                }
+                result.Add(entry.Key, token);
             }
+
+            choices = result;
             return true;
         }
     }

@@ -1,40 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autoccultist.GameState;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
 namespace Autoccultist.Brain.Config
 {
-    public class GameStateCondition : IYamlConvertible
+    public class CardCondition : IYamlConvertible
     {
         // The trend in yaml is to use properties for mode selectors.
         //  See kubernetes and docker compose files.
 
-        public static GameStateCondition NeedsAllOf(params CardChoice[] requirements)
+        public static CardCondition NeedsAllOf(params CardChoice[] requirements)
         {
-            return new GameStateCondition(ConditionMode.AllOf, requirements);
+            return new CardCondition(ConditionMode.AllOf, requirements);
         }
 
-        public static GameStateCondition NeedsAnyOf(params CardChoice[] requirements)
+        public static CardCondition NeedsAnyOf(params CardChoice[] requirements)
         {
-            return new GameStateCondition(ConditionMode.AnyOf, requirements);
+            return new CardCondition(ConditionMode.AnyOf, requirements);
         }
 
-        public static GameStateCondition NeedsNoneOf(params CardChoice[] requirements)
+        public static CardCondition NeedsNoneOf(params CardChoice[] requirements)
         {
-            return new GameStateCondition(ConditionMode.NoneOf, requirements);
+            return new CardCondition(ConditionMode.NoneOf, requirements);
         }
 
         public ConditionMode Mode { get; set; }
         public List<CardChoice> Requirements { get; set; }
 
-        public GameStateCondition()
+        public CardCondition()
         {
         }
 
-        public GameStateCondition(ConditionMode mode, params CardChoice[] requirements)
+        public CardCondition(ConditionMode mode, params CardChoice[] requirements)
         {
             this.Mode = mode;
             this.Requirements = new List<CardChoice>(requirements);
@@ -42,14 +43,19 @@ namespace Autoccultist.Brain.Config
 
         public bool IsConditionMet(IGameState state)
         {
+            // Try to consume from the child scope, and see if we can consume all of them.
+            //  The child scope's consumptions will not affect the parent, as to not pollute
+            //  sibling and ancestor GameStateConditions
+            var childScope = state.CreateConsumptionScope();
+
             switch (this.Mode)
             {
                 case ConditionMode.AllOf:
-                    return state.CardsCanBeSatisfied(this.Requirements);
+                    return this.Requirements.All(card => card.TryConsume(childScope, out var _));
                 case ConditionMode.AnyOf:
-                    return this.Requirements.Any(card => state.CardsCanBeSatisfied(new[] { card }));
+                    return this.Requirements.Any(card => card.TryConsume(childScope, out var _));
                 case ConditionMode.NoneOf:
-                    return !this.Requirements.Any(card => state.CardsCanBeSatisfied(new[] { card }));
+                    return !this.Requirements.Any(card => card.TryConsume(childScope, out var _));
                 default:
                     throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }

@@ -3,6 +3,7 @@ using Autoccultist.Brain;
 using Autoccultist.Brain.Config;
 using Autoccultist.Actor;
 using UnityEngine;
+using Autoccultist.GameState;
 
 namespace Autoccultist
 {
@@ -52,6 +53,8 @@ namespace Autoccultist
 
         void Update()
         {
+            var state = GameStateFactory.FromCurentState();
+
             if (Input.GetKeyDown(KeyCode.F11))
             {
                 if (this.isRunning)
@@ -63,7 +66,7 @@ namespace Autoccultist
                 else
                 {
                     this.LogInfo("Starting brain");
-                    this.brain.Start();
+                    this.brain.Start(state);
                     this.isRunning = true;
                 }
             }
@@ -72,15 +75,15 @@ namespace Autoccultist
                 // Ensure not running
                 this.isRunning = false;
                 this.LogInfo("Step");
-                this.brain.Start();
-                UpdateChildren();
+                this.brain.Start(state);
+                UpdateChildren(state);
                 this.brain.Stop();
 
             }
             else if (Input.GetKeyDown(KeyCode.F9))
             {
                 this.LogInfo("Dumping status");
-                this.brain.LogStatus();
+                this.brain.LogStatus(state);
             }
             else if (Input.GetKeyDown(KeyCode.F8))
             {
@@ -92,7 +95,7 @@ namespace Autoccultist
             {
                 return;
             }
-            UpdateChildren();
+            UpdateChildren(state);
         }
 
         public void LogInfo(string message)
@@ -131,10 +134,10 @@ namespace Autoccultist
             });
         }
 
-        private void UpdateChildren()
+        private void UpdateChildren(IGameState state)
         {
-            this.brain.Update();
-            SituationOrchestrator.Update();
+            this.brain.Update(state);
+            SituationOrchestrator.Update(state);
             AutoccultistActor.Update();
         }
     }

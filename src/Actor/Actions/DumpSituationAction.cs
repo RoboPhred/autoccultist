@@ -9,27 +9,6 @@ namespace Autoccultist.Actor.Actions
         {
             this.SituationId = situationId;
         }
-        public bool CanExecute()
-        {
-            if (!GameAPI.IsInteractable)
-            {
-                return false;
-            }
-
-            var situation = GameAPI.GetSituation(this.SituationId);
-            if (situation == null)
-            {
-                return false;
-            }
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Unstarted:
-                case SituationState.Complete:
-                    return true;
-                default:
-                    return false;
-            }
-        }
 
         public void Execute()
         {
@@ -38,6 +17,7 @@ namespace Autoccultist.Actor.Actions
             {
                 throw new ActionFailureException(this, "Situation is not available.");
             }
+
             switch (situation.SituationClock.State)
             {
                 case SituationState.Unstarted:

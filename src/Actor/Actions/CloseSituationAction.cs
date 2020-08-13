@@ -9,10 +9,6 @@ namespace Autoccultist.Actor.Actions
         {
             this.SituationId = situationId;
         }
-        public bool CanExecute()
-        {
-            return GameAPI.IsInteractable && GameAPI.GetSituation(this.SituationId) != null;
-        }
 
         public void Execute()
         {

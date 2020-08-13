@@ -1,8 +1,9 @@
-// TODO: Choose previously reserved card and clear its reservation.
-// TODO: Move this logic to a card manager and take care of reservations there
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Core.Interfaces;
 using Assets.CS.TabletopUI;
+using Autoccultist.GameState;
 
 namespace Autoccultist.Actor.Actions
 {
@@ -10,57 +11,15 @@ namespace Autoccultist.Actor.Actions
     {
         public string SituationId { get; private set; }
         public string SlotId { get; private set; }
-        public ICardMatcher CardMatcher { get; private set; }
+        public IConsumedToken Card { get; private set; }
 
-        // TODO: This should take a specific card reservation, not a card matcher.
-        public SlotCardAction(string situationId, string slotId, ICardMatcher cardMatcher)
+        public SlotCardAction(string situationId, string slotId, IConsumedToken card)
         {
+            // TODO: Ensure we have a card token.
+
             this.SituationId = situationId;
             this.SlotId = slotId;
-            this.CardMatcher = cardMatcher;
-        }
-        public bool CanExecute()
-        {
-            var situation = GameAPI.GetSituation(this.SituationId);
-            if (situation == null)
-            {
-                return false;
-            }
-
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Complete:
-                case SituationState.FreshlyStarted:
-                    return false;
-            }
-
-            IList<RecipeSlot> slots;
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Unstarted:
-                    slots = situation.situationWindow.GetStartingSlots();
-                    break;
-                case SituationState.Ongoing:
-                    slots = situation.situationWindow.GetOngoingSlots();
-                    break;
-                default:
-                    throw new ActionFailureException(this, "Situation is not in an appropriate state to slot cards.");
-            }
-
-            var slot = slots.FirstOrDefault(x => x.GoverningSlotSpecification.Id == this.SlotId);
-            if (!slot)
-            {
-                return false;
-            }
-
-            var card = CardManager.ChooseCard(this.CardMatcher);
-            if (card == null)
-            {
-                return false;
-            }
-
-
-            return true;
+            this.Card = card;
         }
 
         public void Execute()
@@ -90,13 +49,15 @@ namespace Autoccultist.Actor.Actions
                 throw new ActionFailureException(this, "Situation has no matching slot.");
             }
 
-            var card = CardManager.ChooseCard(this.CardMatcher);
-            if (card == null)
-            {
-                throw new ActionFailureException(this, "No matching card was found.");
-            }
+            // This may throw if something happened to the card before we got to it.
+            var card = this.Card.GetToken() as IElementStack;
+
+            // TODO: Throw if card is already being used by a situation.
 
             GameAPI.SlotCard(slot, card);
+
+            // Release our lock on the card, now that we made use of it
+            this.Card.Release();
         }
     }
 }
