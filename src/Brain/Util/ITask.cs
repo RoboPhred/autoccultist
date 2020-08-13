@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Autoccultist.Brain.Config;
 
 namespace Autoccultist.Brain.Util
 {
@@ -12,5 +9,6 @@ namespace Autoccultist.Brain.Util
 
         bool ShouldExecute(IGameState state);
         bool IsSatisfied(IGameState state);
+        IList<Imperative> GetImperatives();
     }
 }
