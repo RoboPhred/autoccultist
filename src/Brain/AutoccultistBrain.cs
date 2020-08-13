@@ -8,9 +8,7 @@ namespace Autoccultist.Brain
     {
         private BrainConfig config;
 
-        private Goal currentInstinct;   // A "critical-level" Goal: any imperatives through this goal are always considered top priority.
         private Goal currentGoal;       // A "goal-level" Goal: this is important, and prioritized over the aspiration.
-        private Goal currentAspiration; // A "maintenance-level" Goal: this is a Goal to work on with spare available resources.
 
         public AutoccultistBrain(BrainConfig config)
         {
@@ -24,9 +22,7 @@ namespace Autoccultist.Brain
                 this.currentGoal = null;
             }
 
-            this.currentInstinct = this.currentInstinct ?? this.ObtainNextGoal(TaskPriority.Critical);
             this.currentGoal = this.currentGoal ?? this.ObtainNextGoal();
-            this.currentAspiration = this.currentAspiration ?? this.ObtainNextGoal(TaskPriority.Maintenance);
         }
 
         public void Stop()
@@ -120,19 +116,22 @@ namespace Autoccultist.Brain
 
         private IList<Imperative> GetSatisfiableImperatives()
         {
-            Goal[] goals = new Goal[] { this.currentInstinct, this.currentGoal, this.currentAspiration };
-            IEnumerable<Imperative> imperatives =
-                from goal in goals
-                from imperative in (goal.Imperatives)
+            if(this.currentGoal == null)
+            {
+                return new Imperative[0];
+            }
+
+            var imperatives =
+                from imperative in this.currentGoal.Imperatives
                 where imperative.CanExecute(this)
                 orderby goal.Priority, imperative.Priority
                 select imperative;
-            return new List<Imperative>(imperatives);
+            return imperatives.ToList();
         }
 
         private bool IsGoalSatisfied()
         {
-            if (this.currentGoal == null)
+            if(this.currentGoal == null)
             {
                 return true;
             }
@@ -148,16 +147,15 @@ namespace Autoccultist.Brain
             return this.currentGoal.CanActivate(this);
         }
 
-        private Goal ObtainNextGoal(TaskPriority goalLevel = TaskPriority.Goal)
+        private void ObtainNextGoal()
         {
             var goals =
                 from goal in this.config.Goals
                 where goal.CanActivate(this)
                 where goal.Priority == goalLevel
                 select goal;
-            var ReturnValue = goals.FirstOrDefault();
-            AutoccultistPlugin.Instance.LogTrace($"Next {goalLevel.ToString()} goal is {ReturnValue?.Name ?? "[none]"}");
-            return ReturnValue;
+            this.currentGoal = goals.FirstOrDefault();
+            AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
         }
     }
 }
