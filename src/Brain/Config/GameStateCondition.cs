@@ -31,7 +31,16 @@ namespace Autoccultist.Brain.Config
             switch(this.Mode)
             {
             case ConditionMode.AllOf:
-                return this.Requirements.All(condition => condition.IsConditionMet(state));
+                List<CardChoice> cardsRequired = new List<CardChoice>();
+                foreach(ICondition condition in this.Requirements)
+                {
+                    cardsRequired.Add(condition as CardChoice);
+                    if(condition is GameStateCondition)
+                    {
+                        cardsRequired.AddRange((condition as GameStateCondition).GetAllCardsNeeded());
+                    }
+                }
+                return state.CardsCanBeSatisfied(cardsRequired);
             case ConditionMode.AnyOf:
                 return this.Requirements.Any(condition => condition.IsConditionMet(state));
             case ConditionMode.NoneOf:
@@ -40,6 +49,8 @@ namespace Autoccultist.Brain.Config
                 throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }
         }
+
+        private IEnumerable<CardChoice> GetAllCardsNeeded() => throw new NotImplementedException();
 
         void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
@@ -58,10 +69,10 @@ namespace Autoccultist.Brain.Config
                 this.Mode = ConditionMode.NoneOf;
                 break;
             default:
-                throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"noneOf\".");
+                throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
             }
 
-            this.Requirements = new List<ICondition>( (List<CardChoice>) nestedObjectDeserializer(typeof(List<CardChoice>)));
+            this.Requirements = new List<ICondition>((List<CardChoice>) nestedObjectDeserializer(typeof(List<CardChoice>)));
 
             if(parser.Accept<Scalar>(out var _))
             {
