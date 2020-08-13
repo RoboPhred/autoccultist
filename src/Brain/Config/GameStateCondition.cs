@@ -1,87 +1,86 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autoccultist.src.Brain.Util;
+using YamlDotNet.Core;
+using YamlDotNet.Core.Events;
+using YamlDotNet.Serialization;
 
 namespace Autoccultist.Brain.Config
 {
-    public class GameStateCondition : ICondition
+    public class GameStateCondition : IYamlConvertible, ICondition
     {
         // The trend in yaml is to use properties for mode selectors.
         //  See kubernetes and docker compose files.
 
-        public ConditionMode mode { get; set; }
+        public ConditionMode Mode { get; set; }
         public List<ICondition> Requirements { get; set; }
-
 
         public GameStateCondition()
         {
         }
 
-        public GameStateCondition(ConditionMode Mode, params CardChoice[] requirements)
+        public GameStateCondition(ConditionMode mode, params ICondition[] requirements)
         {
-            mode = Mode;
-            Requirements = new List<ICondition>(requirements);
+            this.Mode = mode;
+            this.Requirements = new List<ICondition>(requirements);
         }
-
 
         public bool IsConditionMet(IGameState state)
         {
-            if(mode == ConditionMode.NONE_OF)
+            switch (this.Mode)
             {
-                foreach (var condition in this.Requirements)
-                {
-                    if(condition.IsConditionMet(state))
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                case ConditionMode.AllOf:
+                    return this.Requirements.Any(condition => !condition.IsConditionMet(state));
+                case ConditionMode.AnyOf:
+                    return this.Requirements.Any(condition => condition.IsConditionMet(state));
+                case ConditionMode.NoneOf:
+                    return !this.Requirements.Any(condition => condition.IsConditionMet(state));
+                default:
+                    throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }
-            else if (mode == ConditionMode.ALL_OF)
-            {
-                foreach(var condition in this.Requirements)
-                {
-                    if(!condition.IsConditionMet(state))
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else if (mode == ConditionMode.ANY_OF)
-            {
-                foreach(var condition in this.Requirements)
-                {
-                    if(condition.IsConditionMet(state))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            return false;
         }
 
-        public static GameStateCondition NeedsAllOf(params CardChoice[] requirements)
+        void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
-            return new GameStateCondition(ConditionMode.ALL_OF, requirements);
+            parser.Consume<MappingStart>();
+
+            var key = parser.Consume<Scalar>();
+            switch (key.Value)
+            {
+                case "allOf":
+                    this.Mode = ConditionMode.AllOf;
+                    break;
+                case "anyOf":
+                    this.Mode = ConditionMode.AnyOf;
+                    break;
+                case "noneOf":
+                    this.Mode = ConditionMode.NoneOf;
+                    break;
+                default:
+                    throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
+            }
+
+            this.Requirements = (List<ICondition>)nestedObjectDeserializer(typeof(List<ICondition>));
+
+            if (parser.Accept<Scalar>(out var _))
+            {
+                throw new YamlException(key.Start, key.End, "GameStateCondition must only have one property.");
+            }
+
+            parser.Consume<MappingEnd>();
         }
 
-        public static GameStateCondition NeedsAnyOf(params CardChoice[] requirements)
+        void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
         {
-            return new GameStateCondition(ConditionMode.ANY_OF, requirements);
-        }
-
-        public static GameStateCondition NeedsNoneOf(params CardChoice[] requirements)
-        {
-            return new GameStateCondition(ConditionMode.NONE_OF, requirements);
+            throw new NotSupportedException();
         }
     }
 
     public enum ConditionMode
     {
-        ANY_OF,
-        ALL_OF,
-        NONE_OF
+        AnyOf,
+        AllOf,
+        NoneOf
     }
 }
