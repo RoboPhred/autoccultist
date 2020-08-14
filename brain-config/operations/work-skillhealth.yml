@@ -1,0 +1,9 @@
+name: Work with any Physique
+situation: work
+startingRecipe:
+  slots:
+    work:
+      aspects:
+        healthskill: 1
+    Health:
+      elementId: health
