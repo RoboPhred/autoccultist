@@ -10,8 +10,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
 
-        public GameStateCondition RequiredCards { get; set; }
-        public GameStateCondition CompletedWhen { get; set; }
+        public IGameStateConditionConfig Requirements { get; set; }
+        public IGameStateConditionConfig CompletedWhen { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
 
@@ -41,7 +41,7 @@ namespace Autoccultist.Brain.Config
                 return false;
             }
 
-            if (this.RequiredCards != null && !this.RequiredCards.IsConditionMet(state))
+            if (this.Requirements != null && !this.Requirements.IsConditionMet(state))
             {
                 return false;
             }

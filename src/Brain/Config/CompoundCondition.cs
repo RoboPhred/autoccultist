@@ -2,29 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autoccultist.src.Brain.Util;
-using Autoccultist.src.Brain;
+using Autoccultist.Yaml;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
 namespace Autoccultist.Brain.Config
 {
-    public class GameStateCondition : IYamlConvertible, ICondition
+    [DuckTypeKeys(new[] { "allOf", "anyOf", "oneOf" })]
+    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible, ICondition
     {
-        // The trend in yaml is to use properties for mode selectors.
-        //  See kubernetes and docker compose files.
-
         public ConditionMode Mode { get; set; }
-        public List<ICondition> Requirements { get; set; }
+        public List<IGameStateConditionConfig> Requirements { get; set; } = new List<IGameStateConditionConfig>();
 
-        public GameStateCondition()
+        public void Validate()
         {
-        }
+            if (this.Requirements == null || this.Requirements.Count == 0)
+            {
+                throw new InvalidConfigException("CompoundCondition must have requirements.");
+            }
 
-        public GameStateCondition(ConditionMode mode, params ICondition[] requirements)
-        {
-            this.Mode = mode;
-            this.Requirements = new List<ICondition>(requirements);
+            foreach (var requirement in this.Requirements)
+            {
+                requirement.Validate();
+            }
         }
 
         public bool IsConditionMet(IGameState state)
@@ -37,14 +38,14 @@ namespace Autoccultist.Brain.Config
                 {
                     foreach(ICondition condition in this.Requirements)
                     {
-                        if(condition is CardChoice c)
+                        if(condition is CardChoice cc)
                         {
-                            cardsRequired.Add(c);
+                            cardsRequired.Add(cc);
                         }
 
-                        if(condition is GameStateCondition g)
+                        if(condition is CompoundCondition cg)
                         {
-                            cardsRequired.AddRange(g.GetAllCardsNeeded(state));
+                            cardsRequired.AddRange(cg.GetAllCardsNeeded(state));
                         }
                     }
                 }
@@ -73,7 +74,7 @@ namespace Autoccultist.Brain.Config
                 {
                     switch(condition)
                     {
-                    case GameStateCondition gsc:
+                    case CompoundCondition gsc:
                         list.AddRange(gsc.GetAllCardsNeeded(state));
                         break;
                     case CardChoice cc:
@@ -93,7 +94,7 @@ namespace Autoccultist.Brain.Config
 
             case ConditionMode.AnyOf:
                 throw new NotImplementedException("AnyOf GameStateConditions are not (currently) allowed to be children of AllOf GameStateConditions.");
-
+                
             default:
                 throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }
@@ -119,7 +120,7 @@ namespace Autoccultist.Brain.Config
                 throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
             }
 
-            this.Requirements = new List<ICondition>((List<CardChoice>) nestedObjectDeserializer(typeof(List<CardChoice>)));
+            this.Requirements = (List<IGameStateConditionConfig>)nestedObjectDeserializer(typeof(List<IGameStateConditionConfig>));
 
             if(parser.Accept<Scalar>(out var _))
             {

@@ -9,8 +9,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
         public TaskPriority Priority { get; set; } = TaskPriority.Maintenance;
-        public GameStateCondition RequiredCards { get; set; }
-        public GameStateCondition ForbidWhenCardsPresent { get; set; }
+        public IGameStateConditionConfig Requirements { get; set; }
+        public IGameStateConditionConfig Forbidders { get; set; }
 
         public Operation Operation { get; set; }
 
@@ -21,19 +21,29 @@ namespace Autoccultist.Brain.Config
                 throw new InvalidConfigException($"Imperative {this.Name} must have an operation.");
             }
 
+            if (this.Requirements != null)
+            {
+                this.Requirements.Validate();
+            }
+
+            if (this.Forbidders != null)
+            {
+                this.Forbidders.Validate();
+            }
+
             this.Operation.Validate();
         }
 
         public bool CanExecute(IGameState state)
         {
             // Optionally check required cards for starting the imperative
-            if (this.RequiredCards != null && !this.RequiredCards.IsConditionMet(state))
+            if (this.Requirements != null && !this.Requirements.IsConditionMet(state))
             {
                 return false;
             }
 
             // Sometimes, we want to stop an imperative if other cards are present.
-            if (this.ForbidWhenCardsPresent != null && this.ForbidWhenCardsPresent.IsConditionMet(state))
+            if (this.Forbidders != null && this.Forbidders.IsConditionMet(state))
             {
                 return false;
             }

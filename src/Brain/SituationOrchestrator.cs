@@ -42,6 +42,15 @@ namespace Autoccultist.Brain
             }
         }
 
+        public static void LogStatus()
+        {
+            AutoccultistPlugin.Instance.LogInfo("We are orchestrating:");
+            foreach (var entry in executingOperationsBySituation)
+            {
+                AutoccultistPlugin.Instance.LogInfo($"-- {entry.Key}: {entry.Value.GetType().Name}");
+            }
+        }
+
         public static bool SituationIsAvailable(string situationId)
         {
             var controller = GameAPI.GetSituation(situationId);
@@ -73,10 +82,10 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            var executor = new OperationOrchestration(operation);
-            executingOperationsBySituation[operation.Situation] = executor;
-            executor.Completed += OnExecutorCompleted;
-            executor.Start();
+            var orchestration = new OperationOrchestration(operation);
+            executingOperationsBySituation[operation.Situation] = orchestration;
+            orchestration.Completed += OnOrchestrationCompleted;
+            orchestration.Start();
         }
 
 
@@ -87,17 +96,17 @@ namespace Autoccultist.Brain
                 throw new OperationFailedException($"Cannot dump situation {situationId} because the situation already has an orchestration running.");
             }
 
-            var executor = new DumpSituationOrchestration(situationId);
-            executingOperationsBySituation[situationId] = executor;
-            executor.Completed += OnExecutorCompleted;
-            executor.Start();
+            var orchestration = new DumpSituationOrchestration(situationId);
+            executingOperationsBySituation[situationId] = orchestration;
+            orchestration.Completed += OnOrchestrationCompleted;
+            orchestration.Start();
         }
 
-        private static void OnExecutorCompleted(object sender, EventArgs e)
+        private static void OnOrchestrationCompleted(object sender, EventArgs e)
         {
-            var executor = sender as ISituationOrchestration;
-            executor.Completed -= OnExecutorCompleted;
-            executingOperationsBySituation.Remove(executor.SituationId);
+            var orchestration = sender as ISituationOrchestration;
+            orchestration.Completed -= OnOrchestrationCompleted;
+            executingOperationsBySituation.Remove(orchestration.SituationId);
         }
     }
 }

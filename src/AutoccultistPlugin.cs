@@ -88,6 +88,7 @@ namespace Autoccultist
             {
                 this.LogInfo("Dumping status");
                 this.brain.LogStatus();
+                SituationOrchestrator.LogStatus();
             }
             else if (Input.GetKeyDown(KeyCode.F8))
             {

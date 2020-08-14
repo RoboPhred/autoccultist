@@ -4,57 +4,18 @@ An experimental automata for playing Cultist Simulator.
 
 ## Current Status
 
-Capable of handling an aspirant start. Currently reads the bequest, finds the aquaintance, then levels up health until it gets to the Iron Physique.
+Capable of handling an aspirant start. Currently reads the bequest, finds the aquaintance, then levels up health until it gets to the Steely Physique.
 
-## Issues
+## Configuration
 
-Aspirant brain died to health because it uses health instantly from the completion of one verb to the start of another, giving the magnet slot no time to yank the card.
-Need to satisfy the magnet slots, which means waiting the 20 ticks for them to trigger. Might be cheating if I force the card into the magnet slot, but instantanious
-card movement is already cheaty.
-Probably something for the card manager / slotting scheduler to handle.
+This atomata is entirely configurable by yaml files.
 
-## Notes
-
-Slot solutions - support by element id, and by aspects (required and rejected).
-Also have optimistic slot solutions (do not lock cards, report readyness when cards are not available) and pessimistic slot solutions (lock cards, refuse to start situation solution until all cards are present)
-Ongoing slots should take into account the delay before they can slot cards, to calculate if cards will be available by the time we are ready.
-
-### Card Manager
-
-Card manager should support taking reservations for cards, locking them from use by other solutions. This will let solutions reserve cards when they need a card for an ongoing slot.
-Since card choosers can choose by aspects, we may need to pick out cards at lock-time to be the target card. If it was just by element id, we could simply track the number of locks
-and make sure to leave that number of cards free.
-
-If asked for a card type that is expirable, the card manager should return the card with the shortest expiration time.
-
-### Imperatives should try to preemptively reserve cards
-
-This one is fiddly. An imperative should, on seeing all cards it needs to run, reserve those cards even if its verb is still busy.
-This needs to take into account card expiration (fail to reserve if its verb will be busy for longer than the card exists), ongoing
-recipe duration (fail to reserve if the card will be gone by the time its called for), priority of the imperative (higher priority
-imperatives should be able to break the reservation).
-
-### Slotting manager
-
-Need a way to schedule card movement and let it take place a few ticks after. Few advantages for this:
-
-- Give magnet slots a chance to act.
-  This is critical for things like sickness, where the bot might happily commit its health card straight out of
-  another verb's output slot and prevent sickness from ever seeing health. This ends in death.
-- Make the bot more interesting to look at.
-  The bot should open and close verb windows, and slot cards one after the other. Makes it more pleasing to watch.
-
-## Proposed architecture
-
-The AI will have no state to track the game. Instead, it uses the existance or nonexistance of cards to determine what to do next.
-This will allow it to never get caught off guard by random events or card draws, and let it react to any occurance.
-
-### BrainConfig
+### BrainConfig (brain.yml)
 
 A set of goals to accomplish. This drives the playthrough the AI will make.
 The goals are not in any particular order. Instead, they will get chosen depending on their conditions and the available cards.
 
-### Goal
+### Goal (`goals[]`)
 
 A high level task for the AI to accomplish.
 Example: Increase basic health skill to advanced health skill (healthskilla => healthskillb)
@@ -66,19 +27,17 @@ Goals do not explicitly declare dependencies, but can depend on each other by th
 For example, goal B depends on goal A if A produces a "healthskillb" card, and B declares "healthskillb" a starting requirement.
 
 On startup, AI will go through its goals, find goals that are not satisified yet meet their starting condition, and run one at a time.
-To avoid conflicting verb constraints, lets stick to one goal at a time, and design goals so that all their imperatives coexist.
-Conflicting verbs may be sometimes ok, but other times we will be dealing with expiring cards. If dealing with expiring cards, the AI
-might get stuck in a loop where it keeps switching which goal controls a contested verb, resulting in cards expiring before they can be used to complete
+To avoid conflicting situation constraints, lets stick to one goal at a time, and design goals so that all their imperatives coexist.
+Conflicting situation may be sometimes ok, but other times we will be dealing with expiring cards. If dealing with expiring cards, the AI
+might get stuck in a loop where it keeps switching which goal controls a contested situation, resulting in cards expiring before they can be used to complete
 either goal.
 
 A goal contains a collection of imperatives, all of which are active and working at the same time.
 
-### Imperative
+### Imperative (`goals[].imperatives`)
 
-This is just the name I had in my notes, could use a better one. Imperative might mean a higher level concept than a goal...
-
-An imperative is a set of conditions on which to activate a verb and perform a situation solution.
-An imperative targets a single situation, so multiple imperatives can trigger at once.
+An imperative is a set of conditions on which to activate a situation and perform a situation solution.
+An imperative targets a single situation, so multiple imperatives can trigger at once. However, only one imperative may interact with a situation at a time.
 An imperative will activate a solution when its conditions are met, the situation is free, and no higher priority imperatives want to use the same situation.
 
 Imperatives have 3 priorites
@@ -86,6 +45,10 @@ Imperatives have 3 priorites
 - Critical - Things that need to be done in order to survive. These might get triggered if funds are low or the visions situation is ongoing.
 - GoalOriented - Performing this imperative will bring us closer to our goal. Most imperatives should be this priority.
 - Maintenance - This imperative is to do basic ongoing tasks like make money or take care of a dead card. It can be deferred if a goal oriented task is pending.
+
+### Operation (`goals[].imperatives[].operation`)
+
+An operation is instructions for a full cycle of a verb or situation. It contains the starting recipe, and all ongoing recipes to drive the situation to completion.
 
 ## Installation
 

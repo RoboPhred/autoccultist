@@ -8,7 +8,7 @@ namespace Autoccultist.Brain
     {
         private BrainConfig config;
 
-        private Goal currentGoal;       // A "goal-level" Goal: this is important, and prioritized over the aspiration.
+        private Goal currentGoal;
 
         public AutoccultistBrain(BrainConfig config)
         {
@@ -92,8 +92,8 @@ namespace Autoccultist.Brain
                 foreach(var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
-                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.SituationIsAvailable(imperative.Operation.Situation)}");
-                    foreach(var choice in imperative.Operation.StartingRecipe.Slots)
+                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.IsSituationAvailable(imperative.Operation.Situation)}");
+                    foreach (var choice in imperative.Operation.StartingRecipe.Slots)
                     {
                         AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {this.CardsCanBeSatisfied(new[] { choice.Value })}");
                     }
@@ -104,25 +104,11 @@ namespace Autoccultist.Brain
                 foreach(var goal in this.config.Goals)
                 {
                     AutoccultistPlugin.Instance.LogInfo("Goal " + goal.Name);
-                    if(goal.CompletedWhen.Requirements != null)
-                    {
-                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.Mode.ToString() + "):");
-                        foreach(CardChoice card in goal.RequiredCards.Requirements)
-                        {
-                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
-                        }
-
-                        AutoccultistPlugin.Instance.LogInfo("-- Required cards (" + goal.CompletedWhen.Mode.ToString() + "):");
-                        foreach(CardChoice card in goal.CompletedWhen.Requirements)
-                        {
-                            AutoccultistPlugin.Instance.LogInfo("-- -- " + card + " satisfied " + this.CardsCanBeSatisfied(new[] { card }));
-                        }
-                    }
                 }
             }
         }
 
-        public bool SituationIsAvailable(string situationId)
+        public bool IsSituationAvailable(string situationId)
         {
             return SituationOrchestrator.SituationIsAvailable(situationId);
         }

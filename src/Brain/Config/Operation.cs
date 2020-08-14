@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Autoccultist.Brain.Config
 {
@@ -20,31 +21,32 @@ namespace Autoccultist.Brain.Config
 
         public bool CanExecute(IGameState state)
         {
-            if (!state.SituationIsAvailable(this.Situation))
+            if (!state.IsSituationAvailable(this.Situation))
             {
                 return false;
             }
 
-            if (this.StartingRecipe != null && !this.StartingRecipe.CanExecute(state))
+            IEnumerable<CardChoice> requiredCards = new CardChoice[0];
+
+            // We need to ensure all cards are available, including ongoing.
+
+            //  TODO: More complex and long running situations may not allow us to have all we need right at the start
+            //  We should be able to have optional card choices that do not count to starting.
+            if (this.StartingRecipe != null)
             {
-                return false;
+                requiredCards = requiredCards.Concat(this.StartingRecipe.Slots.Values);
             }
 
             if (this.OngoingRecipes != null)
             {
-                foreach (var ongoing in this.OngoingRecipes.Values)
-                {
-                    // TODO: Should allow these to late-resolve their cards instead of requiring them up-front.
-                    //  maybe a allowIncomplete: true in RecipeSolution itself, or on the CardMatcher
-                    if (!ongoing.CanExecute(state))
-                    {
-                        return false;
-                    }
-                }
+                requiredCards = requiredCards.Concat(
+                    from ongoing in this.OngoingRecipes.Values
+                    from choice in ongoing.Slots.Values
+                    select choice
+                );
             }
 
-            return true;
+            return state.CardsCanBeSatisfied(requiredCards.ToArray());
         }
-
     }
 }
