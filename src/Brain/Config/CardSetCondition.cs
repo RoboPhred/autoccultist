@@ -1,14 +1,13 @@
 using System.Collections.Generic;
+using Autoccultist.src.Brain.Util;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardSetCondition : IGameStateConditionConfig
+    public class CardSetCondition : List<CardChoice>, IGameStateConditionConfig, IBaseCondition
     {
-        public List<CardChoice> CardSet { get; set; }
-
         public void Validate()
         {
-            if (this.CardSet == null || this.CardSet.Count == 0)
+            if (this == null || this.Count == 0)
             {
                 throw new InvalidConfigException("CardSet must have card choices.");
             }
@@ -16,7 +15,7 @@ namespace Autoccultist.Brain.Config
 
         public bool IsConditionMet(IGameState state)
         {
-            return state.CardsCanBeSatisfied(this.CardSet);
+            return state.CardsCanBeSatisfied(this);
         }
     }
 }
