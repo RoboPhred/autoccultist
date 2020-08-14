@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Autoccultist.Brain.Config
 {
-    public class SituationCondition : IGameStateConditionConfig, IGameStateCondition
+    public class SituationCondition : IGameStateConditionConfig
     {
         public string SituationId { get; set; }
 
