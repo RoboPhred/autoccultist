@@ -6,9 +6,9 @@ sharedImperatives:
       anyOf:
         - # Forbid if ill health is occuring
           # TODO: Should only forbid if ongoing slot Affliction is empty
-          situationId: illhealth
+          situation: illhealth
         - # forbid when situation time contains stored stack seasonsickness and it has < 30 seconds remainming in its recipe
-          situationId: time
+          situation: time
           storedCardsMatch:
             - elementId: seasonsickness
           timeRemaining:
