@@ -74,7 +74,7 @@ namespace Autoccultist.Brain.Config
                             cardsRequired.Add(cc);
                             break;
                         case CardSetCondition csc:
-                            cardsRequired.AddRange(csc);
+                            cardsRequired.AddRange(csc.CardSet);
                             break;
                         default:
                             throw new NotImplementedException($"Condition type {condition.GetType()} is not implemented.");
