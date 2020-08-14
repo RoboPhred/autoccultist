@@ -23,6 +23,10 @@ sharedImperatives:
     name: Heal affliction with funds
     priority: critical
     operation: !import operations/heal-affliction-with-funds.yml
+  - &imp-crit-heal-hunger
+    name: Heal Hunger
+    priority: critical
+    operation: !import operations/heal-hunger.yml
   - &imp-crit-dispose-restlessness
     name: Paint away restlessness
     priority: critical
@@ -87,6 +91,7 @@ goals:
       - *imp-crit-heal-injury
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
       - name: Contact Collaborator
         priority: goal
@@ -106,6 +111,9 @@ goals:
       allOf:
         - elementId: health
     imperatives:
+      - *imp-crit-heal-injury
+      - *imp-crit-heal-affliction
+      - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
   - name: Get Health skill A
     requirements:
@@ -123,6 +131,7 @@ goals:
       - *imp-crit-heal-injury
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
       - *imp-goal-vitality-lesson
   - name: Get Health skill B
@@ -171,6 +180,7 @@ goals:
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
       - *imp-crit-heal-injury
+      - *imp-crit-heal-hunger
       - name: Hardened Physique work
         priority: maintenance
         operation: !import operations/work-skillhealthb.yml
@@ -199,6 +209,7 @@ goals:
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
       - *imp-crit-heal-injury
+      - *imp-crit-heal-hunger
       - name: Steely Physique work
         priority: maintenance
         operation: !import operations/work-skillhealthc.yml
