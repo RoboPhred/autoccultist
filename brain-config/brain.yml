@@ -116,7 +116,11 @@ goals:
       # TODO: This is too vague, it might kick in instead of Survive if we have a fatigue around
       #  That is typically ok, but we might want to be able to retire goals after they are completed
       #  Or have them stick to an ordered list, skipping the ones that dont apply at the time.
-      elementId: fatigue
+      anyOf:
+        - elementId: fatigue
+        - elementId: hunger
+        - elementId: injury
+        - elementId: affliction
     completedWhen:
       allOf:
         - elementId: health
