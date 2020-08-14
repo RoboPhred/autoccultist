@@ -2,10 +2,17 @@ sharedImperatives:
   - &imp-maint-work-health
     name: Work with health
     priority: maintenance
-    forbidders:
-      &forbid-during-illhealth # TODO: We should also forbid when situation time contains stored stack seasonsickness and it has < 30 seconds remainming in its recipe
-      situationId: illhealth
-      # TODO: Should only forbid if ongoing slot Affliction is empty
+    forbidders: &forbid-during-illhealth
+      anyOf:
+        - # Forbid if ill health is occuring
+          # TODO: Should only forbid if ongoing slot Affliction is empty
+          situationId: illhealth
+        - # forbid when situation time contains stored stack seasonsickness and it has < 30 seconds remainming in its recipe
+          situationId: time
+          storedCardsMatch:
+            - elementId: seasonsickness
+          timeRemaining:
+            lessThan: 30
     operation: !import operations/work-health.yml
   - &imp-crit-heal-injury
     name: Heal injury with funds

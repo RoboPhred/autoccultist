@@ -10,6 +10,9 @@ namespace Autoccultist.Brain.Config
 
         public SituationStateConfig State { get; set; }
 
+        public string Recipe { get; set; }
+        public TimeComparison TimeRemaining { get; set; }
+
         // It would be nice if this could be IGameStateCondition, but 
         //  it would be an error for it to contain anything other than CardSetCondition and CardChoice objects.
         public List<CardChoice> StoredCardsMatch;
@@ -22,6 +25,11 @@ namespace Autoccultist.Brain.Config
             {
                 throw new InvalidConfigException("SituationCondition must have a situationId.");
             }
+
+            if (this.TimeRemaining != null)
+            {
+                this.TimeRemaining.Validate();
+            }
         }
 
         public bool IsConditionMet(IGameState state)
@@ -31,6 +39,16 @@ namespace Autoccultist.Brain.Config
             if (situation == null)
             {
                 return this.State == SituationStateConfig.Missing;
+            }
+
+            if (this.Recipe != null && situation.SituationClock.RecipeId != this.Recipe)
+            {
+                return false;
+            }
+
+            if (this.TimeRemaining != null && !this.TimeRemaining.IsMatch(situation.SituationClock.TimeRemaining))
+            {
+                return false;
             }
 
             switch (this.State)
