@@ -5,7 +5,7 @@ namespace Autoccultist.Brain.Config
 {
     public class SituationCondition : IGameStateConditionConfig
     {
-        public string SituationId { get; set; }
+        public string Situation { get; set; }
 
 
         public SituationStateConfig State { get; set; }
@@ -21,7 +21,7 @@ namespace Autoccultist.Brain.Config
 
         public void Validate()
         {
-            if (string.IsNullOrEmpty(this.SituationId))
+            if (string.IsNullOrEmpty(this.Situation))
             {
                 throw new InvalidConfigException("SituationCondition must have a situationId.");
             }
@@ -35,7 +35,7 @@ namespace Autoccultist.Brain.Config
         public bool IsConditionMet(IGameState state)
         {
             // TODO: Using GameAPI...  Probably should get this data from IGameState
-            var situation = GameAPI.GetSituation(this.SituationId);
+            var situation = GameAPI.GetSituation(this.Situation);
             if (situation == null)
             {
                 return this.State == SituationStateConfig.Missing;
