@@ -10,7 +10,7 @@ using YamlDotNet.Serialization;
 namespace Autoccultist.Brain.Config
 {
     [DuckTypeKeys(new[] { "allOf", "anyOf", "oneOf" })]
-    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible, ICondition
+    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible
     {
         public ConditionMode Mode { get; set; }
         public List<IGameStateConditionConfig> Requirements { get; set; } = new List<IGameStateConditionConfig>();
@@ -33,28 +33,62 @@ namespace Autoccultist.Brain.Config
             switch(this.Mode)
             {
             case ConditionMode.AllOf:
-                List<CardChoice> cardsRequired = new List<CardChoice>();
                 try
                 {
-                    foreach(ICondition condition in this.Requirements)
+                    // Expand all compound conditions into base conditions
+                    List<IBaseCondition> requirements = new List<IBaseCondition>();
+                    foreach(IGameStateConditionConfig condition in this.Requirements)
                     {
-                        if(condition is CardChoice cc)
+                        if (condition is IBaseCondition bc)
                         {
-                            cardsRequired.Add(cc);
+                            requirements.Add(bc);
                         }
-
-                        if(condition is CompoundCondition cg)
+                        else if (condition is CompoundCondition cg)
                         {
-                            cardsRequired.AddRange(cg.GetAllCardsNeeded(state));
+                            requirements.AddRange(cg.GetAllBaseConditions(state));
                         }
                     }
+
+                    // Parse the base requirements and verify they can all be satisfied.
+                    CardSetCondition cardsRequired = new CardSetCondition();
+                    HashSet<String> situationSet = new HashSet<String>();
+                    foreach (IBaseCondition condition in requirements)
+                    {
+                        switch (condition)
+                        {
+                        case SituationCondition sc:
+                            if (sc.State == SituationStateConfig.Unstarted)
+                            {
+                                if (situationSet.Contains(sc.SituationId))
+                                {
+                                    return false;
+                                }
+                                situationSet.Add(sc.SituationId);
+                            }
+                            else if(!sc.IsConditionMet(state))
+                            {
+                                return false;
+                            }
+                            break;
+                        case CardChoice cc:
+                            cardsRequired.Add(cc);
+                            break;
+                        case CardSetCondition csc:
+                            cardsRequired.AddRange(csc);
+                            break;
+                        default:
+                            throw new NotImplementedException($"Condition type {condition.GetType()} is not implemented.");
+                        }
+                    }
+
+                    return cardsRequired.IsConditionMet(state);
                 }
                 catch(Exception e)
                 {
                     AutoccultistPlugin.Instance.LogWarn(e.Message);
                     return false;
                 }
-                return state.CardsCanBeSatisfied(cardsRequired);
+
             case ConditionMode.AnyOf:
                 return this.Requirements.Any(condition => condition.IsConditionMet(state));
             case ConditionMode.NoneOf:
@@ -64,21 +98,21 @@ namespace Autoccultist.Brain.Config
             }
         }
 
-        private IEnumerable<CardChoice> GetAllCardsNeeded(IGameState state)
+        private IEnumerable<IBaseCondition> GetAllBaseConditions(IGameState state)
         {
             switch(this.Mode)
             {
             case ConditionMode.AllOf:
-                List<CardChoice> list = new List<CardChoice>();
-                foreach(ICondition condition in Requirements)
+                List<IBaseCondition> list = new List<IBaseCondition>();
+                foreach(IGameStateConditionConfig condition in Requirements)
                 {
                     switch(condition)
                     {
                     case CompoundCondition gsc:
-                        list.AddRange(gsc.GetAllCardsNeeded(state));
+                        list.AddRange(gsc.GetAllBaseConditions(state));
                         break;
-                    case CardChoice cc:
-                        list.Add(cc);
+                    case IBaseCondition bc:
+                        list.Add(bc);
                         break;
                     }
                 }
@@ -87,13 +121,13 @@ namespace Autoccultist.Brain.Config
             case ConditionMode.NoneOf:
                 if(this.IsConditionMet(state))
                 {
-                    return new CardChoice[0];
+                    return new IBaseCondition[0];
                 }
 
                 throw new ConditionNotMetException("A 'NoneOf' requirement was not met: " + this.ToString());
 
             case ConditionMode.AnyOf:
-                throw new NotImplementedException("AnyOf GameStateConditions are not (currently) allowed to be children of AllOf GameStateConditions.");
+                throw new NotImplementedException("'AnyOf' CompoundConditions are not (currently) allowed to be children of 'AllOf' CompoundConditions.");
                 
             default:
                 throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");

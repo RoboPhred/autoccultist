@@ -4,7 +4,7 @@ using Autoccultist.src.Brain.Util;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardChoice : ICardMatcher, IGameStateConditionConfig, ICondition
+    public class CardChoice : ICardMatcher, IGameStateConditionConfig, IBaseCondition
     {
         public string ElementId { get; set; }
 
