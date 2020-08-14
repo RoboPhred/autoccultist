@@ -2,6 +2,10 @@ sharedImperatives:
   - &imp-maint-work-health
     name: Work with health
     priority: maintenance
+    forbidders:
+      &forbid-during-illhealth # TODO: We should also forbid when situation time contains stored stack seasonsickness and it has < 30 seconds remainming in its recipe
+      situationId: illhealth
+      # TODO: Should only forbid if ongoing slot Affliction is empty
     operation: !import operations/work-health.yml
   - &imp-crit-heal-injury
     name: Heal injury with funds
@@ -26,6 +30,7 @@ sharedImperatives:
   - &imp-vitality-from-health
     name: Gain vitality from health
     priority: maintenance
+    forbidders: *forbid-during-illhealth
     operation: !import operations/study-health.yml
 
 goals:
@@ -85,6 +90,9 @@ goals:
                 elementId: contactintro
   - name: Wait for health refresh
     requirements:
+      # TODO: This is too vague, it might kick in instead of Survive if we have a fatigue around
+      #  That is typically ok, but we might want to be able to retire goals after they are completed
+      #  Or have them stick to an ordered list, skipping the ones that dont apply at the time.
       elementId: fatigue
     completedWhen:
       allOf:
