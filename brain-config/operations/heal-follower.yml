@@ -1,0 +1,12 @@
+name: Heal a follower
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        follower_wound: 1
+ongoingRecipes:
+  talktofollower_attemptheal:
+    slots:
+      Healing:
+        elementId: funds
