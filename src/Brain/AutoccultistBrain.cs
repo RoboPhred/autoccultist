@@ -8,11 +8,13 @@ namespace Autoccultist.Brain
     {
         private BrainConfig config;
 
+        private IEnumerator<Goal> goalEnumerator;
         private Goal currentGoal;
 
         public AutoccultistBrain(BrainConfig config)
         {
             this.config = config;
+            this.goalEnumerator = config.Goals.GetEnumerator();
         }
 
         public void Start()
@@ -133,11 +135,23 @@ namespace Autoccultist.Brain
 
         private void ObtainNextGoal()
         {
-            var goals =
-                from goal in this.config.Goals
-                where goal.CanActivate(this)
-                select goal;
-            this.currentGoal = goals.FirstOrDefault();
+            this.currentGoal = null;
+
+            // While the detected goal is satisified, move to the next one.
+            while (this.goalEnumerator.Current == null || this.goalEnumerator.Current.IsSatisfied(this))
+            {
+                if (!this.goalEnumerator.MoveNext())
+                {
+                    return;
+                }
+            }
+
+            // If we can activate this goal, do so.
+            if (this.goalEnumerator.Current.CanActivate(this))
+            {
+                this.currentGoal = this.goalEnumerator.Current;
+            }
+
             AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
         }
     }
