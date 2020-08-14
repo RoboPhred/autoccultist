@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     public class SituationCondition : IGameStateConditionConfig
     {

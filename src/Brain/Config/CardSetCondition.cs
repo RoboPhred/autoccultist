@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     public class CardSetCondition : IGameStateConditionConfig
     {

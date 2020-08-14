@@ -6,7 +6,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     [DuckTypeKeys(new[] { "allOf", "anyOf", "oneOf" })]
     public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible

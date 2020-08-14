@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Assets.Core.Interfaces;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     public class CardChoice : ICardMatcher, IGameStateConditionConfig
     {

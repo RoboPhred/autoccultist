@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Autoccultist.Brain.Config.Conditions;
 
 namespace Autoccultist.Brain.Config
 {

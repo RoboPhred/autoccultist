@@ -1,4 +1,6 @@
 
+using Autoccultist.Brain.Config.Conditions;
+
 namespace Autoccultist.Brain.Config
 {
     /**
