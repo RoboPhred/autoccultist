@@ -105,7 +105,6 @@ namespace Autoccultist.Brain
         private static void OnOrchestrationCompleted(object sender, EventArgs e)
         {
             var orchestration = sender as ISituationOrchestration;
-            AutoccultistPlugin.Instance.LogTrace($"An orchestrator completed: {orchestration.SituationId} => {orchestration.GetType().Name}");
             orchestration.Completed -= OnOrchestrationCompleted;
             executingOperationsBySituation.Remove(orchestration.SituationId);
         }
