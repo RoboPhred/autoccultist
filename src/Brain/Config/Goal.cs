@@ -15,8 +15,6 @@ namespace Autoccultist.Brain.Config
 
         public List<Imperative> Imperatives { get; set; }
 
-        public TaskPriority Priority = TaskPriority.Goal;
-
         public void Validate()
         {
             if (string.IsNullOrEmpty(this.Name))
