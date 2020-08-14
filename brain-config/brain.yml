@@ -30,12 +30,10 @@ sharedImperatives:
 
 goals:
   - name: Begin the Intro
-    requiredCards:
-      allOf:
-        - elementId: introjob
+    requirements:
+      elementId: introjob
     completedWhen:
-      allOf:
-        - elementId: bequestintro
+      elementId: bequestintro
     imperatives:
       - name: Work the intro job
         priority: goal
@@ -46,9 +44,8 @@ goals:
               work:
                 elementId: introjob
   - name: Study Bequest
-    requiredCards:
-      allOf:
-        - elementId: bequestintro
+    requirements:
+      elementId: bequestintro
     completedWhen:
       anyOf:
         - elementId: ascensionpowera
@@ -66,9 +63,8 @@ goals:
               Approach:
                 elementId: passion
   - name: Find a Collaborator
-    requiredCards:
-      allOf:
-        - elementId: contactintro
+    requirements:
+      elementId: contactintro
     completedWhen:
       allOf:
         - aspects:
@@ -88,16 +84,15 @@ goals:
               study:
                 elementId: contactintro
   - name: Wait for health refresh
-    requiredCards:
-      allOf:
-        - elementId: fatigue
+    requirements:
+      elementId: fatigue
     completedWhen:
       allOf:
         - elementId: health
     imperatives:
       - *imp-maint-refresh-health
   - name: Get Health skill A
-    requiredCards:
+    requirements:
       allOf:
         - elementId: health
     completedWhen:
@@ -115,9 +110,8 @@ goals:
       - *imp-maint-refresh-health
       - *imp-goal-vitality-lesson
   - name: Get Health skill B
-    requiredCards:
-      allOf:
-        - elementId: skillhealtha
+    requirements:
+      elementId: skillhealtha
     completedWhen:
       anyOf:
         - elementId: skillhealthb
@@ -131,24 +125,24 @@ goals:
       - *imp-crit-heal-injury
       - *imp-vitality-from-health
       - <<: *imp-goal-vitality-lesson
-        forbidWhenCardsPresent:
+        forbidders:
           # Do not monopolize study when we have vitality lessons to study
-          allOf:
+          cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Stronger Physique work
         priority: maintenance
         operation: !import operations/work-skillhealtha.yml
-        forbidWhenCardsPresent:
+        forbidders:
           # Don't steal away our health skill card when we need it to upgrade.
-          allOf:
+          cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Upgrade Stronger Physique to Hardened Physique
         priority: goal
         operation: !import operations/upgrade-skillhealtha.yml
   - name: Get Health skill C
-    requiredCards:
+    requirements:
       allOf:
         - elementId: skillhealthb
     completedWhen:
@@ -163,18 +157,18 @@ goals:
       - *imp-crit-heal-injury
       - *imp-vitality-from-health
       - <<: *imp-goal-vitality-lesson
-        forbidWhenCardsPresent:
+        forbidders:
           # Stop gaining lessons when we have enough
-          allOf:
+          cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Hardened Physique work
         priority: maintenance
         operation: !import operations/work-skillhealthb.yml
-        forbidWhenCardsPresent:
+        forbidders:
           # Stop using our skill card when we have enough lessons
-          allOf:
+          cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
@@ -182,9 +176,8 @@ goals:
         priority: goal
         operation: !import operations/upgrade-skillhealthb.yml
   - name: Survive
-    requiredCards:
-      allOf:
-        - elementId: skillhealthc
+    requirements:
+      elementId: skillhealthc
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness

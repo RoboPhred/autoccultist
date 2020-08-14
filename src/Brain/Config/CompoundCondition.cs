@@ -1,43 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autoccultist.Yaml;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
 namespace Autoccultist.Brain.Config
 {
-    public class GameStateCondition : IYamlConvertible
+    [DuckTypeKeys(new[] { "allOf", "anyOf", "oneOf" })]
+    public class CompoundCondition : IGameStateCondition, IYamlConvertible
     {
-        // The trend in yaml is to use properties for mode selectors.
-        //  See kubernetes and docker compose files.
-
-        public static GameStateCondition NeedsAllOf(params CardChoice[] requirements)
-        {
-            return new GameStateCondition(ConditionMode.AllOf, requirements);
-        }
-
-        public static GameStateCondition NeedsAnyOf(params CardChoice[] requirements)
-        {
-            return new GameStateCondition(ConditionMode.AnyOf, requirements);
-        }
-
-        public static GameStateCondition NeedsNoneOf(params CardChoice[] requirements)
-        {
-            return new GameStateCondition(ConditionMode.NoneOf, requirements);
-        }
-
         public ConditionMode Mode { get; set; }
-        public List<CardChoice> Requirements { get; set; }
+        public List<IGameStateCondition> Requirements { get; set; } = new List<IGameStateCondition>();
 
-        public GameStateCondition()
+        public CompoundCondition()
         {
-        }
-
-        public GameStateCondition(ConditionMode mode, params CardChoice[] requirements)
-        {
-            this.Mode = mode;
-            this.Requirements = new List<CardChoice>(requirements);
         }
 
         public bool IsConditionMet(IGameState state)
@@ -45,11 +23,11 @@ namespace Autoccultist.Brain.Config
             switch (this.Mode)
             {
                 case ConditionMode.AllOf:
-                    return state.CardsCanBeSatisfied(this.Requirements);
+                    return this.Requirements.All(condition => condition.IsConditionMet(state));
                 case ConditionMode.AnyOf:
-                    return this.Requirements.Any(card => state.CardsCanBeSatisfied(new[] { card }));
+                    return this.Requirements.Any(condition => condition.IsConditionMet(state));
                 case ConditionMode.NoneOf:
-                    return !this.Requirements.Any(card => state.CardsCanBeSatisfied(new[] { card }));
+                    return !this.Requirements.Any(condition => condition.IsConditionMet(state));
                 default:
                     throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }
@@ -75,7 +53,7 @@ namespace Autoccultist.Brain.Config
                     throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
             }
 
-            this.Requirements = (List<CardChoice>)nestedObjectDeserializer(typeof(List<CardChoice>));
+            this.Requirements = (List<IGameStateCondition>)nestedObjectDeserializer(typeof(List<IGameStateCondition>));
 
             if (parser.Accept<Scalar>(out var _))
             {

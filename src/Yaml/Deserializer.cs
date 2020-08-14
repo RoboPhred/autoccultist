@@ -37,7 +37,7 @@ namespace Autoccultist.Yaml
                     .IgnoreUnmatchedProperties()
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
-                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnBottom())
+                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
                     .Build();
                 var fileContents = File.ReadAllText(filePath);
                 var parser = new MergingParser(new Parser(new StringReader(fileContents)));

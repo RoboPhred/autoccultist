@@ -3,7 +3,7 @@ using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardChoice : ICardMatcher
+    public class CardChoice : ICardMatcher, IGameStateCondition
     {
         public string ElementId { get; set; }
 
@@ -39,6 +39,11 @@ namespace Autoccultist.Brain.Config
             }
 
             return true;
+        }
+
+        public bool IsConditionMet(IGameState state)
+        {
+            return state.CardsCanBeSatisfied(new[] { this });
         }
 
         public override string ToString()

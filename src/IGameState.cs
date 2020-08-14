@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Autoccultist.Brain
+namespace Autoccultist
 {
     // TODO: We can probably get rid of this now that CardManager and SituationSolutionRunner are static
     public interface IGameState

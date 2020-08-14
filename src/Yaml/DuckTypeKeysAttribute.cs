@@ -9,7 +9,7 @@ namespace Autoccultist.Yaml
     {
         public IReadOnlyList<string> Keys { get; private set; }
 
-        public DuckTypeKeysAttribute(IEnumerable<string> keys)
+        public DuckTypeKeysAttribute(string[] keys)
         {
             this.Keys = keys.ToList();
         }

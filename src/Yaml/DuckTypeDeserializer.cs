@@ -30,10 +30,11 @@ namespace Autoccultist.Yaml
 
             var keys = new List<string>();
             MappingEnd mappingEnd;
-            while (!reader.Accept<MappingEnd>(out mappingEnd))
+            while (!reader.TryConsume<MappingEnd>(out mappingEnd))
             {
                 var key = reader.Consume<Scalar>();
                 keys.Add(key.Value);
+                replayParser.Enqueue(key);
 
                 // The value might be more complex than just a scaler
                 //  This code is cribbed from the SkipThisAndNestedEvents IParser extension method
@@ -60,7 +61,7 @@ namespace Autoccultist.Yaml
                 throw new YamlException(
                     mappingStart.Start,
                     mappingEnd.End,
-                    $"Cannot identify instance type for {expectedType.Name} based on its properties.  Must be one of: {string.Join(", ", candidates.Select(x => x.Name))}"
+                    $"Cannot identify instance type for {expectedType.Name} based on its properties {string.Join(", ", keys)}.  Must be one of: {string.Join(", ", candidates.Select(x => x.Name))}"
                 );
             }
 
@@ -101,18 +102,19 @@ namespace Autoccultist.Yaml
             // YamlDotNet handles any public instance properties or fields.
 
             var properties =
-                from property in type.GetProperties(BindingFlags.Instance)
+                from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 let yamlAttribute = property.GetCustomAttribute<YamlMemberAttribute>()
                 let name = yamlAttribute?.Alias ?? Deserializer.NamingConvention.Apply(property.Name)
                 select name;
 
             var fields =
-                from field in type.GetFields(BindingFlags.Instance)
+                from field in type.GetFields(BindingFlags.Public | BindingFlags.Instance)
                 let yamlAttribute = field.GetCustomAttribute<YamlMemberAttribute>()
                 let name = yamlAttribute?.Alias ?? Deserializer.NamingConvention.Apply(field.Name)
                 select name;
 
-            return properties.Concat(fields).ToList();
+            var keys = properties.Concat(fields).ToList();
+            return keys;
         }
     }
 }

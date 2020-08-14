@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Autoccultist.Yaml
 {
-    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class, AllowMultiple = true)]
     class DuckTypeCandidateAttribute : Attribute
     {
         public Type CandidateType { get; private set; }
