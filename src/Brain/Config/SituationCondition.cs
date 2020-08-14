@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Autoccultist.src.Brain.Util;
 
 namespace Autoccultist.Brain.Config
 {
-    public class SituationCondition : IGameStateConditionConfig, IBaseCondition
+    public class SituationCondition : IGameStateConditionConfig, IGameStateCondition
     {
         public string SituationId { get; set; }
 
