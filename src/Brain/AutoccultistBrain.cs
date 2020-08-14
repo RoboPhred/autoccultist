@@ -37,12 +37,14 @@ namespace Autoccultist.Brain
         {
         }
 
-        public void Reset()
+        public void Reset(BrainConfig ConfigIn = null)
         {
-            if(!this.CanGoalActivate())
+            if(!this.CanGoalActivate() || ConfigIn != null)
             {
                 this.currentGoal = null;
             }
+
+            this.config = ConfigIn ?? this.config;
 
             if(this.currentGoal == null)
             {
