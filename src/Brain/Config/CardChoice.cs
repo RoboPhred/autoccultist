@@ -3,7 +3,7 @@ using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardChoice : ICardMatcher, IGameStateConditionSimple
+    public class CardChoice : ICardMatcher, IGameStateConditionConfig
     {
         public string ElementId { get; set; }
 

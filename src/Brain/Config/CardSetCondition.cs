@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardSetCondition : IGameStateConditionSimple
+    public class CardSetCondition : IGameStateConditionConfig
     {
         public List<CardChoice> CardSet { get; set; } = new List<CardChoice>();
 
