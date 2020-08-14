@@ -150,7 +150,7 @@ goals:
       - *imp-crit-heal-injury
       - name: Stronger Physique work
         priority: maintenance
-        operation: !import operations/work-skillhealtha.yml
+        operation: !import operations/work-skillhealth.yml
         forbidders:
           # Don't steal away our health skill card when we need it to upgrade.
           cardSet:
@@ -183,7 +183,7 @@ goals:
       - *imp-crit-heal-hunger
       - name: Hardened Physique work
         priority: maintenance
-        operation: !import operations/work-skillhealthb.yml
+        operation: !import operations/work-skillhealth.yml
         forbidders:
           # Stop gaining lessons when we have enough
           cardSet:
@@ -212,4 +212,6 @@ goals:
       - *imp-crit-heal-hunger
       - name: Steely Physique work
         priority: maintenance
-        operation: !import operations/work-skillhealthc.yml
+        operation: !import operations/work-skillhealth.yml
+              morevitality:
+                elementId: vitality
