@@ -19,52 +19,14 @@ namespace Autoccultist.Actor.Actions
             this.SlotId = slotId;
             this.CardMatcher = cardMatcher;
         }
-        public bool CanExecute()
-        {
-            var situation = GameAPI.GetSituation(this.SituationId);
-            if (situation == null)
-            {
-                return false;
-            }
-
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Complete:
-                case SituationState.FreshlyStarted:
-                    return false;
-            }
-
-            IList<RecipeSlot> slots;
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Unstarted:
-                    slots = situation.situationWindow.GetStartingSlots();
-                    break;
-                case SituationState.Ongoing:
-                    slots = situation.situationWindow.GetOngoingSlots();
-                    break;
-                default:
-                    throw new ActionFailureException(this, "Situation is not in an appropriate state to slot cards.");
-            }
-
-            var slot = slots.FirstOrDefault(x => x.GoverningSlotSpecification.Id == this.SlotId);
-            if (!slot)
-            {
-                return false;
-            }
-
-            var card = CardManager.ChooseCard(this.CardMatcher);
-            if (card == null)
-            {
-                return false;
-            }
-
-
-            return true;
-        }
 
         public void Execute()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                throw new ActionFailureException(this, "Game is not interactable at this moment.");
+            }
+
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {

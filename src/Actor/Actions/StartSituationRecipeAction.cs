@@ -9,14 +9,14 @@ namespace Autoccultist.Actor.Actions
         {
             this.SituationId = situationId;
         }
-        public bool CanExecute()
-        {
-            // TODO: Return false if unable to start.
-            return GameAPI.GetSituation(this.SituationId) != null;
-        }
 
         public void Execute()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                throw new ActionFailureException(this, "Game is not interactable at this moment.");
+            }
+
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {

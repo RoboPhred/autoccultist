@@ -16,6 +16,11 @@ namespace Autoccultist.Actor.Actions
 
         public void Execute()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                throw new ActionFailureException(this, "Game is not interactable at this moment.");
+            }
+
             GameAPI.SetPaused(Paused);
         }
     }

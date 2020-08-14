@@ -45,7 +45,7 @@ namespace Autoccultist.Actor
                 // This is a new action set, start execution
                 if (!currentActionSet.PendingActions.MoveNext())
                 {
-                    // Didnt have any actions, try again next time.
+                    // Empty pending action set?  Try again next time.
                     currentActionSet = null;
                     return;
                 }
@@ -64,14 +64,6 @@ namespace Autoccultist.Actor
 
             try
             {
-                // Initially, this waited until we could execute to execute,
-                //  but because things can happen that are never recoverable,
-                //  we should throw instead.
-                // if (!nextAction.CanExecute())
-                // {
-                //     return;
-                // }
-
                 // Execute the action, clear it out, and update the last update time
                 //  to delay for the next action.
                 nextAction.Execute();
