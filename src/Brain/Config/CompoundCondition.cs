@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Autoccultist.Yaml;
@@ -31,14 +31,14 @@ namespace Autoccultist.Brain.Config
         {
             switch (this.Mode)
             {
-                case ConditionMode.AllOf:
-                    return this.Requirements.All(condition => condition.IsConditionMet(state));
-                case ConditionMode.AnyOf:
-                    return this.Requirements.Any(condition => condition.IsConditionMet(state));
-                case ConditionMode.NoneOf:
-                    return !this.Requirements.Any(condition => condition.IsConditionMet(state));
-                default:
-                    throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
+            case ConditionMode.AllOf:
+                return this.Requirements.All(condition => condition.IsConditionMet(state));
+            case ConditionMode.AnyOf:
+                return this.Requirements.Any(condition => condition.IsConditionMet(state));
+            case ConditionMode.NoneOf:
+                return !this.Requirements.Any(condition => condition.IsConditionMet(state));
+            default:
+                throw new NotImplementedException($"Condition mode {this.Mode} is not implemented.");
             }
         }
 
@@ -49,20 +49,20 @@ namespace Autoccultist.Brain.Config
             var key = parser.Consume<Scalar>();
             switch (key.Value)
             {
-                case "allOf":
-                    this.Mode = ConditionMode.AllOf;
-                    break;
-                case "anyOf":
-                    this.Mode = ConditionMode.AnyOf;
-                    break;
-                case "noneOf":
-                    this.Mode = ConditionMode.NoneOf;
-                    break;
-                default:
-                    throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
+            case "allOf":
+                this.Mode = ConditionMode.AllOf;
+                break;
+            case "anyOf":
+                this.Mode = ConditionMode.AnyOf;
+                break;
+            case "noneOf":
+                this.Mode = ConditionMode.NoneOf;
+                break;
+            default:
+                throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
             }
 
-            this.Requirements = (List<IGameStateConditionConfig>)nestedObjectDeserializer(typeof(List<IGameStateConditionConfig>));
+            this.Requirements = (List<IGameStateConditionConfig>) nestedObjectDeserializer(typeof(List<IGameStateConditionConfig>));
 
             if (parser.Accept<Scalar>(out var _))
             {
