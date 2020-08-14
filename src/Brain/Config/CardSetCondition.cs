@@ -4,7 +4,7 @@ namespace Autoccultist.Brain.Config
 {
     public class CardSetCondition : IGameStateConditionConfig
     {
-        public List<CardChoice> CardSet { get; set; }
+        public List<CardChoice> CardSet { get; set; } = new List<CardChoice>();
 
         public void Validate()
         {
@@ -18,5 +18,10 @@ namespace Autoccultist.Brain.Config
         {
             return state.CardsCanBeSatisfied(this.CardSet);
         }
+
+        public IEnumerator<CardChoice> GetEnumerator() => this.CardSet.GetEnumerator();
+
+        public void Add(CardChoice cc) => CardSet.Add(cc);
+        public void AddRange(IEnumerable<CardChoice> ecc) => CardSet.AddRange(ecc);
     }
 }

@@ -15,7 +15,7 @@ namespace Autoccultist.Brain.Config
 
         // It would be nice if this could be IGameStateCondition, but 
         //  it would be an error for it to contain anything other than CardSetCondition and CardChoice objects.
-        public List<CardChoice> StoredCardsMatch;
+        public CardSetCondition StoredCardsMatch;
 
         public Dictionary<string, int> StoredAspects;
 
