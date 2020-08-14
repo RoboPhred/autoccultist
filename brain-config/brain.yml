@@ -16,10 +16,18 @@ sharedImperatives:
             lessThan: 30
     operation: !import operations/work-health.yml
   - &imp-crit-heal-injury
+    name: Heal injury with vitality
+    priority: critical
+    operation: !import operations/heal-injury-with-vitality.yml
+  - &imp-crit-heal-affliction
+    name: Heal affliction with vitality
+    priority: critical
+    operation: !import operations/heal-affliction-with-vitality.yml
+  - &imp-crit-heal-injury-funds
     name: Heal injury with funds
     priority: critical
     operation: !import operations/heal-injury-with-funds.yml
-  - &imp-crit-heal-affliction
+  - &imp-crit-heal-affliction-funds
     name: Heal affliction with funds
     priority: critical
     operation: !import operations/heal-affliction-with-funds.yml
@@ -89,8 +97,10 @@ goals:
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
       - name: Contact Collaborator
@@ -112,7 +122,9 @@ goals:
         - elementId: health
     imperatives:
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
   - name: Get Health skill A
@@ -129,8 +141,10 @@ goals:
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
       - *imp-goal-vitality-lesson
@@ -147,7 +161,10 @@ goals:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
+      - *imp-crit-heal-hunger
       - name: Stronger Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -179,7 +196,9 @@ goals:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-heal-hunger
       - name: Hardened Physique work
         priority: maintenance
@@ -208,7 +227,9 @@ goals:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-heal-hunger
       - name: Steely Physique work
         priority: maintenance
