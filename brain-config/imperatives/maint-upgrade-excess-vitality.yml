@@ -1,0 +1,15 @@
+name: Convert excess vitality
+priority: maintenance
+requirements:
+  cardSet:
+  - elementId: vitalityplus
+  - elementId: vitalityplus
+operation:
+  name: Learn lesson from vitality
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: vitality
+      morevitality:
+        elementId: vitality
