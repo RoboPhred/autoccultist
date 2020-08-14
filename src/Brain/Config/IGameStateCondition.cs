@@ -1,7 +1,6 @@
 ﻿namespace Autoccultist.Brain.Config
 {
-    interface IGameStateCondition
+    interface IGameStateConditionSimple : IGameStateConditionConfig
     {
-        bool IsConditionMet(IGameState state);
     }
 }
