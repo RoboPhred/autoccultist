@@ -10,7 +10,8 @@ sharedImperatives:
         - # forbid when situation time contains stored stack seasonsickness and it has < 30 seconds remainming in its recipe
           situationId: time
           storedCardsMatch:
-            - elementId: seasonsickness
+            cardSet:
+              - elementId: seasonsickness
           timeRemaining:
             lessThan: 30
     operation: !import operations/work-health.yml
@@ -108,7 +109,7 @@ goals:
       - *imp-maint-refresh-health
   - name: Get Health skill A
     requirements:
-      allOf:
+      cardSet:
         - elementId: health
     completedWhen:
       anyOf:
@@ -150,7 +151,7 @@ goals:
       - <<: *imp-goal-vitality-lesson
         forbidders:
           # Do not monopolize study when we have vitality lessons to study
-          allOf:
+          cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
       - name: Upgrade Stronger Physique to Hardened Physique
@@ -158,7 +159,7 @@ goals:
         operation: !import operations/upgrade-skillhealtha.yml
   - name: Get Health skill C
     requirements:
-      allOf:
+      cardSet:
         - elementId: skillhealthb
     completedWhen:
       anyOf:
