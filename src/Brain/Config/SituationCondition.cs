@@ -8,7 +8,7 @@ namespace Autoccultist.Brain.Config
         public string Situation { get; set; }
 
 
-        public SituationStateConfig State { get; set; }
+        public SituationStateConfig? State { get; set; }
 
         public string Recipe { get; set; }
         public TimeComparison TimeRemaining { get; set; }
