@@ -21,7 +21,7 @@ namespace Autoccultist.Brain.Config
 
         public bool CanExecute(IGameState state)
         {
-            if (!state.SituationIsAvailable(this.Situation))
+            if (!state.IsSituationAvailable(this.Situation))
             {
                 return false;
             }

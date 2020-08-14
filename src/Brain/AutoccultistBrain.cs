@@ -82,7 +82,7 @@ namespace Autoccultist.Brain
                 foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
-                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.SituationIsAvailable(imperative.Operation.Situation)}");
+                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.IsSituationAvailable(imperative.Operation.Situation)}");
                     foreach (var choice in imperative.Operation.StartingRecipe.Slots)
                     {
                         AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {this.CardsCanBeSatisfied(new[] { choice.Value })}");
@@ -98,7 +98,7 @@ namespace Autoccultist.Brain
             }
         }
 
-        public bool SituationIsAvailable(string situationId)
+        public bool IsSituationAvailable(string situationId)
         {
             return SituationOrchestrator.SituationIsAvailable(situationId);
         }

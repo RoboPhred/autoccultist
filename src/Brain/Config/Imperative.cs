@@ -9,8 +9,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
         public TaskPriority Priority { get; set; } = TaskPriority.Maintenance;
-        public IGameStateCondition Requirements { get; set; }
-        public IGameStateCondition Forbidders { get; set; }
+        public IGameStateConditionConfig Requirements { get; set; }
+        public IGameStateConditionConfig Forbidders { get; set; }
 
         public Operation Operation { get; set; }
 
@@ -19,6 +19,16 @@ namespace Autoccultist.Brain.Config
             if (this.Operation == null)
             {
                 throw new InvalidConfigException($"Imperative {this.Name} must have an operation.");
+            }
+
+            if (this.Requirements != null)
+            {
+                this.Requirements.Validate();
+            }
+
+            if (this.Forbidders != null)
+            {
+                this.Forbidders.Validate();
             }
 
             this.Operation.Validate();

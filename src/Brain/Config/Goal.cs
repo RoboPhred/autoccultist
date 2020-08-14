@@ -10,8 +10,8 @@ namespace Autoccultist.Brain.Config
     {
         public string Name { get; set; }
 
-        public IGameStateCondition Requirements { get; set; }
-        public IGameStateCondition CompletedWhen { get; set; }
+        public IGameStateConditionConfig Requirements { get; set; }
+        public IGameStateConditionConfig CompletedWhen { get; set; }
 
         public List<Imperative> Imperatives { get; set; }
 

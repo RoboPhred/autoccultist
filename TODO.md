@@ -1,3 +1,5 @@
 - Operations and imperatives should automatically get a name based on the yaml file and line they were defined on
 - BrainConfig validation should be implemented alongside the yaml parser to capture the file and line number
   - There is an example of this in the YamlDotNet github
+- Either make all data come from IGameState, or get rid of it completely.
+  - We are still going to need something to handle reserved cards. Maybe IGameState can have a list of unreserved or unconsumed cards and a method to reserve / consume them.

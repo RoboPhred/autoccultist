@@ -3,11 +3,19 @@ using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain.Config
 {
-    public class CardChoice : ICardMatcher, IGameStateCondition
+    public class CardChoice : ICardMatcher, IGameStateConditionConfig
     {
         public string ElementId { get; set; }
 
         public Dictionary<string, int> Aspects { get; set; }
+
+        public void Validate()
+        {
+            if (string.IsNullOrEmpty(this.ElementId) && (this.Aspects == null || this.Aspects.Count == 0))
+            {
+                throw new InvalidConfigException("Card choice must have either an elementId or aspects.");
+            }
+        }
 
         public bool CardMatches(IElementStack card)
         {

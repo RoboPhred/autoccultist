@@ -9,13 +9,22 @@ using YamlDotNet.Serialization;
 namespace Autoccultist.Brain.Config
 {
     [DuckTypeKeys(new[] { "allOf", "anyOf", "oneOf" })]
-    public class CompoundCondition : IGameStateCondition, IYamlConvertible
+    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible
     {
         public ConditionMode Mode { get; set; }
-        public List<IGameStateCondition> Requirements { get; set; } = new List<IGameStateCondition>();
+        public List<IGameStateConditionConfig> Requirements { get; set; } = new List<IGameStateConditionConfig>();
 
-        public CompoundCondition()
+        public void Validate()
         {
+            if (this.Requirements == null || this.Requirements.Count == 0)
+            {
+                throw new InvalidConfigException("CompoundCondition must have requirements.");
+            }
+
+            foreach (var requirement in this.Requirements)
+            {
+                requirement.Validate();
+            }
         }
 
         public bool IsConditionMet(IGameState state)
@@ -53,7 +62,7 @@ namespace Autoccultist.Brain.Config
                     throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
             }
 
-            this.Requirements = (List<IGameStateCondition>)nestedObjectDeserializer(typeof(List<IGameStateCondition>));
+            this.Requirements = (List<IGameStateConditionConfig>)nestedObjectDeserializer(typeof(List<IGameStateConditionConfig>));
 
             if (parser.Accept<Scalar>(out var _))
             {
