@@ -96,4 +96,11 @@ namespace Autoccultist.Brain.Config.Conditions
             return true;
         }
     }
+
+    public enum SituationStateConfig
+    {
+        Missing,
+        Unstarted,
+        Ongoing
+    }
 }
