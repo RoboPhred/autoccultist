@@ -11,6 +11,22 @@ namespace Autoccultist.Brain.Config.Conditions
     public class CardChoice : ICardChooser, ICardConditionConfig
     {
         /// <summary>
+        /// Specify whether the card choice should go for the oldest or youngest card it can find.
+        /// </summary>
+        public enum CardAgeSelection
+        {
+            /// <summary>
+            /// The choice should choose the card with the least lifetime remaining.
+            /// </summary>
+            Oldest,
+
+            /// <summary>
+            /// The choice should choose the card with the most lifetime remaining.
+            /// </summary>
+            Youngest,
+        }
+
+        /// <summary>
         /// Gets or sets the element id of the card to choose.
         /// If left empty, the element id will not be factored into the card choice.
         /// </summary>
@@ -39,6 +55,11 @@ namespace Autoccultist.Brain.Config.Conditions
         /// </summary>
         public List<string> ForbiddenElementIds { get; set; }
 
+        /// <summary>
+        /// Gets or sets the age bias by which to choose time-limited cards.
+        /// </summary>
+        public CardAgeSelection? AgeBias { get; set; }
+
         /// <inheritdoc/>
         public void Validate()
         {
@@ -61,11 +82,26 @@ namespace Autoccultist.Brain.Config.Conditions
                 where this.Aspects == null || card.Aspects.HasAspects(this.Aspects)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != false
                 where !this.IsUnique.HasValue || card.IsUnique == this.IsUnique.Value
-                let cardWeight = card.Aspects.GetWeight() - (this.Aspects?.GetWeight() ?? 0)
-                orderby cardWeight ascending // We want the lowest weight card we can find
                 select card;
 
-            return candidates.FirstOrDefault();
+            var candidatesOrdered = (IOrderedEnumerable<ICardState>)candidates;
+
+            // Sort for age bias.
+            if (this.AgeBias.HasValue)
+            {
+                if (this.AgeBias == CardAgeSelection.Oldest)
+                {
+                    candidatesOrdered = candidates.OrderBy(card => card.LifetimeRemaining);
+                }
+                else if (this.AgeBias == CardAgeSelection.Youngest)
+                {
+                    candidatesOrdered = candidates.OrderByDescending(card => card.LifetimeRemaining);
+                }
+            }
+
+            candidatesOrdered = candidatesOrdered.ThenBy(card => card.Aspects.GetWeight());
+
+            return candidatesOrdered.FirstOrDefault();
         }
 
         /// <inheritdoc/>
