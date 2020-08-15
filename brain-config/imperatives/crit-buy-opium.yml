@@ -1,4 +1,5 @@
 name: Buy a Tincture of Opium
+priority: critical
 requirements:
   situation: despair
   storedCardsMatch:

@@ -234,4 +234,5 @@ goals:
         operation: !import operations/work-skillhealth.yml
       - !import imperatives/maint-upgrade-excess-vitality.yml
       - !import imperatives/maint-buy-books.yml
+      - !import imperatives/maint-translate-books.yml
       - !import imperatives/crit-buy-opium.yml
