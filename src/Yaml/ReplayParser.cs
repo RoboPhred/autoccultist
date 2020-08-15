@@ -1,5 +1,4 @@
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
@@ -19,6 +18,7 @@ namespace Autoccultist.Yaml
             {
                 throw new InvalidOperationException("Cannot enqueue to a ReplayParser that has already been started.");
             }
+
             this.replayEvents.Add(parsingEvent);
         }
 

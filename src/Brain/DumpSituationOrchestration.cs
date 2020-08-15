@@ -1,26 +1,37 @@
-using System;
-using System.Collections.Generic;
-using Autoccultist.Actor;
-using Autoccultist.Actor.Actions;
-
 namespace Autoccultist.Brain
 {
-    class DumpSituationOrchestration : ISituationOrchestration
+    using System;
+    using System.Collections.Generic;
+    using Autoccultist.Actor;
+    using Autoccultist.Actor.Actions;
+
+    /// <summary>
+    /// An orchestration that dumps all cards from its situation.
+    /// </summary>
+    public class DumpSituationOrchestration : ISituationOrchestration
     {
-        public event EventHandler Completed;
-
-        public string SituationId { get; private set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DumpSituationOrchestration"/> class.
+        /// </summary>
+        /// <param name="situationId">The situation id of the situation to dump.</param>
         public DumpSituationOrchestration(string situationId)
         {
             this.SituationId = situationId;
         }
 
+        /// <inheritdoc/>
+        public event EventHandler Completed;
+
+        /// <inheritdoc/>
+        public string SituationId { get; }
+
+        /// <inheritdoc/>
         public void Start()
         {
             this.DumpSituation();
         }
 
+        /// <inheritdoc/>
         public void Update()
         {
             // Nothing to do here, waiting on the Actor to finish the dump.
@@ -38,10 +49,7 @@ namespace Autoccultist.Brain
             }
             finally
             {
-                if (this.Completed != null)
-                {
-                    this.Completed(this, EventArgs.Empty);
-                }
+                this.Completed?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -54,7 +62,7 @@ namespace Autoccultist.Brain
             //  This happens with transient situations like suspicion.
             yield return new CloseSituationAction(this.SituationId)
             {
-                IgnoreFailures = true
+                IgnoreFailures = true,
             };
         }
     }

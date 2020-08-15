@@ -1,61 +1,61 @@
-using System.Linq;
-using System.Collections.Generic;
-using Autoccultist.Brain.Config;
-
 namespace Autoccultist.Brain
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Autoccultist.Brain.Config;
+
+    /// <summary>
+    /// The AutoccultistBrain takes a BrainConfig and executes it against the game.
+    /// </summary>
     public class AutoccultistBrain : IGameState
     {
-        private BrainConfig config;
+        private readonly BrainConfig config;
 
         private IEnumerator<Goal> goalEnumerator;
         private Goal currentGoal;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoccultistBrain"/> class.
+        /// </summary>
+        /// <param name="config">The config to use.</param>
         public AutoccultistBrain(BrainConfig config)
         {
             this.config = config;
             this.goalEnumerator = config.Goals.GetEnumerator();
         }
 
-        private void ResetGoalIfSatisfiedOrNull()
-        {
-            if(this.IsGoalSatisfied())
-            {
-                this.currentGoal = null;
-            }
-
-            if(this.currentGoal == null)
-            {
-                this.ObtainNextGoal();
-            }
-        }
-
+        /// <summary>
+        /// Starts the brain executing the configured plan.
+        /// </summary>
         public void Start()
         {
-            ResetGoalIfSatisfiedOrNull();
+            this.ResetGoalIfSatisfiedOrNull();
         }
 
+        /// <summary>
+        /// Stops the brain executing the configured plan.
+        /// </summary>
         public void Stop()
         {
         }
 
+        /// <summary>
+        /// Clears the current goal, resets progress tracking, and tries to obtain the first possible goal.
+        /// </summary>
         public void Reset()
         {
-            if(!this.CanGoalActivate())
-            {
-                this.currentGoal = null;
-            }
-
-            if(this.currentGoal == null)
-            {
-                this.ObtainNextGoal();
-            }
+            this.currentGoal = null;
+            this.goalEnumerator = this.config.Goals.GetEnumerator();
+            this.ObtainNextGoal();
         }
 
+        /// <summary>
+        /// Checks to see if the goal is still valid, and if any goal imperatives should be triggered.
+        /// </summary>
         public void Update()
         {
-            ResetGoalIfSatisfiedOrNull();
-            if(this.currentGoal == null)
+            this.ResetGoalIfSatisfiedOrNull();
+            if (this.currentGoal == null)
             {
                 return;
             }
@@ -68,15 +68,15 @@ namespace Autoccultist.Brain
                 group imperative.Operation by imperative.Operation.Situation into situationGroup
                 select situationGroup;
 
-            foreach(var group in candidateGroups)
+            foreach (var group in candidateGroups)
             {
                 var operation = group.FirstOrDefault();
-                if(operation == null)
+                if (operation == null)
                 {
                     continue;
                 }
 
-                if(!SituationOrchestrator.SituationIsAvailable(operation.Situation))
+                if (!SituationOrchestrator.SituationIsAvailable(operation.Situation))
                 {
                     continue;
                 }
@@ -85,13 +85,16 @@ namespace Autoccultist.Brain
             }
         }
 
+        /// <summary>
+        /// Dumps information on the state of the brain to the console.
+        /// </summary>
         public void LogStatus()
         {
             AutoccultistPlugin.Instance.LogInfo(string.Format("My goal is {0}", this.currentGoal != null ? this.currentGoal.Name : "<none>"));
             AutoccultistPlugin.Instance.LogInfo(string.Format("I have {0} satisfiable imperatives", this.GetSatisfiableImperatives().Count));
-            if(this.currentGoal != null)
+            if (this.currentGoal != null)
             {
-                foreach(var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
+                foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
                     AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.IsSituationAvailable(imperative.Operation.Situation)}");
@@ -103,26 +106,41 @@ namespace Autoccultist.Brain
             }
             else
             {
-                foreach(var goal in this.config.Goals)
+                foreach (var goal in this.config.Goals)
                 {
                     AutoccultistPlugin.Instance.LogInfo("Goal " + goal.Name);
                 }
             }
         }
 
+        /// <inheritdoc/>
         public bool IsSituationAvailable(string situationId)
         {
             return SituationOrchestrator.SituationIsAvailable(situationId);
         }
 
+        /// <inheritdoc/>
         public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
         {
             return CardManager.CardsCanBeSatisfied(choices);
         }
 
+        private void ResetGoalIfSatisfiedOrNull()
+        {
+            if (this.IsGoalSatisfied())
+            {
+                this.currentGoal = null;
+            }
+
+            if (this.currentGoal == null)
+            {
+                this.ObtainNextGoal();
+            }
+        }
+
         private IList<Imperative> GetSatisfiableImperatives()
         {
-            if(this.currentGoal == null)
+            if (this.currentGoal == null)
             {
                 return new Imperative[0];
             }
@@ -136,20 +154,12 @@ namespace Autoccultist.Brain
 
         private bool IsGoalSatisfied()
         {
-            if(this.currentGoal == null)
+            if (this.currentGoal == null)
             {
                 return true;
             }
-            return this.currentGoal.IsSatisfied(this);
-        }
 
-        private bool CanGoalActivate()
-        {
-            if (this.currentGoal == null)
-            {
-                return false;
-            }
-            return this.currentGoal.CanActivate(this);
+            return this.currentGoal.IsSatisfied(this);
         }
 
         private void ObtainNextGoal()
@@ -157,7 +167,7 @@ namespace Autoccultist.Brain
             this.currentGoal = null;
 
             // While the detected goal is satisified, move to the next one.
-            while (this.goalEnumerator.Current == null || this.goalEnumerator.Current.IsSatisfied(this))
+            while (this.goalEnumerator.Current?.IsSatisfied(this) != false)
             {
                 if (!this.goalEnumerator.MoveNext())
                 {

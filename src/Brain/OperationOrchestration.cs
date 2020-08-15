@@ -1,23 +1,55 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.CS.TabletopUI;
-using Assets.TabletopUi;
-using Autoccultist.Brain.Config;
-using Autoccultist.Actor;
-using Autoccultist.Actor.Actions;
-
 namespace Autoccultist.Brain
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Assets.CS.TabletopUI;
+    using Assets.TabletopUi;
+    using Autoccultist.Actor;
+    using Autoccultist.Actor.Actions;
+    using Autoccultist.Brain.Config;
+
+    /// <summary>
+    /// An orchestration of a situation that executes an operation.
+    /// </summary>
     public class OperationOrchestration : ISituationOrchestration
     {
-        // We need to wait to see if we are really complete, or just transitioning.
-        public static TimeSpan CompleteAwaitTime { get; set; } = TimeSpan.FromSeconds(0.2);
+        private readonly Operation operation;
 
-        private Operation operation;
+        private OperationState operationState = OperationState.Starting;
+        private string ongoingRecipe;
+        private DateTime? completionDebounceTime = null;
 
+        /// <inheritdoc/>
         public event EventHandler Completed;
 
+        /// <summary>
+        /// The state of the operation being executed.
+        /// </summary>
+        private enum OperationState
+        {
+            /// <summary>
+            /// The operation is starting and slotting is initial cards
+            /// </summary>
+            Starting,
+
+            /// <summary>
+            /// The operation is performing its recipes and waiting on the result
+            /// </summary>
+            Ongoing,
+
+            /// <summary>
+            /// The operation has finished and we are waiting for the contents to dump.
+            /// </summary>
+            Completing,
+        }
+
+        /// <summary>
+        /// Gets or sets the time delay to check if a situation is really completed, or just transitioning between two recipes.
+        /// </summary>
+        public static TimeSpan CompleteAwaitTime { get; set; } = TimeSpan.FromSeconds(0.2);
+
+        /// <inheritdoc/>
         public string SituationId
         {
             get
@@ -35,19 +67,21 @@ namespace Autoccultist.Brain
                 {
                     AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} not found.");
                 }
+
                 return situation;
             }
         }
 
-        private OperationState operationState = OperationState.Starting;
-        private string ongoingRecipe;
-        private DateTime? completionDebounceTime = null;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationOrchestration"/> class.
+        /// </summary>
+        /// <param name="operation">The operation for this orchestration to execute.</param>
         public OperationOrchestration(Operation operation)
         {
             this.operation = operation;
         }
 
+        /// <inheritdoc/>
         public void Start()
         {
             var situation = this.Situation;
@@ -60,6 +94,7 @@ namespace Autoccultist.Brain
             this.RunCoroutine(this.StartOperationCoroutine());
         }
 
+        /// <inheritdoc/>
         public void Update()
         {
             if (this.Situation == null)
@@ -67,7 +102,7 @@ namespace Autoccultist.Brain
                 throw new Exception("Tried to update a situation solution with no situation.");
             }
 
-            // TODO: We want to hook into the completion of the situation rather than scanning it every update.
+            /* TODO: We want to hook into the completion of the situation rather than scanning it every update. */
 
             var state = this.Situation.SituationClock.State;
 
@@ -90,14 +125,14 @@ namespace Autoccultist.Brain
                 // We have two final states: Complete (has output cards) and Unstarted (no output cards).
                 if (state == SituationState.Complete || state == SituationState.Unstarted)
                 {
-                    if (completionDebounceTime == null)
+                    if (this.completionDebounceTime == null)
                     {
                         // Start the timer for waiting out to see if this is a real completion.
                         // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
                         //  so we need to delay to make sure this is a full and final completion.
-                        completionDebounceTime = DateTime.Now + CompleteAwaitTime;
+                        this.completionDebounceTime = DateTime.Now + CompleteAwaitTime;
                     }
-                    else if (completionDebounceTime <= DateTime.Now)
+                    else if (this.completionDebounceTime <= DateTime.Now)
                     {
                         // Enough time has passed that we can consider this operation completed.
                         this.operationState = OperationState.Completing;
@@ -121,10 +156,7 @@ namespace Autoccultist.Brain
 
         private void End()
         {
-            if (this.Completed != null)
-            {
-                this.Completed(this, EventArgs.Empty);
-            }
+            this.Completed?.Invoke(this, EventArgs.Empty);
         }
 
         private void ContinueOperation()
@@ -162,20 +194,21 @@ namespace Autoccultist.Brain
 
             // Get the first card.  Slotting this will usually create additional slots
             var slots = this.Situation.situationWindow.GetStartingSlots();
-            var firstSlot = slots.First();
-            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, this.operation.StartingRecipe);
+            var firstSlot = slots[0];
+            var firstSlotAction = this.CreateSlotActionFromRecipe(firstSlot, this.operation.StartingRecipe);
             if (firstSlotAction == null)
             {
                 // First slot of starting situation is required.
                 throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlot.GoverningSlotSpecification.Id} has no card choice.");
             }
+
             yield return firstSlotAction;
 
             // Refresh the slots and get the rest of the cards
             slots = this.Situation.situationWindow.GetStartingSlots();
             foreach (var slot in slots.Skip(1))
             {
-                var slotAction = CreateSlotActionFromRecipe(slot, this.operation.StartingRecipe);
+                var slotAction = this.CreateSlotActionFromRecipe(slot, this.operation.StartingRecipe);
                 if (slotAction != null)
                 {
                     yield return slotAction;
@@ -208,7 +241,7 @@ namespace Autoccultist.Brain
                 yield break;
             }
 
-            var firstSlot = slots.First();
+            var firstSlot = slots[0];
 
             if (firstSlot.GetTokenInSlot() != null)
             {
@@ -223,7 +256,7 @@ namespace Autoccultist.Brain
             }
 
             // Get the first card.  Slotting this will usually create additional slots
-            var firstSlotAction = CreateSlotActionFromRecipe(firstSlot, recipe);
+            var firstSlotAction = this.CreateSlotActionFromRecipe(firstSlot, recipe);
             if (firstSlotAction == null)
             {
                 // Not sure if the first slot of ongoing actions is always required...
@@ -235,7 +268,7 @@ namespace Autoccultist.Brain
             slots = this.Situation.situationWindow.GetOngoingSlots();
             foreach (var slot in slots.Skip(1))
             {
-                var slotAction = CreateSlotActionFromRecipe(slot, recipe);
+                var slotAction = this.CreateSlotActionFromRecipe(slot, recipe);
                 if (slotAction != null)
                 {
                     yield return slotAction;
@@ -288,16 +321,6 @@ namespace Autoccultist.Brain
                 AutoccultistPlugin.Instance.LogWarn($"Failed to run operation {this.operation.Name}: {ex.Message}");
                 this.Abort();
             }
-        }
-
-        enum OperationState
-        {
-            Starting,
-            // The operation is performing its recipes and waiting on the result
-            Ongoing,
-
-            // The operation has finished and we are waiting for the contents to dump.
-            Completing
         }
     }
 }
