@@ -2,8 +2,9 @@ name: Convert excess vitality
 priority: maintenance
 requirements:
   cardSet:
-  - elementId: vitalityplus
-  - elementId: vitalityplus
+    - elementId: vitality
+    - elementId: vitality
+    - elementId: vitality
 operation:
   name: Learn lesson from vitality
   situation: study
@@ -13,3 +14,19 @@ operation:
         elementId: vitality
       morevitality:
         elementId: vitality
+forbidders:
+  anyOf:
+  - cardSet:
+      - elementId: glimmering
+      - elementId: glimmering
+  - cardSet:
+      - elementId: erudition
+      - elementId: erudition
+  - cardSet:
+      - elementId: glimmeringplus
+      - elementId: glimmering
+  - cardSet:
+      - elementId: eruditionplus
+      - elementId: erudition
+  - aspects:
+      text: 1
