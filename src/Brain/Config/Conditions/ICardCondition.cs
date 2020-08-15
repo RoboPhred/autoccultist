@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Autoccultist.Yaml;
 
 namespace Autoccultist.Brain.Config.Conditions
 {
+    [DuckTypeCandidate(typeof(CardSetCondition))]
+    [DuckTypeCandidate(typeof(CardChoice))]
     public interface ICardCondition : IGameStateConditionConfig
     {
         List<CardChoice> CardSet { get; }
