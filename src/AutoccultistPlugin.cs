@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Autoccultist.Brain;
 using Autoccultist.Brain.Config;
 using Autoccultist.Actor;

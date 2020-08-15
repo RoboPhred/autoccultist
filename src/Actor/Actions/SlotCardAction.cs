@@ -1,18 +1,22 @@
-// TODO: Choose previously reserved card and clear its reservation.
-// TODO: Move this logic to a card manager and take care of reservations there
-using System.Collections.Generic;
-using System.Linq;
-using Assets.CS.TabletopUI;
-
 namespace Autoccultist.Actor.Actions
 {
-    class SlotCardAction : IAutoccultistAction
-    {
-        public string SituationId { get; private set; }
-        public string SlotId { get; private set; }
-        public ICardMatcher CardMatcher { get; private set; }
+    using System.Collections.Generic;
+    using System.Linq;
+    using Assets.CS.TabletopUI;
 
+    /// <summary>
+    /// An action to slot a card into a slot of a situation.
+    /// </summary>
+    public class SlotCardAction : IAutoccultistAction
+    {
         // TODO: This should take a specific card reservation, not a card matcher.
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SlotCardAction"/> class.
+        /// </summary>
+        /// <param name="situationId">The situation id of the situation to slot the card into.</param>
+        /// <param name="slotId">The slot id of the slot in the situation to slot the card into.</param>
+        /// <param name="cardMatcher">The card matcher to choose a card to slot.</param>
         public SlotCardAction(string situationId, string slotId, ICardMatcher cardMatcher)
         {
             this.SituationId = situationId;
@@ -20,6 +24,22 @@ namespace Autoccultist.Actor.Actions
             this.CardMatcher = cardMatcher;
         }
 
+        /// <summary>
+        /// Gets the situation id of the situation to slot the card into.
+        /// </summary>
+        public string SituationId { get; }
+
+        /// <summary>
+        /// Gets the slot id of the slot in the situation to slot the card into.
+        /// </summary>
+        public string SlotId { get; }
+
+        /// <summary>
+        /// Gets the card matcher that will get the card to slot.
+        /// </summary>
+        public ICardMatcher CardMatcher { get; }
+
+        /// <inheritdoc/>
         public void Execute()
         {
             if (!GameAPI.IsInteractable)
