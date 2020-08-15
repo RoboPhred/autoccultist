@@ -187,7 +187,6 @@ namespace Autoccultist.Brain
 
         private IEnumerable<IAutoccultistAction> StartOperationCoroutine()
         {
-            yield return new SetPausedAction(true);
             yield return new OpenSituationAction(this.SituationId);
             yield return new DumpSituationAction(this.SituationId);
 
@@ -230,7 +229,6 @@ namespace Autoccultist.Brain
             }
 
             yield return new CloseSituationAction(this.SituationId);
-            yield return new SetPausedAction(false);
         }
 
         private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe, bool standalone = true)
@@ -252,7 +250,6 @@ namespace Autoccultist.Brain
 
             if (standalone)
             {
-                yield return new SetPausedAction(true);
                 yield return new OpenSituationAction(this.SituationId);
             }
 
@@ -280,7 +277,6 @@ namespace Autoccultist.Brain
             if (standalone)
             {
                 yield return new CloseSituationAction(this.SituationId);
-                yield return new SetPausedAction(false);
             }
         }
 

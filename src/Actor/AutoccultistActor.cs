@@ -56,6 +56,8 @@ namespace Autoccultist.Actor
                 currentActionSet = PendingActionSets.DequeueOrDefault();
                 if (currentActionSet == null)
                 {
+                    // No more action sets
+                    OnIdle();
                     return;
                 }
 
@@ -77,6 +79,9 @@ namespace Autoccultist.Actor
             }
 
             var nextAction = currentActionSet.PendingActions.Current;
+
+            // We now have something to do
+            OnActive();
 
             try
             {
@@ -103,6 +108,16 @@ namespace Autoccultist.Actor
                 currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
                 currentActionSet = null;
             }
+        }
+
+        private static void OnActive()
+        {
+            GameAPI.SetPaused(true);
+        }
+
+        private static void OnIdle()
+        {
+            GameAPI.SetPaused(false);
         }
 
         private class PendingActionSet
