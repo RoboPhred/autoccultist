@@ -10,5 +10,7 @@
     <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
         <!-- Do not require exceptions to have specific constructors.  Some of our exceptions require particular data. -->
         <Rule Id="RCS1194" Action="None" />
+        <!-- Do not require `if() { return false }; return true` to be condensed to one return -->
+        <Rule Id="RCS1073" Action="None" />
     </Rules>
 </RuleSet>

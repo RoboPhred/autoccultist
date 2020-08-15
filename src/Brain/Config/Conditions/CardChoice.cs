@@ -21,6 +21,18 @@ namespace Autoccultist.Brain.Config.Conditions
         /// </summary>
         public Dictionary<string, int> Aspects { get; set; }
 
+        /// <summary>
+        /// Gets or sets a list of aspects forbidden to be on the chosen card.
+        /// Mainly used when specifying matching aspects.
+        /// </summary>
+        public List<string> ForbiddenAspects { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of elements forbidden from being matched.
+        /// Mainly used when specifying matching aspects.
+        /// </summary>
+        public List<string> ForbiddenElementIds { get; set; }
+
         /// <inheritdoc/>
         public void Validate()
         {
@@ -38,9 +50,15 @@ namespace Autoccultist.Brain.Config.Conditions
                 return false;
             }
 
+            if (this.ForbiddenElementIds?.Contains(this.ElementId) == true)
+            {
+                return false;
+            }
+
+            var cardAspects = card.GetAspects();
+
             if (this.Aspects != null)
             {
-                var cardAspects = card.GetAspects();
                 foreach (var aspectPair in this.Aspects)
                 {
                     if (!cardAspects.TryGetValue(aspectPair.Key, out int cardAspect))
@@ -57,6 +75,11 @@ namespace Autoccultist.Brain.Config.Conditions
                         return false;
                     }
                 }
+            }
+
+            if (this.ForbiddenAspects?.Intersect(cardAspects.Keys).Any() == true)
+            {
+                return false;
             }
 
             return true;
