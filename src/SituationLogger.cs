@@ -1,30 +1,33 @@
-using System.Collections.Generic;
-using System.Text;
-using Assets.Core;
-using Assets.Core.Interfaces;
-using Assets.CS.TabletopUI;
-using Assets.TabletopUi;
-
 namespace Autoccultist
 {
-    static class SituationLogger
+    using System.Collections.Generic;
+    using System.Text;
+    using Assets.Core;
+    using Assets.Core.Interfaces;
+    using Assets.CS.TabletopUI;
+    using Assets.TabletopUi;
+
+    /// <summary>
+    /// Utility classes for logging the status of situations.
+    /// </summary>
+    internal static class SituationLogger
     {
-        public static void LogSituations(string matchToken = null)
+        /// <summary>
+        /// Dump information about the situations to the console.
+        /// </summary>
+        public static void LogSituations()
         {
             LogInfo("Seeking situation tokens...");
             foreach (var situationController in GameAPI.GetAllSituations())
             {
-                if (matchToken != null && situationController.GetTokenId() != matchToken)
-                {
-                    continue;
-                }
                 LogInfo("We found a situation token - " + situationController.GetTokenId());
                 DumpSituationStatus(situationController);
             }
+
             LogInfo("...Done seeking situation tokens");
         }
 
-        static void DumpSituationStatus(SituationController controller)
+        private static void DumpSituationStatus(SituationController controller)
         {
             LogInfo("- state: " + controller.SituationClock.State);
             LogInfo("- recipe id: " + controller.SituationClock.RecipeId);
@@ -46,7 +49,7 @@ namespace Autoccultist
             DumpElements(controller.GetOutputStacks());
         }
 
-        static void DumpSlots(IList<RecipeSlot> slots)
+        private static void DumpSlots(IList<RecipeSlot> slots)
         {
             foreach (var slot in slots)
             {
@@ -76,24 +79,22 @@ namespace Autoccultist
                         LogInfo("- - - - lifetime remaining: " + asStack.LifetimeRemaining);
                         var stackAspects = AspectsToString(asStack.GetAspects());
                         LogInfo("- - - - aspects: " + stackAspects);
-
                     }
                 }
             }
         }
 
-        static void DumpElements(IEnumerable<IElementStack> stacks)
+        private static void DumpElements(IEnumerable<IElementStack> stacks)
         {
             foreach (var stack in stacks)
             {
                 LogInfo("- - " + stack.EntityId);
                 LogInfo("- - - quantity: " + stack.Quantity);
                 LogInfo("- - - lifetime remaining: " + stack.LifetimeRemaining);
-
             }
         }
 
-        static string AspectsToString(IAspectsDictionary aspects)
+        private static string AspectsToString(IAspectsDictionary aspects)
         {
             var builder = new StringBuilder();
             foreach (var aspect in aspects)
@@ -104,12 +105,13 @@ namespace Autoccultist
             var str = builder.ToString();
             if (str.Length == 0)
             {
-                return "";
+                return string.Empty;
             }
+
             return str.Substring(0, str.Length - 2);
         }
 
-        static void LogInfo(string message)
+        private static void LogInfo(string message)
         {
             AutoccultistPlugin.Instance.LogTrace(message);
         }

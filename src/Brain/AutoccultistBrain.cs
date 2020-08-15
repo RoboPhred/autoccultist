@@ -13,8 +13,6 @@ namespace Autoccultist.Brain
 
         private IEnumerator<Goal> goalEnumerator;
 
-        private const bool FEATURE_SWITCH_LINEAR_GOALS = false;
-
         private Goal currentGoal;
 
         /// <summary>
@@ -188,36 +186,12 @@ namespace Autoccultist.Brain
 
         private void ObtainNextGoal()
         {
-            if (FEATURE_SWITCH_LINEAR_GOALS)
-            {
-                this.currentGoal = null;
-
-                // While the detected goal is satisified, move to the next one.
-                while (this.goalEnumerator.Current?.IsSatisfied(this) != false)
-                {
-                    if (!this.goalEnumerator.MoveNext())
-                    {
-                        return;
-                    }
-                }
-
-                // If we can activate this goal, do so.
-                if (this.goalEnumerator.Current.CanActivate(this))
-                {
-                    this.currentGoal = this.goalEnumerator.Current;
-                }
-
-                AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
-            }
-            else
-            {
-                var goals =
-                    from goal in this.config.Goals
-                    where goal.CanActivate(this)
-                    select goal;
-                this.currentGoal = goals.FirstOrDefault();
-                AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
-            }
+            var goals =
+                from goal in this.config.Goals
+                where goal.CanActivate(this)
+                select goal;
+            this.currentGoal = goals.FirstOrDefault();
+            AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
         }
     }
 }

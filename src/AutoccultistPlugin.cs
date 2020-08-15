@@ -73,8 +73,8 @@ namespace Autoccultist
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         this.LogInfo("Reloading and Restarting brain");
-                        var Config = this.LoadBrainConfig();
-                        this.brain.Reset(Config);
+                        var config = this.LoadBrainConfig();
+                        this.brain.Reset(config);
                     }
                     else
                     {
