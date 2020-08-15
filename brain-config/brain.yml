@@ -122,8 +122,10 @@ goals:
         - elementId: injury
         - elementId: affliction
     completedWhen:
-      allOf:
+      anyOf:
         - elementId: health
+        - aspects:
+            healthskill: 1
     imperatives:
       - *imp-crit-heal-injury
       - *imp-crit-heal-injury-funds
@@ -136,12 +138,9 @@ goals:
       cardSet:
         - elementId: health
     completedWhen:
-      anyOf:
-        - elementId: skillhealtha
-        - elementId: skillhealthb
-        - elementId: skillhealthc
-        - elementId: skillhealthd_strength
-        - elementId: skillhealthd_grace
+      cardSet:
+        - aspects:
+            healthskill: 1
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
@@ -156,11 +155,9 @@ goals:
     requirements:
       elementId: skillhealtha
     completedWhen:
-      anyOf:
-        - elementId: skillhealthb
-        - elementId: skillhealthc
-        - elementId: skillhealthd_strength
-        - elementId: skillhealthd_grace
+      cardSet:
+        - aspects:
+            healthskill: 2
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
@@ -192,10 +189,9 @@ goals:
       cardSet:
         - elementId: skillhealthb
     completedWhen:
-      anyOf:
-        - elementId: skillhealthc
-        - elementId: skillhealthd_strength
-        - elementId: skillhealthd_grace
+      cardSet:
+        - aspects:
+            healthskill: 3
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
@@ -226,7 +222,9 @@ goals:
         operation: !import operations/upgrade-skillhealthb.yml
   - name: Survive
     requirements:
-      elementId: skillhealthc
+      cardSet:
+        - aspects:
+            healthskill: 3
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
