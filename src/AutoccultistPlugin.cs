@@ -1,11 +1,14 @@
-using System.IO;
-using Autoccultist.Brain;
-using Autoccultist.Brain.Config;
-using Autoccultist.Actor;
-using UnityEngine;
-
 namespace Autoccultist
 {
+    using System.IO;
+    using Autoccultist.Actor;
+    using Autoccultist.Brain;
+    using Autoccultist.Brain.Config;
+    using UnityEngine;
+
+    /// <summary>
+    /// The main entrypoint for Autoccultist, loaded by BenInEx.
+    /// </summary>
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.Autoccultist", "Autoccultist", "0.0.1")]
     public class AutoccultistPlugin : BepInEx.BaseUnityPlugin
     {
@@ -13,12 +16,18 @@ namespace Autoccultist
 
         private AutoccultistBrain brain;
 
+        /// <summary>
+        /// Gets the instance of the plugin.
+        /// </summary>
         public static AutoccultistPlugin Instance
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the directory the mod dll is located in.
+        /// </summary>
         public static string AssemblyDirectory
         {
             get
@@ -29,28 +38,27 @@ namespace Autoccultist
             }
         }
 
-        void Start()
+        /// <summary>
+        /// Starts the mod.
+        /// </summary>
+        public void Start()
         {
             Instance = this;
 
             Dispatcher.Initialize();
 
             var brainConfig = this.LoadBrainConfig();
-            LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
+            this.LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
 
             this.brain = new AutoccultistBrain(brainConfig);
 
             this.LogInfo("Autoccultist initialized.");
         }
 
-        BrainConfig LoadBrainConfig()
-        {
-            var configPath = System.IO.Path.Combine(AssemblyDirectory, "brain.yml");
-            this.LogInfo(string.Format("Loading config from {0}", configPath));
-            return BrainConfig.Load(configPath);
-        }
-
-        void Update()
+        /// <summary>
+        /// Runs an update tick on the mod.
+        /// </summary>
+        public void Update()
         {
             if (Input.GetKeyDown(KeyCode.F11))
             {
@@ -62,7 +70,7 @@ namespace Autoccultist
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         this.LogInfo("Reloading brain");
-                        LoadBrainConfig();
+                        this.LoadBrainConfig();
                         this.LogInfo("Restarting brain");
                         this.brain.Reset();
                     }
@@ -80,9 +88,8 @@ namespace Autoccultist
                 this.isRunning = false;
                 this.LogInfo("Step");
                 this.brain.Start();
-                UpdateChildren();
+                this.UpdateChildren();
                 this.brain.Stop();
-
             }
             else if (Input.GetKeyDown(KeyCode.F9))
             {
@@ -100,26 +107,32 @@ namespace Autoccultist
             {
                 return;
             }
-            UpdateChildren();
+
+            this.UpdateChildren();
         }
 
+        /// <summary>
+        /// Log an info-level message.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void LogInfo(string message)
         {
-            Dispatcher.RunOnMainThread(() =>
-            {
-                this.Logger.LogInfo(message);
-            });
+            Dispatcher.RunOnMainThread(() => this.Logger.LogInfo(message));
         }
 
+        /// <summary>
+        /// Log a trace-level message.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void LogTrace(string message)
         {
-            Dispatcher.RunOnMainThread(() =>
-            {
-                this.Logger.LogInfo(message);
-            });
-
+            Dispatcher.RunOnMainThread(() => this.Logger.LogInfo(message));
         }
 
+        /// <summary>
+        /// Log a warning-level message.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void LogWarn(string message)
         {
             Dispatcher.RunOnMainThread(() =>
@@ -129,6 +142,11 @@ namespace Autoccultist
             });
         }
 
+        /// <summary>
+        /// Log and handle a fatal event.
+        /// This will also stop the brain from running.
+        /// </summary>
+        /// <param name="message">The message to log.</param>
         public void Fatal(string message)
         {
             Dispatcher.RunOnMainThread(() =>
@@ -138,6 +156,13 @@ namespace Autoccultist
                 this.isRunning = false;
                 this.brain.Stop();
             });
+        }
+
+        private BrainConfig LoadBrainConfig()
+        {
+            var configPath = Path.Combine(AssemblyDirectory, "brain.yml");
+            this.LogInfo(string.Format("Loading config from {0}", configPath));
+            return BrainConfig.Load(configPath);
         }
 
         private void UpdateChildren()
