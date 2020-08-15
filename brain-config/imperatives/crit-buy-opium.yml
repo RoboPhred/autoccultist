@@ -1,0 +1,13 @@
+name: Buy a Tincture of Opium
+priority: critical
+requirements:
+  situation: despair
+  storedCardsMatch:
+    elementId: dread
+operation:
+  name: Buy a Tincture of Opium
+  situation: dream
+  startingRecipe:
+    slots:
+      dream:
+        elementId: funds

@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -35,19 +35,19 @@ namespace Autoccultist.Brain.Config
         /// Gets or sets the card condition matching cards stored inside this condition, excluding slotted cards.
         /// If null, this condition will not be checked.
         /// </summary>
-        public CardSetCondition StoredCardsMatch { get; set; }
+        public ICardCondition StoredCardsMatch { get; set; }
 
         /// <summary>
         /// Gets or sets the card set condition matching cards slotted into the current ongoing slots of the situation.
         /// If null, this condition will not be checked.
         /// </summary>
-        public CardSetCondition SlottedCardsMatch { get; set; }
+        public ICardCondition SlottedCardsMatch { get; set; }
 
         /// <summary>
         /// Gets or sets the card set condition matching all cards in play by this situation, including slotted and stored cards.
         /// If null, this condition will not be checked.
         /// </summary>
-        public CardSetCondition ContainedCardsMatch { get; set; }
+        public ICardCondition ContainedCardsMatch { get; set; }
 
         /// <summary>
         /// Gets or sets a dictionary containing asset ids to degrees that must be satisfied in this situation.
@@ -145,6 +145,13 @@ namespace Autoccultist.Brain.Config
             }
 
             return true;
+        }
+
+        public enum SituationStateConfig
+        {
+            Missing,
+            Unstarted,
+            Ongoing
         }
     }
 }

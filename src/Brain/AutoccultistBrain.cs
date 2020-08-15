@@ -9,9 +9,12 @@ namespace Autoccultist.Brain
     /// </summary>
     public class AutoccultistBrain : IGameState
     {
-        private readonly BrainConfig config;
+        private BrainConfig config;
 
         private IEnumerator<Goal> goalEnumerator;
+
+        private const bool FEATURE_SWITCH_LINEAR_GOALS = false;
+
         private Goal currentGoal;
 
         /// <summary>
@@ -42,11 +45,20 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Clears the current goal, resets progress tracking, and tries to obtain the first possible goal.
         /// </summary>
-        public void Reset()
+        public void Reset(BrainConfig ConfigIn = null)
         {
-            this.currentGoal = null;
-            this.goalEnumerator = this.config.Goals.GetEnumerator();
-            this.ObtainNextGoal();
+            if (!this.CanGoalActivate() || ConfigIn != null)
+            {
+                this.currentGoal = null;
+            }
+
+            this.config = ConfigIn ?? this.config;
+            this.goalEnumerator = config.Goals.GetEnumerator();
+
+            if (this.currentGoal == null)
+            {
+                this.ObtainNextGoal();
+            }
         }
 
         /// <summary>
@@ -152,6 +164,16 @@ namespace Autoccultist.Brain
             return imperatives.ToList();
         }
 
+        private bool CanGoalActivate()
+        {
+            if (this.currentGoal == null)
+            {
+                return false;
+            }
+
+            return this.currentGoal.CanActivate(this);
+        }
+
         private bool IsGoalSatisfied()
         {
             if (this.currentGoal == null)
@@ -164,24 +186,36 @@ namespace Autoccultist.Brain
 
         private void ObtainNextGoal()
         {
-            this.currentGoal = null;
-
-            // While the detected goal is satisified, move to the next one.
-            while (this.goalEnumerator.Current?.IsSatisfied(this) != false)
+            if (FEATURE_SWITCH_LINEAR_GOALS)
             {
-                if (!this.goalEnumerator.MoveNext())
+                this.currentGoal = null;
+
+                // While the detected goal is satisified, move to the next one.
+                while (this.goalEnumerator.Current?.IsSatisfied(this) != false)
                 {
-                    return;
+                    if (!this.goalEnumerator.MoveNext())
+                    {
+                        return;
+                    }
                 }
-            }
 
-            // If we can activate this goal, do so.
-            if (this.goalEnumerator.Current.CanActivate(this))
+                // If we can activate this goal, do so.
+                if (this.goalEnumerator.Current.CanActivate(this))
+                {
+                    this.currentGoal = this.goalEnumerator.Current;
+                }
+
+                AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
+            }
+            else
             {
-                this.currentGoal = this.goalEnumerator.Current;
+                var goals =
+                    from goal in this.config.Goals
+                    where goal.CanActivate(this)
+                    select goal;
+                this.currentGoal = goals.FirstOrDefault();
+                AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
             }
-
-            AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
         }
     }
 }

@@ -1,13 +1,10 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
     using Assets.Core.Interfaces;
 
-    /// <summary>
-    /// A condition that requires all cards to be present at the same time.
-    /// </summary>
-    public class CardSetCondition : IGameStateConditionConfig
+    public class CardSetCondition : ICardCondition
     {
         /// <summary>
         /// Gets or sets a list of cards, all of which must be present at the same time to meet this condition.
@@ -32,17 +29,7 @@ namespace Autoccultist.Brain.Config
             return state.CardsCanBeSatisfied(this.CardSet);
         }
 
-        /// <summary>
-        /// Gets an enumerator of all card choices in this card set.
-        /// </summary>
-        /// <returns>An enumerator of all card choices in this card set.</returns>
-        public IEnumerator<CardChoice> GetEnumerator() => this.CardSet.GetEnumerator();
-
-        /// <summary>
-        /// Determine if the given cards match against the card set.
-        /// </summary>
-        /// <param name="cards">The cards to match against the card set.</param>
-        /// <returns>True if the card set is satsified by the cards in the given list, False otherwise.</returns>
+        /// <inheritdoc/>
         public bool CardsMatchSet(IList<IElementStack> cards)
         {
             var remaining = new HashSet<IElementStack>(cards);

@@ -1,6 +1,7 @@
 namespace Autoccultist.Brain.Config
 {
     using System.Collections.Generic;
+    using Autoccultist.Brain.Config.Conditions;
 
     /// <summary>
     /// A Goal represents a collection of imperatives which activate under certain conditions,

@@ -1,4 +1,4 @@
-﻿namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
@@ -94,7 +94,7 @@
                     this.Mode = ConditionMode.NoneOf;
                     break;
                 default:
-                    throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
+                    throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"noneOf\".");
             }
 
             this.Requirements = (List<IGameStateConditionConfig>)nestedObjectDeserializer(typeof(List<IGameStateConditionConfig>));

@@ -1,5 +1,7 @@
 namespace Autoccultist.Brain.Config
 {
+    using Autoccultist.Brain.Config.Conditions;
+
     /// <summary>
     /// An Imperative represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Imperative allow for its execution, the task should execute.

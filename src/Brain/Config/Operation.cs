@@ -2,6 +2,7 @@ namespace Autoccultist.Brain.Config
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Autoccultist.Brain.Config.Conditions;
 
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.

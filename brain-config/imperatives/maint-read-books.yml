@@ -1,0 +1,48 @@
+name: Read books
+priority: maintenance
+requirements:
+  noneOf:
+    - aspects: { textlatin: 1 }
+    - aspects: { textgreek: 1 }
+    - aspects: { textsanskrit: 1 }
+    - aspects: { textaramaic: 1 }
+    - aspects: { textphrygian: 1 }
+    - aspects: { textmandaic: 1 }
+    - aspects: { textfucine: 1 }
+    - aspects: { textvak: 1 }
+operation:
+  name: Read a book
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        aspects: {text: 1}
+forbidders:
+  anyOf:
+    - cardSet:
+      - elementId: textbooklatin
+      - elementId: scholarlatin
+    - cardSet:
+      - elementId: textbookgreek
+      - elementId: scholargreek
+    - cardSet:
+      - elementId: textbooksanskrit
+      - elementId: scholarsanskrit
+    - cardSet:
+      - elementId: textbookfucine
+      - elementId: scholarfucine
+    - cardSet:
+      - elementId: textbookmandaic
+      - elementId: scholarmandaic
+    - cardSet:
+      - elementId: textbookphrygian
+      - elementId: scholarphrygian
+    - cardSet:
+      - elementId: textbookaramaic
+      - elementId: scholararamaic
+    - cardSet:
+      - elementId: textbookvak
+      - elementId: scholarvak
+    - elementId: textbookreason
+    - elementId: textbookpassion
+  

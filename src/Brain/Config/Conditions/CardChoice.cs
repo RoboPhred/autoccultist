@@ -1,12 +1,10 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Assets.Core.Interfaces;
 
-    /// <summary>
-    /// A configuration node responsible for choosing a card based on its properties.
-    /// </summary>
-    public class CardChoice : IConfigObject, ICardMatcher, IGameStateConditionConfig
+    public class CardChoice : ICardMatcher, ICardCondition
     {
         /// <summary>
         /// Gets or sets the element id of the card to choose.
@@ -65,6 +63,12 @@ namespace Autoccultist.Brain.Config
         public bool IsConditionMet(IGameState state)
         {
             return state.CardsCanBeSatisfied(new[] { this });
+        }
+
+        /// <inheritdoc/>
+        public bool CardsMatchSet(IList<IElementStack> cards)
+        {
+            return cards.Any(card => this.CardMatches(card));
         }
     }
 }
