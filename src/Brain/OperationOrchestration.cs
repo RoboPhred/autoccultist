@@ -48,7 +48,7 @@ namespace Autoccultist.Brain
             Unstarted,
 
             /// <summary>
-            /// The operation is starting and slotting is initial cards.
+            /// The operation is filling out its cards and starting up.
             /// </summary>
             Starting,
 
@@ -110,6 +110,7 @@ namespace Autoccultist.Brain
                 throw new Exception("Tried to start a situation solution with no situation.");
             }
 
+            this.operationState = OperationState.Starting;
             AutoccultistPlugin.Instance.LogTrace("Starting operation " + this.operation.Name);
             this.RunCoroutine(this.StartOperationCoroutine());
         }
@@ -122,7 +123,7 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            if (this.operationState == OperationState.Starting || this.operationState == OperationState.Ongoing)
+            if (this.operationState == OperationState.Ongoing)
             {
                 var clockState = this.Situation.SituationClock.State;
                 if (clockState == SituationState.Ongoing)
@@ -225,6 +226,9 @@ namespace Autoccultist.Brain
 
             // Start the situation
             yield return new StartSituationRecipeAction(this.SituationId);
+
+            // Mark us as ongoing now that we started the recipe.
+            this.operationState = OperationState.Ongoing;
 
             // Accept the current recipe and fill its needs
             this.ongoingRecipe = this.Situation.SituationClock.RecipeId;
