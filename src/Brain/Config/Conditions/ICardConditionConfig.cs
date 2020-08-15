@@ -4,9 +4,12 @@
     using Assets.Core.Interfaces;
     using Autoccultist.Yaml;
 
+    /// <summary>
+    /// A node that can contain any condition operating against a list of cards.
+    /// </summary>
     [DuckTypeCandidate(typeof(CardSetCondition))]
     [DuckTypeCandidate(typeof(CardChoice))]
-    public interface ICardCondition : IGameStateConditionConfig
+    public interface ICardConditionConfig : IGameStateConditionConfig
     {
         /// <summary>
         /// Determine if the given cards match against the card set.

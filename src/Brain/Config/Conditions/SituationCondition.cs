@@ -9,6 +9,27 @@ namespace Autoccultist.Brain.Config.Conditions
     public class SituationCondition : IGameStateConditionConfig
     {
         /// <summary>
+        /// Possible states to check situations against.
+        /// </summary>
+        public enum SituationStateConfig
+        {
+            /// <summary>
+            /// The situation is not present on the table
+            /// </summary>
+            Missing,
+
+            /// <summary>
+            /// The situation is present, but not currently running a recipe.
+            /// </summary>
+            Unstarted,
+
+            /// <summary>
+            /// The situation is present and currently operating on a recipe.
+            /// </summary>
+            Ongoing,
+        }
+
+        /// <summary>
         /// Gets or sets the situation id for which all the other condition properties will target.
         /// </summary>
         public string Situation { get; set; }
@@ -35,19 +56,19 @@ namespace Autoccultist.Brain.Config.Conditions
         /// Gets or sets the card condition matching cards stored inside this condition, excluding slotted cards.
         /// If null, this condition will not be checked.
         /// </summary>
-        public ICardCondition StoredCardsMatch { get; set; }
+        public ICardConditionConfig StoredCardsMatch { get; set; }
 
         /// <summary>
         /// Gets or sets the card set condition matching cards slotted into the current ongoing slots of the situation.
         /// If null, this condition will not be checked.
         /// </summary>
-        public ICardCondition SlottedCardsMatch { get; set; }
+        public ICardConditionConfig SlottedCardsMatch { get; set; }
 
         /// <summary>
         /// Gets or sets the card set condition matching all cards in play by this situation, including slotted and stored cards.
         /// If null, this condition will not be checked.
         /// </summary>
-        public ICardCondition ContainedCardsMatch { get; set; }
+        public ICardConditionConfig ContainedCardsMatch { get; set; }
 
         /// <summary>
         /// Gets or sets a dictionary containing asset ids to degrees that must be satisfied in this situation.
@@ -145,13 +166,6 @@ namespace Autoccultist.Brain.Config.Conditions
             }
 
             return true;
-        }
-
-        public enum SituationStateConfig
-        {
-            Missing,
-            Unstarted,
-            Ongoing
         }
     }
 }

@@ -45,15 +45,16 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Clears the current goal, resets progress tracking, and tries to obtain the first possible goal.
         /// </summary>
-        public void Reset(BrainConfig ConfigIn = null)
+        /// <param name="configIn">The replacement config file to use, if desired.</param>
+        public void Reset(BrainConfig configIn = null)
         {
-            if (!this.CanGoalActivate() || ConfigIn != null)
+            if (!this.CanGoalActivate() || configIn != null)
             {
                 this.currentGoal = null;
             }
 
-            this.config = ConfigIn ?? this.config;
-            this.goalEnumerator = config.Goals.GetEnumerator();
+            this.config = configIn ?? this.config;
+            this.goalEnumerator = this.config.Goals.GetEnumerator();
 
             if (this.currentGoal == null)
             {

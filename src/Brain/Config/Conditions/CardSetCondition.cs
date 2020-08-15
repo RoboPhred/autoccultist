@@ -4,7 +4,10 @@ namespace Autoccultist.Brain.Config.Conditions
     using System.Linq;
     using Assets.Core.Interfaces;
 
-    public class CardSetCondition : ICardCondition
+    /// <summary>
+    /// A set of CardChoice matchers.  All card choices must be matched with no overlap for this condition to pass.
+    /// </summary>
+    public class CardSetCondition : ICardConditionConfig
     {
         /// <summary>
         /// Gets or sets a list of cards, all of which must be present at the same time to meet this condition.

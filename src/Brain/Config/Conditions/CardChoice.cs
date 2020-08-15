@@ -4,7 +4,10 @@ namespace Autoccultist.Brain.Config.Conditions
     using System.Linq;
     using Assets.Core.Interfaces;
 
-    public class CardChoice : ICardMatcher, ICardCondition
+    /// <summary>
+    /// Represents a choice of a card based on various attributes.
+    /// </summary>
+    public class CardChoice : ICardMatcher, ICardConditionConfig
     {
         /// <summary>
         /// Gets or sets the element id of the card to choose.
