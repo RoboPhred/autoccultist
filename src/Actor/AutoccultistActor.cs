@@ -13,6 +13,7 @@ namespace Autoccultist.Actor
     public static class AutoccultistActor
     {
         private static readonly Queue<PendingActionSet> PendingActionSets = new Queue<PendingActionSet>();
+        private static bool isPausedForActions;
         private static DateTime lastUpdate = DateTime.Now;
         private static PendingActionSet currentActionSet;
 
@@ -127,12 +128,17 @@ namespace Autoccultist.Actor
 
         private static void OnActive()
         {
+            isPausedForActions = true;
             GameAPI.SetPaused(true);
         }
 
         private static void OnIdle()
         {
-            GameAPI.SetPaused(false);
+            if (isPausedForActions)
+            {
+                isPausedForActions = false;
+                GameAPI.SetPaused(false);
+            }
         }
 
         private class PendingActionSet
