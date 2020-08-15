@@ -27,7 +27,7 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Gets a value indicating whether the brain is running.
         /// </summary>
-        public bool IsRunning { get; private set; }
+        public bool IsRunning { get; private set; } = false;
 
         /// <summary>
         /// Starts the brain executing the configured plan.
@@ -39,6 +39,8 @@ namespace Autoccultist.Brain
                 return;
             }
 
+            this.IsRunning = true;
+            AutoccultistPlugin.Instance.LogInfo("Starting brain");
             this.ResetGoalIfSatisfiedOrNull();
         }
 
@@ -47,6 +49,7 @@ namespace Autoccultist.Brain
         /// </summary>
         public void Stop()
         {
+            AutoccultistPlugin.Instance.LogInfo("Stopping brain");
             this.IsRunning = false;
         }
 
@@ -56,6 +59,8 @@ namespace Autoccultist.Brain
         /// <param name="configIn">The replacement config file to use, if desired.</param>
         public void Reset(BrainConfig configIn = null)
         {
+            AutoccultistPlugin.Instance.LogInfo($"Resetting brain [new config: {configIn != null}]");
+
             if (!this.CanGoalActivate() || configIn != null)
             {
                 this.currentGoal = null;

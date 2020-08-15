@@ -40,6 +40,21 @@ namespace Autoccultist.Actor
         }
 
         /// <summary>
+        /// Abort all ongoing actions.
+        /// </summary>
+        public static void AbortAllActions()
+        {
+            PendingActionSet pendingActionSet;
+            while ((pendingActionSet = PendingActionSets.DequeueOrDefault()) != null)
+            {
+                pendingActionSet.TaskCompletion.TrySetCanceled();
+            }
+
+            PendingActionSets.Clear();
+            currentActionSet = null;
+        }
+
+        /// <summary>
         /// Run frame updates for the actor.
         /// </summary>
         public static void Update()

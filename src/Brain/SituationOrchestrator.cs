@@ -80,7 +80,7 @@ namespace Autoccultist.Brain
         /// </summary>
         /// <param name="situationId">The situation id of the situation to check.</param>
         /// <returns>True if the situation is idle and available, False otherwise.</returns>
-        public static bool SituationIsAvailable(string situationId)
+        public static bool IsSituationAvailable(string situationId)
         {
             var controller = GameAPI.GetSituation(situationId);
             if (controller == null)
@@ -105,7 +105,7 @@ namespace Autoccultist.Brain
         /// <param name="operation">The operation to execute.</param>
         public static void ExecuteOperation(Operation operation)
         {
-            if (!SituationIsAvailable(operation.Situation))
+            if (!IsSituationAvailable(operation.Situation))
             {
                 throw new OperationFailedException($"Cannot execute operation for situation {operation.Situation} because the situation is not available.");
             }

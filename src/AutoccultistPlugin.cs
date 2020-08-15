@@ -62,7 +62,6 @@ namespace Autoccultist
             {
                 if (this.isRunning)
                 {
-                    this.LogInfo("Stopping brain");
                     this.isRunning = false;
                 }
                 else
@@ -75,7 +74,6 @@ namespace Autoccultist
                     }
                     else
                     {
-                        this.LogInfo("Starting brain");
                         this.isRunning = true;
                     }
                 }
@@ -101,10 +99,18 @@ namespace Autoccultist
                 else
                 {
                     this.brain.Stop();
+                    SituationOrchestrator.Abort();
+                    AutoccultistActor.AbortAllActions();
                 }
             }
 
-            this.UpdateChildren();
+            if (this.isRunning)
+            {
+                // The idea was to always update children,
+                //  but some things crash if updating when the main game isn't in play.
+                // This needs more work.
+                this.UpdateChildren();
+            }
         }
 
         /// <summary>
