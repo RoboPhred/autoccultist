@@ -1,17 +1,31 @@
 namespace Autoccultist.Actor.Actions
 {
-    class CloseSituationAction : IAutoccultistAction
+    /// <summary>
+    /// An action that closes a situation window.
+    /// </summary>
+    public class CloseSituationAction : IAutoccultistAction
     {
-        public string SituationId { get; private set; }
-
-        public bool IgnoreFailures { get; set; }
-
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CloseSituationAction"/> class.
+        /// </summary>
+        /// <param name="situationId">The id of the situation to close.</param>
         public CloseSituationAction(string situationId)
         {
             this.SituationId = situationId;
         }
 
+        /// <summary>
+        /// Gets the situation id of the situation to close the window for.
+        /// </summary>
+        public string SituationId { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this action should ignore failures.
+        /// This can be useful for cases when the situation may dissapear after being interacted with.
+        /// </summary>
+        public bool IgnoreFailures { get; set; }
+
+        /// <inheritdoc/>
         public void Execute()
         {
             if (!GameAPI.IsInteractable)
@@ -20,6 +34,7 @@ namespace Autoccultist.Actor.Actions
                 {
                     return;
                 }
+
                 throw new ActionFailureException(this, "Game is not interactable at this moment.");
             }
 
@@ -30,6 +45,7 @@ namespace Autoccultist.Actor.Actions
                 {
                     return;
                 }
+
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 

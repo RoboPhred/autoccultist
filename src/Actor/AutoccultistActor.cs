@@ -1,30 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Autoccultist.Actor
 {
-    static class AutoccultistActor
-    {
-        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.2);
-        private static DateTime lastUpdate = DateTime.Now;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
-        private static Queue<PendingActionSet> pendingActionSets = new Queue<PendingActionSet>();
+    /// <summary>
+    /// The actor, that performs game actions on our behalf.
+    /// <para>
+    /// Game actions are delayed slightly, to make the gameplay easier to follow.
+    /// </summary>
+    public static class AutoccultistActor
+    {
+        private static readonly Queue<PendingActionSet> PendingActionSets = new Queue<PendingActionSet>();
+        private static DateTime lastUpdate = DateTime.Now;
         private static PendingActionSet currentActionSet;
 
+        /// <summary>
+        /// Gets or sets the delay between each action.
+        /// </summary>
+        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.2);
+
+        /// <summary>
+        /// Perform the actions from the enumerable.
+        /// </summary>
+        /// <param name="actions">An enumerable of actions to execute.</param>
+        /// <param name="cancellationToken">An optional CancellationToken used to cancel the action execution.</param>
+        /// <returns>A task that will complete when all actions complete, or fail with an exception describing the action failure.</returns>
         public static Task<ActorResult> PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
         {
             var pendingAction = new PendingActionSet
             {
                 PendingActions = actions.GetEnumerator(),
                 TaskCompletion = new TaskCompletionSource<ActorResult>(),
-                CancellationToken = cancellationToken ?? CancellationToken.None
+                CancellationToken = cancellationToken ?? CancellationToken.None,
             };
-            pendingActionSets.Enqueue(pendingAction);
+            PendingActionSets.Enqueue(pendingAction);
             return pendingAction.TaskCompletion.Task;
         }
 
+        /// <summary>
+        /// Run frame updates for the actor.
+        /// </summary>
         public static void Update()
         {
             if (lastUpdate + ActionDelay > DateTime.Now)
@@ -36,7 +53,7 @@ namespace Autoccultist.Actor
             // See if we need to get the next action set.
             if (currentActionSet == null)
             {
-                currentActionSet = pendingActionSets.TryDequeue();
+                currentActionSet = PendingActionSets.TryDequeue();
                 if (currentActionSet == null)
                 {
                     return;
@@ -49,7 +66,6 @@ namespace Autoccultist.Actor
                     currentActionSet = null;
                     return;
                 }
-
             }
 
             if (currentActionSet.CancellationToken.IsCancellationRequested)
@@ -89,11 +105,22 @@ namespace Autoccultist.Actor
             }
         }
 
-        class PendingActionSet
+        private class PendingActionSet
         {
-            public IEnumerator<IAutoccultistAction> PendingActions;
-            public TaskCompletionSource<ActorResult> TaskCompletion;
-            public CancellationToken CancellationToken;
+            /// <summary>
+            /// Gets or sets the enumerator of pending actions.
+            /// </summary>
+            public IEnumerator<IAutoccultistAction> PendingActions { get; set; }
+
+            /// <summary>
+            /// Gets or sets the task completion source to report back when the actions are completed.
+            /// </summary>
+            public TaskCompletionSource<ActorResult> TaskCompletion { get; set; }
+
+            /// <summary>
+            /// Gets or sets the cancellation token that can cancel this action set.
+            /// </summary>
+            public CancellationToken CancellationToken { get; set; }
         }
     }
 }

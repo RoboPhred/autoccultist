@@ -1,7 +1,13 @@
 namespace Autoccultist.Actor
 {
-    enum ActorResult
+    /// <summary>
+    /// The result of an action sequence.
+    /// </summary>
+    public enum ActorResult
     {
+        /// <summary>
+        /// All actions completed successfully
+        /// </summary>
         Success,
     }
 }
