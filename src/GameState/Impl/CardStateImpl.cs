@@ -13,6 +13,7 @@ namespace Autoccultist.GameState.Impl
 
         private readonly string elementId;
         private readonly float lifetimeRemaining;
+        private readonly bool isUnique;
         private readonly IReadOnlyDictionary<string, int> aspects;
 
         /// <summary>
@@ -25,6 +26,7 @@ namespace Autoccultist.GameState.Impl
 
             this.elementId = sourceStack.EntityId;
             this.lifetimeRemaining = sourceStack.LifetimeRemaining;
+            this.isUnique = sourceStack.Unique;
             this.aspects = new Dictionary<string, int>(sourceStack.GetAspects());
         }
 
@@ -45,6 +47,16 @@ namespace Autoccultist.GameState.Impl
             {
                 this.VerifyAccess();
                 return this.lifetimeRemaining;
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool IsUnique
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.isUnique;
             }
         }
 

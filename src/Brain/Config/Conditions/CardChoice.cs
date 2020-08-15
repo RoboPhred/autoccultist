@@ -23,6 +23,11 @@ namespace Autoccultist.Brain.Config.Conditions
         public Dictionary<string, int> Aspects { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the card must or must not be unique.
+        /// </summary>
+        public bool? IsUnique { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of aspects forbidden to be on the chosen card.
         /// Mainly used when specifying matching aspects.
         /// </summary>
@@ -55,6 +60,7 @@ namespace Autoccultist.Brain.Config.Conditions
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where this.Aspects == null || card.Aspects.HasAspects(this.Aspects)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != false
+                where !this.IsUnique.HasValue || card.IsUnique == this.IsUnique.Value
                 let cardWeight = card.Aspects.GetWeight() - (this.Aspects?.GetWeight() ?? 0)
                 orderby cardWeight ascending // We want the lowest weight card we can find
                 select card;

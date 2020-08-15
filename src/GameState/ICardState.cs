@@ -19,6 +19,11 @@ namespace Autoccultist.GameState
         float LifetimeRemaining { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this card is unique.
+        /// </summary>
+        bool IsUnique { get; }
+
+        /// <summary>
         /// Gets a dictionary of aspects on this card.
         /// </summary>
         IReadOnlyDictionary<string, int> Aspects { get; }

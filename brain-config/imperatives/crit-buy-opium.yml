@@ -4,6 +4,12 @@ requirements:
   situation: despair
   storedCardsMatch:
     elementId: dread
+forbidders:
+  anyOf:
+    - situation: despair
+      slottedCardsMatch:
+        elementId: contentment
+    - elementId: contentment
 operation:
   name: Buy a Tincture of Opium
   situation: dream
