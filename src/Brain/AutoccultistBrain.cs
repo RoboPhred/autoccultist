@@ -110,6 +110,7 @@ namespace Autoccultist.Brain
                 foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
+                    AutoccultistPlugin.Instance.LogInfo($"Requirements satisfied: {imperative.Requirements.IsConditionMet(this)}");
                     AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.IsSituationAvailable(imperative.Operation.Situation)}");
                     foreach (var choice in imperative.Operation.StartingRecipe.Slots)
                     {
