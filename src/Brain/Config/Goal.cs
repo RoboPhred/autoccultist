@@ -1,26 +1,48 @@
-using System.Collections.Generic;
-
 namespace Autoccultist.Brain.Config
 {
-    /**
-     * A Goal represents a set of actions that can be satisfied by a given board state.
-     * A Goal contains a set of Imperatives that will presumably reach the given state.
-     */
-    public class Goal
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// A Goal represents a collection of imperatives which activate under certain conditions,
+    /// and continually run until an expected state is reached.
+    /// <para>
+    /// Goals are made out of multiple imperatives, which trigger the actual actions against the game.
+    /// </summary>
+    public class Goal : INamedConfigObject
     {
+        /// <inheritdoc/>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the condition which is required to be met for this goal to activate.
+        /// <para>
+        /// The goal will remain activated after these conditions are met,
+        /// and continue operating until the CompletedWhen condition is met.
+        /// </summary>
         public IGameStateConditionConfig Requirements { get; set; }
+
+        /// <summary>
+        /// Gets or sets the condition to determine when this goal is completed.
+        /// <para>
+        /// Once started, the goal will continue to operate until its completion conditions are met.
+        /// </summary>
         public IGameStateConditionConfig CompletedWhen { get; set; }
 
-        public List<Imperative> Imperatives { get; set; }
+        /// <summary>
+        /// Gets or sets a list of imperatives this goal provides.
+        /// <para>
+        /// Each imperative provides an operation and conditions under which the operation will be performed.
+        /// </summary>
+        public List<Imperative> Imperatives { get; set; } = new List<Imperative>();
 
+        /// <inheritdoc/>
         public void Validate()
         {
             if (string.IsNullOrEmpty(this.Name))
             {
                 throw new InvalidConfigException("Goal must have a name.");
             }
+
             if (this.Imperatives == null || this.Imperatives.Count == 0)
             {
                 throw new InvalidConfigException("Goal must have an imperative");
@@ -32,6 +54,11 @@ namespace Autoccultist.Brain.Config
             }
         }
 
+        /// <summary>
+        /// Determines whether the goal can activate with the given game state.
+        /// </summary>
+        /// <param name="state">The game state to check conditions against.</param>
+        /// <returns>True if this goal is able to activate, False otherwise.</returns>
         public bool CanActivate(IGameState state)
         {
             if (this.IsSatisfied(state))
@@ -39,7 +66,7 @@ namespace Autoccultist.Brain.Config
                 return false;
             }
 
-            if (this.Requirements != null && !this.Requirements.IsConditionMet(state))
+            if (this.Requirements?.IsConditionMet(state) == false)
             {
                 return false;
             }
@@ -47,9 +74,14 @@ namespace Autoccultist.Brain.Config
             return true;
         }
 
+        /// <summary>
+        /// Determines whether this goal is completed with the given game state.
+        /// </summary>
+        /// <param name="state">The game state to check conditions against.</param>
+        /// <returns>True if the goal is completed, False otherwise.</returns>
         public bool IsSatisfied(IGameState state)
         {
-            return this.CompletedWhen != null && this.CompletedWhen.IsConditionMet(state);
+            return this.CompletedWhen?.IsConditionMet(state) == true;
         }
     }
 }
