@@ -232,5 +232,6 @@ goals:
       - name: Steely Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
-              morevitality:
-                elementId: vitality
+      - !import imperatives/maint-upgrade-excess-vitality.yml
+      - !import imperatives/maint-buy-books.yml
+      - !import imperatives/crit-buy-opium.yml
