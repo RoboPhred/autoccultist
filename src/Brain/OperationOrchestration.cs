@@ -20,6 +20,15 @@ namespace Autoccultist.Brain
         private string ongoingRecipe;
         private DateTime? completionDebounceTime = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OperationOrchestration"/> class.
+        /// </summary>
+        /// <param name="operation">The operation for this orchestration to execute.</param>
+        public OperationOrchestration(Operation operation)
+        {
+            this.operation = operation;
+        }
+
         /// <inheritdoc/>
         public event EventHandler Completed;
 
@@ -70,15 +79,6 @@ namespace Autoccultist.Brain
 
                 return situation;
             }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OperationOrchestration"/> class.
-        /// </summary>
-        /// <param name="operation">The operation for this orchestration to execute.</param>
-        public OperationOrchestration(Operation operation)
-        {
-            this.operation = operation;
         }
 
         /// <inheritdoc/>
@@ -167,6 +167,7 @@ namespace Autoccultist.Brain
                 // Recipe has not changed.
                 return;
             }
+
             this.ongoingRecipe = currentRecipe;
 
             if (this.operation.OngoingRecipes == null)
@@ -262,6 +263,7 @@ namespace Autoccultist.Brain
                 // Not sure if the first slot of ongoing actions is always required...
                 throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlot.GoverningSlotSpecification.Id} has no card choice.");
             }
+
             yield return firstSlotAction;
 
             // Refresh the slots and get the rest of the cards
