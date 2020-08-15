@@ -3,9 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>Autoccultist</RootNamespace>
-    <!--
     <CodeAnalysisRuleSet>StyleCop.ruleset</CodeAnalysisRuleSet>
-    -->
   </PropertyGroup>
 
   <ItemGroup>
