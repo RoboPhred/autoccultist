@@ -3,13 +3,14 @@ namespace Autoccultist.Brain
     using System.Collections.Generic;
     using System.Linq;
     using Autoccultist.Brain.Config;
+    using Autoccultist.GameState;
 
     // TODO: This should not implement IGameState, as currently it just forwards to static classes.
 
     /// <summary>
     /// The AutoccultistBrain takes a BrainConfig and executes it against the game.
     /// </summary>
-    public class AutoccultistBrain : IGameState
+    public class AutoccultistBrain
     {
         private BrainConfig config;
 
@@ -41,7 +42,6 @@ namespace Autoccultist.Brain
 
             this.IsRunning = true;
             AutoccultistPlugin.Instance.LogInfo("Starting brain");
-            this.ResetGoalIfSatisfiedOrNull();
         }
 
         /// <summary>
@@ -60,54 +60,47 @@ namespace Autoccultist.Brain
         public void Reset(BrainConfig configIn = null)
         {
             AutoccultistPlugin.Instance.LogInfo($"Resetting brain [new config: {configIn != null}]");
-
-            if (!this.CanGoalActivate() || configIn != null)
-            {
-                this.currentGoal = null;
-            }
-
+            this.currentGoal = null;
             this.config = configIn ?? this.config;
-
-            if (this.IsRunning && this.currentGoal == null)
-            {
-                this.ObtainNextGoal();
-            }
         }
 
         /// <summary>
         /// Checks to see if the goal is still valid, and if any goal imperatives should be triggered.
         /// </summary>
-        public void Update()
+        /// <param name="state">The game state to update on.</param>
+        public void Update(IGameState state)
         {
             if (!this.IsRunning)
             {
                 return;
             }
 
-            this.ResetGoalIfSatisfiedOrNull();
+            this.ResetGoalIfSatisfiedOrNull(state);
             if (this.currentGoal != null)
             {
-                this.TryStartImperatives();
+                this.TryStartImperatives(state);
             }
         }
 
         /// <summary>
         /// Dumps information on the state of the brain to the console.
         /// </summary>
-        public void LogStatus()
+        /// <param name="state">The state to log the status from.</param>
+        public void LogStatus(IGameState state)
         {
-            AutoccultistPlugin.Instance.LogInfo(string.Format("My goal is {0}", this.currentGoal != null ? this.currentGoal.Name : "<none>"));
-            AutoccultistPlugin.Instance.LogInfo(string.Format("I have {0} satisfiable imperatives", this.GetSatisfiableImperatives().Count));
+            AutoccultistPlugin.Instance.LogInfo(string.Format("My goal is {0}", this.currentGoal?.Name ?? "<none>"));
+            AutoccultistPlugin.Instance.LogInfo(string.Format("I have {0} satisfiable imperatives", this.GetSatisfiableImperatives(state).Count));
             if (this.currentGoal != null)
             {
                 foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
-                    AutoccultistPlugin.Instance.LogInfo($"Requirements satisfied: {imperative.Requirements.IsConditionMet(this)}");
-                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {this.IsSituationAvailable(imperative.Operation.Situation)}");
+                    AutoccultistPlugin.Instance.LogInfo($"-- Requirements satisfied: {imperative.Requirements?.IsConditionMet(state) ?? true}");
+                    AutoccultistPlugin.Instance.LogInfo($"-- Forbidders in place: {imperative.Forbidders?.IsConditionMet(state) ?? false}");
+                    AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {state.IsSituationAvailable(imperative.Operation.Situation)}");
                     foreach (var choice in imperative.Operation.StartingRecipe.Slots)
                     {
-                        AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {this.CardsCanBeSatisfied(new[] { choice.Value })}");
+                        AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {state.CardsCanBeSatisfied(new[] { choice.Value })}");
                     }
                 }
             }
@@ -120,24 +113,12 @@ namespace Autoccultist.Brain
             }
         }
 
-        /// <inheritdoc/>
-        public bool IsSituationAvailable(string situationId)
-        {
-            return SituationOrchestrator.IsSituationAvailable(situationId);
-        }
-
-        /// <inheritdoc/>
-        public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
-        {
-            return CardManager.CardsCanBeSatisfied(choices);
-        }
-
-        private void TryStartImperatives()
+        private void TryStartImperatives(IGameState state)
         {
             // Scan through all possible imperatives and invoke the ones that can start.
             //  Where multiple imperatives try for the same verb, invoke the highest priority
             var candidateGroups =
-                from imperative in this.GetSatisfiableImperatives()
+                from imperative in this.GetSatisfiableImperatives(state)
                 orderby imperative.Priority descending
                 group imperative.Operation by imperative.Operation.Situation into situationGroup
                 select situationGroup;
@@ -159,20 +140,20 @@ namespace Autoccultist.Brain
             }
         }
 
-        private void ResetGoalIfSatisfiedOrNull()
+        private void ResetGoalIfSatisfiedOrNull(IGameState state)
         {
-            if (this.IsGoalSatisfied())
+            if (this.IsGoalSatisfied(state))
             {
                 this.currentGoal = null;
             }
 
             if (this.currentGoal == null)
             {
-                this.ObtainNextGoal();
+                this.ObtainNextGoal(state);
             }
         }
 
-        private IList<Imperative> GetSatisfiableImperatives()
+        private IList<Imperative> GetSatisfiableImperatives(IGameState state)
         {
             if (this.currentGoal == null)
             {
@@ -181,36 +162,26 @@ namespace Autoccultist.Brain
 
             var imperatives =
                 from imperative in this.currentGoal.Imperatives
-                where imperative.CanExecute(this)
+                where imperative.CanExecute(state)
                 select imperative;
             return imperatives.ToList();
         }
 
-        private bool CanGoalActivate()
-        {
-            if (this.currentGoal == null)
-            {
-                return false;
-            }
-
-            return this.currentGoal.CanActivate(this);
-        }
-
-        private bool IsGoalSatisfied()
+        private bool IsGoalSatisfied(IGameState state)
         {
             if (this.currentGoal == null)
             {
                 return true;
             }
 
-            return this.currentGoal.IsSatisfied(this);
+            return this.currentGoal.IsSatisfied(state);
         }
 
-        private void ObtainNextGoal()
+        private void ObtainNextGoal(IGameState state)
         {
             var goals =
                 from goal in this.config.Goals
-                where goal.CanActivate(this)
+                where goal.CanActivate(state)
                 select goal;
             this.currentGoal = goals.FirstOrDefault();
             AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");

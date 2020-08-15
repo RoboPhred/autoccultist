@@ -1,7 +1,7 @@
 ﻿namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
-    using Assets.Core.Interfaces;
+    using Autoccultist.GameState;
     using Autoccultist.Yaml;
 
     /// <summary>
@@ -16,6 +16,6 @@
         /// </summary>
         /// <param name="cards">The cards to match against the card set.</param>
         /// <returns>True if the card set is satsified by the cards in the given list, False otherwise.</returns>
-        bool CardsMatchSet(IList<IElementStack> cards);
+        bool CardsMatchSet(IReadOnlyCollection<ICardState> cards);
     }
 }

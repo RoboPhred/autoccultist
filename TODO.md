@@ -3,3 +3,5 @@
   - There is an example of this in the YamlDotNet github
 - Either make all data come from IGameState, or get rid of it completely.
   - We are still going to need something to handle reserved cards. Maybe IGameState can have a list of unreserved or unconsumed cards and a method to reserve / consume them.
+- If the game isnt in 'game mode', dont update stuff.
+- If the game transitions out of game mode, lobotomize the brain and other states.

@@ -2,6 +2,7 @@ namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// A condition dealing with matching the state of situations.
@@ -21,7 +22,7 @@ namespace Autoccultist.Brain.Config.Conditions
             /// <summary>
             /// The situation is present, but not currently running a recipe.
             /// </summary>
-            Unstarted,
+            Idle,
 
             /// <summary>
             /// The situation is present and currently operating on a recipe.
@@ -92,43 +93,33 @@ namespace Autoccultist.Brain.Config.Conditions
         public bool IsConditionMet(IGameState state)
         {
             // TODO: Using GameAPI...  Probably should get this data from IGameState
-            var situation = GameAPI.GetSituation(this.Situation);
+            var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {
                 return this.State == SituationStateConfig.Missing;
             }
 
-            if (this.Recipe != null && situation.SituationClock.RecipeId != this.Recipe)
+            if (this.Recipe != null && situation.CurrentRecipe != this.Recipe)
             {
                 return false;
             }
 
-            if (this.TimeRemaining?.IsComparisonTrue(situation.SituationClock.TimeRemaining) == false)
+            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsComparisonTrue(situation.RecipeTimeRemaining ?? 0)))
             {
                 return false;
             }
 
-            switch (this.State)
+            if (this.State == SituationStateConfig.Idle || this.State == SituationStateConfig.Ongoing)
             {
-                case SituationStateConfig.Ongoing:
-                    if (!situation.IsOngoing)
-                    {
-                        return false;
-                    }
-
-                    break;
-                case SituationStateConfig.Unstarted:
-                    if (situation.SituationClock.State != SituationState.Unstarted)
-                    {
-                        return false;
-                    }
-
-                    break;
+                if (situation.IsOccupied != (this.State == SituationStateConfig.Ongoing))
+                {
+                    return false;
+                }
             }
 
             if (this.StoredCardsMatch != null)
             {
-                var cards = situation.GetStoredStacks().ToList();
+                var cards = situation.StoredCards;
                 if (!this.StoredCardsMatch.CardsMatchSet(cards))
                 {
                     return false;
@@ -137,7 +128,7 @@ namespace Autoccultist.Brain.Config.Conditions
 
             if (this.SlottedCardsMatch != null)
             {
-                var cards = situation.GetOngoingStacks().ToList();
+                var cards = situation.SlottedCards;
                 if (!this.SlottedCardsMatch.CardsMatchSet(cards))
                 {
                     return false;
@@ -146,7 +137,7 @@ namespace Autoccultist.Brain.Config.Conditions
 
             if (this.ContainedCardsMatch != null)
             {
-                var cards = situation.GetStoredStacks().Concat(situation.GetOngoingStacks()).ToList();
+                var cards = situation.StoredCards.Concat(situation.SlottedCards).ToList();
                 if (!this.ContainedCardsMatch.CardsMatchSet(cards))
                 {
                     return false;
@@ -155,13 +146,10 @@ namespace Autoccultist.Brain.Config.Conditions
 
             if (this.ContainedAspects != null)
             {
-                var aspects = situation.situationWindow.GetAspectsFromAllSlottedAndStoredElements(true);
-                foreach (var entry in this.ContainedAspects)
+                var aspects = situation.GetAspects();
+                if (!aspects.HasAspects(this.ContainedAspects))
                 {
-                    if (!aspects.TryGetValue(entry.Key, out var value) || value < entry.Value)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 

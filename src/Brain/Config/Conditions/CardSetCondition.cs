@@ -1,8 +1,7 @@
 namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using Assets.Core.Interfaces;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// A set of CardChoice matchers.  All card choices must be matched with no overlap for this condition to pass.
@@ -33,18 +32,21 @@ namespace Autoccultist.Brain.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IList<IElementStack> cards)
+        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
         {
-            var remaining = new HashSet<IElementStack>(cards);
-            foreach (var choice in this.CardSet)
+            var remaining = new HashSet<ICardState>(cards);
+            foreach (var chooser in this.CardSet)
             {
-                var match = remaining.FirstOrDefault(card => choice.CardMatches(card));
-                if (match == null)
+                // TODO: Each chooser individually chooses a card, so its possible for a chooser
+                // to have multiple choices, but choose the one that is the only viable card for another chooser.
+                // We should get all candidates for all choosers and try to satisfy them all.
+                var choice = chooser.ChooseCard(remaining);
+                if (choice == null)
                 {
                     return false;
                 }
 
-                remaining.Remove(match);
+                remaining.Remove(choice);
             }
 
             return true;

@@ -17,7 +17,7 @@ namespace Autoccultist.Actor.Actions
         /// <param name="situationId">The situation id of the situation to slot the card into.</param>
         /// <param name="slotId">The slot id of the slot in the situation to slot the card into.</param>
         /// <param name="cardMatcher">The card matcher to choose a card to slot.</param>
-        public SlotCardAction(string situationId, string slotId, ICardMatcher cardMatcher)
+        public SlotCardAction(string situationId, string slotId, ICardChooser cardMatcher)
         {
             this.SituationId = situationId;
             this.SlotId = slotId;
@@ -37,7 +37,7 @@ namespace Autoccultist.Actor.Actions
         /// <summary>
         /// Gets the card matcher that will get the card to slot.
         /// </summary>
-        public ICardMatcher CardMatcher { get; }
+        public ICardChooser CardMatcher { get; }
 
         /// <inheritdoc/>
         public void Execute()

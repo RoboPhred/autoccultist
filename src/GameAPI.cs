@@ -89,22 +89,40 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Takes a stack of a single card from an existing stack.
+        /// </summary>
+        /// <param name="stack">The stack to obtain a card from.</param>
+        /// <returns>A stack of a single card.</returns>
+        public static IElementStack TakeOneCard(IElementStack stack)
+        {
+            if (stack.Quantity > 1)
+            {
+                return stack.SplitAllButNCardsToNewStack(stack.Quantity - 1, new Context(Context.ActionSource.PlayerDrag));
+            }
+
+            if (stack.Quantity == 1)
+            {
+                return stack;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Slots a card into the given slot.
         /// If card is a stack of cards, only one card will be slotted.
         /// </summary>
         /// <param name="slot">The slot to place the card into.</param>
-        /// <param name="card">The card stack to pick a card from.</param>
-        public static void SlotCard(RecipeSlot slot, IElementStack card)
+        /// <param name="stack">The card stack to pick a card from.</param>
+        public static void SlotCard(RecipeSlot slot, IElementStack stack)
         {
-            if (card.Quantity > 1)
+            var singleCard = TakeOneCard(stack);
+            if (singleCard == null)
             {
-                var newStack = card.SplitAllButNCardsToNewStack(card.Quantity - 1, new Context(Context.ActionSource.PlayerDrag));
-                slot.AcceptStack(newStack, new Context(Context.ActionSource.PlayerDrag));
+                return;
             }
-            else if (card.Quantity == 1)
-            {
-                slot.AcceptStack(card, new Context(Context.ActionSource.PlayerDrag));
-            }
+
+            slot.AcceptStack(singleCard, new Context(Context.ActionSource.PlayerDrag));
         }
 
         /// <summary>

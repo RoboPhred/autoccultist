@@ -1,9 +1,11 @@
 namespace Autoccultist
 {
+    using System;
     using System.IO;
     using Autoccultist.Actor;
     using Autoccultist.Brain;
     using Autoccultist.Brain.Config;
+    using Autoccultist.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -58,6 +60,8 @@ namespace Autoccultist
         /// </summary>
         public void Update()
         {
+            var state = new Lazy<IGameState>(() => GameStateFactory.FromCurrentState());
+
             if (Input.GetKeyDown(KeyCode.F11))
             {
                 if (this.isRunning)
@@ -68,7 +72,6 @@ namespace Autoccultist
                 {
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
-                        this.LogInfo("Reloading and Restarting brain");
                         var config = this.LoadBrainConfig();
                         this.brain.Reset(config);
                     }
@@ -81,7 +84,7 @@ namespace Autoccultist
             else if (Input.GetKeyDown(KeyCode.F9))
             {
                 this.LogInfo("Dumping status");
-                this.brain.LogStatus();
+                this.brain.LogStatus(state.Value);
                 SituationOrchestrator.LogStatus();
             }
             else if (Input.GetKeyDown(KeyCode.F8))
@@ -109,7 +112,7 @@ namespace Autoccultist
                 // The idea was to always update children,
                 //  but some things crash if updating when the main game isn't in play.
                 // This needs more work.
-                this.UpdateChildren();
+                this.UpdateChildren(state.Value);
             }
         }
 
@@ -161,9 +164,9 @@ namespace Autoccultist
             return BrainConfig.Load(configPath);
         }
 
-        private void UpdateChildren()
+        private void UpdateChildren(IGameState state)
         {
-            this.brain.Update();
+            this.brain.Update(state);
             AutoccultistActor.Update();
             SituationOrchestrator.Update();
         }

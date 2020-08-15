@@ -1,8 +1,8 @@
 namespace Autoccultist.Brain.Config
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Autoccultist.Brain.Config.Conditions;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// A solution to a situation recipe.
@@ -21,8 +21,7 @@ namespace Autoccultist.Brain.Config
         /// <returns>True if this recipe solution can be performed in the current game state, or False otherwise.</returns>
         public bool IsConditionMet(IGameState state)
         {
-            var cardMatchers = this.Slots.Values.Cast<ICardMatcher>().ToArray();
-            return state.CardsCanBeSatisfied(cardMatchers);
+            return state.CardsCanBeSatisfied(this.Slots.Values);
         }
     }
 }

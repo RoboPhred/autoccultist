@@ -2,13 +2,13 @@ namespace Autoccultist.Brain.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Assets.Core.Interfaces;
     using Autoccultist;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// Represents a choice of a card based on various attributes.
     /// </summary>
-    public class CardChoice : ICardMatcher, ICardConditionConfig
+    public class CardChoice : ICardChooser, ICardConditionConfig
     {
         /// <summary>
         /// Gets or sets the element id of the card to choose.
@@ -44,58 +44,34 @@ namespace Autoccultist.Brain.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool CardMatches(IElementStack card)
+        public ICardState ChooseCard(IEnumerable<ICardState> cards)
         {
-            if (this.ElementId != null && card.EntityId != this.ElementId)
-            {
-                return false;
-            }
+            // TODO: We could have some weighing mechanism to let a config specify which cards are higher priority than others?
 
-            if (this.ForbiddenElementIds?.Contains(this.ElementId) == true)
-            {
-                return false;
-            }
+            // TODO: We also want to filter by time remaining, and preference either least or most time remaining.
+            var candidates =
+                from card in cards
+                where this.ElementId == null || card.ElementId == this.ElementId
+                where this.ForbiddenElementIds?.Contains(card.ElementId) != true
+                where this.Aspects == null || card.Aspects.HasAspects(this.Aspects)
+                where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != false
+                let cardWeight = card.Aspects.GetWeight() - (this.Aspects?.GetWeight() ?? 0)
+                orderby cardWeight ascending // We want the lowest weight card we can find
+                select card;
 
-            var cardAspects = card.GetAspects();
-
-            if (this.Aspects != null)
-            {
-                foreach (var aspectPair in this.Aspects)
-                {
-                    if (!cardAspects.TryGetValue(aspectPair.Key, out int cardAspect))
-                    {
-                        return false;
-                    }
-
-                    // For now, just looking for aspects that have at least that amount.
-                    // TODO: We should be choosing the least matching card of all possible cards, to
-                    //  leave higher aspect cards for other usages.
-                    // May want to return a match weight where lower values get chosen over higher values
-                    if (cardAspect < aspectPair.Value)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            if (this.ForbiddenAspects?.Intersect(cardAspects.Keys).Any() == true)
-            {
-                return false;
-            }
-
-            return true;
+            return candidates.FirstOrDefault();
         }
 
         /// <inheritdoc/>
         public bool IsConditionMet(IGameState state)
         {
-            return state.CardsCanBeSatisfied(new[] { this });
+            return this.ChooseCard(state.TabletopCards) != null;
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IList<IElementStack> cards)
+        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
         {
-            return cards.Any(card => this.CardMatches(card));
+            return this.ChooseCard(cards) != null;
         }
     }
 }
