@@ -2,7 +2,7 @@ name: Buy a Tincture of Opium
 requirements:
   situation: despair
   storedCardsMatch:
-    - elementId: dread
+    elementId: dread
 operation:
   name: Buy a Tincture of Opium
   situation: dream
