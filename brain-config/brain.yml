@@ -174,7 +174,7 @@ goals:
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
         forbidders:
-          # Do not monopolize study when we have vitality lessons to study
+          # Don't steal away our health skill card when we need it to upgrade.
           cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
