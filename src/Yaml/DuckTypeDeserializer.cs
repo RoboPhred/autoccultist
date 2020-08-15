@@ -1,15 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
-
 namespace Autoccultist.Yaml
 {
-    class DuckTypeDeserializer : INodeDeserializer
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using YamlDotNet.Core;
+    using YamlDotNet.Core.Events;
+    using YamlDotNet.Serialization;
+
+    /// <summary>
+    /// A node deserializer capable of deserializing multiple types base don duck type property matching.
+    /// </summary>
+    internal class DuckTypeDeserializer : INodeDeserializer
     {
+        /// <inheritdoc/>
         public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
         {
             var candidates = DuckTypeCandidateAttribute.GetDuckCandidates(expectedType);
@@ -30,7 +34,7 @@ namespace Autoccultist.Yaml
 
             var keys = new List<string>();
             MappingEnd mappingEnd;
-            while (!reader.TryConsume<MappingEnd>(out mappingEnd))
+            while (!reader.TryConsume(out mappingEnd))
             {
                 var key = reader.Consume<Scalar>();
                 keys.Add(key.Value);
@@ -61,8 +65,7 @@ namespace Autoccultist.Yaml
                 throw new YamlException(
                     mappingStart.Start,
                     mappingEnd.End,
-                    $"Cannot identify instance type for {expectedType.Name} based on its properties {string.Join(", ", keys)}.  Must be one of: {string.Join(", ", candidates.Select(x => x.Name))}"
-                );
+                    $"Cannot identify instance type for {expectedType.Name} based on its properties {string.Join(", ", keys)}.  Must be one of: {string.Join(", ", candidates.Select(x => x.Name))}");
             }
 
             replayParser.Start();
@@ -77,13 +80,9 @@ namespace Autoccultist.Yaml
             var matches =
                 from candidate in candidates
                 let yamlProperties = GetTypeYamlProperties(candidate)
-                // Must not have any non-matching keys.
                 where !keys.Except(yamlProperties).Any()
-                // How many candidate keys match the keys we have?
                 let matchCount = yamlProperties.Intersect(keys).Count()
-                // We are only interested if we have at least one match.
                 where matchCount > 0
-                // Find the candidate with the most matches
                 orderby matchCount descending
                 select candidate;
 
@@ -100,7 +99,6 @@ namespace Autoccultist.Yaml
             }
 
             // YamlDotNet handles any public instance properties or fields.
-
             var properties =
                 from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 let yamlAttribute = property.GetCustomAttribute<YamlMemberAttribute>()
@@ -113,8 +111,7 @@ namespace Autoccultist.Yaml
                 let name = yamlAttribute?.Alias ?? Deserializer.NamingConvention.Apply(field.Name)
                 select name;
 
-            var keys = properties.Concat(fields).ToList();
-            return keys;
+            return properties.Concat(fields).ToList();
         }
     }
 }

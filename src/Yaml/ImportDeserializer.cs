@@ -1,13 +1,17 @@
-using System;
-using System.IO;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
-
 namespace Autoccultist.Yaml
 {
-    class ImportDeserializer : INodeDeserializer
+    using System;
+    using System.IO;
+    using YamlDotNet.Core;
+    using YamlDotNet.Core.Events;
+    using YamlDotNet.Serialization;
+
+    /// <summary>
+    /// A deserializer capable of importing additional yaml files based on `!import` statements.
+    /// </summary>
+    internal class ImportDeserializer : INodeDeserializer
     {
+        /// <inheritdoc/>
         public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
         {
             if (reader.Current is NodeEvent nodeEvent)
