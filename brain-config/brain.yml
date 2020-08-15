@@ -137,9 +137,8 @@ goals:
       cardSet:
         - elementId: health
     completedWhen:
-      cardSet:
-        - aspects:
-            healthskill: 1
+      - aspects:
+          healthskill: 1
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
@@ -154,9 +153,8 @@ goals:
     requirements:
       elementId: skillhealtha
     completedWhen:
-      cardSet:
-        - aspects:
-            healthskill: 2
+      - aspects:
+          healthskill: 2
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
@@ -221,9 +219,8 @@ goals:
         operation: !import operations/upgrade-skillhealthb.yml
   - name: Survive
     requirements:
-      cardSet:
-        - aspects:
-            healthskill: 3
+      - aspects:
+          healthskill: 3
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
