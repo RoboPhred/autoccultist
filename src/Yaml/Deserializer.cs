@@ -29,16 +29,7 @@ namespace Autoccultist.Yaml
             parsingFiles.Push(filePath);
             try
             {
-                var deserializer = new DeserializerBuilder()
-                    .WithNamingConvention(NamingConvention)
-                    // TODO: Remove this.  Currently needed because of merge keys.
-                    // We really do not want to ignore them, and instead should give the user an error.
-                    //  This is paritcularly useful for the duck typing mechanism.
-                    .IgnoreUnmatchedProperties()
-                    .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
-                    .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
-                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
-                    .Build();
+                var deserializer = BuildDeserializer();
                 var fileContents = File.ReadAllText(filePath);
                 var parser = new MergingParser(new Parser(new StringReader(fileContents)));
                 return deserializer.Deserialize<T>(parser);
@@ -54,10 +45,7 @@ namespace Autoccultist.Yaml
             parsingFiles.Push(filePath);
             try
             {
-                var deserializer = new DeserializerBuilder()
-                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                    .IgnoreUnmatchedProperties()
-                    .Build();
+                var deserializer = BuildDeserializer();
                 var fileContents = File.ReadAllText(filePath);
                 var parser = new MergingParser(new Parser(new StringReader(fileContents)));
                 return deserializer.Deserialize(parser, type);
@@ -66,6 +54,20 @@ namespace Autoccultist.Yaml
             {
                 parsingFiles.Pop();
             }
+        }
+
+        private static IDeserializer BuildDeserializer()
+        {
+            return new DeserializerBuilder()
+                    .WithNamingConvention(NamingConvention)
+                    // TODO: Remove this.  Currently needed because of merge keys.
+                    // We really do not want to ignore them, and instead should give the user an error.
+                    //  This is paritcularly useful for the duck typing mechanism.
+                    .IgnoreUnmatchedProperties()
+                    .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
+                    .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
+                    .Build();
         }
     }
 }
