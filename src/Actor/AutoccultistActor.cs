@@ -53,7 +53,7 @@ namespace Autoccultist.Actor
             // See if we need to get the next action set.
             if (currentActionSet == null)
             {
-                currentActionSet = PendingActionSets.TryDequeue();
+                currentActionSet = PendingActionSets.DequeueOrDefault();
                 if (currentActionSet == null)
                 {
                     return;

@@ -2,6 +2,8 @@
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
         <!-- Do not require file headers -->
         <Rule Id="SA1633" Action="None"/>
+        <!-- We do not want to produce xml documentation -->
+        <Rule Id="SA0001" Action="None"/>
     </Rules>
     <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
         <!-- Do not allow removal of 'this' for instance member access; conflicts with StyleCop.Analyzers rule -->

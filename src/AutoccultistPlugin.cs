@@ -45,8 +45,6 @@ namespace Autoccultist
         {
             Instance = this;
 
-            Dispatcher.Initialize();
-
             var brainConfig = this.LoadBrainConfig();
             this.LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
 
@@ -119,7 +117,7 @@ namespace Autoccultist
         /// <param name="message">The message to log.</param>
         public void LogInfo(string message)
         {
-            Dispatcher.RunOnMainThread(() => this.Logger.LogInfo(message));
+            this.Logger.LogInfo(message);
         }
 
         /// <summary>
@@ -128,7 +126,7 @@ namespace Autoccultist
         /// <param name="message">The message to log.</param>
         public void LogTrace(string message)
         {
-            Dispatcher.RunOnMainThread(() => this.Logger.LogInfo(message));
+            this.Logger.LogInfo(message);
         }
 
         /// <summary>
@@ -137,11 +135,8 @@ namespace Autoccultist
         /// <param name="message">The message to log.</param>
         public void LogWarn(string message)
         {
-            Dispatcher.RunOnMainThread(() =>
-            {
-                this.Logger.LogWarning(message);
-                GameAPI.Notify("Autoccultist Warning", message);
-            });
+            this.Logger.LogWarning(message);
+            GameAPI.Notify("Autoccultist Warning", message);
         }
 
         /// <summary>
@@ -151,13 +146,10 @@ namespace Autoccultist
         /// <param name="message">The message to log.</param>
         public void Fatal(string message)
         {
-            Dispatcher.RunOnMainThread(() =>
-            {
-                this.Logger.LogError("Fatal - " + message);
-                GameAPI.Notify("Autoccultist Fatal", message);
-                this.isRunning = false;
-                this.brain.Stop();
-            });
+            this.Logger.LogError("Fatal - " + message);
+            GameAPI.Notify("Autoccultist Fatal", message);
+            this.isRunning = false;
+            this.brain.Stop();
         }
 
         private BrainConfig LoadBrainConfig()
