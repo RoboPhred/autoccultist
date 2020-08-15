@@ -9,6 +9,8 @@ namespace Autoccultist.Brain
         private BrainConfig config;
 
         private IEnumerator<Goal> goalEnumerator;
+        private static readonly bool FEATURE_SWITCH_LINEAR_GOALS = false;
+        
         private Goal currentGoal;
 
         public AutoccultistBrain(BrainConfig config)
@@ -39,14 +41,16 @@ namespace Autoccultist.Brain
         {
         }
 
-        public void Reset()
+        public void Reset(BrainConfig ConfigIn = null)
         {
-            if(!this.CanGoalActivate())
+            if (!this.CanGoalActivate() || ConfigIn != null)
             {
                 this.currentGoal = null;
             }
 
-            if(this.currentGoal == null)
+            this.config = ConfigIn ?? this.config;
+
+            if (this.currentGoal == null)
             {
                 this.ObtainNextGoal();
             }
@@ -154,6 +158,8 @@ namespace Autoccultist.Brain
 
         private void ObtainNextGoal()
         {
+            if (FEATURE_SWITCH_LINEAR_GOALS)
+            {
             this.currentGoal = null;
 
             // While the detected goal is satisified, move to the next one.
@@ -172,6 +178,16 @@ namespace Autoccultist.Brain
             }
 
             AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
+            }
+            else
+            {
+            var goals =
+                from goal in this.config.Goals
+                where goal.CanActivate(this)
+                select goal;
+            this.currentGoal = goals.FirstOrDefault();
+            AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.currentGoal?.Name ?? "[none]"}");
+            }
         }
     }
 }

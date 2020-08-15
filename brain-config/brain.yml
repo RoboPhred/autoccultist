@@ -16,13 +16,25 @@ sharedImperatives:
             lessThan: 30
     operation: !import operations/work-health.yml
   - &imp-crit-heal-injury
+    name: Heal injury with vitality
+    priority: critical
+    operation: !import operations/heal-injury-with-vitality.yml
+  - &imp-crit-heal-affliction
+    name: Heal affliction with vitality
+    priority: critical
+    operation: !import operations/heal-affliction-with-vitality.yml
+  - &imp-crit-heal-injury-funds
     name: Heal injury with funds
     priority: critical
     operation: !import operations/heal-injury-with-funds.yml
-  - &imp-crit-heal-affliction
+  - &imp-crit-heal-affliction-funds
     name: Heal affliction with funds
     priority: critical
     operation: !import operations/heal-affliction-with-funds.yml
+  - &imp-crit-heal-hunger
+    name: Heal Hunger
+    priority: critical
+    operation: !import operations/heal-hunger.yml
   - &imp-crit-dispose-restlessness
     name: Paint away restlessness
     priority: critical
@@ -61,9 +73,8 @@ goals:
       elementId: bequestintro
     completedWhen:
       anyOf:
-        - elementId: ascensionpowera
-        - elementId: ascensionenlightenmenta
-        - elementId: ascensionsensationa
+        - aspects:
+            desire: 1
     imperatives:
       - name: Study the Bequest
         priority: goal
@@ -85,8 +96,11 @@ goals:
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
+      - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
       - name: Contact Collaborator
         priority: goal
@@ -101,11 +115,22 @@ goals:
       # TODO: This is too vague, it might kick in instead of Survive if we have a fatigue around
       #  That is typically ok, but we might want to be able to retire goals after they are completed
       #  Or have them stick to an ordered list, skipping the ones that dont apply at the time.
-      elementId: fatigue
+      anyOf:
+        - elementId: fatigue
+        - elementId: hunger
+        - elementId: injury
+        - elementId: affliction
     completedWhen:
-      allOf:
+      anyOf:
         - elementId: health
+        - aspects:
+            healthskill: 1
     imperatives:
+      - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
+      - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
+      - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
   - name: Get Health skill A
     requirements:
@@ -116,13 +141,16 @@ goals:
         - elementId: skillhealtha
         - elementId: skillhealthb
         - elementId: skillhealthc
-        - elementId: skillhealthd_strength
         - elementId: skillhealthd_grace
+        - elementId: skillhealthd_strength
     imperatives:
       - *imp-maint-work-health
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
+      - *imp-crit-heal-hunger
       - *imp-maint-refresh-health
       - *imp-goal-vitality-lesson
   - name: Get Health skill B
@@ -132,16 +160,19 @@ goals:
       anyOf:
         - elementId: skillhealthb
         - elementId: skillhealthc
-        - elementId: skillhealthd_strength
         - elementId: skillhealthd_grace
+        - elementId: skillhealthd_strength
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
+      - *imp-crit-heal-hunger
       - name: Stronger Physique work
         priority: maintenance
-        operation: !import operations/work-skillhealtha.yml
+        operation: !import operations/work-skillhealth.yml
         forbidders:
           # Don't steal away our health skill card when we need it to upgrade.
           cardSet:
@@ -164,16 +195,19 @@ goals:
     completedWhen:
       anyOf:
         - elementId: skillhealthc
-        - elementId: skillhealthd_strength
         - elementId: skillhealthd_grace
+        - elementId: skillhealthd_strength
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
+      - *imp-crit-heal-hunger
       - name: Hardened Physique work
         priority: maintenance
-        operation: !import operations/work-skillhealthb.yml
+        operation: !import operations/work-skillhealth.yml
         forbidders:
           # Stop gaining lessons when we have enough
           cardSet:
@@ -193,12 +227,23 @@ goals:
         operation: !import operations/upgrade-skillhealthb.yml
   - name: Survive
     requirements:
-      elementId: skillhealthc
+      anyOf:
+        - elementId: skillhealthc
+        - elementId: skillhealthd_grace
+        - elementId: skillhealthd_strength
     imperatives:
       - *imp-maint-refresh-health
       - *imp-crit-dispose-restlessness
       - *imp-crit-heal-affliction
+      - *imp-crit-heal-affliction-funds
       - *imp-crit-heal-injury
+      - *imp-crit-heal-injury-funds
+      - *imp-crit-heal-hunger
       - name: Steely Physique work
         priority: maintenance
-        operation: !import operations/work-skillhealthc.yml
+        operation: !import operations/work-skillhealth.yml
+      - !import imperatives/maint-upgrade-excess-vitality.yml
+      - !import imperatives/maint-buy-books.yml
+      - !import imperatives/maint-translate-books.yml
+      - !import imperatives/maint-read-books.yml
+      - !import imperatives/crit-buy-opium.yml

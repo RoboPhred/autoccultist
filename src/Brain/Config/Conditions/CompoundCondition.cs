@@ -6,9 +6,9 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
-    [DuckTypeKeys(new[] { "allOf", "anyOf", "oneOf" })]
+    [DuckTypeKeys(new[] { "allOf", "anyOf", "noneOf" })]
     public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible
     {
         public ConditionMode Mode { get; set; }
@@ -59,7 +59,7 @@ namespace Autoccultist.Brain.Config
                 this.Mode = ConditionMode.NoneOf;
                 break;
             default:
-                throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"oneOf\".");
+                throw new YamlException(key.Start, key.End, "GameStateCondition must have one of the following keys: \"allOf\", \"anyOf\", \"noneOf\".");
             }
 
             this.Requirements = (List<IGameStateConditionConfig>) nestedObjectDeserializer(typeof(List<IGameStateConditionConfig>));

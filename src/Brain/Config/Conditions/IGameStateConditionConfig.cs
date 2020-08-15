@@ -1,6 +1,6 @@
 using Autoccultist.Yaml;
 
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain.Config.Conditions
 {
     [DuckTypeCandidate(typeof(CompoundCondition))]
     [DuckTypeCandidate(typeof(SituationCondition))]
