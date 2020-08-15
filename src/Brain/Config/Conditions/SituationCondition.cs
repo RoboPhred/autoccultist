@@ -12,10 +12,8 @@ namespace Autoccultist.Brain.Config.Conditions
 
         public string Recipe { get; set; }
         public TimeComparison TimeRemaining { get; set; }
-
-        // It would be nice if this could be IGameStateCondition, but 
-        //  it would be an error for it to contain anything other than CardSetCondition and CardChoice objects.
-        public CardSetCondition StoredCardsMatch;
+        
+        public ICardCondition StoredCardsMatch;
 
         public Dictionary<string, int> StoredAspects;
 
@@ -70,7 +68,7 @@ namespace Autoccultist.Brain.Config.Conditions
             if (this.StoredCardsMatch != null)
             {
                 var cards = situation.GetStoredStacks().ToList();
-                foreach (var choice in this.StoredCardsMatch)
+                foreach (var choice in this.StoredCardsMatch.CardSet)
                 {
                     var match = cards.FirstOrDefault(card => choice.CardMatches(card));
                     if (match == null)

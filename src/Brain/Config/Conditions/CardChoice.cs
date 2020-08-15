@@ -3,11 +3,13 @@ using Assets.Core.Interfaces;
 
 namespace Autoccultist.Brain.Config.Conditions
 {
-    public class CardChoice : ICardMatcher, IGameStateConditionConfig
+    public class CardChoice : ICardMatcher, ICardCondition
     {
         public string ElementId { get; set; }
 
         public Dictionary<string, int> Aspects { get; set; }
+
+        public List<CardChoice> CardSet => new List<CardChoice> { this };
 
         public void Validate()
         {
