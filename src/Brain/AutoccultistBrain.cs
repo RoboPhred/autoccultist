@@ -4,14 +4,14 @@ namespace Autoccultist.Brain
     using System.Linq;
     using Autoccultist.Brain.Config;
 
+    // TODO: This should not implement IGameState, as currently it just forwards to static classes.
+
     /// <summary>
     /// The AutoccultistBrain takes a BrainConfig and executes it against the game.
     /// </summary>
     public class AutoccultistBrain : IGameState
     {
         private BrainConfig config;
-
-        private IEnumerator<Goal> goalEnumerator;
 
         private Goal currentGoal;
 
@@ -22,14 +22,23 @@ namespace Autoccultist.Brain
         public AutoccultistBrain(BrainConfig config)
         {
             this.config = config;
-            this.goalEnumerator = config.Goals.GetEnumerator();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether the brain is running.
+        /// </summary>
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Starts the brain executing the configured plan.
         /// </summary>
         public void Start()
         {
+            if (this.IsRunning)
+            {
+                return;
+            }
+
             this.ResetGoalIfSatisfiedOrNull();
         }
 
@@ -38,6 +47,7 @@ namespace Autoccultist.Brain
         /// </summary>
         public void Stop()
         {
+            this.IsRunning = false;
         }
 
         /// <summary>
@@ -52,9 +62,8 @@ namespace Autoccultist.Brain
             }
 
             this.config = configIn ?? this.config;
-            this.goalEnumerator = this.config.Goals.GetEnumerator();
 
-            if (this.currentGoal == null)
+            if (this.IsRunning && this.currentGoal == null)
             {
                 this.ObtainNextGoal();
             }
@@ -65,34 +74,15 @@ namespace Autoccultist.Brain
         /// </summary>
         public void Update()
         {
-            this.ResetGoalIfSatisfiedOrNull();
-            if (this.currentGoal == null)
+            if (!this.IsRunning)
             {
                 return;
             }
 
-            // Scan through all possible imperatives and invoke the ones that can start.
-            //  Where multiple imperatives try for the same verb, invoke the highest priority
-            var candidateGroups =
-                from imperative in this.GetSatisfiableImperatives()
-                orderby imperative.Priority descending
-                group imperative.Operation by imperative.Operation.Situation into situationGroup
-                select situationGroup;
-
-            foreach (var group in candidateGroups)
+            this.ResetGoalIfSatisfiedOrNull();
+            if (this.currentGoal != null)
             {
-                var operation = group.FirstOrDefault();
-                if (operation == null)
-                {
-                    continue;
-                }
-
-                if (!SituationOrchestrator.SituationIsAvailable(operation.Situation))
-                {
-                    continue;
-                }
-
-                SituationOrchestrator.ExecuteOperation(operation);
+                this.TryStartImperatives();
             }
         }
 
@@ -128,13 +118,40 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public bool IsSituationAvailable(string situationId)
         {
-            return SituationOrchestrator.SituationIsAvailable(situationId);
+            return SituationOrchestrator.IsSituationAvailable(situationId);
         }
 
         /// <inheritdoc/>
         public bool CardsCanBeSatisfied(IReadOnlyCollection<ICardMatcher> choices)
         {
             return CardManager.CardsCanBeSatisfied(choices);
+        }
+
+        private void TryStartImperatives()
+        {
+            // Scan through all possible imperatives and invoke the ones that can start.
+            //  Where multiple imperatives try for the same verb, invoke the highest priority
+            var candidateGroups =
+                from imperative in this.GetSatisfiableImperatives()
+                orderby imperative.Priority descending
+                group imperative.Operation by imperative.Operation.Situation into situationGroup
+                select situationGroup;
+
+            foreach (var group in candidateGroups)
+            {
+                var operation = group.FirstOrDefault();
+                if (operation == null)
+                {
+                    continue;
+                }
+
+                if (!SituationOrchestrator.IsSituationAvailable(operation.Situation))
+                {
+                    continue;
+                }
+
+                SituationOrchestrator.ExecuteOperation(operation);
+            }
         }
 
         private void ResetGoalIfSatisfiedOrNull()

@@ -26,5 +26,10 @@ namespace Autoccultist.Brain
         /// Allow the orchestration to perform its on-update tasks.
         /// </summary>
         void Update();
+
+        /// <summary>
+        /// Abort the orchestration.
+        /// </summary>
+        void Abort();
     }
 }

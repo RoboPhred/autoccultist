@@ -3,6 +3,7 @@ namespace Autoccultist.Brain
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
     using Autoccultist.Actor;
@@ -16,8 +17,12 @@ namespace Autoccultist.Brain
     {
         private readonly Operation operation;
 
-        private OperationState operationState = OperationState.Starting;
+        private CancellationTokenSource cancelCurrentTask;
+
+        private OperationState operationState = OperationState.Unstarted;
+
         private string ongoingRecipe;
+
         private DateTime? completionDebounceTime = null;
 
         /// <summary>
@@ -38,12 +43,17 @@ namespace Autoccultist.Brain
         private enum OperationState
         {
             /// <summary>
-            /// The operation is starting and slotting is initial cards
+            /// The operation has yet to start.
+            /// </summary>
+            Unstarted,
+
+            /// <summary>
+            /// The operation is starting and slotting is initial cards.
             /// </summary>
             Starting,
 
             /// <summary>
-            /// The operation is performing its recipes and waiting on the result
+            /// The operation is performing its recipes and waiting on the result.
             /// </summary>
             Ongoing,
 
@@ -51,6 +61,11 @@ namespace Autoccultist.Brain
             /// The operation has finished and we are waiting for the contents to dump.
             /// </summary>
             Completing,
+
+            /// <summary>
+            /// The operation was aborted.
+            /// </summary>
+            Finished,
         }
 
         /// <summary>
@@ -84,6 +99,11 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public void Start()
         {
+            if (this.operationState != OperationState.Unstarted)
+            {
+                return;
+            }
+
             var situation = this.Situation;
             if (situation == null)
             {
@@ -97,33 +117,24 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public void Update()
         {
-            if (this.Situation == null)
+            if (this.operationState == OperationState.Unstarted)
             {
-                throw new Exception("Tried to update a situation solution with no situation.");
+                return;
             }
 
-            /* TODO: We want to hook into the completion of the situation rather than scanning it every update. */
-
-            var state = this.Situation.SituationClock.State;
-
-            if (state == SituationState.Ongoing)
+            if (this.operationState == OperationState.Starting || this.operationState == OperationState.Ongoing)
             {
-                // The situation is running its recipe.
-                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
-                this.operationState = OperationState.Ongoing;
-                this.completionDebounceTime = null;
+                var clockState = this.Situation.SituationClock.State;
+                if (clockState == SituationState.Ongoing)
+                {
+                    // The situation is running its recipe.
+                    //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
+                    this.completionDebounceTime = null;
 
-                // See if we need to slot new cards.
-                this.ContinueOperation();
-            }
-            else if (this.operationState == OperationState.Ongoing)
-            {
-                // At this point, we have seen the situation go through a recipe, so we are clear to start tracking completions.
-
-                // We need to be careful, as this might be a transient state, and the situation may still have another recipe to run.
-
-                // We have two final states: Complete (has output cards) and Unstarted (no output cards).
-                if (state == SituationState.Complete || state == SituationState.Unstarted)
+                    // See if we need to slot new cards.
+                    this.ContinueOperation();
+                }
+                else if (clockState == SituationState.Complete || clockState == SituationState.Unstarted)
                 {
                     if (this.completionDebounceTime == null)
                     {
@@ -142,9 +153,11 @@ namespace Autoccultist.Brain
             }
         }
 
-        private void Abort()
+        /// <inheritdoc/>
+        public void Abort()
         {
             AutoccultistPlugin.Instance.LogTrace($"Aborting operation {this.operation.Name}");
+            this.cancelCurrentTask?.Cancel();
             this.End();
         }
 
@@ -152,11 +165,6 @@ namespace Autoccultist.Brain
         {
             AutoccultistPlugin.Instance.LogTrace($"Completing operation {this.operation.Name}");
             this.RunCoroutine(this.CompleteOperationCoroutine());
-        }
-
-        private void End()
-        {
-            this.Completed?.Invoke(this, EventArgs.Empty);
         }
 
         private void ContinueOperation()
@@ -312,13 +320,24 @@ namespace Autoccultist.Brain
             // Async functions are fine, as they are broken up into state machines with Continue
             try
             {
-                await AutoccultistActor.PerformActions(coroutine);
+                this.cancelCurrentTask = new CancellationTokenSource();
+                await AutoccultistActor.PerformActions(coroutine, this.cancelCurrentTask.Token);
             }
             catch (Exception ex)
             {
                 AutoccultistPlugin.Instance.LogWarn($"Failed to run operation {this.operation.Name}: {ex.Message}");
                 this.Abort();
             }
+            finally
+            {
+                this.cancelCurrentTask = null;
+            }
+        }
+
+        private void End()
+        {
+            this.operationState = OperationState.Finished;
+            this.Completed?.Invoke(this, EventArgs.Empty);
         }
     }
 }

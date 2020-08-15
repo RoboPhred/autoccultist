@@ -63,7 +63,6 @@ namespace Autoccultist
                 if (this.isRunning)
                 {
                     this.LogInfo("Stopping brain");
-                    this.brain.Stop();
                     this.isRunning = false;
                 }
                 else
@@ -77,19 +76,9 @@ namespace Autoccultist
                     else
                     {
                         this.LogInfo("Starting brain");
-                        this.brain.Start();
                         this.isRunning = true;
                     }
                 }
-            }
-            else if (Input.GetKeyDown(KeyCode.F10))
-            {
-                // Ensure not running
-                this.isRunning = false;
-                this.LogInfo("Step");
-                this.brain.Start();
-                this.UpdateChildren();
-                this.brain.Stop();
             }
             else if (Input.GetKeyDown(KeyCode.F9))
             {
@@ -103,9 +92,16 @@ namespace Autoccultist
                 SituationLogger.LogSituations();
             }
 
-            if (!this.isRunning)
+            if (this.brain.IsRunning != this.isRunning)
             {
-                return;
+                if (this.isRunning)
+                {
+                    this.brain.Start();
+                }
+                else
+                {
+                    this.brain.Stop();
+                }
             }
 
             this.UpdateChildren();
@@ -162,8 +158,8 @@ namespace Autoccultist
         private void UpdateChildren()
         {
             this.brain.Update();
-            SituationOrchestrator.Update();
             AutoccultistActor.Update();
+            SituationOrchestrator.Update();
         }
     }
 }

@@ -3,6 +3,7 @@ namespace Autoccultist.Brain.Config.Conditions
     using System.Collections.Generic;
     using System.Linq;
     using Assets.Core.Interfaces;
+    using Autoccultist;
 
     /// <summary>
     /// Represents a choice of a card based on various attributes.

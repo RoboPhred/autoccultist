@@ -17,9 +17,9 @@ namespace Autoccultist.Brain
         /// </summary>
         public static void Update()
         {
-            foreach (var executor in ExecutingOperationsBySituation.Values.ToArray())
+            foreach (var operation in ExecutingOperationsBySituation.Values.ToArray())
             {
-                executor.Update();
+                operation.Update();
             }
 
             // After we update the existing situation handlers, dump any completed ones if any remain.
@@ -48,6 +48,19 @@ namespace Autoccultist.Brain
 
                 DumpSituation(situationId);
             }
+        }
+
+        /// <summary>
+        /// Aborts all ongoing operations.
+        /// </summary>
+        public static void Abort()
+        {
+            foreach (var operation in ExecutingOperationsBySituation.Values.ToArray())
+            {
+                operation.Abort();
+            }
+
+            ExecutingOperationsBySituation.Clear();
         }
 
         /// <summary>
