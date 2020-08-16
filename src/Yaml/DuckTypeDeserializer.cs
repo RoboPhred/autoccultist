@@ -24,6 +24,30 @@ namespace Autoccultist.Yaml
                 return false;
             }
 
+            // Things get gnarly here, as we might be parsing an !import tag.
+            if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
+            {
+                value = Deserializer.WithFileParser(filePath, importParser =>
+                {
+                    // Expecting a basic, non fragment single document file.
+                    importParser.Consume<StreamStart>();
+                    importParser.Consume<DocumentStart>();
+                    var result = DeserializeDuckType(importParser, expectedType, candidates, nestedObjectDeserializer);
+                    importParser.Consume<DocumentEnd>();
+                    importParser.Consume<StreamEnd>();
+                    return result;
+                });
+            }
+            else
+            {
+                value = DeserializeDuckType(reader, expectedType, candidates, nestedObjectDeserializer);
+            }
+
+            return true;
+        }
+
+        private static object DeserializeDuckType(IParser reader, Type expectedType, ICollection<Type> candidates, Func<IParser, Type, object> nestedObjectDeserializer)
+        {
             // We need to parse this object in its entirity to discover its keys.
             //  We also need to remember what we have parsed so that nestedObjectDeserializer can do its thing.
             // This replay parser will remember everything we parsed, and re-parse it for nestedObjectDeserializer.
@@ -69,13 +93,12 @@ namespace Autoccultist.Yaml
             }
 
             replayParser.Start();
-            value = nestedObjectDeserializer(replayParser, chosenType);
-            return true;
+            return nestedObjectDeserializer(replayParser, chosenType);
         }
 
         // Choose a candidate duck type based on the keys we posess.
         //  The best match is the one that has the most keys in common.
-        private static Type ChooseType(IList<Type> candidates, IList<string> keys)
+        private static Type ChooseType(ICollection<Type> candidates, IList<string> keys)
         {
             var matches =
                 from candidate in candidates

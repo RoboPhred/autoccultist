@@ -29,10 +29,10 @@ namespace Autoccultist.Yaml
         /// </summary>
         /// <param name="type">The type to find candidate duck types from.</param>
         /// <returns>A list of candidate duck types for the given type.</returns>
-        public static IList<Type> GetDuckCandidates(Type type)
+        public static ICollection<Type> GetDuckCandidates(Type type)
         {
             var candidateAttributes = (DuckTypeCandidateAttribute[])type.GetCustomAttributes(typeof(DuckTypeCandidateAttribute), false);
-            return candidateAttributes.Select(attr => attr.CandidateType).ToList();
+            return candidateAttributes.Select(attr => attr.CandidateType).ToArray();
         }
     }
 }
