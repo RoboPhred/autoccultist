@@ -22,8 +22,24 @@ namespace Autoccultist.Yaml
             if (reader.Accept<NodeEvent>(out var nodeEvent) && nodeEvent.Tag == "!import")
             {
                 reader.Consume<NodeEvent>();
-                filePath = reader.Consume<Scalar>().Value;
+
+                // Tag can either be on the scalar itself, or sometimes be followed by the scalar.
+                // Not sure about the reasoning behind this, but the latter occurs when there is more than one import in a sequence.
+                if (nodeEvent is Scalar scalar)
+                {
+                    filePath = scalar.Value;
+                }
+                else
+                {
+                    filePath = reader.Consume<Scalar>().Value;
+                }
+
                 filePath = Path.Combine(Path.GetDirectoryName(Deserializer.CurrentFilePath), filePath);
+                if (!File.Exists(filePath))
+                {
+                    throw new YamlException(nodeEvent.Start, nodeEvent.End, $"Cannot import file \"{filePath}\" as the file does not exist.");
+                }
+
                 return true;
             }
 
@@ -34,15 +50,8 @@ namespace Autoccultist.Yaml
         /// <inheritdoc/>
         public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
         {
-            if (reader.Current is NodeEvent nodeEvent && nodeEvent.Tag == "!import")
+            if (TryConsumeImport(reader, out var filePath))
             {
-                var filePath = reader.Consume<Scalar>().Value;
-                filePath = Path.Combine(Path.GetDirectoryName(Deserializer.CurrentFilePath), filePath);
-                if (!File.Exists(filePath))
-                {
-                    throw new YamlException(nodeEvent.Start, nodeEvent.End, $"Cannot import file \"{filePath}\" as the file does not exist.");
-                }
-
                 value = Deserializer.Deserialize(filePath, expectedType);
                 return true;
             }
