@@ -80,7 +80,7 @@ namespace Autoccultist.Brain.Config.Conditions
                 where this.ElementId == null || card.ElementId == this.ElementId
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where this.Aspects == null || card.Aspects.HasAspects(this.Aspects)
-                where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != false
+                where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
                 where !this.IsUnique.HasValue || card.IsUnique == this.IsUnique.Value
                 select card;
 
