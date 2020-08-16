@@ -1,91 +1,12 @@
 sharedImperatives:
-  - &imp-maint-work-health
-    name: Work with health
-    priority: maintenance
-    forbidders: &forbid-during-illhealth
-      anyOf:
-        - # Forbid if ill health is occuring
-          # TODO: Should only forbid if ongoing slot Affliction is empty
-          situation: illhealth
-        - # forbid when situation time contains stored stack seasonsickness and it has < 30 seconds remainming in its recipe
-          situation: time
-          storedCardsMatch:
-            cardSet:
-              - elementId: seasonsickness
-          timeRemaining:
-            lessThan: 30
-    operation: !import operations/work-health.yml
-  - &imp-crit-heal-injury
-    name: Heal injury with vitality
-    priority: critical
-    operation: !import operations/heal-injury-with-vitality.yml
-  - &imp-crit-heal-affliction
-    name: Heal affliction with vitality
-    priority: critical
-    operation: !import operations/heal-affliction-with-vitality.yml
-  - &imp-crit-heal-injury-funds
-    name: Heal injury with funds
-    priority: critical
-    operation: !import operations/heal-injury-with-funds.yml
-  - &imp-crit-heal-affliction-funds
-    name: Heal affliction with funds
-    priority: critical
-    operation: !import operations/heal-affliction-with-funds.yml
-  - &imp-crit-heal-hunger
-    name: Heal Hunger
-    priority: critical
-    operation: !import operations/heal-hunger.yml
-  - &imp-crit-dispose-restlessness
-    name: Paint away restlessness
-    priority: critical
-    operation: !import operations/paint-away-restlessness.yml
-  - &imp-maint-refresh-health
-    name: Refresh health
-    priority: maintenance
-    operation: !import operations/refresh-health.yml
-  - &imp-goal-vitality-lesson
+  - &learn-lesson-vitality
     name: Learn lesson from vitality
-    priority: goal
+    priority: normal
     operation: !import operations/learn-vitality-lesson.yml
-  - &imp-vitality-from-health
-    name: Gain vitality from health
-    priority: maintenance
-    forbidders: *forbid-during-illhealth
-    operation: !import operations/study-health.yml
 
 goals:
-  - name: Begin the Intro
-    requirements:
-      elementId: introjob
-    completedWhen:
-      elementId: bequestintro
-    imperatives:
-      - name: Work the intro job
-        priority: goal
-        operation:
-          situation: work
-          startingRecipe:
-            slots:
-              work:
-                elementId: introjob
-  - name: Study Bequest
-    requirements:
-      elementId: bequestintro
-    completedWhen:
-      anyOf:
-        - aspects:
-            desire: 1
-    imperatives:
-      - name: Study the Bequest
-        priority: goal
-        operation:
-          situation: study
-          startingRecipe:
-            slots:
-              study:
-                elementId: bequestintro
-              Approach:
-                elementId: passion
+  - !import goals/aspirant/begin-intro.yml
+  - !import goals/aspirant/study-bequest-passion.yml
   - name: Find a Collaborator
     requirements:
       elementId: contactintro
@@ -94,14 +15,14 @@ goals:
         - aspects:
             acquaintance: 1
     imperatives:
-      - *imp-maint-work-health
-      - *imp-crit-heal-injury
-      - *imp-crit-heal-injury-funds
-      - *imp-crit-dispose-restlessness
-      - *imp-crit-heal-affliction
-      - *imp-crit-heal-affliction-funds
-      - *imp-crit-heal-hunger
-      - *imp-maint-refresh-health
+      - !import imperatives/maint-work-health.yml
+      - !import imperatives/crit-heal-injury-vitality.yml
+      - !import imperatives/crit-heal-injury-funds.yml
+      - !import imperatives/crit-dispose-restlessness-paint.yml
+      - !import imperatives/crit-heal-affliction-vitality.yml
+      - !import imperatives/crit-heal-affliction-funds.yml
+      - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/maint-refresh-health.yml
       - name: Contact Collaborator
         priority: goal
         operation:
@@ -126,12 +47,12 @@ goals:
         - aspects:
             healthskill: 1
     imperatives:
-      - *imp-crit-heal-injury
-      - *imp-crit-heal-injury-funds
-      - *imp-crit-heal-affliction
-      - *imp-crit-heal-affliction-funds
-      - *imp-crit-heal-hunger
-      - *imp-maint-refresh-health
+      - !import imperatives/crit-heal-injury-vitality.yml
+      - !import imperatives/crit-heal-injury-funds.yml
+      - !import imperatives/crit-heal-affliction-vitality.yml
+      - !import imperatives/crit-heal-affliction-funds.yml
+      - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/maint-refresh-health.yml
   - name: Get Health skill A
     requirements:
       cardSet:
@@ -144,15 +65,15 @@ goals:
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
     imperatives:
-      - *imp-maint-work-health
-      - *imp-crit-heal-injury
-      - *imp-crit-heal-injury-funds
-      - *imp-crit-dispose-restlessness
-      - *imp-crit-heal-affliction
-      - *imp-crit-heal-affliction-funds
-      - *imp-crit-heal-hunger
-      - *imp-maint-refresh-health
-      - *imp-goal-vitality-lesson
+      - !import imperatives/maint-work-health.yml
+      - !import imperatives/crit-heal-injury-vitality.yml
+      - !import imperatives/crit-heal-injury-funds.yml
+      - !import imperatives/crit-dispose-restlessness-paint.yml
+      - !import imperatives/crit-heal-affliction-vitality.yml
+      - !import imperatives/crit-heal-affliction-funds.yml
+      - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/maint-refresh-health.yml
+      - !import imperatives/norm-learn-lesson-vitality.yml
   - name: Get Health skill B
     requirements:
       elementId: skillhealtha
@@ -163,13 +84,13 @@ goals:
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
     imperatives:
-      - *imp-maint-refresh-health
-      - *imp-crit-dispose-restlessness
-      - *imp-crit-heal-affliction
-      - *imp-crit-heal-affliction-funds
-      - *imp-crit-heal-injury
-      - *imp-crit-heal-injury-funds
-      - *imp-crit-heal-hunger
+      - !import imperatives/maint-refresh-health.yml
+      - !import imperatives/crit-dispose-restlessness-paint.yml
+      - !import imperatives/crit-heal-affliction-vitality.yml
+      - !import imperatives/crit-heal-affliction-funds.yml
+      - !import imperatives/crit-heal-injury-vitality.yml
+      - !import imperatives/crit-heal-injury-funds.yml
+      - !import imperatives/crit-heal-hunger.yml
       - name: Stronger Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -178,8 +99,8 @@ goals:
           cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
-      - *imp-vitality-from-health
-      - <<: *imp-goal-vitality-lesson
+      - !import imperatives/norm-vitality-from-health.yml
+      - <<: *learn-lesson-vitality
         forbidders:
           # Do not monopolize study when we have vitality lessons to study
           cardSet:
@@ -198,13 +119,13 @@ goals:
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
     imperatives:
-      - *imp-maint-refresh-health
-      - *imp-crit-dispose-restlessness
-      - *imp-crit-heal-affliction
-      - *imp-crit-heal-affliction-funds
-      - *imp-crit-heal-injury
-      - *imp-crit-heal-injury-funds
-      - *imp-crit-heal-hunger
+      - !import imperatives/maint-refresh-health.yml
+      - !import imperatives/crit-dispose-restlessness-paint.yml
+      - !import imperatives/crit-heal-affliction-vitality.yml
+      - !import imperatives/crit-heal-affliction-funds.yml
+      - !import imperatives/crit-heal-injury-vitality.yml
+      - !import imperatives/crit-heal-injury-funds.yml
+      - !import imperatives/crit-heal-hunger.yml
       - name: Hardened Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -214,8 +135,8 @@ goals:
             - elementId: vitalityplus
             - elementId: vitalityplus
             - elementId: vitalityplus
-      - *imp-vitality-from-health
-      - <<: *imp-goal-vitality-lesson
+      - !import imperatives/norm-vitality-from-health.yml
+      - <<: *learn-lesson-vitality
         forbidders:
           # Stop using our skill card when we have enough lessons
           cardSet:
@@ -232,13 +153,13 @@ goals:
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
     imperatives:
-      - *imp-maint-refresh-health
-      - *imp-crit-dispose-restlessness
-      - *imp-crit-heal-affliction
-      - *imp-crit-heal-affliction-funds
-      - *imp-crit-heal-injury
-      - *imp-crit-heal-injury-funds
-      - *imp-crit-heal-hunger
+      - !import imperatives/maint-refresh-health.yml
+      - !import imperatives/crit-dispose-restlessness-paint.yml
+      - !import imperatives/crit-heal-affliction-vitality.yml
+      - !import imperatives/crit-heal-affliction-funds.yml
+      - !import imperatives/crit-heal-injury-vitality.yml
+      - !import imperatives/crit-heal-injury-funds.yml
+      - !import imperatives/crit-heal-hunger.yml
       - name: Steely Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
