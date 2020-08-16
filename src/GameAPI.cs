@@ -1,5 +1,6 @@
 namespace Autoccultist
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Assets.Core.Entities;
@@ -132,7 +133,14 @@ namespace Autoccultist
         /// <param name="message">The message of the toast.</param>
         public static void Notify(string title, string message)
         {
-            Registry.Retrieve<INotifier>().ShowNotificationWindow(title, message);
+            try
+            {
+                Registry.Retrieve<INotifier>().ShowNotificationWindow(title, message);
+            }
+            catch (ApplicationException)
+            {
+                // INotifier is not available until the game fully starts up.
+            }
         }
 
         private static bool IsCardAccessable(ElementStackToken card)
