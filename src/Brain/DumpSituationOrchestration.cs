@@ -29,6 +29,12 @@ namespace Autoccultist.Brain
         public string SituationId { get; }
 
         /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"[DumpSituationOrchestration Situation={this.SituationId}]";
+        }
+
+        /// <inheritdoc/>
         public void Start()
         {
             this.DumpSituation();

@@ -71,7 +71,7 @@ namespace Autoccultist.Brain
             AutoccultistPlugin.Instance.LogInfo("We are orchestrating:");
             foreach (var entry in ExecutingOperationsBySituation)
             {
-                AutoccultistPlugin.Instance.LogInfo($"-- {entry.Key}: {entry.Value.GetType().Name}");
+                AutoccultistPlugin.Instance.LogInfo($"-- {entry.Key}: {entry.Value}");
             }
         }
 

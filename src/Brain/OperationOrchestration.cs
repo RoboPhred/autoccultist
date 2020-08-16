@@ -97,6 +97,12 @@ namespace Autoccultist.Brain
         }
 
         /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"[OperationOrchestration Operation={this.operation.Name}]";
+        }
+
+        /// <inheritdoc/>
         public void Start()
         {
             if (this.operationState != OperationState.Unstarted)
