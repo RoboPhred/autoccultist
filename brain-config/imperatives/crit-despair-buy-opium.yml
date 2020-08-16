@@ -1,9 +1,6 @@
 name: Buy a Tincture of Opium
 priority: critical
-requirements:
-  situation: despair
-  storedCardsMatch:
-    elementId: dread
+requirements: !import ../conditions/despair-unsatisfied.yml
 forbidders:
   anyOf:
     - situation: despair

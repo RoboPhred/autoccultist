@@ -5,3 +5,5 @@
   - We are still going to need something to handle reserved cards. Maybe IGameState can have a list of unreserved or unconsumed cards and a method to reserve / consume them.
 - If the game isnt in 'game mode', dont update stuff.
 - If the game transitions out of game mode, lobotomize the brain and other states.
+- More robust yaml parsing: Record errors and cleanly display to user
+  - Particulary care about what yaml file the error came from, can be multiple files in play due to !import

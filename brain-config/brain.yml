@@ -72,6 +72,7 @@ goals:
       - !import imperatives/crit-heal-affliction-vitality.yml
       - !import imperatives/crit-heal-affliction-funds.yml
       - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/crit-despair-buy-opium.yml
       - !import imperatives/maint-refresh-health.yml
       - !import imperatives/goal-learn-lesson-vitality.yml
   - name: Get Health skill B
@@ -91,6 +92,7 @@ goals:
       - !import imperatives/crit-heal-injury-vitality.yml
       - !import imperatives/crit-heal-injury-funds.yml
       - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/crit-despair-buy-opium.yml
       - name: Stronger Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -129,6 +131,7 @@ goals:
       - !import imperatives/crit-heal-injury-vitality.yml
       - !import imperatives/crit-heal-injury-funds.yml
       - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/crit-despair-buy-opium.yml
       - name: Hardened Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -166,6 +169,7 @@ goals:
       - !import imperatives/crit-heal-injury-vitality.yml
       - !import imperatives/crit-heal-injury-funds.yml
       - !import imperatives/crit-heal-hunger.yml
+      - !import imperatives/crit-despair-buy-opium.yml
       - name: Steely Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -173,4 +177,3 @@ goals:
       - !import imperatives/maint-buy-books.yml
       - !import imperatives/maint-translate-books.yml
       - !import imperatives/maint-read-books.yml
-      - !import imperatives/crit-buy-opium.yml
