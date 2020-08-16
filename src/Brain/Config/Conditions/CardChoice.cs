@@ -84,24 +84,24 @@ namespace Autoccultist.Brain.Config.Conditions
                 where !this.IsUnique.HasValue || card.IsUnique == this.IsUnique.Value
                 select card;
 
-            var candidatesOrdered = (IOrderedEnumerable<ICardState>)candidates;
-
             // Sort for age bias.
             if (this.AgeBias.HasValue)
             {
                 if (this.AgeBias == CardAgeSelection.Oldest)
                 {
-                    candidatesOrdered = candidates.OrderBy(card => card.LifetimeRemaining);
+                    candidates = candidates.OrderBy(card => card.LifetimeRemaining);
                 }
                 else if (this.AgeBias == CardAgeSelection.Youngest)
                 {
-                    candidatesOrdered = candidates.OrderByDescending(card => card.LifetimeRemaining);
+                    candidates = candidates.OrderByDescending(card => card.LifetimeRemaining);
                 }
             }
+            else
+            {
+                candidates = candidates.OrderBy(card => card.Aspects.GetWeight());
+            }
 
-            candidatesOrdered = candidatesOrdered.ThenBy(card => card.Aspects.GetWeight());
-
-            return candidatesOrdered.FirstOrDefault();
+            return candidates.FirstOrDefault();
         }
 
         /// <inheritdoc/>
