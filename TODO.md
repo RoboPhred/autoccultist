@@ -1,12 +1,15 @@
 - Operations and imperatives should automatically get a name based on the yaml file and line they were defined on
 - BrainConfig validation should be implemented alongside the yaml parser to capture the file and line number
   - There is an example of this in the YamlDotNet github
-- Either make all data come from IGameState, or get rid of it completely.
-  - We are still going to need something to handle reserved cards. Maybe IGameState can have a list of unreserved or unconsumed cards and a method to reserve / consume them.
+- Implement consumption into ICardState so simultanious orchestrations do not try to yoink eachother's cards.
 - If the game isnt in 'game mode', dont update stuff.
 - If the game transitions out of game mode, lobotomize the brain and other states.
 - More robust yaml parsing: Record errors and cleanly display to user
   - Particulary care about what yaml file the error came from, can be multiple files in play due to !import
 - extends property of imperatives should also be able to take a filename and auto-load that from the imperatives folder
 - imperativeSets property of goals should also be able to take a filename and auto-load that from the imperative-sets folder
-- Many (but not all) goals will have a common set of imperatives, we should find a way to share these.
+- Stop spamming errors on update if yaml is invalid.
+- Deal with fascination. situation `visions`, counter card with aspect `fascination` using dream with `fleeting`, or let restlessness fester into dread
+- Rethink requirements on goals. When doing goals linearly, it doesn't make much sense.
+  - Can also get us stuck with no goals at all. Should we have a fallback goal?
+  - This should be resolved with tasking, where goals can be looped / linear / parallel

@@ -6,3 +6,4 @@ startingRecipe:
       elementId: injury
     medicines:
       elementId: vitality
+      ageBias: oldest

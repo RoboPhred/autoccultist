@@ -2,7 +2,9 @@ name: Begin the Intro
 requirements:
   elementId: introjob
 completedWhen:
-  elementId: bequestintro
+  anyOf:
+    - elementId: bequestintro
+    - situation: time
 imperatives:
   - name: Work the intro job
     priority: goal

@@ -1,0 +1,19 @@
+anyOf:
+  - aspects: { text: 1 } # Non-translatable books
+    forbiddenAspects:
+      - textlatin
+      - textgreek
+      - textsanskrit
+      - textaramaic
+      - textphrygian
+      - textmandaic
+      - textfucine
+      - textvak
+    forbiddenElementIds:
+      - textbookreason
+      - textbookpassion
+      - genericrubbishbook
+  - allOf: # Greek book that is translatable
+      - aspects: { textgreek: 1 }
+      - elementId: scholargreek
+  # TODO: Other languages

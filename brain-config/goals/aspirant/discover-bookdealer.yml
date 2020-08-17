@@ -1,0 +1,21 @@
+name: Study the map to Morlands
+requirements:
+  elementId: mapbookdealer
+completedWhen:
+  anyOf:
+    - elementId: locationbookdealer
+    - elementId: locationbookdealer_exhausted
+    - elementId: hq.bookshop
+
+imperativeSets:
+  - !import ../../imperative-sets/procure-funds.yml
+  - !import ../../imperative-sets/survive.yml
+imperatives:
+  - name: Study the map to morlands
+    priority: goal
+    operation:
+      situation: study
+      startingRecipe:
+        slots:
+          study:
+            elementId: mapbookdealer

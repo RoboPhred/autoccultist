@@ -1,0 +1,20 @@
+name: Find a Collaborator
+requirements:
+  elementId: contactintro
+completedWhen:
+  allOf:
+    - aspects:
+        acquaintance: 1
+imperativeSets:
+  - !import ../../imperative-sets/survive.yml
+imperatives:
+  - !import ../../imperatives/maint-work-health.yml
+  - !import ../../imperatives/maint-refresh-health.yml
+  - name: Contact Collaborator
+    priority: goal
+    operation:
+      situation: study
+      startingRecipe:
+        slots:
+          study:
+            elementId: contactintro

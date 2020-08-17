@@ -20,3 +20,4 @@ operation:
         forbiddenElementIds:
           - textbookreason
           - textbookpassion
+          - genericrubbishbook
