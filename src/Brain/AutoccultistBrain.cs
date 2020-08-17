@@ -15,6 +15,8 @@ namespace Autoccultist.Brain
 
         private IGoal currentGoal;
 
+        private bool announceGoalChange;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoccultistBrain"/> class.
         /// </summary>
@@ -28,14 +30,6 @@ namespace Autoccultist.Brain
         /// Gets a value indicating whether the brain is running.
         /// </summary>
         public bool IsRunning { get; private set; } = false;
-
-        private IGoal CurrentGoal
-        {
-            get
-            {
-                return this.currentGoal;
-            }
-        }
 
         /// <summary>
         /// Starts the brain executing the configured plan.
@@ -64,6 +58,7 @@ namespace Autoccultist.Brain
         /// <param name="replacementGoals">The replacement list of goals to use, if desired.</param>
         public void Reset(IReadOnlyList<IGoal> replacementGoals = null)
         {
+            this.announceGoalChange = true;
             this.goals = replacementGoals ?? this.goals;
             this.goalEnumerator = this.goals.GetEnumerator();
         }
@@ -89,13 +84,11 @@ namespace Autoccultist.Brain
         /// <param name="state">The state to log the status from.</param>
         public void LogStatus(IGameState state)
         {
-            var currentGoal = this.CurrentGoal;
-
-            AutoccultistPlugin.Instance.LogInfo(string.Format("My goal is {0}", currentGoal?.Name ?? "<none>"));
+            AutoccultistPlugin.Instance.LogInfo(string.Format("My goal is {0}", this.currentGoal?.Name ?? "<none>"));
             AutoccultistPlugin.Instance.LogInfo(string.Format("I have {0} satisfiable imperatives", this.GetSatisfiableImperatives(state).Count));
-            if (currentGoal != null)
+            if (this.currentGoal != null)
             {
-                foreach (var imperative in currentGoal.Imperatives.OrderByDescending(x => x.Priority))
+                foreach (var imperative in this.currentGoal.Imperatives.OrderByDescending(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo($"Imperative - {imperative.Name}");
                     AutoccultistPlugin.Instance.LogInfo($"-- Requirements satisfied: {imperative.Requirements?.IsConditionMet(state) ?? true}");
@@ -145,15 +138,13 @@ namespace Autoccultist.Brain
 
         private IList<IImperative> GetSatisfiableImperatives(IGameState state)
         {
-            var currentGoal = this.CurrentGoal;
-
-            if (currentGoal == null)
+            if (this.currentGoal == null)
             {
                 return new IImperative[0];
             }
 
             var imperatives =
-                from imperative in currentGoal.Imperatives
+                from imperative in this.currentGoal.Imperatives
                 where imperative.CanExecute(state)
                 select imperative;
             return imperatives.ToList();
@@ -161,48 +152,64 @@ namespace Autoccultist.Brain
 
         private void UpdateCurrentGoal(IGameState state)
         {
-            var hadPreviousGoal = this.currentGoal != null;
-
             if (this.currentGoal?.IsSatisfied(state) == false)
             {
                 // Still working on the current goal.
                 return;
             }
 
-            if (hadPreviousGoal)
+            try
             {
-                AutoccultistPlugin.Instance.LogInfo($"Current goal {this.currentGoal.Name} is now satisfied.");
-            }
-
-            // Goal is satisfied, null out the current goal.
-            this.currentGoal = null;
-
-            // Find the next goal that is not satisfied.
-            // For the first iteration after the first goal, Current should be equal to the previous currentGoal, which is satisfied.
-            while (this.goalEnumerator.Current?.IsSatisfied(state) != false)
-            {
-                if (!this.goalEnumerator.MoveNext())
+                if (this.currentGoal != null)
                 {
-                    // Done with all goals
-                    GameAPI.Notify("The tasks are done", "All goals are completed.");
-                    this.Stop();
+                    AutoccultistPlugin.Instance.LogInfo($"Current goal {this.currentGoal.Name} is now satisfied.");
+                }
+
+                if (this.currentGoal != null)
+                {
+                    // Goal is changing, we should announce it.
+                    this.announceGoalChange = true;
+                }
+
+                // Goal is satisfied, null out the current goal.
+                this.currentGoal = null;
+
+                // Find the next goal that is not satisfied.
+                // For the first iteration after the first goal, Current should be equal to the previous currentGoal, which is satisfied.
+                while (this.goalEnumerator.Current?.IsSatisfied(state) != false)
+                {
+                    if (!this.goalEnumerator.MoveNext())
+                    {
+                        // Done with all goals
+                        GameAPI.Notify("The tasks are done", "All goals are completed.");
+                        this.Stop();
+                        return;
+                    }
+                }
+
+                // TODO: Rethink CanActivate; doesn't make sense with linear goals.  May still be useful with more advanced goal determination
+                /*
+                if (!this.goalEnumerator.Current.CanActivate(state))
+                {
+                    // Next goal cannot activate yet.
+                    if (this.announceGoalChange)
+                    {
+                        AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.goalEnumerator.Current.Name}, but it is not yet available.");
+                    }
+
                     return;
                 }
-            }
+                */
 
-            if (!this.goalEnumerator.Current.CanActivate(state))
+                this.currentGoal = this.goalEnumerator.Current;
+
+                // This only happens once, we do not need to check announceGoalChange
+                AutoccultistPlugin.Instance.LogInfo($"Starting goal {this.currentGoal.Name}.");
+            }
+            finally
             {
-                // Next goal cannot activate yet.
-                if (hadPreviousGoal)
-                {
-                    AutoccultistPlugin.Instance.LogTrace($"Next goal is {this.goalEnumerator.Current.Name}, but it is not yet available.");
-                }
-
-                return;
+                this.announceGoalChange = false;
             }
-
-            this.currentGoal = this.goalEnumerator.Current;
-            AutoccultistPlugin.Instance.LogInfo($"Starting goal {this.currentGoal.Name}.");
         }
     }
 }
