@@ -9,16 +9,6 @@ namespace Autoccultist.Brain.Config
     public class BrainConfig : IConfigObject
     {
         /// <summary>
-        /// Gets or sets a list of shared imperatives.
-        /// <para>
-        /// This is a convinenent storage spot for imperatives that will be referenced later by yaml anchors.
-        /// It has no other purpose and is not used in any way.
-        /// <para>
-        /// This exists as a workaround to YamlDotNet refusing to process anchors on extranious properties.
-        /// </summary>
-        public List<ImperativeConfig> SharedImperatives { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of goals for this brain config to achieve.
         /// <para>
         /// Goals will operate in order, skipping over goals until one is found that can be activated.
