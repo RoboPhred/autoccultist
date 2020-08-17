@@ -96,6 +96,8 @@ namespace Autoccultist.Yaml
         /// Obtains a <see cref="IParser"/> from a given yaml file path.
         /// </summary>
         /// <param name="filePath">The path of the file to obtain a parser for.</param>
+        /// <param name="func">The function to parse the object from the parser.</param>
+        /// <typeparam name="T">The type to deserialize.</typeparam>
         /// <returns>The parser for the given file.</returns>
         public static T WithFileParser<T>(string filePath, Func<IParser, T> func)
         {
