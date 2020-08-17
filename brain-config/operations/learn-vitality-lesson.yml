@@ -4,5 +4,7 @@ startingRecipe:
   slots:
     study:
       elementId: vitality
+      ageBias: oldest
     morevitality:
       elementId: vitality
+      ageBias: oldest

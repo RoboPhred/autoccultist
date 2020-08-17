@@ -127,20 +127,31 @@ goals:
       - name: Upgrade Hardened Physique to Steely Physique
         priority: goal
         operation: !import operations/upgrade-skillhealthb.yml
-  - name: Survive
+  - name: Read Morland books
     requirements:
-      anyOf:
-        - elementId: skillhealthc
-        - elementId: skillhealthd_grace
-        - elementId: skillhealthd_strength
+      allOf:
+        - elementId: skillhealthc # TODO: We only check skillhealthc to make this run after "Get Health skill C".  Remove this when goals are linear
+        - elementId: locationbookdealer
+        - !import conditions/can-procure-funds.yml
+    completedWhen:
+      allOf:
+        - elementId: locationbookdealer_exhausted
+        - noneOf:
+            - aspects: { text: 1 }
     imperativeSets:
       - !import imperative-sets/survive.yml
+      - !import imperative-sets/procure-funds.yml
     imperatives:
-      - name: Steely Physique work
+      - name: Physical work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
       - !import imperatives/maint-refresh-health.yml
       - !import imperatives/maint-upgrade-excess-vitality.yml
       - !import imperatives/maint-buy-books.yml
-      - !import imperatives/maint-translate-books.yml
+      - !import imperatives/maint-translate-books-greek.yml
       - !import imperatives/maint-read-books.yml
+  - name: Survive
+    requirements:
+      elementId: locationbookdealer_exhausted # TODO: We only require exhausted book dealer because goals are not yet linear.  Make goals linear and remove this.
+    imperativeSets:
+      - !import imperative-sets/survive.yml

@@ -3,4 +3,4 @@ storedCardsMatch:
   cardSet:
     - elementId: seasonsickness
 timeRemaining:
-  lessThan: 15
+  lessThan: 30

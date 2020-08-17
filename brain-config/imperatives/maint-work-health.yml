@@ -3,5 +3,10 @@ priority: maintenance
 forbidders:
   anyOf:
     - !import ../conditions/illhealth-unsatisfied.yml
-    - !import ../conditions/illhealth-pending-15secs.yml
+    - allOf: # Consider pending ill health if we would take away the last health
+        - noneOf:
+            cardSet:
+              - health
+              - health
+        - !import ../conditions/illhealth-pending-30secs.yml
 operation: !import ../operations/work-health.yml
