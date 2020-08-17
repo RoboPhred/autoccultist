@@ -1,6 +1,7 @@
 namespace Autoccultist.Brain.Config
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Autoccultist.Brain.Config.Conditions;
     using Autoccultist.GameState;
 
@@ -31,6 +32,13 @@ namespace Autoccultist.Brain.Config
         public IGameStateConditionConfig CompletedWhen { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of bundles of imperatives to also include in this goal.
+        /// <para>
+        /// These imperatives will be lower priority than the goal's normal imperatives, unless overriden with an imperative's <see cref="ImperativeConfig.Priority"> property.
+        /// </summary>
+        public List<List<ImperativeConfig>> ImperativeSets { get; set; } = new List<List<ImperativeConfig>>();
+
+        /// <summary>
         /// Gets or sets a list of imperatives this goal provides.
         /// <para>
         /// Each imperative provides an operation and conditions under which the operation will be performed.
@@ -47,7 +55,7 @@ namespace Autoccultist.Brain.Config
         IGameStateCondition IGoal.CompletedWhen => this.CompletedWhen;
 
         /// <inheritdoc/>
-        IReadOnlyList<IImperative> IGoal.Imperatives => this.Imperatives;
+        IReadOnlyList<IImperative> IGoal.Imperatives => this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
 
         /// <inheritdoc/>
         public void Validate()
@@ -63,6 +71,11 @@ namespace Autoccultist.Brain.Config
             }
 
             foreach (var imperative in this.Imperatives)
+            {
+                imperative.Validate();
+            }
+
+            foreach (var imperative in this.ImperativeSets.SelectMany(set => set))
             {
                 imperative.Validate();
             }

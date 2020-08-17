@@ -14,14 +14,10 @@ goals:
       allOf:
         - aspects:
             acquaintance: 1
+    imperativeSets:
+      - !import imperative-sets/survive.yml
     imperatives:
       - !import imperatives/maint-work-health.yml
-      - !import imperatives/crit-heal-injury-vitality.yml
-      - !import imperatives/crit-heal-injury-funds.yml
-      - !import imperatives/crit-dispose-restlessness-paint.yml
-      - !import imperatives/crit-heal-affliction-vitality.yml
-      - !import imperatives/crit-heal-affliction-funds.yml
-      - !import imperatives/crit-heal-hunger.yml
       - !import imperatives/maint-refresh-health.yml
       - name: Contact Collaborator
         priority: goal
@@ -46,12 +42,9 @@ goals:
         - elementId: health
         - aspects:
             healthskill: 1
+    imperativeSets:
+      - !import imperative-sets/survive.yml
     imperatives:
-      - !import imperatives/crit-heal-injury-vitality.yml
-      - !import imperatives/crit-heal-injury-funds.yml
-      - !import imperatives/crit-heal-affliction-vitality.yml
-      - !import imperatives/crit-heal-affliction-funds.yml
-      - !import imperatives/crit-heal-hunger.yml
       - !import imperatives/maint-refresh-health.yml
   - name: Get Health skill A
     requirements:
@@ -64,15 +57,10 @@ goals:
         - elementId: skillhealthc
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
+    imperativeSets:
+      - !import imperative-sets/survive.yml
     imperatives:
       - !import imperatives/maint-work-health.yml
-      - !import imperatives/crit-heal-injury-vitality.yml
-      - !import imperatives/crit-heal-injury-funds.yml
-      - !import imperatives/crit-dispose-restlessness-paint.yml
-      - !import imperatives/crit-heal-affliction-vitality.yml
-      - !import imperatives/crit-heal-affliction-funds.yml
-      - !import imperatives/crit-heal-hunger.yml
-      - !import imperatives/crit-despair-buy-opium.yml
       - !import imperatives/maint-refresh-health.yml
       - !import imperatives/goal-learn-lesson-vitality.yml
   - name: Get Health skill B
@@ -84,15 +72,10 @@ goals:
         - elementId: skillhealthc
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
+    imperativeSets:
+      - !import imperative-sets/survive.yml
     imperatives:
       - !import imperatives/maint-refresh-health.yml
-      - !import imperatives/crit-dispose-restlessness-paint.yml
-      - !import imperatives/crit-heal-affliction-vitality.yml
-      - !import imperatives/crit-heal-affliction-funds.yml
-      - !import imperatives/crit-heal-injury-vitality.yml
-      - !import imperatives/crit-heal-injury-funds.yml
-      - !import imperatives/crit-heal-hunger.yml
-      - !import imperatives/crit-despair-buy-opium.yml
       - name: Stronger Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -123,15 +106,10 @@ goals:
         - elementId: skillhealthc
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
+    imperativeSets:
+      - !import imperative-sets/survive.yml
     imperatives:
       - !import imperatives/maint-refresh-health.yml
-      - !import imperatives/crit-dispose-restlessness-paint.yml
-      - !import imperatives/crit-heal-affliction-vitality.yml
-      - !import imperatives/crit-heal-affliction-funds.yml
-      - !import imperatives/crit-heal-injury-vitality.yml
-      - !import imperatives/crit-heal-injury-funds.yml
-      - !import imperatives/crit-heal-hunger.yml
-      - !import imperatives/crit-despair-buy-opium.yml
       - name: Hardened Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
@@ -161,18 +139,13 @@ goals:
         - elementId: skillhealthc
         - elementId: skillhealthd_grace
         - elementId: skillhealthd_strength
+    imperativeSets:
+      - !import imperative-sets/survive.yml
     imperatives:
-      - !import imperatives/maint-refresh-health.yml
-      - !import imperatives/crit-dispose-restlessness-paint.yml
-      - !import imperatives/crit-heal-affliction-vitality.yml
-      - !import imperatives/crit-heal-affliction-funds.yml
-      - !import imperatives/crit-heal-injury-vitality.yml
-      - !import imperatives/crit-heal-injury-funds.yml
-      - !import imperatives/crit-heal-hunger.yml
-      - !import imperatives/crit-despair-buy-opium.yml
       - name: Steely Physique work
         priority: maintenance
         operation: !import operations/work-skillhealth.yml
+      - !import imperatives/maint-refresh-health.yml
       - !import imperatives/maint-upgrade-excess-vitality.yml
       - !import imperatives/maint-buy-books.yml
       - !import imperatives/maint-translate-books.yml

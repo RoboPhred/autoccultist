@@ -7,3 +7,6 @@
 - If the game transitions out of game mode, lobotomize the brain and other states.
 - More robust yaml parsing: Record errors and cleanly display to user
   - Particulary care about what yaml file the error came from, can be multiple files in play due to !import
+- extends property of imperatives should also be able to take a filename and auto-load that from the imperatives folder
+- imperativeSets property of goals should also be able to take a filename and auto-load that from the imperative-sets folder
+- Many (but not all) goals will have a common set of imperatives, we should find a way to share these.

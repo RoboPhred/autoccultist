@@ -1,0 +1,10 @@
+# This set of imperatives deals with counteracting common ailments.
+# In general, they should all be critical, to take control and deal with the issue
+# on behalf of the implementing goal.
+- !import ../imperatives/crit-dispose-restlessness-paint.yml
+- !import ../imperatives/crit-heal-affliction-vitality.yml
+- !import ../imperatives/crit-heal-affliction-funds.yml
+- !import ../imperatives/crit-heal-injury-vitality.yml
+- !import ../imperatives/crit-heal-injury-funds.yml
+- !import ../imperatives/crit-heal-hunger.yml
+- !import ../imperatives/crit-despair-buy-opium.yml
