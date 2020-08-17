@@ -2,27 +2,24 @@ namespace Autoccultist.Brain
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.Brain.Config;
     using Autoccultist.GameState;
 
-    // TODO: This should not implement IGameState, as currently it just forwards to static classes.
-
     /// <summary>
-    /// The AutoccultistBrain takes a BrainConfig and executes it against the game.
+    /// The AutoccultistBrain takes a list of goals and runs them to completion.
     /// </summary>
     public class AutoccultistBrain
     {
-        private BrainConfig config;
+        private IReadOnlyList<IGoal> goals;
 
-        private Goal currentGoal;
+        private IGoal currentGoal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoccultistBrain"/> class.
         /// </summary>
-        /// <param name="config">The config to use.</param>
-        public AutoccultistBrain(BrainConfig config)
+        /// <param name="goals">The list of goals to accomplish.</param>
+        public AutoccultistBrain(IReadOnlyList<IGoal> goals)
         {
-            this.config = config;
+            this.goals = goals;
         }
 
         /// <summary>
@@ -56,12 +53,11 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Clears the current goal, resets progress tracking, and tries to obtain the first possible goal.
         /// </summary>
-        /// <param name="configIn">The replacement config file to use, if desired.</param>
-        public void Reset(BrainConfig configIn = null)
+        /// <param name="replacementGoals">The replacement list of goals to use, if desired.</param>
+        public void Reset(IReadOnlyList<IGoal> replacementGoals = null)
         {
-            AutoccultistPlugin.Instance.LogInfo($"Resetting brain [new config: {configIn != null}]");
             this.currentGoal = null;
-            this.config = configIn ?? this.config;
+            this.goals = replacementGoals ?? this.goals;
         }
 
         /// <summary>
@@ -106,7 +102,7 @@ namespace Autoccultist.Brain
             }
             else
             {
-                foreach (var goal in this.config.Goals)
+                foreach (var goal in this.goals)
                 {
                     AutoccultistPlugin.Instance.LogInfo("Goal " + goal.Name);
                 }
@@ -153,11 +149,11 @@ namespace Autoccultist.Brain
             }
         }
 
-        private IList<Imperative> GetSatisfiableImperatives(IGameState state)
+        private IList<IImperative> GetSatisfiableImperatives(IGameState state)
         {
             if (this.currentGoal == null)
             {
-                return new Imperative[0];
+                return new IImperative[0];
             }
 
             var imperatives =
@@ -180,7 +176,7 @@ namespace Autoccultist.Brain
         private void ObtainNextGoal(IGameState state)
         {
             var goals =
-                from goal in this.config.Goals
+                from goal in this.goals
                 where goal.CanActivate(state)
                 select goal;
             this.currentGoal = goals.FirstOrDefault();

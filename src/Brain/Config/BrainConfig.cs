@@ -16,14 +16,14 @@ namespace Autoccultist.Brain.Config
         /// <para>
         /// This exists as a workaround to YamlDotNet refusing to process anchors on extranious properties.
         /// </summary>
-        public List<Imperative> SharedImperatives { get; set; }
+        public List<ImperativeConfig> SharedImperatives { get; set; }
 
         /// <summary>
         /// Gets or sets a list of goals for this brain config to achieve.
         /// <para>
         /// Goals will operate in order, skipping over goals until one is found that can be activated.
         /// </summary>
-        public List<Goal> Goals { get; set; }
+        public List<GoalConfig> Goals { get; set; }
 
         /// <summary>
         /// Loads a BrainConfig from the given file.

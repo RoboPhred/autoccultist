@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain
 {
     /// <summary>
     /// Specifies the priority of a task.

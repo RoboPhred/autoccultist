@@ -8,7 +8,7 @@ namespace Autoccultist.Brain.Config
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
     /// </summary>
-    public class Operation : INamedConfigObject, IGameStateCondition
+    public class OperationConfig : INamedConfigObject, IGameStateCondition, IOperation
     {
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -27,6 +27,9 @@ namespace Autoccultist.Brain.Config
         /// Gets or sets a dictionary of recipe ids to recipe solutions for each ongoing recipe the situation may encounter.
         /// </summary>
         public Dictionary<string, RecipeSolution> OngoingRecipes { get; set; } = new Dictionary<string, RecipeSolution>();
+
+        /// <inheritdoc/>
+        IReadOnlyDictionary<string, RecipeSolution> IOperation.OngoingRecipes => this.OngoingRecipes;
 
         /// <inheritdoc/>
         public void Validate()

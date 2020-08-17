@@ -10,7 +10,7 @@ namespace Autoccultist.Brain.Config
     /// <para>
     /// Goals are made out of multiple imperatives, which trigger the actual actions against the game.
     /// </summary>
-    public class Goal : INamedConfigObject
+    public class GoalConfig : INamedConfigObject, IGoal
     {
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -35,7 +35,19 @@ namespace Autoccultist.Brain.Config
         /// <para>
         /// Each imperative provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        public List<Imperative> Imperatives { get; set; } = new List<Imperative>();
+        public List<ImperativeConfig> Imperatives { get; set; } = new List<ImperativeConfig>();
+
+        /// <inheritdoc/>
+        string IGoal.Name => this.Name;
+
+        /// <inheritdoc/>
+        IGameStateCondition IGoal.Requirements => this.Requirements;
+
+        /// <inheritdoc/>
+        IGameStateCondition IGoal.CompletedWhen => this.CompletedWhen;
+
+        /// <inheritdoc/>
+        IReadOnlyList<IImperative> IGoal.Imperatives => this.Imperatives;
 
         /// <inheritdoc/>
         public void Validate()

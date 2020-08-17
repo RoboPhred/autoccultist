@@ -3,7 +3,6 @@ namespace Autoccultist.Brain
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.Brain.Config;
 
     /// <summary>
     /// A static class responsible for mangaing all situation orchestrations.
@@ -103,7 +102,7 @@ namespace Autoccultist.Brain
         /// Executes the given operation.
         /// </summary>
         /// <param name="operation">The operation to execute.</param>
-        public static void ExecuteOperation(Operation operation)
+        public static void ExecuteOperation(IOperation operation)
         {
             if (!IsSituationAvailable(operation.Situation))
             {

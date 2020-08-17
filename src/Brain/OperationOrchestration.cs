@@ -8,14 +8,13 @@ namespace Autoccultist.Brain
     using Assets.TabletopUi;
     using Autoccultist.Actor;
     using Autoccultist.Actor.Actions;
-    using Autoccultist.Brain.Config;
 
     /// <summary>
     /// An orchestration of a situation that executes an operation.
     /// </summary>
     public class OperationOrchestration : ISituationOrchestration
     {
-        private readonly Operation operation;
+        private readonly IOperation operation;
 
         private CancellationTokenSource cancelCurrentTask;
 
@@ -29,7 +28,7 @@ namespace Autoccultist.Brain
         /// Initializes a new instance of the <see cref="OperationOrchestration"/> class.
         /// </summary>
         /// <param name="operation">The operation for this orchestration to execute.</param>
-        public OperationOrchestration(Operation operation)
+        public OperationOrchestration(IOperation operation)
         {
             this.operation = operation;
         }

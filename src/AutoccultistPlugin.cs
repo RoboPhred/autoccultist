@@ -50,7 +50,7 @@ namespace Autoccultist
             var brainConfig = this.LoadBrainConfig();
             this.LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
 
-            this.brain = new AutoccultistBrain(brainConfig);
+            this.brain = new AutoccultistBrain(brainConfig.Goals);
 
             this.LogInfo("Autoccultist initialized.");
         }
@@ -73,7 +73,7 @@ namespace Autoccultist
                     if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         var config = this.LoadBrainConfig();
-                        this.brain.Reset(config);
+                        this.brain.Reset(config.Goals);
                     }
                     else
                     {

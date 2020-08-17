@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Brain
 {
     using System.Collections.Generic;
     using Autoccultist.Brain.Config.Conditions;
