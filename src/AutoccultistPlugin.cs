@@ -6,6 +6,7 @@ namespace Autoccultist
     using Autoccultist.Brain;
     using Autoccultist.Brain.Config;
     using Autoccultist.GameState;
+    using Autoccultist.GUI;
     using UnityEngine;
 
     /// <summary>
@@ -41,6 +42,25 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Gets a value indicating whether the brain is running.
+        /// </summary>
+        public bool IsRunning
+        {
+            get
+            {
+                return this.isRunning;
+            }
+        }
+
+        public AutoccultistBrain Brain
+        {
+            get
+            {
+                return this.brain;
+            }
+        }
+
+        /// <summary>
         /// Starts the mod.
         /// </summary>
         public void Start()
@@ -55,55 +75,50 @@ namespace Autoccultist
             this.LogInfo("Autoccultist initialized.");
         }
 
+        public void ResetBrain()
+        {
+            AutoccultistPlugin.Instance.LogInfo("Resetting brain");
+            var config = this.LoadBrainConfig();
+            this.brain.Reset(config.Goals);
+        }
+
+        public void StartBrain()
+        {
+            this.isRunning = true;
+        }
+
+        public void StopBrain()
+        {
+            this.isRunning = false;
+        }
+
+        /// <summary>
+        /// Renders the mod GUI.
+        /// </summary>
+        public void OnGUI()
+        {
+            TestGUI.OnGUI();
+        }
+
         /// <summary>
         /// Runs an update tick on the mod.
         /// </summary>
         public void Update()
         {
-            var state = new Lazy<IGameState>(() => GameStateFactory.FromCurrentState());
+            GameStateProvider.Invalidate();
 
-            if (Input.GetKeyDown(KeyCode.F11))
-            {
-                if (this.isRunning)
-                {
-                    this.isRunning = false;
-                }
-                else
-                {
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        AutoccultistPlugin.Instance.LogInfo("Resetting brain");
-                        var config = this.LoadBrainConfig();
-                        this.brain.Reset(config.Goals);
-                    }
-                    else
-                    {
-                        this.isRunning = true;
-                    }
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.F9))
-            {
-                this.LogInfo("Dumping status");
-                this.brain.LogStatus(state.Value);
-                SituationOrchestrator.LogStatus();
-            }
-            else if (Input.GetKeyDown(KeyCode.F8))
-            {
-                this.LogInfo("Dumping situations");
-                SituationLogger.LogSituations();
-            }
+            this.ProcessHotkeys();
 
             if (this.brain.IsRunning != this.isRunning)
             {
                 if (this.isRunning)
                 {
-                    AutoccultistPlugin.Instance.LogInfo("Starting brain");
+                    this.LogInfo("Starting brain");
                     this.brain.Start();
                 }
                 else
                 {
-                    AutoccultistPlugin.Instance.LogInfo("Stopping brain");
+                    this.LogInfo("Stopping brain");
                     this.brain.Stop();
                     SituationOrchestrator.Abort();
                     AutoccultistActor.AbortAllActions();
@@ -115,7 +130,7 @@ namespace Autoccultist
                 // The idea was to always update children,
                 //  but some things crash if updating when the main game isn't in play.
                 // This needs more work.
-                this.UpdateChildren(state.Value);
+                this.UpdateChildren();
             }
         }
 
@@ -160,6 +175,39 @@ namespace Autoccultist
             this.brain.Stop();
         }
 
+        private void ProcessHotkeys()
+        {
+            if (Input.GetKeyDown(KeyCode.F11))
+            {
+                if (this.isRunning)
+                {
+                    this.StopBrain();
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        this.ResetBrain();
+                    }
+                    else
+                    {
+                        this.StartBrain();
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.F9))
+            {
+                this.LogInfo("Dumping status");
+                this.brain.LogStatus(GameStateProvider.Current);
+                SituationOrchestrator.LogStatus();
+            }
+            else if (Input.GetKeyDown(KeyCode.F8))
+            {
+                this.LogInfo("Dumping situations");
+                SituationLogger.LogSituations();
+            }
+        }
+
         private BrainConfig LoadBrainConfig()
         {
             var configPath = Path.Combine(AssemblyDirectory, "brain.yml");
@@ -167,9 +215,9 @@ namespace Autoccultist
             return BrainConfig.Load(configPath);
         }
 
-        private void UpdateChildren(IGameState state)
+        private void UpdateChildren()
         {
-            this.brain.Update(state);
+            this.brain.Update(GameStateProvider.Current);
             AutoccultistActor.Update();
             SituationOrchestrator.Update();
         }

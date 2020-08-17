@@ -32,6 +32,17 @@ namespace Autoccultist.Brain
         public bool IsRunning { get; private set; } = false;
 
         /// <summary>
+        /// Gets the current goal.
+        /// </summary>
+        public IGoal CurrentGoal
+        {
+            get
+            {
+                return this.currentGoal;
+            }
+        }
+
+        /// <summary>
         /// Starts the brain executing the configured plan.
         /// </summary>
         public void Start()

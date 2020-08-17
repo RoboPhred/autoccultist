@@ -15,9 +15,7 @@ namespace Autoccultist
         /// <returns>The chosen card, or null if none was found.</returns>
         public static IElementStack ChooseCard(ICardChooser choice)
         {
-            // FIXME: Things that care about this should receive the passed state.
-            //  We should NOT be recalculating state here!
-            var state = GameStateFactory.FromCurrentState();
+            var state = GameStateProvider.Current;
             return choice.ChooseCard(state.TabletopCards)?.ToElementStack();
         }
     }
