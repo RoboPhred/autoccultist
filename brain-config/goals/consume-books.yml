@@ -1,17 +1,8 @@
-name: Read books
-requirements:
-  aspects: { text: 1 }
-  forbiddenElementIds:
-    - textbookreason
-    - textbookpassion
-    - genericrubbishbook
+name: Read and translate books
+requirements: !import ../conditions/readable-or-translatable-books.yml
 completedWhen:
   noneOf:
-    - aspects: { text: 1 }
-      forbiddenElementIds:
-        - textbookreason
-        - textbookpassion
-        - genericrubbishbook
+    - !import ../conditions/readable-or-translatable-books.yml
 imperativeSets:
   - !import ../imperative-sets/survive.yml
   - !import ../imperative-sets/procure-funds.yml

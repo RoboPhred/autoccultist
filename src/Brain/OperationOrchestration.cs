@@ -116,7 +116,6 @@ namespace Autoccultist.Brain
             }
 
             this.operationState = OperationState.Starting;
-            AutoccultistPlugin.Instance.LogTrace("Starting operation " + this.operation.Name);
             this.RunCoroutine(this.StartOperationCoroutine());
         }
 
@@ -162,14 +161,13 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public void Abort()
         {
-            AutoccultistPlugin.Instance.LogTrace($"Aborting operation {this.operation.Name}");
             this.cancelCurrentTask?.Cancel();
+            BrainEventSink.OnOperationAborted(this.operation);
             this.End();
         }
 
         private void Complete()
         {
-            AutoccultistPlugin.Instance.LogTrace($"Completing operation {this.operation.Name}");
             this.RunCoroutine(this.CompleteOperationCoroutine());
         }
 
@@ -201,6 +199,8 @@ namespace Autoccultist.Brain
 
         private IEnumerable<IAutoccultistAction> StartOperationCoroutine()
         {
+            BrainEventSink.OnOperationStarted(this.operation);
+
             yield return new OpenSituationAction(this.SituationId);
             yield return new DumpSituationAction(this.SituationId);
 
@@ -218,7 +218,7 @@ namespace Autoccultist.Brain
 
             yield return firstSlotAction;
 
-            // Refresh the slots and get the rest of the cards
+            // Refresh the slots and get the rest of the cards.
             slots = this.Situation.situationWindow.GetStartingSlots();
             foreach (var slot in slots.Skip(1))
             {
@@ -307,6 +307,7 @@ namespace Autoccultist.Brain
             }
             finally
             {
+                BrainEventSink.OnOperationCompleted(this.operation);
                 this.End();
             }
         }

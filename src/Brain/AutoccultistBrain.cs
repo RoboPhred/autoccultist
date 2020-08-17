@@ -162,7 +162,7 @@ namespace Autoccultist.Brain
             {
                 if (this.currentGoal != null)
                 {
-                    AutoccultistPlugin.Instance.LogInfo($"Current goal {this.currentGoal.Name} is now satisfied.");
+                    BrainEventSink.OnGoalCompleted(this.currentGoal);
                 }
 
                 if (this.currentGoal != null)
@@ -202,9 +202,7 @@ namespace Autoccultist.Brain
                 */
 
                 this.currentGoal = this.goalEnumerator.Current;
-
-                // This only happens once, we do not need to check announceGoalChange
-                AutoccultistPlugin.Instance.LogInfo($"Starting goal {this.currentGoal.Name}.");
+                BrainEventSink.OnGoalStarted(this.currentGoal);
             }
             finally
             {
