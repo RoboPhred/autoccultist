@@ -70,8 +70,9 @@ namespace Autoccultist
                 }
                 else
                 {
-                    if (Input.GetKeyDown(KeyCode.LeftShift))
+                    if (Input.GetKey(KeyCode.LeftShift))
                     {
+                        AutoccultistPlugin.Instance.LogInfo("Resetting brain");
                         var config = this.LoadBrainConfig();
                         this.brain.Reset(config.Goals);
                     }
@@ -97,10 +98,12 @@ namespace Autoccultist
             {
                 if (this.isRunning)
                 {
+                    AutoccultistPlugin.Instance.LogInfo("Starting brain");
                     this.brain.Start();
                 }
                 else
                 {
+                    AutoccultistPlugin.Instance.LogInfo("Stopping brain");
                     this.brain.Stop();
                     SituationOrchestrator.Abort();
                     AutoccultistActor.AbortAllActions();

@@ -34,7 +34,7 @@ namespace Autoccultist.Brain.Config
         /// <summary>
         /// Gets or sets a list of bundles of imperatives to also include in this goal.
         /// <para>
-        /// These imperatives will be lower priority than the goal's normal imperatives, unless overriden with an imperative's <see cref="ImperativeConfig.Priority"> property.
+        /// These imperatives will be lower priority than the goal's normal imperatives, unless overriden with an imperative's <see cref="ImperativeConfig.Priority"/> property.
         /// </summary>
         public List<List<ImperativeConfig>> ImperativeSets { get; set; } = new List<List<ImperativeConfig>>();
 
@@ -65,17 +65,13 @@ namespace Autoccultist.Brain.Config
                 throw new InvalidConfigException("Goal must have a name.");
             }
 
-            if (this.Imperatives == null || this.Imperatives.Count == 0)
+            var imperatives = this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
+            if (imperatives.Length == 0)
             {
                 throw new InvalidConfigException("Goal must have an imperative");
             }
 
-            foreach (var imperative in this.Imperatives)
-            {
-                imperative.Validate();
-            }
-
-            foreach (var imperative in this.ImperativeSets.SelectMany(set => set))
+            foreach (var imperative in imperatives)
             {
                 imperative.Validate();
             }
