@@ -1,3 +1,0 @@
-name: Heal Hunger
-priority: critical
-operation: !import ../operations/heal-hunger.yml

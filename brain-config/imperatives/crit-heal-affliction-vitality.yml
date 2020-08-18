@@ -1,3 +1,0 @@
-name: Heal affliction with vitality
-priority: critical
-operation: !import ../operations/heal-affliction-with-vitality.yml

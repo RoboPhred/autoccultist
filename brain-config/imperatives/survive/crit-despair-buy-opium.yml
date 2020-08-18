@@ -1,6 +1,6 @@
 name: Buy a Tincture of Opium
 priority: critical
-requirements: !import ../conditions/despair-unsatisfied.yml
+requirements: !import ../../conditions/despair-unsatisfied.yml
 forbidders:
   anyOf:
     - situation: despair
