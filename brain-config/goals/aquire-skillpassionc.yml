@@ -18,12 +18,3 @@ imperatives:
   - name: Upgrade Wild Imagination to Fevered Imagination
     priority: goal
     operation: !import ../operations/upgrade-skillpassionb.yml
-  - name: Paint
-    priority: goal
-    forbidders:
-      # Do not use skillpassion when we need to upgrade it
-      cardSet:
-        - elementId: glimmeringplus
-        - elementId: glimmeringplus
-        - elementId: glimmeringplus
-    operation: !import ../operations/work-skillpassion-mystique-noyearning.yml

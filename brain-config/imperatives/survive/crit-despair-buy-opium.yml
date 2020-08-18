@@ -1,4 +1,4 @@
-name: Buy a Tincture of Opium
+name: Counter dspair with Opium
 priority: critical
 requirements: !import ../../conditions/despair-unsatisfied.yml
 forbidders:
