@@ -18,9 +18,9 @@ goals:
       - !import imperative-sets/survive.yml
     imperatives:
       - !import imperatives/maint-refresh-health.yml
-  - !import goals/aquire-healthskilla.yml
-  - !import goals/aquire-healthskillb.yml
-  - !import goals/aquire-healthskillc.yml
+  - !import goals/aquire-skillhealtha.yml
+  - !import goals/aquire-skillhealthb.yml
+  - !import goals/aquire-skillhealthc.yml
   - !import goals/aspirant/discover-bookdealer.yml
   - !import goals/consume-bookdealer.yml
   - name: Survive
