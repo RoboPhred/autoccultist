@@ -1,0 +1,10 @@
+name: Learn lesson from glimmering
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: glimmering
+      ageBias: oldest
+    moreglimmering:
+      elementId: glimmering
+      ageBias: oldest

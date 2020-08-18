@@ -2,6 +2,7 @@ name: Upgrade Stronger Physique
 situation: study
 startingRecipe:
   slots:
+    # TODO: Combine this with upgrade-skillhealthb by selecitng either skillhealtha or skillhealthb for study
     study:
       elementId: skillhealtha
     V1:

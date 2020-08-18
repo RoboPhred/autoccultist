@@ -1,0 +1,29 @@
+name: Aquire a Fevered Imagination
+requirements:
+  aspects: { passionskill: 2 }
+completedWhen:
+  aspects: { passionskill: 3 }
+imperativeSets:
+  - !import ../imperative-sets/survive.yml
+  - !import ../imperative-sets/procure-funds.yml
+imperatives:
+  - extends: !import ../imperatives/goal-learn-lesson-glimmering.yml
+    forbidders:
+      # Do not monopolize study when we have glimmering lessons to study
+      cardSet:
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+  - !import ../imperatives/norm-glimmering-from-passion.yml
+  - name: Upgrade Wild Imagination to Fevered Imagination
+    priority: goal
+    operation: !import ../operations/upgrade-skillpassionb.yml
+  - name: Paint
+    priority: goal
+    forbidders:
+      # Do not use skillpassion when we need to upgrade it
+      cardSet:
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+    operation: !import ../operations/work-skillpassion-mystique-noyearning.yml

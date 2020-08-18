@@ -1,12 +1,8 @@
 name: Get Health skill B
 requirements:
-  elementId: skillhealtha
+  aspects: { healthskill: 1 }
 completedWhen:
-  anyOf:
-    - elementId: skillhealthb
-    - elementId: skillhealthc
-    - elementId: skillhealthd_grace
-    - elementId: skillhealthd_strength
+  aspects: { healthskill: 2 }
 imperativeSets:
   - !import ../imperative-sets/survive.yml
 imperatives:
@@ -20,6 +16,7 @@ imperatives:
           cardSet:
             - elementId: vitalityplus
             - elementId: vitalityplus
+          # Don't use health if we need it for an affliction
         - !import ../conditions/illhealth-unsatisfied.yml
         - !import ../conditions/illhealth-pending-30secs.yml
   - !import ../imperatives/norm-vitality-from-health.yml

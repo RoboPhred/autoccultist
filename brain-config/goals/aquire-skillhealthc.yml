@@ -1,12 +1,8 @@
 name: Get Health skill C
 requirements:
-  cardSet:
-    - elementId: skillhealthb
+  aspects: { healthskill: 2 }
 completedWhen:
-  anyOf:
-    - elementId: skillhealthc
-    - elementId: skillhealthd_grace
-    - elementId: skillhealthd_strength
+  aspects: { healthskill: 3 }
 imperativeSets:
   - !import ../imperative-sets/survive.yml
 imperatives:
