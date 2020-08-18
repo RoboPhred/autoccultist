@@ -8,7 +8,7 @@ namespace Autoccultist.Brain.Config.Conditions
     [DuckTypeCandidate(typeof(CompoundCondition))]
     [DuckTypeCandidate(typeof(SituationCondition))]
     [DuckTypeCandidate(typeof(CardSetCondition))]
-    [DuckTypeCandidate(typeof(CardChoice))]
+    [DuckTypeCandidate(typeof(CardChoiceCondition))]
     public interface IGameStateConditionConfig : IConfigObject, IGameStateCondition
     {
     }

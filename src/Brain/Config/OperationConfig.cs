@@ -21,15 +21,19 @@ namespace Autoccultist.Brain.Config
         /// <summary>
         /// Gets or sets the recipe used to start this situation.
         /// </summary>
-        public RecipeSolution StartingRecipe { get; set; }
+        public RecipeSolutionConfig StartingRecipe { get; set; }
 
         /// <summary>
         /// Gets or sets a dictionary of recipe ids to recipe solutions for each ongoing recipe the situation may encounter.
         /// </summary>
-        public Dictionary<string, RecipeSolution> OngoingRecipes { get; set; } = new Dictionary<string, RecipeSolution>();
+        public Dictionary<string, RecipeSolutionConfig> OngoingRecipes { get; set; } = new Dictionary<string, RecipeSolutionConfig>();
 
         /// <inheritdoc/>
-        IReadOnlyDictionary<string, RecipeSolution> IOperation.OngoingRecipes => this.OngoingRecipes;
+        IRecipeSolution IOperation.StartingRecipe => this.StartingRecipe;
+
+        /// <inheritdoc/>
+        // IReadOnlyDictionary is not marked with out params...
+        IReadOnlyDictionary<string, IRecipeSolution> IOperation.OngoingRecipes => this.OngoingRecipes.ToDictionary(entry => entry.Key, entry => entry.Value as IRecipeSolution);
 
         /// <inheritdoc/>
         public void Validate()
@@ -52,12 +56,10 @@ namespace Autoccultist.Brain.Config
                 return false;
             }
 
-            IEnumerable<CardChoice> requiredCards = new CardChoice[0];
+            // We currently take advantage of only ever having RecipeSolutionConfigs and rely on knowledge of
+            //  their optional cards.  This may be problematic if we ever get other types of recipe solutions.
+            IEnumerable<RecipeCardChoiceConfig> requiredCards = new RecipeCardChoiceConfig[0];
 
-            // We need to ensure all cards are available, including ongoing.
-
-            // TODO: More complex and long running situations may not allow us to have all we need right at the start
-            // We should be able to have optional card choices that do not count to starting.
             if (this.StartingRecipe != null)
             {
                 requiredCards = requiredCards.Concat(this.StartingRecipe.Slots.Values);
@@ -71,6 +73,9 @@ namespace Autoccultist.Brain.Config
                     select choice);
             }
 
+            // TODO: Optional card slots.
+            // Do not require optional cards to be satisfied.
+            // requiredCards = requiredCards.Where(x => !x.Optional);
             return state.CardsCanBeSatisfied(requiredCards.ToArray());
         }
     }

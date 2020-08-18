@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config.Conditions
+namespace Autoccultist.Brain.Config
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,7 +8,7 @@ namespace Autoccultist.Brain.Config.Conditions
     /// <summary>
     /// Represents a choice of a card based on various attributes.
     /// </summary>
-    public class CardChoice : ICardChooser, ICardConditionConfig
+    public class CardChoiceConfig : ICardChooser, IConfigObject
     {
         /// <summary>
         /// Specify whether the card choice should go for the oldest or youngest card it can find.
@@ -102,18 +102,6 @@ namespace Autoccultist.Brain.Config.Conditions
             }
 
             return candidates.FirstOrDefault();
-        }
-
-        /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
-        {
-            return this.ChooseCard(state.TabletopCards) != null;
-        }
-
-        /// <inheritdoc/>
-        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
-        {
-            return this.ChooseCard(cards) != null;
         }
     }
 }

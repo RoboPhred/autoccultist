@@ -14,7 +14,7 @@ namespace Autoccultist.Brain.Config.Conditions
         /// Each choice in this list must match to a different card.  Once a card is chosen by a card choice,
         /// other card choices in the list will be unable to match that same card.
         /// </summary>
-        public List<CardChoice> CardSet { get; set; } = new List<CardChoice>();
+        public List<CardChoiceCondition> CardSet { get; set; } = new List<CardChoiceCondition>();
 
         /// <inheritdoc/>
         public void Validate()

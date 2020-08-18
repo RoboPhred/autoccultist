@@ -20,11 +20,11 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Gets the recipe used to start this situation.
         /// </summary>
-        RecipeSolution StartingRecipe { get; }
+        IRecipeSolution StartingRecipe { get; }
 
         /// <summary>
         /// Gets a dictionary of recipe ids to recipe solutions for each ongoing recipe the situation may encounter.
         /// </summary>
-        IReadOnlyDictionary<string, RecipeSolution> OngoingRecipes { get; }
+        IReadOnlyDictionary<string, IRecipeSolution> OngoingRecipes { get; }
     }
 }

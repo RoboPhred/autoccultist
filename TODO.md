@@ -13,3 +13,6 @@
 - Rethink requirements on goals. When doing goals linearly, it doesn't make much sense.
   - Can also get us stuck with no goals at all. Should we have a fallback goal?
   - This should be resolved with tasking, where goals can be looped / linear / parallel
+- Make situation auto-dump optional (config in brain.yml?) - Consider cards in completed situations to be 'on table' / available in IGameState
+- `firstMatch` ICardChooser that takes several card choosers and picks the first chooser to match. Use this so that skillhealth and skillpassion upgrade ops can be agnostic to what particular card is being upgraded.
+- Support limiting aspects: `aspects: { foo: 1 }` stays as `at least one`, but implement `aspects: { foo: { lessThan: 3 } }` to put an upper limit on aspects.
