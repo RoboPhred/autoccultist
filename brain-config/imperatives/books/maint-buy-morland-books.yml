@@ -11,12 +11,4 @@ requirements:
     - elementId: funds
     - elementId: funds
     - elementId: funds
-operation:
-  name: Buy a book from Morland
-  situation: explore
-  startingRecipe:
-    slots:
-      explore:
-        elementId: locationbookdealer
-      Cost:
-        elementId: funds
+operation: !import ../../operations/buy-book-from-morland.yml
