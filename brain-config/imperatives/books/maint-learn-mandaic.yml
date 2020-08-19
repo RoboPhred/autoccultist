@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholarmandaic
+operation:
+  name: Learn a Language (M)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbookmandaic
+  

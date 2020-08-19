@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholarlatin
+operation:
+  name: Learn a Language (L)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbooklatin
+  
