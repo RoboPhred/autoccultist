@@ -1,0 +1,19 @@
+name: Aquire a Wild Imagination
+requirements:
+  aspects: { passionskill: 1 }
+completedWhen:
+  aspects: { passionskill: 2 }
+imperativeSets:
+  - !import ../imperative-sets/survive.yml
+  - !import ../imperative-sets/procure-funds.yml
+imperatives:
+  - extends: !import ../imperatives/goal-learn-lesson-glimmering.yml
+    forbidders:
+      # Do not monopolize study when we have glimmering lessons to study
+      cardSet:
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+  - !import ../imperatives/norm-glimmering-from-passion.yml
+  - name: Upgrade Vivid Imagination to Wild Imagination
+    priority: goal
+    operation: !import ../operations/upgrade-skillpassiona.yml

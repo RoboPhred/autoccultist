@@ -248,7 +248,7 @@ namespace Autoccultist.Brain
             yield return new CloseSituationAction(this.SituationId);
         }
 
-        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(RecipeSolution recipe, bool standalone = true)
+        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(IRecipeSolution recipe, bool standalone = true)
         {
             var slots = this.Situation.situationWindow.GetOngoingSlots();
             if (slots.Count == 0)
@@ -312,10 +312,11 @@ namespace Autoccultist.Brain
             }
         }
 
-        private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, RecipeSolution recipe)
+        private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, IRecipeSolution recipe)
         {
             var slotId = slot.GoverningSlotSpecification.Id;
-            if (!recipe.Slots.TryGetValue(slotId, out var cardChoice))
+            var cardChoice = recipe.ResolveSlotCard(slot);
+            if (cardChoice == null)
             {
                 return null;
             }

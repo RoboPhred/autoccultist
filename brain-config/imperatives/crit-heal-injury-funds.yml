@@ -1,3 +1,0 @@
-name: Heal injury with funds
-priority: critical
-operation: !import ../operations/heal-injury-with-funds.yml

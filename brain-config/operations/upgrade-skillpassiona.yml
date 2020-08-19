@@ -1,0 +1,11 @@
+name: Upgrade Vivid Imagination
+situation: study
+startingRecipe:
+  slots:
+    study:
+      # TODO: Combine this with upgrade-skillpassionb by selecitng either skillpassiona or skillpassionb for study
+      elementId: skillpassiona
+    G1:
+      elementId: glimmeringplus
+    G2:
+      elementId: glimmeringplus

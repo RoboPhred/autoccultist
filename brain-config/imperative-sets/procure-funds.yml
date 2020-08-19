@@ -4,3 +4,6 @@
 - name: Skilled physical work
   priority: maintenance
   operation: !import ../operations/work-skillhealth.yml
+- name: Unskilled physical work
+  priority: maintenance
+  operation: !import ../operations/work-health.yml

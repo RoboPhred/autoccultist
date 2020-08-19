@@ -92,7 +92,6 @@ namespace Autoccultist.Brain.Config.Conditions
         /// <inheritdoc/>
         public bool IsConditionMet(IGameState state)
         {
-            // TODO: Using GameAPI...  Probably should get this data from IGameState
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {

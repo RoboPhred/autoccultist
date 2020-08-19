@@ -2,6 +2,7 @@ namespace Autoccultist.Brain
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Autoccultist.Brain.Config;
     using Autoccultist.GameState;
 
     /// <summary>
@@ -94,9 +95,12 @@ namespace Autoccultist.Brain
                     AutoccultistPlugin.Instance.LogInfo($"-- Requirements satisfied: {imperative.Requirements?.IsConditionMet(state) ?? true}");
                     AutoccultistPlugin.Instance.LogInfo($"-- Forbidders in place: {imperative.Forbidders?.IsConditionMet(state) ?? false}");
                     AutoccultistPlugin.Instance.LogInfo($"-- Situation {imperative.Operation.Situation} available: {state.IsSituationAvailable(imperative.Operation.Situation)}");
-                    foreach (var choice in imperative.Operation.StartingRecipe.Slots)
+                    if (imperative.Operation.StartingRecipe is RecipeSolutionConfig recipeSolution)
                     {
-                        AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {state.CardsCanBeSatisfied(new[] { choice.Value })}");
+                        foreach (var choice in recipeSolution.Slots)
+                        {
+                            AutoccultistPlugin.Instance.LogInfo($"-- Slot {choice.Key} satisfied: {state.CardsCanBeSatisfied(new[] { choice.Value })}");
+                        }
                     }
                 }
             }

@@ -1,0 +1,3 @@
+name: Heal affliction with funds
+priority: critical
+operation: !import ../../operations/heal-affliction-with-funds.yml
