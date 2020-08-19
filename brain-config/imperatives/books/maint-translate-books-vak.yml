@@ -1,12 +1,12 @@
 name: Translate books
 priority: maintenance
 operation:
-  name: Translate a book from Greek
+  name: Translate a book (V)
   situation: study
   startingRecipe:
     slots:
       study:
-        elementId: scholargreek
+        elementId: scholarvak
       Text:
-        aspects: {textgreek: 1}
+        aspects: {textvak: 1}
   

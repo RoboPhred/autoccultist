@@ -1,0 +1,11 @@
+# This set of imperatives deals with translating books.
+# In general, they should all be maint, to defer to anything
+# more important to do with the books or the Study Verb.
+- !import ../imperatives/books/maint-translate-books-fucine.yml
+- !import ../imperatives/books/maint-translate-books-vak.yml
+- !import ../imperatives/books/maint-translate-books-greek.yml
+- !import ../imperatives/books/maint-translate-books-phrygian.yml
+- !import ../imperatives/books/maint-translate-books-mandaic.yml
+- !import ../imperatives/books/maint-translate-books-latin.yml
+- !import ../imperatives/books/maint-translate-books-aramaic.yml
+- !import ../imperatives/books/maint-translate-books-sanskrit.yml
