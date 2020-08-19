@@ -115,7 +115,8 @@ try to log errors when it cannot do it's job properly. Create a github issue wit
 Project dependencies should be placed in a folder called `externals` in the project's root directory.
 This folder should include:
 
-- BepInEx.dll - Copied from the BepInEx 5.0 installation under `BepInEx/core`
+- BepInEx.dll - Copied from the BepInEx installation under `BepInEx/core`
+- 0Harmony.dll - Copied from the BepInEx installation under `BepInEx/core`
 - Assembly-CSharp.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
 - UnityEngine.CoreModule.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
 - UnityEngine.UI.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`

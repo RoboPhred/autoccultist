@@ -14,6 +14,17 @@ namespace Autoccultist
     /// </summary>
     public static class GameAPI
     {
+        static GameAPI()
+        {
+            GameEventSource.GameStarted += OnGameStarted;
+            GameEventSource.GameEnded += OnGameEnded;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the game is running.
+        /// </summary>
+        public static bool IsRunning { get; private set; }
+
         /// <summary>
         /// Gets a value indicating whether the game is interactable.
         /// </summary>
@@ -141,6 +152,16 @@ namespace Autoccultist
             {
                 // INotifier is not available until the game fully starts up.
             }
+        }
+
+        private static void OnGameStarted(object sender, EventArgs e)
+        {
+            IsRunning = true;
+        }
+
+        private static void OnGameEnded(object sender, EventArgs e)
+        {
+            IsRunning = false;
         }
 
         private static bool IsCardAccessable(ElementStackToken card)

@@ -6,6 +6,7 @@ namespace Autoccultist
     using Autoccultist.Brain;
     using Autoccultist.Brain.Config;
     using Autoccultist.GameState;
+    using HarmonyLib;
     using UnityEngine;
 
     /// <summary>
@@ -15,6 +16,8 @@ namespace Autoccultist
     public class AutoccultistPlugin : BepInEx.BaseUnityPlugin
     {
         private bool isRunning = false;
+
+        private BrainConfig config;
 
         private AutoccultistBrain brain;
 
@@ -47,10 +50,15 @@ namespace Autoccultist
         {
             Instance = this;
 
-            var brainConfig = this.LoadBrainConfig();
-            this.LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
+            var harmony = new Harmony("net.robophreddev.CultistSimulator.Autoccultist");
+            harmony.PatchAll();
 
-            this.brain = new AutoccultistBrain(brainConfig.Goals);
+            // Not really needed until game starts, but its convienent seeing it throw errors at game start if the
+            //  config is bad.
+            this.config = this.LoadBrainConfig();
+
+            GameEventSource.GameStarted += this.OnGameStarted;
+            GameEventSource.GameEnded += this.OnGameEnded;
 
             this.LogInfo("Autoccultist initialized.");
         }
@@ -60,6 +68,11 @@ namespace Autoccultist
         /// </summary>
         public void Update()
         {
+            if (this.brain == null)
+            {
+                return;
+            }
+
             var state = new Lazy<IGameState>(() => GameStateFactory.FromCurrentState());
 
             if (Input.GetKeyDown(KeyCode.F11))
@@ -158,6 +171,24 @@ namespace Autoccultist
             GameAPI.Notify("Autoccultist Fatal", message);
             this.isRunning = false;
             this.brain.Stop();
+        }
+
+        private void OnGameStarted(object sender, EventArgs e)
+        {
+            this.LogInfo("Game has started.  Initializing brain.");
+            this.brain = new AutoccultistBrain(this.config.Goals);
+            if (this.isRunning)
+            {
+                this.brain.Start();
+            }
+        }
+
+        private void OnGameEnded(object sender, EventArgs e)
+        {
+            this.LogInfo("Game has stopped: Destroying brain.");
+            this.brain.Stop();
+            this.brain = null;
+            this.isRunning = false;
         }
 
         private BrainConfig LoadBrainConfig()

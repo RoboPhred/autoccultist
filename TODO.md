@@ -1,9 +1,6 @@
 - Operations and imperatives should automatically get a name based on the yaml file and line they were defined on
 - BrainConfig validation should be implemented alongside the yaml parser to capture the file and line number
   - There is an example of this in the YamlDotNet github
-- Implement consumption into ICardState so simultanious orchestrations do not try to yoink eachother's cards.
-- If the game isnt in 'game mode', dont update stuff.
-- If the game transitions out of game mode, lobotomize the brain and other states.
 - More robust yaml parsing: Record errors and cleanly display to user
   - Particulary care about what yaml file the error came from, can be multiple files in play due to !import
 - extends property of imperatives should also be able to take a filename and auto-load that from the imperatives folder
@@ -16,3 +13,23 @@
 - Make situation auto-dump optional (config in brain.yml?) - Consider cards in completed situations to be 'on table' / available in IGameState
 - `firstMatch` ICardChooser that takes several card choosers and picks the first chooser to match. Use this so that skillhealth and skillpassion upgrade ops can be agnostic to what particular card is being upgraded.
 - Support limiting aspects: `aspects: { foo: 1 }` stays as `at least one`, but implement `aspects: { foo: { lessThan: 3 } }` to put an upper limit on aspects.
+- Mansus support
+  - MapTokenContainer, MapController
+  - TabletopManager.ReturnFromMansus receives the chosen card
+
+### Card consumption
+
+Implement consumption into ICardState so simultanious orchestrations do not try to yoink eachother's cards.
+
+If consumed and aborted: ElementStackToken.ReturnToTabletop
+Only succeed if private ElementStackToken.IsOnTabletop `this.transform.parent.GetComponent<TabletopTokenContainer>() != null;`
+Throw error if ElementStackToken.Defunct
+Unique IDs? ElementStackToken.EntityWithMutationsId
+
+### Handle game state changes
+
+- If the game isnt in 'game mode', dont update stuff.
+- If the game transitions out of game mode, lobotomize the brain and other states.
+
+TabletopManager.BeginGame
+TabletopManager.OnDestroy
