@@ -11,8 +11,6 @@ namespace Autoccultist.Brain
     {
         private static readonly Queue<IGoal> GoalQueue = new Queue<IGoal>();
 
-        public static bool IsRunning { get; private set; }
-
         private static IGoal currentGoal;
 
         static TaskDriver()
@@ -20,22 +18,51 @@ namespace Autoccultist.Brain
             GoalDriver.OnGoalCompleted += OnGoalCompleted;
         }
 
-        public static void SetTasks(IList<IGoal> tasks)
+        /// <summary>
+        /// Gets a value indicating whether the task driver is running.
+        /// </summary>
+        public static bool IsRunning { get; private set; }
+
+        /// <summary>
+        /// Sets the task list for the TaskDriver to execute.
+        /// </summary>
+        /// <param name="tasks">The tasks to execute.</param>
+        public static void SetTasks(IReadOnlyList<IGoal> tasks)
         {
             TryStopGoal();
+
             GoalQueue.Clear();
             foreach (var task in tasks)
             {
                 GoalQueue.Enqueue(task);
             }
+
+            if (IsRunning)
+            {
+                TryStartGoal();
+            }
         }
 
+        /// <summary>
+        /// Resets the TaskDriver and clears all tasks.
+        /// </summary>
+        public static void Reset()
+        {
+            GoalQueue.Clear();
+        }
+
+        /// <summary>
+        /// Starts the TaskDriver executing its tasks.
+        /// </summary>
         public static void Start()
         {
             IsRunning = true;
             TryStartGoal();
         }
 
+        /// <summary>
+        /// Stops the TaskDriver from executing its tasks.
+        /// </summary>
         public static void Stop()
         {
             IsRunning = false;
@@ -57,9 +84,11 @@ namespace Autoccultist.Brain
             currentGoal = GoalQueue.DequeueOrDefault();
             if (currentGoal == null)
             {
+                AutoccultistPlugin.Instance.LogTrace("TaskDriver: No goal to start.");
                 return;
             }
 
+            AutoccultistPlugin.Instance.LogTrace("TaskDriver: Adding goal " + currentGoal.Name);
             GoalDriver.AddGoal(currentGoal);
         }
 
@@ -80,6 +109,7 @@ namespace Autoccultist.Brain
                 return;
             }
 
+            AutoccultistPlugin.Instance.LogTrace("TaskDriver: Current goal " + currentGoal.Name + " completed.");
             currentGoal = null;
             TryStartGoal();
         }

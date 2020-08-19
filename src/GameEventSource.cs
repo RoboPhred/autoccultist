@@ -26,7 +26,7 @@ namespace Autoccultist
         }
 
         /// <summary>
-        /// /// Raise the <see cref="GameEnded"/> event.
+        /// Raise the <see cref="GameEnded"/> event.
         /// </summary>
         public static void RaiseGameEnded()
         {

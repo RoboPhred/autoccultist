@@ -14,12 +14,6 @@ namespace Autoccultist
     /// </summary>
     public static class GameAPI
     {
-        static GameAPI()
-        {
-            GameEventSource.GameStarted += OnGameStarted;
-            GameEventSource.GameEnded += OnGameEnded;
-        }
-
         /// <summary>
         /// Gets a value indicating whether the game is running.
         /// </summary>
@@ -56,6 +50,17 @@ namespace Autoccultist
             {
                 return TabletopManager._tabletop;
             }
+        }
+
+        /// <summary>
+        /// Initialize the GameAPI.
+        /// <para>
+        /// Cannot be a static constructor, as this must run early, before GameAPI is naturally used.
+        /// </summary>
+        public static void Initialize()
+        {
+            GameEventSource.GameStarted += OnGameStarted;
+            GameEventSource.GameEnded += OnGameEnded;
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ namespace Autoccultist.Brain
         public static void AddGoal(IGoal goal)
         {
             ActiveGoals.Add(goal);
+            BrainEventSink.OnGoalStarted(goal);
         }
 
         /// <summary>
@@ -36,13 +37,43 @@ namespace Autoccultist.Brain
         }
 
         /// <summary>
+        /// Clears all goals and resets the goal driver.
+        /// </summary>
+        public static void Reset()
+        {
+            ActiveGoals.Clear();
+        }
+
+        /// <summary>
         /// Update and execute goals.
         /// </summary>
         /// <param name="state">The game state to update on.</param>
-        public static void Update(IGameState state)
+        public static void Update()
         {
+            var state = GameStateFactory.FromCurrentState();
             TryCompleteGoals(state);
             TryStartImperatives(state);
+        }
+
+        /// <summary>
+        /// Write out status to the console.
+        /// </summary>
+        public static void DumpStatus()
+        {
+            var state = GameStateFactory.FromCurrentState();
+            AutoccultistPlugin.Instance.LogInfo("Active Goals:");
+            foreach (var goal in ActiveGoals)
+            {
+                AutoccultistPlugin.Instance.LogInfo("- " + goal.Name);
+                AutoccultistPlugin.Instance.LogInfo("- Imperatives");
+                foreach (var imperative in goal.Imperatives.OrderBy(x => x.Priority))
+                {
+                    AutoccultistPlugin.Instance.LogInfo("- - " + imperative.Name);
+                    AutoccultistPlugin.Instance.LogInfo("- - - Requirements met: " + (imperative.Requirements?.IsConditionMet(state) != false));
+                    AutoccultistPlugin.Instance.LogInfo("- - - Forbidders in place: " + (imperative.Forbidders?.IsConditionMet(state) == true));
+                    AutoccultistPlugin.Instance.LogInfo("- - - Operation ready: " + imperative.Operation.IsConditionMet(state));
+                }
+            }
         }
 
         private static void TryCompleteGoals(IGameState state)
@@ -62,6 +93,7 @@ namespace Autoccultist.Brain
         {
             ActiveGoals.Remove(goal);
             OnGoalCompleted?.Invoke(null, new GoalCompletedEventArgs(goal));
+            BrainEventSink.OnGoalCompleted(goal);
         }
 
         private static void TryStartImperatives(IGameState state)
