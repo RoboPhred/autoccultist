@@ -74,7 +74,10 @@ namespace Autoccultist
         /// </summary>
         public static void Update()
         {
-            TriggerMechanicalBeat();
+            if (IsRunning)
+            {
+                TriggerMechanicalBeat();
+            }
         }
 
         private static void OnGameEnded(object sender, EventArgs e)
