@@ -1,10 +1,8 @@
 namespace Autoccultist
 {
-    using System;
     using System.IO;
-    using Autoccultist.Actor;
     using Autoccultist.Brain;
-    using Autoccultist.Brain.Config;
+    using Autoccultist.Config;
     using HarmonyLib;
     using UnityEngine;
 

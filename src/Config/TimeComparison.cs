@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Config
 {
     /// <summary>
     /// Specifies a comparison against a time value.

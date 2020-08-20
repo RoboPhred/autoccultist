@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Config
 {
     /// <summary>
     /// A card choice in a recipe solution.

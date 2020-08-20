@@ -1,8 +1,9 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Config
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.Brain.Config.Conditions;
+    using Autoccultist.Brain;
+    using Autoccultist.Config.Conditions;
     using Autoccultist.GameState;
 
     /// <summary>

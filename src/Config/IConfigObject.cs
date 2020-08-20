@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Config
 {
     /// <summary>
     /// Defines a node in the config tree.

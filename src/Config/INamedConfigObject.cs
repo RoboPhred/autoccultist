@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Config
 {
     /// <summary>
     /// Defines a configuration node with a human friendly display name.

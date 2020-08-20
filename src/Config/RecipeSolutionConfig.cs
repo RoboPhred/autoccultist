@@ -1,8 +1,9 @@
-namespace Autoccultist.Brain.Config
+namespace Autoccultist.Config
 {
     using System.Collections.Generic;
     using System.Linq;
     using Assets.CS.TabletopUI;
+    using Autoccultist.Brain;
     using Autoccultist.GameState;
 
     /// <summary>
