@@ -20,4 +20,12 @@ operation:
         forbiddenElementIds:
           - textbookreason
           - textbookpassion
+          - textbookgreek
+          - textbooklatin
+          - textbooksanskrit
+          - textbookaramaic
+          - textbookphrygian
+          - textbookfucine
+          - textbookmandaic
+          - textbookvak
           - genericrubbishbook

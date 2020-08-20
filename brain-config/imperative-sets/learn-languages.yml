@@ -1,0 +1,11 @@
+# This set of imperatives deals with learning languages.
+# In general, they should all be maint, to defer to anything
+# more important to do with the textbooks or the Study Verb.
+- !import ../imperatives/books/maint-learn-fucine.yml
+- !import ../imperatives/books/maint-learn-vak.yml
+- !import ../imperatives/books/maint-learn-greek.yml
+- !import ../imperatives/books/maint-learn-phrygian.yml
+- !import ../imperatives/books/maint-learn-mandaic.yml
+- !import ../imperatives/books/maint-learn-latin.yml
+- !import ../imperatives/books/maint-learn-aramaic.yml
+- !import ../imperatives/books/maint-learn-sanskrit.yml

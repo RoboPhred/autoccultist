@@ -1,0 +1,12 @@
+name: Translate books
+priority: maintenance
+operation:
+  name: Translate a book (A)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: scholararamaic
+      Text:
+        aspects: {textaramaic: 1}
+  

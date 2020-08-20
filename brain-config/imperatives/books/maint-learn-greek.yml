@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholargreek
+operation:
+  name: Learn a Language (G)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbookgreek
+  

@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholararamaic
+operation:
+  name: Learn a Language (A)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbookaramaic
+  
