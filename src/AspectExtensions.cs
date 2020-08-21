@@ -28,7 +28,17 @@ namespace Autoccultist
         {
             foreach (var entry in matchingAspects)
             {
-                if (!aspects.TryGetValue(entry.Key, out var degree) || degree < entry.Value)
+                if (!aspects.TryGetValue(entry.Key, out int degree))
+                {
+                    degree = 0;
+                }
+
+                // Using cultist simulator conventions.  Negative means "less than"
+                if (entry.Value > 0 && degree < entry.Value)
+                {
+                    return false;
+                }
+                else if (entry.Value < 0 && degree >= -entry.Value)
                 {
                     return false;
                 }
