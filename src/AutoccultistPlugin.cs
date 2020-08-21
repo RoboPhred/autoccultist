@@ -3,6 +3,8 @@ namespace Autoccultist
     using System.IO;
     using Autoccultist.Brain;
     using Autoccultist.Config;
+    using Autoccultist.GameState;
+    using Autoccultist.GUI;
     using HarmonyLib;
     using UnityEngine;
 
@@ -35,25 +37,6 @@ namespace Autoccultist
         }
 
         /// <summary>
-        /// Gets a value indicating whether the brain is running.
-        /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return this.isRunning;
-            }
-        }
-
-        public AutoccultistBrain Brain
-        {
-            get
-            {
-                return this.brain;
-            }
-        }
-
-        /// <summary>
         /// Starts the mod.
         /// </summary>
         public void Start()
@@ -71,21 +54,14 @@ namespace Autoccultist
             this.LogInfo("Autoccultist initialized.");
         }
 
-        public void ResetBrain()
+        /// <summary>
+        /// Reload all tasks in the TaskDriver.
+        /// </summary>
+        public void ReloadTasks()
         {
-            AutoccultistPlugin.Instance.LogInfo("Resetting brain");
+            this.LogInfo("Reloading tasks");
             var config = this.LoadBrainConfig();
-            this.brain.Reset(config.Goals);
-        }
-
-        public void StartBrain()
-        {
-            this.isRunning = true;
-        }
-
-        public void StopBrain()
-        {
-            this.isRunning = false;
+            TaskDriver.SetTasks(config.Goals);
         }
 
         /// <summary>
@@ -93,7 +69,7 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
-            TestGUI.OnGUI();
+            DiagnosticGUI.OnGUI();
         }
 
         /// <summary>
@@ -101,6 +77,7 @@ namespace Autoccultist
         /// </summary>
         public void Update()
         {
+            GameStateProvider.Invalidate();
             MechanicalHeart.Update();
             this.HandleHotkeys();
         }
@@ -158,9 +135,7 @@ namespace Autoccultist
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        this.LogInfo("Reloading tasks");
-                        var config = this.LoadBrainConfig();
-                        TaskDriver.SetTasks(config.Goals);
+                        this.ReloadTasks();
                     }
                     else
                     {
@@ -193,39 +168,6 @@ namespace Autoccultist
             MechanicalHeart.Stop();
             TaskDriver.Stop();
             GoalDriver.Reset();
-        }
-
-        private void ProcessHotkeys()
-        {
-            if (Input.GetKeyDown(KeyCode.F11))
-            {
-                if (this.isRunning)
-                {
-                    this.StopBrain();
-                }
-                else
-                {
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        this.ResetBrain();
-                    }
-                    else
-                    {
-                        this.StartBrain();
-                    }
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.F9))
-            {
-                this.LogInfo("Dumping status");
-                this.brain.LogStatus(GameStateProvider.Current);
-                SituationOrchestrator.LogStatus();
-            }
-            else if (Input.GetKeyDown(KeyCode.F8))
-            {
-                this.LogInfo("Dumping situations");
-                SituationLogger.LogSituations();
-            }
         }
 
         private BrainConfig LoadBrainConfig()

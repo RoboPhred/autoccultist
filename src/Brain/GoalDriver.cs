@@ -18,6 +18,17 @@ namespace Autoccultist.Brain
         public static event EventHandler<GoalCompletedEventArgs> OnGoalCompleted;
 
         /// <summary>
+        /// Gets a list of the current active goals.
+        /// </summary>
+        public static IReadOnlyList<IGoal> CurrentGoals
+        {
+            get
+            {
+                return ActiveGoals.ToArray();
+            }
+        }
+
+        /// <summary>
         /// Add a goal to the active goals.
         /// </summary>
         /// <param name="goal">The goal to make active.</param>
@@ -47,10 +58,9 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Update and execute goals.
         /// </summary>
-        /// <param name="state">The game state to update on.</param>
         public static void Update()
         {
-            var state = GameStateFactory.FromCurrentState();
+            var state = GameStateProvider.Current;
             TryCompleteGoals(state);
             TryStartImperatives(state);
         }
@@ -60,7 +70,7 @@ namespace Autoccultist.Brain
         /// </summary>
         public static void DumpStatus()
         {
-            var state = GameStateFactory.FromCurrentState();
+            var state = GameStateProvider.Current;
             AutoccultistPlugin.Instance.LogInfo("Active Goals:");
             foreach (var goal in ActiveGoals)
             {

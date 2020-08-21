@@ -12,6 +12,18 @@ namespace Autoccultist.Brain
         private static readonly IDictionary<string, ISituationOrchestration> ExecutingOperationsBySituation = new Dictionary<string, ISituationOrchestration>();
 
         /// <summary>
+        /// Gets all current orchestrations.
+        /// </summary>
+        public static IReadOnlyDictionary<string, ISituationOrchestration> CurrentOrchestrations
+        {
+            get
+            {
+                // Make a copy to ensure it is not mutated.
+                return ExecutingOperationsBySituation.ToDictionary(entry => entry.Key, entry => entry.Value);
+            }
+        }
+
+        /// <summary>
         /// Run all updates for the situation orchestrator.
         /// </summary>
         public static void Update()
