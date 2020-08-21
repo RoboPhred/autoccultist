@@ -62,9 +62,9 @@ namespace Autoccultist.GUI
                 AutoccultistPlugin.Instance.ReloadTasks();
             }
 
-            GUILayout.Label("Current Goals: " + string.Join("\n", GoalDriver.CurrentGoals.Select(x => x.Name)));
+            GUILayout.Label("Current Goals:\n" + string.Join("\n", GoalDriver.CurrentGoals.Select(x => x.Name)));
 
-            GUILayout.Label("Current Orchestrations: " + string.Join("\n", SituationOrchestrator.CurrentOrchestrations.Select(entry => $"{entry.Key}={entry.Value}")));
+            GUILayout.Label("Current Orchestrations:\n" + string.Join("\n", SituationOrchestrator.CurrentOrchestrations.Select(entry => $"{entry.Key}: {entry.Value}")));
         }
     }
 }
