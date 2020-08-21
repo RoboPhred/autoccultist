@@ -14,6 +14,8 @@ namespace Autoccultist
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.Autoccultist", "Autoccultist", "0.0.1")]
     public class AutoccultistPlugin : BepInEx.BaseUnityPlugin
     {
+        private bool isUiEnabled = false;
+
         /// <summary>
         /// Gets the instance of the plugin.
         /// </summary>
@@ -69,7 +71,10 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
-            DiagnosticGUI.OnGUI();
+            if (this.isUiEnabled)
+            {
+                DiagnosticGUI.OnGUI();
+            }
         }
 
         /// <summary>
@@ -143,6 +148,10 @@ namespace Autoccultist
                         this.StartAutoccultist();
                     }
                 }
+            }
+            else if (Input.GetKeyDown(KeyCode.F10))
+            {
+                this.isUiEnabled = !this.isUiEnabled;
             }
             else if (Input.GetKeyDown(KeyCode.F9))
             {
