@@ -27,11 +27,12 @@ namespace Autoccultist
         }
 
         // https://weblog.west-wind.com/posts/2010/Dec/20/Finding-a-Relative-Path-in-NET
+
         /// <summary>
         /// Returns a relative path string from a full path based on a base path
         /// provided.
         /// </summary>
-        /// <param name="fullPath">The path to convert. Can be either a file or a directory</param>
+        /// <param name="fullPath">The path to convert. Can be either a file or a directory.</param>
         /// <param name="basePath">The base path on which relative processing is based. Should be a directory.</param>
         /// <returns>
         /// String of the relative path.

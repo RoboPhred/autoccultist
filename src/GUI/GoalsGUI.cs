@@ -48,11 +48,12 @@ namespace Autoccultist.GUI
             {
                 GUILayout.BeginHorizontal();
 
-                GUILayout.Label(goal.Name);
                 if (GUILayout.Button("Cancel", GUILayout.Width(75)))
                 {
                     GoalDriver.RemoveGoal(goal);
                 }
+
+                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
 
                 GUILayout.EndHorizontal();
             }
@@ -74,16 +75,16 @@ namespace Autoccultist.GUI
 
                 GUI.enabled = true;
 
-                GUILayout.Label(goal.Name);
+                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
 
                 if (goal.CanActivate(GameStateProvider.Current))
                 {
-                    GUILayout.Label("[CanActivate]");
+                    GUILayout.Label("[CanActivate]", GUILayout.ExpandWidth(false));
                 }
 
                 if (goal.IsSatisfied(GameStateProvider.Current))
                 {
-                    GUILayout.Label("[IsSatisfied]");
+                    GUILayout.Label("[IsSatisfied]", GUILayout.ExpandWidth(false));
                 }
 
                 GUILayout.EndHorizontal();

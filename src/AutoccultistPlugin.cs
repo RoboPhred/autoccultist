@@ -69,6 +69,11 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
+            if (!GameAPI.IsRunning)
+            {
+                return;
+            }
+
             DiagnosticGUI.OnGUI();
             GoalsGUI.OnGUI();
         }

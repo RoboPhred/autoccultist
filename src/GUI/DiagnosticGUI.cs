@@ -67,7 +67,7 @@ namespace Autoccultist.GUI
                 }
             }
 
-            if (GUILayout.Button("Reload Config"))
+            if (GUILayout.Button("Reload All Configs"))
             {
                 AutoccultistPlugin.Instance.ReloadTasks();
             }
