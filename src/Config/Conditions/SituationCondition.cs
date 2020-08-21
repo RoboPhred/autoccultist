@@ -51,7 +51,7 @@ namespace Autoccultist.Config.Conditions
         /// Gets or sets a time comparison to the time remaining for the situation's current recipe.
         /// If null, this condition will not be checked.
         /// </summary>
-        public TimeComparison TimeRemaining { get; set; }
+        public ValueCondition TimeRemaining { get; set; }
 
         /// <summary>
         /// Gets or sets the card condition matching cards stored inside this condition, excluding slotted cards.
@@ -76,7 +76,7 @@ namespace Autoccultist.Config.Conditions
         /// Aspects are taken from all contained cards, both slotted and stored.
         /// If null, this condition will not be checked.
         /// </summary>
-        public Dictionary<string, int> ContainedAspects { get; set; }
+        public Dictionary<string, ValueCondition> ContainedAspects { get; set; }
 
         /// <inheritdoc/>
         public void Validate()
@@ -103,7 +103,7 @@ namespace Autoccultist.Config.Conditions
                 return false;
             }
 
-            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsComparisonTrue(situation.RecipeTimeRemaining ?? 0)))
+            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0)))
             {
                 return false;
             }
@@ -146,7 +146,11 @@ namespace Autoccultist.Config.Conditions
             if (this.ContainedAspects != null)
             {
                 var aspects = situation.GetAspects();
-                if (!aspects.HasAspects(this.ContainedAspects))
+
+                // Damned lack of covariance on IReadOnlyDictionary
+                var containedAspects = this.ContainedAspects.ToDictionary(entry => entry.Key, entry => (IValueCondition)entry.Value);
+
+                if (!aspects.HasAspects(containedAspects))
                 {
                     return false;
                 }

@@ -3,6 +3,7 @@ namespace Autoccultist.Config
     using System.Collections.Generic;
     using System.Linq;
     using Autoccultist;
+    using Autoccultist.Config.Conditions;
     using Autoccultist.GameState;
 
     /// <summary>
@@ -36,7 +37,7 @@ namespace Autoccultist.Config
         /// Gets or sets a dictionary of aspect names to degrees to filter the cards by.
         /// If set, a matching card must have all of the specified aspects of at least the given degree.
         /// </summary>
-        public Dictionary<string, int> Aspects { get; set; }
+        public Dictionary<string, ValueCondition> Aspects { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the card must or must not be unique.
@@ -74,12 +75,14 @@ namespace Autoccultist.Config
         {
             // TODO: We could have some weighing mechanism to let a config specify which cards are higher priority than others?
 
-            // TODO: We also want to filter by time remaining, and preference either least or most time remaining.
+            // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
+            var aspectsAsCondition = this.Aspects?.ToDictionary(entry => entry.Key, entry => entry.Value as IValueCondition);
+
             var candidates =
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
-                where this.Aspects == null || card.Aspects.HasAspects(this.Aspects)
+                where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
                 where !this.IsUnique.HasValue || card.IsUnique == this.IsUnique.Value
                 select card;
