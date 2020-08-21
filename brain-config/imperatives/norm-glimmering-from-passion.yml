@@ -1,0 +1,3 @@
+name: Gain glimmering from passion
+priority: normal
+operation: !import ../operations/study-passion.yml

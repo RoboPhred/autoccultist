@@ -1,0 +1,6 @@
+name: Study Passion
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: passion

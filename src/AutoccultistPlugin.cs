@@ -1,12 +1,9 @@
 namespace Autoccultist
 {
-    using System;
     using System.IO;
-    using Autoccultist.Actor;
     using Autoccultist.Brain;
-    using Autoccultist.Brain.Config;
-    using Autoccultist.GameState;
-    using Autoccultist.GUI;
+    using Autoccultist.Config;
+    using HarmonyLib;
     using UnityEngine;
 
     /// <summary>
@@ -15,10 +12,6 @@ namespace Autoccultist
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.Autoccultist", "Autoccultist", "0.0.1")]
     public class AutoccultistPlugin : BepInEx.BaseUnityPlugin
     {
-        private bool isRunning = false;
-
-        private AutoccultistBrain brain;
-
         /// <summary>
         /// Gets the instance of the plugin.
         /// </summary>
@@ -67,10 +60,13 @@ namespace Autoccultist
         {
             Instance = this;
 
-            var brainConfig = this.LoadBrainConfig();
-            this.LogInfo($"Loaded {brainConfig.Goals.Count} goals.");
+            var harmony = new Harmony("net.robophreddev.CultistSimulator.Autoccultist");
+            harmony.PatchAll();
 
-            this.brain = new AutoccultistBrain(brainConfig.Goals);
+            GameAPI.Initialize();
+
+            var config = this.LoadBrainConfig();
+            TaskDriver.SetTasks(config.Goals);
 
             this.LogInfo("Autoccultist initialized.");
         }
@@ -105,33 +101,8 @@ namespace Autoccultist
         /// </summary>
         public void Update()
         {
-            GameStateProvider.Invalidate();
-
-            this.ProcessHotkeys();
-
-            if (this.brain.IsRunning != this.isRunning)
-            {
-                if (this.isRunning)
-                {
-                    this.LogInfo("Starting brain");
-                    this.brain.Start();
-                }
-                else
-                {
-                    this.LogInfo("Stopping brain");
-                    this.brain.Stop();
-                    SituationOrchestrator.Abort();
-                    AutoccultistActor.AbortAllActions();
-                }
-            }
-
-            if (this.isRunning)
-            {
-                // The idea was to always update children,
-                //  but some things crash if updating when the main game isn't in play.
-                // This needs more work.
-                this.UpdateChildren();
-            }
+            MechanicalHeart.Update();
+            this.HandleHotkeys();
         }
 
         /// <summary>
@@ -171,8 +142,57 @@ namespace Autoccultist
         {
             this.Logger.LogError("Fatal - " + message);
             GameAPI.Notify("Autoccultist Fatal", message);
-            this.isRunning = false;
-            this.brain.Stop();
+            this.StopAutoccultist();
+        }
+
+        private void HandleHotkeys()
+        {
+            if (Input.GetKeyDown(KeyCode.F11))
+            {
+                if (MechanicalHeart.IsRunning)
+                {
+                    this.LogInfo("Stopping Autoccultist");
+                    this.StopAutoccultist();
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        this.LogInfo("Reloading tasks");
+                        var config = this.LoadBrainConfig();
+                        TaskDriver.SetTasks(config.Goals);
+                    }
+                    else
+                    {
+                        this.LogInfo("Starting Autoccultist");
+                        this.StartAutoccultist();
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.F9))
+            {
+                this.LogInfo("Dumping status");
+                GoalDriver.DumpStatus();
+                SituationOrchestrator.LogStatus();
+            }
+            else if (Input.GetKeyDown(KeyCode.F8))
+            {
+                this.LogInfo("Dumping situations");
+                SituationLogger.LogSituations();
+            }
+        }
+
+        private void StartAutoccultist()
+        {
+            TaskDriver.Start();
+            MechanicalHeart.Start();
+        }
+
+        private void StopAutoccultist()
+        {
+            MechanicalHeart.Stop();
+            TaskDriver.Stop();
+            GoalDriver.Reset();
         }
 
         private void ProcessHotkeys()
@@ -213,13 +233,6 @@ namespace Autoccultist
             var configPath = Path.Combine(AssemblyDirectory, "brain.yml");
             this.LogInfo(string.Format("Loading config from {0}", configPath));
             return BrainConfig.Load(configPath);
-        }
-
-        private void UpdateChildren()
-        {
-            this.brain.Update(GameStateProvider.Current);
-            AutoccultistActor.Update();
-            SituationOrchestrator.Update();
         }
     }
 }

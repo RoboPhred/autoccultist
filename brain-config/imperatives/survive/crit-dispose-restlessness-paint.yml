@@ -1,0 +1,3 @@
+name: Paint away restlessness
+priority: critical
+operation: !import ../../operations/dispose-restlessness-paint.yml

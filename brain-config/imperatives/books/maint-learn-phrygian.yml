@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholarphrygian
+operation:
+  name: Learn a Language (P)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbookphrygian
+  

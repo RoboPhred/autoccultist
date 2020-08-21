@@ -34,7 +34,7 @@ namespace Autoccultist.Yaml
                     filePath = reader.Consume<Scalar>().Value;
                 }
 
-                filePath = Path.Combine(Path.GetDirectoryName(Deserializer.CurrentFilePath), filePath);
+                filePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Deserializer.CurrentFilePath), filePath));
                 if (!File.Exists(filePath))
                 {
                     throw new YamlException(nodeEvent.Start, nodeEvent.End, $"Cannot import file \"{filePath}\" as the file does not exist.");

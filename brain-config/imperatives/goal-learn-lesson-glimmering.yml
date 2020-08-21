@@ -1,0 +1,3 @@
+name: Learn lessons from glimmering
+priority: goal
+operation: !import ../operations/learn-glimmering-lesson.yml

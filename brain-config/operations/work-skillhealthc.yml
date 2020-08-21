@@ -1,8 +1,0 @@
-name: Work with Steely Physique
-situation: work
-startingRecipe:
-  slots:
-    work:
-      elementId: skillhealthc
-    Health:
-      elementId: health

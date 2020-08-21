@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholarfucine
+operation:
+  name: Learn a Language (F)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbookfucine
+  

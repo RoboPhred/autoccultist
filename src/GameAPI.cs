@@ -15,6 +15,11 @@ namespace Autoccultist
     public static class GameAPI
     {
         /// <summary>
+        /// Gets a value indicating whether the game is running.
+        /// </summary>
+        public static bool IsRunning { get; private set; }
+
+        /// <summary>
         /// Gets a value indicating whether the game is interactable.
         /// </summary>
         public static bool IsInteractable
@@ -45,6 +50,17 @@ namespace Autoccultist
             {
                 return TabletopManager._tabletop;
             }
+        }
+
+        /// <summary>
+        /// Initialize the GameAPI.
+        /// <para>
+        /// Cannot be a static constructor, as this must run early, before GameAPI is naturally used.
+        /// </summary>
+        public static void Initialize()
+        {
+            GameEventSource.GameStarted += OnGameStarted;
+            GameEventSource.GameEnded += OnGameEnded;
         }
 
         /// <summary>
@@ -141,6 +157,16 @@ namespace Autoccultist
             {
                 // INotifier is not available until the game fully starts up.
             }
+        }
+
+        private static void OnGameStarted(object sender, EventArgs e)
+        {
+            IsRunning = true;
+        }
+
+        private static void OnGameEnded(object sender, EventArgs e)
+        {
+            IsRunning = false;
         }
 
         private static bool IsCardAccessable(ElementStackToken card)

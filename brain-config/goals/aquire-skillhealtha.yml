@@ -1,0 +1,11 @@
+name: Get Health skill A
+requirements:
+  elementId: health
+completedWhen:
+  aspects: { healthskill: 1 }
+imperativeSets:
+  - !import ../imperative-sets/survive.yml
+imperatives:
+  - !import ../imperatives/maint-work-health.yml
+  - !import ../imperatives/maint-refresh-health.yml
+  - !import ../imperatives/goal-learn-lesson-vitality.yml

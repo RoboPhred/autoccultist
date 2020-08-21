@@ -1,0 +1,16 @@
+name: Counter dspair with Opium
+priority: critical
+requirements: !import ../../conditions/despair-unsatisfied.yml
+forbidders:
+  anyOf:
+    - situation: despair
+      slottedCardsMatch:
+        elementId: contentment
+    - elementId: contentment
+operation:
+  name: Buy a Tincture of Opium
+  situation: dream
+  startingRecipe:
+    slots:
+      dream:
+        elementId: funds

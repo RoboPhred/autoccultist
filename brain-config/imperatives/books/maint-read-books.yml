@@ -1,0 +1,31 @@
+name: Read books
+priority: maintenance
+operation:
+  name: Read a book
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        aspects:
+          text: 1
+        forbiddenAspects:
+          - textlatin
+          - textgreek
+          - textsanskrit
+          - textaramaic
+          - textphrygian
+          - textmandaic
+          - textfucine
+          - textvak
+        forbiddenElementIds:
+          - textbookreason
+          - textbookpassion
+          - textbookgreek
+          - textbooklatin
+          - textbooksanskrit
+          - textbookaramaic
+          - textbookphrygian
+          - textbookfucine
+          - textbookmandaic
+          - textbookvak
+          - genericrubbishbook

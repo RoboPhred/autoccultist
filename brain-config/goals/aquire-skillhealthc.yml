@@ -1,0 +1,32 @@
+name: Get Health skill C
+requirements:
+  aspects: { healthskill: 2 }
+completedWhen:
+  aspects: { healthskill: 3 }
+imperativeSets:
+  - !import ../imperative-sets/survive.yml
+imperatives:
+  - !import ../imperatives/maint-refresh-health.yml
+  - name: Hardened Physique work
+    priority: maintenance
+    operation: !import ../operations/work-skillhealth.yml
+    forbidders:
+      anyOf:
+        - # Stop gaining lessons when we have enough
+          cardSet:
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+            - elementId: vitalityplus
+        - !import ../conditions/illhealth-unsatisfied.yml
+        - !import ../conditions/illhealth-pending-30secs.yml
+  - extends: !import ../imperatives/goal-learn-lesson-vitality.yml
+    forbidders:
+      # Stop using our skill card when we have enough lessons
+      cardSet:
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+  - !import ../imperatives/norm-vitality-from-health.yml
+  - name: Upgrade Hardened Physique to Steely Physique
+    priority: goal
+    operation: !import ../operations/upgrade-skillhealthb.yml

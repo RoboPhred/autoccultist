@@ -1,0 +1,6 @@
+name: Uninspired Painting
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: passion
