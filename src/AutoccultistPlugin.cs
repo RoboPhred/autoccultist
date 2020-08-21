@@ -14,8 +14,6 @@ namespace Autoccultist
     [BepInEx.BepInPlugin("net.robophreddev.CultistSimulator.Autoccultist", "Autoccultist", "0.0.1")]
     public class AutoccultistPlugin : BepInEx.BaseUnityPlugin
     {
-        private bool isUiEnabled = false;
-
         /// <summary>
         /// Gets the instance of the plugin.
         /// </summary>
@@ -50,8 +48,7 @@ namespace Autoccultist
 
             GameAPI.Initialize();
 
-            var config = this.LoadBrainConfig();
-            TaskDriver.SetTasks(config.Goals);
+            this.ReloadTasks();
 
             this.LogInfo("Autoccultist initialized.");
         }
@@ -62,6 +59,7 @@ namespace Autoccultist
         public void ReloadTasks()
         {
             this.LogInfo("Reloading tasks");
+            Library.LoadAll();
             var config = this.LoadBrainConfig();
             TaskDriver.SetTasks(config.Goals);
         }
@@ -71,10 +69,8 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
-            if (this.isUiEnabled)
-            {
-                DiagnosticGUI.OnGUI();
-            }
+            DiagnosticGUI.OnGUI();
+            GoalsGUI.OnGUI();
         }
 
         /// <summary>
@@ -151,7 +147,7 @@ namespace Autoccultist
             }
             else if (Input.GetKeyDown(KeyCode.F10))
             {
-                this.isUiEnabled = !this.isUiEnabled;
+                DiagnosticGUI.IsShowing = !DiagnosticGUI.IsShowing;
             }
             else if (Input.GetKeyDown(KeyCode.F9))
             {

@@ -13,18 +13,28 @@ namespace Autoccultist.GUI
         private static readonly Lazy<int> WindowId = new Lazy<int>(() => GUIUtility.GetControlID(FocusType.Passive));
 
         /// <summary>
-        /// Draw the test gui.
+        /// Gets or sets a value indicating whether the window is being shown.
+        /// </summary>
+        public static bool IsShowing { get; set; }
+
+        /// <summary>
+        /// Draw gui.
         /// </summary>
         public static void OnGUI()
         {
+            if (!IsShowing)
+            {
+                return;
+            }
+
             var width = Mathf.Min(Screen.width, 350);
             var height = Mathf.Min(Screen.height, 500);
             var offsetX = Screen.width - width - 10;
             var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, width, height), TestWindow, "Autoccultist Test");
+            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, width, height), DiagnosticsWindow, "Autoccultist Diagnostics");
         }
 
-        private static void TestWindow(int id)
+        private static void DiagnosticsWindow(int id)
         {
             var mechHeart = GUILayout.Toggle(MechanicalHeart.IsRunning, "Mechanical Heart");
             if (mechHeart != MechanicalHeart.IsRunning)
@@ -63,6 +73,11 @@ namespace Autoccultist.GUI
             }
 
             GUILayout.Label("Current Goals:\n" + string.Join("\n", GoalDriver.CurrentGoals.Select(x => x.Name)));
+
+            if (GUILayout.Button("Toggle Goals Menu"))
+            {
+                GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
+            }
 
             GUILayout.Label("Current Orchestrations:\n" + string.Join("\n", SituationOrchestrator.CurrentOrchestrations.Select(entry => $"{entry.Key}: {entry.Value}")));
         }
