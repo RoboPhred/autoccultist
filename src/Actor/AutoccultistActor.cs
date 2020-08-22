@@ -128,8 +128,13 @@ namespace Autoccultist.Actor
 
         private static void OnActive()
         {
-            isPausedForActions = true;
-            GameAPI.SetPaused(true);
+            // Only take over pause if it is not currently paused.
+            // We can still run our activties, but do not unpause it afterwards.
+            if (!GameAPI.IsPaused)
+            {
+                isPausedForActions = true;
+                GameAPI.SetPaused(true);
+            }
         }
 
         private static void OnIdle()

@@ -30,6 +30,17 @@ namespace Autoccultist
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the game is paused.
+        /// </summary>
+        public static bool IsPaused
+        {
+            get
+            {
+                return TabletopManager.IsPaused();
+            }
+        }
+
         private static TabletopManager TabletopManager
         {
             get
