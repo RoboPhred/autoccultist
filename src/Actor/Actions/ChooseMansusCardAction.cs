@@ -39,28 +39,28 @@ namespace Autoccultist.Actor.Actions
             var faceUpState = CardStateImpl.CardStatesFromStack(cards[0]);
 
             // Card 0 is always the face up card.
-            if (this.MansusSolution.FaceUpCardChooser?.ChooseCard(new[] { (ICardState)faceUpState }) != null)
+            if (this.MansusSolution.MansusCardChoice?.ChooseCard(new[] { (ICardState)faceUpState }) != null)
             {
                 // This is the card we want.
                 mapController.HideMansusMap(activeDoor.transform, cards[0]);
             }
             else
             {
-                if (this.MansusSolution.FallbackDeckName == activeDoor.GetDeckName(0))
+                if (this.MansusSolution.MansusDefaultDeck == activeDoor.GetDeckName(0))
                 {
                     mapController.HideMansusMap(activeDoor.transform, cards[0]);
                 }
-                else if (this.MansusSolution.FallbackDeckName == activeDoor.GetDeckName(1))
+                else if (this.MansusSolution.MansusDefaultDeck == activeDoor.GetDeckName(1))
                 {
                     mapController.HideMansusMap(activeDoor.transform, cards[1]);
                 }
-                else if (this.MansusSolution.FallbackDeckName == activeDoor.GetDeckName(2))
+                else if (this.MansusSolution.MansusDefaultDeck == activeDoor.GetDeckName(2))
                 {
                     mapController.HideMansusMap(activeDoor.transform, cards[2]);
                 }
                 else
                 {
-                    AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.FallbackDeckName} is not available on the mansus.");
+                    AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.MansusDefaultDeck} is not available on the mansus.");
                 }
             }
         }

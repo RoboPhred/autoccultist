@@ -8,11 +8,11 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Gets a card chooser to choose the face up card.
         /// </summary>
-        ICardChooser FaceUpCardChooser { get; }
+        ICardChooser MansusCardChoice { get; }
 
         /// <summary>
-        /// Gets the deck name to draw from if the <see cref="FaceUpCardChooser"/> declines to choose a card.
+        /// Gets the deck name to draw from if the <see cref="MansusCardChoice"/> declines to choose a card.
         /// </summary>
-        string FallbackDeckName { get; }
+        string MansusDefaultDeck { get; }
     }
 }

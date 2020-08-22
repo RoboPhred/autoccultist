@@ -15,15 +15,15 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets the fallback deck to draw from if the face up card does not match <see cref="FaceUpCardChooser"/>.
         /// </summary>
-        public string FallbackDeckName { get; set; }
+        public string MansusDefaultDeck { get; set; }
 
         /// <inheritdoc/>
-        ICardChooser IMansusSolution.FaceUpCardChooser => this.FaceUpCardChooser;
+        ICardChooser IMansusSolution.MansusCardChoice => this.FaceUpCardChooser;
 
         /// <inheritdoc/>
         public void Validate()
         {
-            if (this.FallbackDeckName == null)
+            if (this.MansusDefaultDeck == null)
             {
                 throw new InvalidConfigException("fallbackDeckName is required.");
             }
