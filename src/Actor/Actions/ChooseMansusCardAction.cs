@@ -30,16 +30,19 @@ namespace Autoccultist.Actor.Actions
         /// <inheritdoc/>
         public void Execute()
         {
+            // FIXME: We leave too soon.  We need to wait for DraggableToken.draggingEnabled to be true before closing the mansus,
+            //  otherwise it re-opens itself.
+
             var mapController = Registry.Retrieve<MapController>();
             var activeDoor = GameAPI.TabletopManager.mapTokenContainer.GetActiveDoor();
 
             var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
 
             // FIXME: Move mansus stuff into IGameState, avoid instantiating state objects here.
-            var faceUpState = CardStateImpl.CardStatesFromStack(cards[0]);
+            var faceUpStates = CardStateImpl.CardStatesFromStack(cards[0]);
 
             // Card 0 is always the face up card.
-            if (this.MansusSolution.MansusCardChoice?.ChooseCard(new[] { (ICardState)faceUpState }) != null)
+            if (this.MansusSolution.MansusCardChoice?.ChooseCard(faceUpStates) != null)
             {
                 // This is the card we want.
                 mapController.HideMansusMap(activeDoor.transform, cards[0]);

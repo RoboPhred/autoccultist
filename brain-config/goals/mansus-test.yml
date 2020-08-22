@@ -7,8 +7,9 @@ imperatives:
     operation:
       situation: dream
       startingRecipe:
-        dream:
-          elementId: waywood
+        slots:
+          dream:
+            elementId: waywood
       ongoingRecipes:
         dreamusewoodway:
           slots:
