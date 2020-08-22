@@ -8,6 +8,11 @@ namespace Autoccultist.Brain
     public interface IRecipeSolution : IGameStateCondition
     {
         /// <summary>
+        /// Gets the solution for the mansus choice of this recipe, if any.
+        /// </summary>
+        IMansusSolution MansusSolution { get; }
+
+        /// <summary>
         /// Gets the card for the given slot.
         /// </summary>
         /// <param name="slot">The slot to fill.</param>

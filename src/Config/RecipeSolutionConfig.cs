@@ -16,6 +16,14 @@ namespace Autoccultist.Config
         /// </summary>
         public Dictionary<string, RecipeCardChoiceConfig> Slots { get; set; } = new Dictionary<string, RecipeCardChoiceConfig>();
 
+        /// <summary>
+        /// Gets or sets a solver for a mansus event triggered by this recipe.
+        /// </summary>
+        public MansusSolutionConfig MansusSolution { get; set; }
+
+        /// <inheritdoc/>
+        IMansusSolution IRecipeSolution.MansusSolution => this.MansusSolution;
+
         /// <inheritdoc/>
         public bool IsConditionMet(IGameState state)
         {

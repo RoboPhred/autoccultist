@@ -4,6 +4,7 @@ namespace Autoccultist.Brain
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
     using Autoccultist.Actor;
@@ -55,6 +56,11 @@ namespace Autoccultist.Brain
             /// The operation is performing its recipes and waiting on the result.
             /// </summary>
             Ongoing,
+
+            /// <summary>
+            /// The operation is choosing a card in the mansus
+            /// </summary>
+            Mansus,
 
             /// <summary>
             /// The operation has finished and we are waiting for the contents to dump.
@@ -151,7 +157,6 @@ namespace Autoccultist.Brain
                     else if (this.completionDebounceTime <= DateTime.Now)
                     {
                         // Enough time has passed that we can consider this operation completed.
-                        this.operationState = OperationState.Completing;
                         this.Complete();
                     }
                 }
@@ -166,9 +171,26 @@ namespace Autoccultist.Brain
             this.End();
         }
 
-        private void Complete()
+        private async void Complete()
         {
-            this.RunCoroutine(this.CompleteOperationCoroutine());
+            // We currently assume mansus only ever occurs as the last recipe of a situation.
+            var recipeId = this.Situation.SituationClock.RecipeId;
+            var recipe = GameAPI.GetRecipe(recipeId);
+            if (recipe.PortalEffect != PortalEffect.None && GameAPI.IsInMansus)
+            {
+                if (this.operation.OngoingRecipes.TryGetValue(recipeId, out var recipeSolution) && recipeSolution.MansusSolution != null)
+                {
+                    this.operationState = OperationState.Mansus;
+                    await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusSolution));
+                }
+                else
+                {
+                    AutoccultistPlugin.Instance.LogWarn($"Unhandled mansus event for recipeId {recipeId} in operation {this.operation.Name}.");
+                }
+            }
+
+            this.operationState = OperationState.Completing;
+            await this.AwaitCoroutine(this.CompleteOperationCoroutine());
         }
 
         private void ContinueOperation()
@@ -297,6 +319,11 @@ namespace Autoccultist.Brain
             }
         }
 
+        private IEnumerable<IAutoccultistAction> ChooseMansusCoroutine(IMansusSolution solution)
+        {
+            yield return new ChooseMansusCardAction(solution);
+        }
+
         private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine()
         {
             try
@@ -325,6 +352,11 @@ namespace Autoccultist.Brain
         }
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
+        {
+            await this.AwaitCoroutine(coroutine);
+        }
+
+        private async Task AwaitCoroutine(IEnumerable<IAutoccultistAction> coroutine)
         {
             // Note: PerformActions gives us a Task that crawls along on the main thread.
             //  Because of this, Waiting this task will create a deadlock.

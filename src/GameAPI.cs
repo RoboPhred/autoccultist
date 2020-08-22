@@ -31,6 +31,17 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Gets a value indicating whether the mansus is active.
+        /// </summary>
+        public static bool IsInMansus
+        {
+            get
+            {
+                return TabletopManager.IsInMansus();
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the game is paused.
         /// </summary>
         public static bool IsPaused
@@ -41,7 +52,7 @@ namespace Autoccultist
             }
         }
 
-        private static TabletopManager TabletopManager
+        public static TabletopManager TabletopManager
         {
             get
             {
@@ -91,6 +102,16 @@ namespace Autoccultist
         public static SituationController GetSituation(string situationId)
         {
             return Registry.Retrieve<SituationsCatalogue>().GetRegisteredSituations().Find(x => x.situationToken.EntityId == situationId);
+        }
+
+        /// <summary>
+        /// Gets a recipe by recipe id.
+        /// </summary>
+        /// <param name="recipeId">The recipe id of the recipe to get.</param>
+        /// <returns>The recipe matching the recipe id.</returns>
+        public static Recipe GetRecipe(string recipeId)
+        {
+            return Registry.Retrieve<ICompendium>().GetRecipeById(recipeId);
         }
 
         /// <summary>
