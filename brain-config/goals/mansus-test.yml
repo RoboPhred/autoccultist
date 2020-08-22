@@ -5,6 +5,7 @@ imperativeSets:
 imperatives:
   - name: Do the mansus
     operation:
+      situation: dream
       startingRecipe:
         dream:
           elementId: waywood
