@@ -30,9 +30,6 @@ namespace Autoccultist.Actor.Actions
         /// <inheritdoc/>
         public void Execute()
         {
-            // FIXME: We leave too soon.  We need to wait for DraggableToken.draggingEnabled to be true before closing the mansus,
-            //  otherwise it re-opens itself.
-
             var mapController = Registry.Retrieve<MapController>();
             var activeDoor = GameAPI.TabletopManager.mapTokenContainer.GetActiveDoor();
 
@@ -42,28 +39,28 @@ namespace Autoccultist.Actor.Actions
             var faceUpStates = CardStateImpl.CardStatesFromStack(cards[0]);
 
             // Card 0 is always the face up card.
-            if (this.MansusSolution.MansusCardChoice?.ChooseCard(faceUpStates) != null)
+            if (this.MansusSolution.FaceUpCard?.ChooseCard(faceUpStates) != null)
             {
                 // This is the card we want.
                 mapController.HideMansusMap(activeDoor.transform, cards[0]);
             }
             else
             {
-                if (this.MansusSolution.MansusDefaultDeck == activeDoor.GetDeckName(0))
+                if (this.MansusSolution.Deck == activeDoor.GetDeckName(0))
                 {
                     mapController.HideMansusMap(activeDoor.transform, cards[0]);
                 }
-                else if (this.MansusSolution.MansusDefaultDeck == activeDoor.GetDeckName(1))
+                else if (this.MansusSolution.Deck == activeDoor.GetDeckName(1))
                 {
                     mapController.HideMansusMap(activeDoor.transform, cards[1]);
                 }
-                else if (this.MansusSolution.MansusDefaultDeck == activeDoor.GetDeckName(2))
+                else if (this.MansusSolution.Deck == activeDoor.GetDeckName(2))
                 {
                     mapController.HideMansusMap(activeDoor.transform, cards[2]);
                 }
                 else
                 {
-                    AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.MansusDefaultDeck} is not available on the mansus.");
+                    AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available on the mansus.");
                 }
             }
         }

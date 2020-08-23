@@ -5,6 +5,7 @@ imperativeSets:
 imperatives:
   - name: Do the mansus
     operation:
+      name: Do the Mansus
       situation: dream
       startingRecipe:
         slots:
@@ -16,7 +17,7 @@ imperatives:
             Path:
               elementId: passion
         dreamenterwood:
-          mansusSolution:
-            faceUpCardChooser:
+          mansusChoice:
+            faceUpCard:
               elementId: fragmentsecrethistories
-            fallbackDeckName: mansus_wood2
+            deck: mansus_wood2

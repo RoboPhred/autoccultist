@@ -10,7 +10,7 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Gets the solution for the mansus choice of this recipe, if any.
         /// </summary>
-        IMansusSolution MansusSolution { get; }
+        IMansusSolution MansusChoice { get; }
 
         /// <summary>
         /// Gets the card for the given slot.

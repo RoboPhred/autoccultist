@@ -60,6 +60,12 @@ namespace Autoccultist.Actor
         /// </summary>
         public static void Update()
         {
+            if (!GameAPI.IsInteractable)
+            {
+                // Not interactable at the moment
+                return;
+            }
+
             if (lastUpdate + ActionDelay > DateTime.Now)
             {
                 // Not time to act yet.
@@ -134,6 +140,11 @@ namespace Autoccultist.Actor
             {
                 isPausedForActions = true;
                 GameAPI.SetPaused(true);
+            }
+            else if (GameAPI.IsInMansus)
+            {
+                // Hack to unpause after we leave the mansus.
+                isPausedForActions = true;
             }
         }
 

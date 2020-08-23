@@ -8,6 +8,7 @@ namespace Autoccultist
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
     using TabletopUi.Scripts.Interfaces;
+    using UnityEngine;
 
     /// <summary>
     /// A set of static functions for manipulating the game.
@@ -26,7 +27,7 @@ namespace Autoccultist
         {
             get
             {
-                return !TabletopManager.IsInMansus();
+                return IsRunning && DraggableToken.draggingEnabled && (!IsInMansus || IsMansusInteractable);
             }
         }
 
@@ -42,6 +43,22 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Gets a value indicating whether the mansus is ready for interaction.
+        /// </summary>
+        public static bool IsMansusInteractable
+        {
+            get
+            {
+                // We need to wait out mansus animations.  There are two of them.
+                // 1: Mansus screen fade-in (turns off DraggableToken.draggingEnabled while fading)
+                // 2: Mansus token container fade-in (detected by alpha changing)
+                var fader = Reflection.GetPrivateField<CanvasGroupFader>(TabletopManager.mapTokenContainer, "canvasGroupFader");
+                var faderGroup = fader.GetComponent<CanvasGroup>();
+                return IsInMansus && DraggableToken.draggingEnabled && faderGroup.alpha == 1;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the game is paused.
         /// </summary>
         public static bool IsPaused
@@ -52,6 +69,9 @@ namespace Autoccultist
             }
         }
 
+        /// <summary>
+        /// Gets the tabletop manager.
+        /// </summary>
         public static TabletopManager TabletopManager
         {
             get

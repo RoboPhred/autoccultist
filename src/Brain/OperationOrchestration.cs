@@ -178,10 +178,10 @@ namespace Autoccultist.Brain
             var recipe = GameAPI.GetRecipe(recipeId);
             if (recipe.PortalEffect != PortalEffect.None && GameAPI.IsInMansus)
             {
-                if (this.operation.OngoingRecipes.TryGetValue(recipeId, out var recipeSolution) && recipeSolution.MansusSolution != null)
+                if (this.operation.OngoingRecipes.TryGetValue(recipeId, out var recipeSolution) && recipeSolution.MansusChoice != null)
                 {
                     this.operationState = OperationState.Mansus;
-                    await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusSolution));
+                    await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice));
                 }
                 else
                 {

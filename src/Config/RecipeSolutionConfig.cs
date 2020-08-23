@@ -19,10 +19,10 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets a solver for a mansus event triggered by this recipe.
         /// </summary>
-        public MansusSolutionConfig MansusSolution { get; set; }
+        public MansusSolutionConfig MansusChoice { get; set; }
 
         /// <inheritdoc/>
-        IMansusSolution IRecipeSolution.MansusSolution => this.MansusSolution;
+        IMansusSolution IRecipeSolution.MansusChoice => this.MansusChoice;
 
         /// <inheritdoc/>
         public bool IsConditionMet(IGameState state)

@@ -28,14 +28,14 @@ namespace Autoccultist.Actor.Actions
         /// <inheritdoc/>
         public void Execute()
         {
-            if (!GameAPI.IsInteractable)
+            if (GameAPI.IsInMansus)
             {
                 if (this.IgnoreFailures)
                 {
                     return;
                 }
 
-                throw new ActionFailureException(this, "Game is not interactable at this moment.");
+                throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);

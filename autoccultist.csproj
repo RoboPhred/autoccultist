@@ -35,6 +35,9 @@
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>.\externals\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>.\externals\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
