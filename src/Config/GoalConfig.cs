@@ -5,6 +5,8 @@ namespace Autoccultist.Config
     using Autoccultist.Brain;
     using Autoccultist.Config.Conditions;
     using Autoccultist.GameState;
+    using Autoccultist.Yaml;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// A Goal represents a collection of imperatives which activate under certain conditions,
@@ -12,7 +14,7 @@ namespace Autoccultist.Config
     /// <para>
     /// Goals are made out of multiple imperatives, which trigger the actual actions against the game.
     /// </summary>
-    public class GoalConfig : INamedConfigObject, IGoal
+    public class GoalConfig : INamedConfigObject, IGoal, IAfterYamlDeserialization
     {
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -58,26 +60,6 @@ namespace Autoccultist.Config
         /// <inheritdoc/>
         IReadOnlyList<IImperative> IGoal.Imperatives => this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
 
-        /// <inheritdoc/>
-        public void Validate()
-        {
-            if (string.IsNullOrEmpty(this.Name))
-            {
-                throw new InvalidConfigException("Goal must have a name.");
-            }
-
-            var imperatives = this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
-            if (imperatives.Length == 0)
-            {
-                throw new InvalidConfigException("Goal must have an imperative");
-            }
-
-            foreach (var imperative in imperatives)
-            {
-                imperative.Validate();
-            }
-        }
-
         /// <summary>
         /// Determines whether the goal can activate with the given game state.
         /// </summary>
@@ -106,6 +88,21 @@ namespace Autoccultist.Config
         public bool IsSatisfied(IGameState state)
         {
             return this.CompletedWhen?.IsConditionMet(state) == true;
+        }
+
+        /// <inheritdoc/>
+        public void AfterDeserialized(Mark start, Mark end)
+        {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
+            }
+
+            var imperatives = this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
+            if (imperatives.Length == 0)
+            {
+                throw new InvalidConfigException("Goal must have an imperative");
+            }
         }
     }
 }

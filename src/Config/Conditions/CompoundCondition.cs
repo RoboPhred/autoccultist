@@ -14,7 +14,7 @@ namespace Autoccultist.Config.Conditions
     /// require either all to match, at least one to match, or none to match.
     /// </summary>
     [DuckTypeKeys(new[] { "allOf", "anyOf", "noneOf" })]
-    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible
+    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible, IAfterYamlDeserialization
     {
         /// <summary>
         /// A mode by which CompoundCondition resolves the relationship between its child conditions.
@@ -48,16 +48,11 @@ namespace Autoccultist.Config.Conditions
         public List<IGameStateConditionConfig> Requirements { get; set; } = new List<IGameStateConditionConfig>();
 
         /// <inheritdoc/>
-        public void Validate()
+        public void AfterDeserialized(Mark start, Mark end)
         {
             if (this.Requirements == null || this.Requirements.Count == 0)
             {
                 throw new InvalidConfigException("CompoundCondition must have requirements.");
-            }
-
-            foreach (var requirement in this.Requirements)
-            {
-                requirement.Validate();
             }
         }
 

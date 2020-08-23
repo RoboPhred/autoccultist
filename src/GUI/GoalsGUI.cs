@@ -8,7 +8,7 @@ namespace Autoccultist.GUI
     using UnityEngine;
 
     /// <summary>
-    /// Test GUI.
+    /// GUI for listing and activating goals.
     /// </summary>
     public static class GoalsGUI
     {

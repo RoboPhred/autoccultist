@@ -3,10 +3,11 @@ namespace Autoccultist.GUI
     using System;
     using System.Linq;
     using Autoccultist.Brain;
+    using Autoccultist.Config;
     using UnityEngine;
 
     /// <summary>
-    /// Test GUI.
+    /// GUI for general diagnostics.
     /// </summary>
     public static class DiagnosticGUI
     {
@@ -36,6 +37,15 @@ namespace Autoccultist.GUI
 
         private static void DiagnosticsWindow(int id)
         {
+            if (Library.ParseErrors.Count > 0)
+            {
+                GUILayout.Label($"{Library.ParseErrors.Count} parse errors.");
+                if (GUILayout.Button("Toggle Errors"))
+                {
+                    ParseErrorsGUI.IsShowing = !ParseErrorsGUI.IsShowing;
+                }
+            }
+
             var mechHeart = GUILayout.Toggle(MechanicalHeart.IsRunning, "Mechanical Heart");
             if (mechHeart != MechanicalHeart.IsRunning)
             {

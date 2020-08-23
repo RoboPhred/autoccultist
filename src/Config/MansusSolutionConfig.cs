@@ -1,11 +1,13 @@
 namespace Autoccultist.Config
 {
     using Autoccultist.Brain;
+    using Autoccultist.Yaml;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// Provides configuration for solving a mansus event.
     /// </summary>
-    public class MansusSolutionConfig : IConfigObject, IMansusSolution
+    public class MansusSolutionConfig : IConfigObject, IMansusSolution, IAfterYamlDeserialization
     {
         /// <summary>
         /// Gets or sets the card choice to match against the face up card.
@@ -21,7 +23,7 @@ namespace Autoccultist.Config
         ICardChooser IMansusSolution.FaceUpCard => this.FaceUpCard;
 
         /// <inheritdoc/>
-        public void Validate()
+        public void AfterDeserialized(Mark start, Mark end)
         {
             if (this.Deck == null)
             {

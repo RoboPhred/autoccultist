@@ -6,6 +6,7 @@ namespace Autoccultist.Yaml
     using YamlDotNet.Core;
     using YamlDotNet.Serialization;
     using YamlDotNet.Serialization.NamingConventions;
+    using YamlDotNet.Serialization.NodeDeserializers;
 
     /// <summary>
     /// Deserialization utilities for yaml files.
@@ -121,13 +122,12 @@ namespace Autoccultist.Yaml
 
         private static IDeserializer BuildDeserializer()
         {
-            // TODO: We should remove IgnoreUnmatchedProperties, as it is useful to know if we made a typo.
             return new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
-                    .IgnoreUnmatchedProperties()
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
                     .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(objectDeserializer => new NodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
                     .Build();
         }
     }

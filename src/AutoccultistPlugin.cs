@@ -49,6 +49,10 @@ namespace Autoccultist
             GameAPI.Initialize();
 
             this.ReloadTasks();
+            if (Library.ParseErrors.Count > 0)
+            {
+                ParseErrorsGUI.IsShowing = true;
+            }
 
             this.LogInfo("Autoccultist initialized.");
         }
@@ -60,8 +64,10 @@ namespace Autoccultist
         {
             this.LogInfo("Reloading tasks");
             Library.LoadAll();
-            var config = this.LoadBrainConfig();
-            TaskDriver.SetTasks(config.Goals);
+            if (Library.Brain != null)
+            {
+                TaskDriver.SetTasks(Library.Brain.Goals);
+            }
         }
 
         /// <summary>
@@ -69,6 +75,9 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
+            // Allow ParseErrorsGUI to run when the core game is not in play.
+            ParseErrorsGUI.OnGUI();
+
             if (!GameAPI.IsRunning)
             {
                 return;
@@ -178,13 +187,6 @@ namespace Autoccultist
             MechanicalHeart.Stop();
             TaskDriver.Stop();
             GoalDriver.Reset();
-        }
-
-        private BrainConfig LoadBrainConfig()
-        {
-            var configPath = Path.Combine(AssemblyDirectory, "brain.yml");
-            this.LogInfo(string.Format("Loading config from {0}", configPath));
-            return BrainConfig.Load(configPath);
         }
     }
 }

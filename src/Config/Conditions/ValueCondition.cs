@@ -1,6 +1,7 @@
 namespace Autoccultist.Config.Conditions
 {
     using System;
+    using Autoccultist.Yaml;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -8,7 +9,7 @@ namespace Autoccultist.Config.Conditions
     /// <summary>
     /// Specifies a comparison against a time value.
     /// </summary>
-    public class ValueCondition : IConfigObject, IYamlConvertible, IValueCondition
+    public class ValueCondition : IConfigObject, IYamlConvertible, IValueCondition, IAfterYamlDeserialization
     {
         /// <summary>
         /// Gets or sets a value indicating that the target value must be greater than this amount.
@@ -33,7 +34,7 @@ namespace Autoccultist.Config.Conditions
         public float? LessThan { get; set; }
 
         /// <inheritdoc/>
-        public void Validate()
+        public void AfterDeserialized(Mark start, Mark end)
         {
             if (this.GreaterThan.HasValue && this.LessThan.HasValue && this.GreaterThan.Value > this.LessThan.Value)
             {

@@ -1,6 +1,3 @@
-- Operations and imperatives should automatically get a name based on the yaml file and line they were defined on
-- BrainConfig validation should be implemented alongside the yaml parser to capture the file and line number
-  - There is an example of this in the YamlDotNet github
 - More robust yaml parsing: Record errors and cleanly display to user
   - Particulary care about what yaml file the error came from, can be multiple files in play due to !import
 - extends property of imperatives should also be able to take a filename and auto-load that from the imperatives folder

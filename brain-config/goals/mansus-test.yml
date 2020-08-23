@@ -3,9 +3,7 @@ imperativeSets:
   - !import ../imperative-sets/survive.yml
   - !import ../imperative-sets/procure-funds.yml
 imperatives:
-  - name: Do the mansus
-    operation:
-      name: Do the Mansus
+  - operation:
       situation: dream
       startingRecipe:
         slots:

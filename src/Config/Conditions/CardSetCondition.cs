@@ -2,11 +2,13 @@ namespace Autoccultist.Config.Conditions
 {
     using System.Collections.Generic;
     using Autoccultist.GameState;
+    using Autoccultist.Yaml;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// A set of CardChoice matchers.  All card choices must be matched with no overlap for this condition to pass.
     /// </summary>
-    public class CardSetCondition : ICardConditionConfig
+    public class CardSetCondition : ICardConditionConfig, IAfterYamlDeserialization
     {
         /// <summary>
         /// Gets or sets a list of cards, all of which must be present at the same time to meet this condition.
@@ -17,7 +19,7 @@ namespace Autoccultist.Config.Conditions
         public List<CardChoiceCondition> CardSet { get; set; } = new List<CardChoiceCondition>();
 
         /// <inheritdoc/>
-        public void Validate()
+        public void AfterDeserialized(Mark start, Mark end)
         {
             if (this.CardSet == null || this.CardSet.Count == 0)
             {

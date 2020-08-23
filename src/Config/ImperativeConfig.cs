@@ -2,12 +2,14 @@ namespace Autoccultist.Config
 {
     using Autoccultist.Brain;
     using Autoccultist.Config.Conditions;
+    using Autoccultist.Yaml;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// An Imperative represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Imperative allow for its execution, the task should execute.
     /// </summary>
-    public class ImperativeConfig : IConfigObject, IImperative
+    public class ImperativeConfig : IConfigObject, IImperative, IAfterYamlDeserialization
     {
         /// <summary>
         /// Gets or sets the imperative that this imperative inherits from.
@@ -56,18 +58,17 @@ namespace Autoccultist.Config
         IOperation IImperative.Operation => this.Operation ?? this.Extends?.Operation;
 
         /// <inheritdoc/>
-        public void Validate()
+        public void AfterDeserialized(Mark start, Mark end)
         {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
+            }
+
             if (this.Operation == null && this.Extends?.Operation == null)
             {
                 throw new InvalidConfigException($"Imperative {this.Name} must have an operation.");
             }
-
-            (this.Requirements ?? this.Extends?.Requirements)?.Validate();
-
-            (this.Forbidders ?? this.Extends?.Forbidders)?.Validate();
-
-            (this.Operation ?? this.Extends?.Operation).Validate();
         }
     }
 }

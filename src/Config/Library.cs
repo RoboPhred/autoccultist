@@ -4,14 +4,25 @@ namespace Autoccultist.Config
     using System.IO;
     using System.Linq;
     using Autoccultist.Yaml;
-    using YamlDotNet.Core;
 
     /// <summary>
     /// Library of various config assets.
     /// </summary>
     public static class Library
     {
+        private static readonly List<YamlFileException> LibraryParseErrors = new List<YamlFileException>();
         private static readonly Dictionary<string, GoalConfig> LibraryGoals = new Dictionary<string, GoalConfig>();
+
+        /// <summary>
+        /// Gets a collection of errors encountered while loading the library.
+        /// </summary>
+        public static IReadOnlyCollection<YamlFileException> ParseErrors
+        {
+            get
+            {
+                return LibraryParseErrors.ToArray();
+            }
+        }
 
         /// <summary>
         /// Gets a collection of goals loaded by the library.
@@ -23,6 +34,12 @@ namespace Autoccultist.Config
                 return LibraryGoals.Values.ToArray();
             }
         }
+
+        /// <summary>
+        /// Gets the singular brain.
+        /// </summary>
+        // TODO: Should load multiple of these from a folder and show a ui for choosing which to use.
+        public static BrainConfig Brain { get; private set; }
 
         private static string GoalsDirectory
         {
@@ -37,7 +54,9 @@ namespace Autoccultist.Config
         /// </summary>
         public static void LoadAll()
         {
+            LibraryParseErrors.Clear();
             LoadGoals();
+            LoadBrain(Path.Combine(AutoccultistPlugin.AssemblyDirectory, "brain.yml"));
         }
 
         private static void LoadGoals()
@@ -54,8 +73,21 @@ namespace Autoccultist.Config
                 var goal = Deserializer.Deserialize<GoalConfig>(filePath);
                 LibraryGoals.Add(localPath, goal);
             }
-            catch (YamlException)
+            catch (YamlFileException ex)
             {
+                LibraryParseErrors.Add(ex);
+            }
+        }
+
+        private static void LoadBrain(string filePath)
+        {
+            try
+            {
+                Brain = Deserializer.Deserialize<BrainConfig>(filePath);
+            }
+            catch (YamlFileException ex)
+            {
+                LibraryParseErrors.Add(ex);
             }
         }
     }

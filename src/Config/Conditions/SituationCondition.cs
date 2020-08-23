@@ -3,11 +3,13 @@ namespace Autoccultist.Config.Conditions
     using System.Collections.Generic;
     using System.Linq;
     using Autoccultist.GameState;
+    using Autoccultist.Yaml;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// A condition dealing with matching the state of situations.
     /// </summary>
-    public class SituationCondition : IGameStateConditionConfig
+    public class SituationCondition : IGameStateConditionConfig, IAfterYamlDeserialization
     {
         /// <summary>
         /// Possible states to check situations against.
@@ -79,14 +81,12 @@ namespace Autoccultist.Config.Conditions
         public Dictionary<string, ValueCondition> ContainedAspects { get; set; }
 
         /// <inheritdoc/>
-        public void Validate()
+        public void AfterDeserialized(Mark start, Mark end)
         {
             if (string.IsNullOrEmpty(this.Situation))
             {
                 throw new InvalidConfigException("SituationCondition must have a situationId.");
             }
-
-            this.TimeRemaining?.Validate();
         }
 
         /// <inheritdoc/>

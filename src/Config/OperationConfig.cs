@@ -4,11 +4,13 @@ namespace Autoccultist.Config
     using System.Linq;
     using Autoccultist.Brain;
     using Autoccultist.GameState;
+    using Autoccultist.Yaml;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
     /// </summary>
-    public class OperationConfig : INamedConfigObject, IGameStateCondition, IOperation
+    public class OperationConfig : INamedConfigObject, IGameStateCondition, IOperation, IAfterYamlDeserialization
     {
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -34,15 +36,6 @@ namespace Autoccultist.Config
         /// <inheritdoc/>
         // IReadOnlyDictionary is not marked with out params...
         IReadOnlyDictionary<string, IRecipeSolution> IOperation.OngoingRecipes => this.OngoingRecipes.ToDictionary(entry => entry.Key, entry => entry.Value as IRecipeSolution);
-
-        /// <inheritdoc/>
-        public void Validate()
-        {
-            if (string.IsNullOrEmpty(this.Situation))
-            {
-                throw new InvalidConfigException($"Operation {this.Name} must have a situation.");
-            }
-        }
 
         /// <summary>
         /// Determines if this operation is able to execute given the supplied game state.
@@ -77,6 +70,20 @@ namespace Autoccultist.Config
             // Do not require optional cards to be satisfied.
             // requiredCards = requiredCards.Where(x => !x.Optional);
             return state.CardsCanBeSatisfied(requiredCards.ToArray());
+        }
+
+        /// <inheritdoc/>
+        public void AfterDeserialized(Mark start, Mark end)
+        {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
+            }
+
+            if (string.IsNullOrEmpty(this.Situation))
+            {
+                throw new InvalidConfigException($"Operation {this.Name} must have a situation.");
+            }
         }
     }
 }
