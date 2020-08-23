@@ -101,7 +101,7 @@ namespace Autoccultist.Config
             var imperatives = this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
             if (imperatives.Length == 0)
             {
-                throw new InvalidConfigException("Goal must have an imperative");
+                throw new InvalidConfigException("Goal must have at least one imperative.");
             }
         }
     }
