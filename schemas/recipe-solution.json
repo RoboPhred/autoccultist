@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Recipe Solution",
+  "description": "Instructions to resolve a recipe.",
+  "type": "object",
+  "properties": {
+    "slots": {
+      "title": "Card Slots",
+      "description": "A map of card slot names to the card choosers that will populate them.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+      }
+    },
+    "mansusChoice": {
+      "title": "Mansus Choice",
+      "description": "The choice to make if presented with a mansus visit.",
+      "type": "object",
+      "properties": {
+        "faceUpCard": {
+          "title": "Face-up card chooser",
+          "description": "The card chooser to test against the face-up card, and to chooseif it is a match.",
+          "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+        },
+        "deck": {
+          "title": "Deck",
+          "description": "The mansus deck to choose.  If faceUpCard is present, this will only trigger if faceUpCard does not match the face-up card.",
+          "type": "string"
+        }
+      },
+      "required": ["deck"]
+    }
+  },
+  "anyOf": [{ "required": ["slots"] }, { "required": ["mansusChoice"] }]
+}

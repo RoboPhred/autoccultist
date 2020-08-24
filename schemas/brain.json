@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "type": "object",
+  "properties": {
+    "goals": {
+      "title": "Goals",
+      "description": "The goals to execute. Goals will be executed in the order they appear.",
+      "type": "array",
+      "items": {
+        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/goal.json"
+      }
+    }
+  }
+}
