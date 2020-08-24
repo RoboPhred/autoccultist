@@ -1,4 +1,4 @@
-# Occultist
+# Autoccultist
 
 An experimental automaton for playing Cultist Simulator.
 
