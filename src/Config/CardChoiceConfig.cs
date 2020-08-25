@@ -44,7 +44,7 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets a value indicating whether the card must or must not be unique.
         /// </summary>
-        public bool? IsUnique { get; set; }
+        public bool? Unique { get; set; }
 
         /// <summary>
         /// Gets or sets a list of aspects forbidden to be on the chosen card.
@@ -77,7 +77,7 @@ namespace Autoccultist.Config
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
-                where !this.IsUnique.HasValue || card.IsUnique == this.IsUnique.Value
+                where !this.Unique.HasValue || card.IsUnique == this.Unique.Value
                 select card;
 
             // Sort for age bias.
