@@ -10,7 +10,7 @@
         "allOf": {
           "type": "array",
           "items": {
-            "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-condition.json"
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
           }
         }
       },
@@ -24,7 +24,7 @@
         "anyOf": {
           "type": "array",
           "items": {
-            "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-condition.json"
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
           }
         }
       },
@@ -38,7 +38,7 @@
         "noneOf": {
           "type": "array",
           "items": {
-            "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-condition.json"
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
           }
         }
       },

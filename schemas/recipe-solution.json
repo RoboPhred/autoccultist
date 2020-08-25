@@ -9,7 +9,7 @@
       "description": "A map of card slot names to the card choosers that will populate them.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
       }
     },
     "mansusChoice": {
@@ -20,7 +20,7 @@
         "faceUpCard": {
           "title": "Face-up card chooser",
           "description": "The card chooser to test against the face-up card, and to chooseif it is a match.",
-          "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+          "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
         },
         "deck": {
           "title": "Deck",

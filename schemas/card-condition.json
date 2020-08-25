@@ -4,10 +4,10 @@
   "description": "A condition that can match against a set of cards.  When used as a game condition, it will match against all cards on the tabletop.",
   "oneOf": [
     {
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
     },
     {
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-set.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-set.json"
     }
   ]
 }

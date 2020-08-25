@@ -8,7 +8,7 @@
       "description": "The array of card choices that must be satisfiable.  Once one card choice finds a card, the remaining choices cannot use it for their choice.",
       "type": "array",
       "items": {
-        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
       }
     }
   },

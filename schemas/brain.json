@@ -7,7 +7,7 @@
       "description": "The goals to execute. Goals will be executed in the order they appear.",
       "type": "array",
       "items": {
-        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/goal.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/goal.json"
       }
     }
   }

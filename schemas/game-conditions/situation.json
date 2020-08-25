@@ -22,29 +22,29 @@
     "timeRemaining": {
       "name": "Time remaining",
       "description": "Make this condition depend on the amount of time remaining for the situation's current recipe.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/value-condition.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
     },
     "storedCardsMatch": {
       "name": "Stored cards match",
       "description": "Only match the condition if the situation contains stored cards matching this card condition.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-condition.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-condition.json"
     },
     "slottedCardsMatch": {
       "name": "Slotted cards match",
       "description": "Only match the condition if the situation contains currently slotted cards matching this card condition.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-condition.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-condition.json"
     },
     "containedCardsMatch": {
       "name": "Contained cards match",
       "description": "Only match the condition if the situation contains either stored or slotted cards matching this card condition.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-condition.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-condition.json"
     },
     "containedAspects": {
       "name": "Contained Aspects",
       "description": "Only match this condition if all the given aspects match their value conditions.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/value-condition.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
       }
     }
   },

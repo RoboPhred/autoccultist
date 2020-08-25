@@ -17,14 +17,14 @@
     "startingRecipe": {
       "title": "Starting Recipe",
       "description": "The recipe solution to start off this orchestration.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/recipe-solution.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/recipe-solution.json"
     },
     "ongoingRecipes": {
       "title": "Ongoing Recipes",
       "description": "A map of recipe IDs to their solutions for handling ongoing recipies the situation may encounter.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/recipe-solution.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/recipe-solution.json"
       }
     }
   },

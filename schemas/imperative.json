@@ -23,17 +23,17 @@
     "requirements": {
       "title": "Requirements",
       "description": "Require this condition to be met for the imperative to activate.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-condition.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
     },
     "forbidders": {
       "title": "Forbidders",
       "description": "If this condition is met, the imperative will not activate.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-condition.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
     },
     "operation": {
       "title": "Operation",
       "description": "The operation this imperative should perform when activated.",
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/operation.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/operation.json"
     }
   },
   "additionalProperties": false,

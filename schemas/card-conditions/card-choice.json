@@ -12,7 +12,7 @@
       "title": "Aspects",
       "description": "Require the matching card to have these aspects.",
       "additionalProperties": {
-        "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/value-condition.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
       }
     },
     "unique": {

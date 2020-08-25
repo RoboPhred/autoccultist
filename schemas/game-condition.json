@@ -4,16 +4,16 @@
   "description": "A condition that matches against the current game state.",
   "oneOf": [
     {
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-choice.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
     },
     {
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/card-conditions/card-set.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-set.json"
     },
     {
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-conditions/compound.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-conditions/compound.json"
     },
     {
-      "$ref": "file:///D:/dev/git/RoboPhred/Autoccultist/schemas/game-conditions/situation.json"
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-conditions/situation.json"
     }
   ]
 }
