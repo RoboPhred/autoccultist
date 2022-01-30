@@ -10,8 +10,8 @@ namespace Autoccultist.Config
     /// </summary>
     public static class Library
     {
-        private static readonly List<YamlFileException> LibraryParseErrors = new List<YamlFileException>();
-        private static readonly Dictionary<string, GoalConfig> LibraryGoals = new Dictionary<string, GoalConfig>();
+        private static readonly List<YamlFileException> LibraryParseErrors = new();
+        private static readonly Dictionary<string, GoalConfig> LibraryGoals = new();
 
         /// <summary>
         /// Gets a collection of errors encountered while loading the library.

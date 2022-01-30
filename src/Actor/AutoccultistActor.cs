@@ -12,8 +12,10 @@ namespace Autoccultist.Actor
     /// </summary>
     public static class AutoccultistActor
     {
-        private static readonly Queue<PendingActionSet> PendingActionSets = new Queue<PendingActionSet>();
-        // private static bool isPausedForActions;
+        private static readonly Queue<PendingActionSet> PendingActionSets = new();
+
+        private static GameAPI.PauseToken pauseToken;
+
         private static DateTime lastUpdate = DateTime.Now;
         private static PendingActionSet currentActionSet;
 
@@ -134,29 +136,16 @@ namespace Autoccultist.Actor
 
         private static void OnActive()
         {
-            // Old code: No longer a single source of truth for pausing.
-            // // Only take over pause if it is not currently paused.
-            // // We can still run our activties, but do not unpause it afterwards.
-            // if (!GameAPI.IsPaused)
-            // {
-            //     isPausedForActions = true;
-            //     GameAPI.SetPaused(true);
-            // }
-            // else if (GameAPI.IsInMansus)
-            // {
-            //     // Hack to unpause after we leave the mansus.
-            //     isPausedForActions = true;
-            // }
+            if (pauseToken == null)
+            {
+                pauseToken = GameAPI.Pause();
+            }
         }
 
         private static void OnIdle()
         {
-            // Old code: No longer a single source of truth for pausing.
-            // if (isPausedForActions)
-            // {
-            //     isPausedForActions = false;
-            //     GameAPI.SetPaused(false);
-            // }
+            pauseToken?.Dispose();
+            pauseToken = null;
         }
 
         private class PendingActionSet

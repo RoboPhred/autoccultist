@@ -22,6 +22,10 @@ namespace Autoccultist.GUI
         /// </summary>
         public static bool IsShowing { get; set; }
 
+        public static float Width => Mathf.Min(Screen.width, 500);
+
+        public static float Height => Mathf.Min(Screen.height, 900);
+
         /// <summary>
         /// Draw the gui.
         /// </summary>
@@ -32,11 +36,9 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var width = Mathf.Min(Screen.width, 500);
-            var height = Mathf.Min(Screen.height, 700);
-            var offsetX = (Screen.width * 3 / 4) - (width / 2);
+            var offsetX = Screen.width - DiagnosticGUI.Width - Width - 10;
             var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, width, height), GoalsWindow, "Autoccultist Goals");
+            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, Width, Height), GoalsWindow, "Autoccultist Goals");
         }
 
         private static void GoalsWindow(int id)
@@ -60,8 +62,8 @@ namespace Autoccultist.GUI
 
             GUILayout.EndScrollView();
 
-            GUILayout.Label("Available Goals");
-            availableGoalsScrollPosition = GUILayout.BeginScrollView(availableGoalsScrollPosition, GUILayout.Height(450));
+            GUILayout.Label("Available Goals (" + Library.Goals.Count + ")");
+            availableGoalsScrollPosition = GUILayout.BeginScrollView(availableGoalsScrollPosition, GUILayout.Height(Height - 200));
 
             foreach (var goal in Library.Goals)
             {

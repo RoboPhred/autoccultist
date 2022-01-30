@@ -7,6 +7,8 @@ namespace Autoccultist
     using Assets.Core.Interfaces;
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
+    using Assets.TabletopUi.Scripts.Infrastructure;
+    using Assets.TabletopUi.Scripts.Interfaces;
     using UnityEngine;
 
     /// <summary>
@@ -14,6 +16,9 @@ namespace Autoccultist
     /// </summary>
     public static class GameAPI
     {
+        private static GameSpeed prePauseSpeed = GameSpeed.Normal;
+        private static int pauseDepth = 0;
+
         /// <summary>
         /// Gets a value indicating whether the game is running.
         /// </summary>
@@ -57,17 +62,26 @@ namespace Autoccultist
             }
         }
 
-        // No longer a single source of truth for pausing.  See LocalNexus and GameSpeedState
-        // /// <summary>
-        // /// Gets a value indicating whether the game is paused.
-        // /// </summary>
-        // public static bool IsPaused
-        // {
-        //     get
-        //     {
-        //         return TabletopManager.IsPaused();
-        //     }
-        // }
+        /// <summary>
+        /// Gets the current user-chosen game speed.
+        /// </summary>
+        public static GameSpeed GameSpeed
+        {
+            get
+            {
+                var heartGo = GameObject.Find("Heart");
+                if (heartGo == null)
+                {
+                    AutoccultistPlugin.Instance.LogWarn("Could not find Heart.");
+                    return GameSpeed.Paused;
+                }
+
+                var heartBehavior = heartGo.GetComponent<Heart>();
+
+                var speedState = Reflection.GetPrivateField<GameSpeedState>(heartBehavior, "gameSpeedState");
+                return speedState.GetEffectiveGameSpeed();
+            }
+        }
 
         /// <summary>
         /// Gets the tabletop manager.
@@ -105,15 +119,27 @@ namespace Autoccultist
             GameEventSource.GameEnded += OnGameEnded;
         }
 
-        // No longer a single source of truth for pausing.  See LocalNexus and GameSpeedState
-        // /// <summary>
-        // /// Sets the pause state of the game.
-        // /// </summary>
-        // /// <param name="paused">True if the game should pause, or False if it should unpause.</param>
-        // public static void SetPaused(bool paused)
-        // {
-        //     TabletopManager.SetPausedState(paused);
-        // }
+        /// <summary>
+        /// Sets the pause state of the game.
+        /// </summary>
+        /// <returns>A token to unpause the game.</returns>
+        public static PauseToken Pause()
+        {
+            if (pauseDepth == 0)
+            {
+                prePauseSpeed = GameSpeed;
+                Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
+                {
+                    ControlPriorityLevel = 1,
+                    GameSpeed = GameSpeed.Paused,
+                    WithSFX = true,
+                });
+            }
+
+            pauseDepth++;
+
+            return new PauseToken();
+        }
 
         /// <summary>
         /// Gets a situation by a situation id.
@@ -240,6 +266,41 @@ namespace Autoccultist
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// A token representing a pause.
+        /// </summary>
+        public class PauseToken : IDisposable
+        {
+            private bool isDisposed = false;
+
+            ~PauseToken()
+            {
+                AutoccultistPlugin.Instance.LogWarn("Leaked PauseToken");
+            }
+
+            /// <inheritdoc/>
+            public void Dispose()
+            {
+                if (this.isDisposed)
+                {
+                    return;
+                }
+
+                this.isDisposed = true;
+                GC.SuppressFinalize(this);
+                pauseDepth--;
+                if (pauseDepth == 0)
+                {
+                    Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
+                    {
+                        ControlPriorityLevel = 1,
+                        GameSpeed = prePauseSpeed,
+                        WithSFX = true,
+                    });
+                }
+            }
         }
     }
 }

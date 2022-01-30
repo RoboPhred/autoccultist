@@ -1,0 +1,12 @@
+name: Upgrade Notable Scholarship
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: skillreasonb
+    e1:
+      elementId: eruditionplus
+    e2:
+      elementId: eruditionplus
+    e3:
+      elementId: eruditionplus

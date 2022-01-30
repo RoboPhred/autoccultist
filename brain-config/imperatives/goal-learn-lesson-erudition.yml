@@ -1,0 +1,3 @@
+name: Learn lessons from erudition
+priority: goal
+operation: !import ../operations/learn-erudition-lesson.yml

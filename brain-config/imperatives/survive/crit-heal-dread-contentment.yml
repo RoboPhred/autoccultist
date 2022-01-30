@@ -11,5 +11,7 @@ operation:
     slots:
       dream:
         elementId: dread
+        ageBias: youngest
       reminders:
         elementId: contentment
+        ageBias: oldest

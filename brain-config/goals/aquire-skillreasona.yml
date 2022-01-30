@@ -1,0 +1,11 @@
+name: Aquire Scholarship
+requirements:
+  elementId: reason
+completedWhen:
+  aspects: { reasonskill: 1 }
+imperativeSets:
+  - !import ../imperative-sets/survive.yml
+  - !import ../imperative-sets/procure-funds.yml
+imperatives:
+  - !import ../imperatives/goal-learn-lesson-erudition.yml
+  - !import ../imperatives/norm-erudition-from-reason.yml
