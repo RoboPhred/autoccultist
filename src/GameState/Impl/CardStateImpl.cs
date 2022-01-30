@@ -2,14 +2,14 @@ namespace Autoccultist.GameState.Impl
 {
     using System;
     using System.Collections.Generic;
-    using Assets.Core.Interfaces;
+    using Assets.CS.TabletopUI;
 
     /// <summary>
     /// The backing implementation of the state of a card as derived from an element stack.
     /// </summary>
     internal class CardStateImpl : GameStateObject, ICardState
     {
-        private readonly Lazy<IElementStack> consumed;
+        private readonly Lazy<ElementStackToken> consumed;
 
         private readonly string elementId;
         private readonly float lifetimeRemaining;
@@ -20,9 +20,9 @@ namespace Autoccultist.GameState.Impl
         /// Initializes a new instance of the <see cref="CardStateImpl"/> class.
         /// </summary>
         /// <param name="sourceStack">The source stack to represent a card of.</param>
-        public CardStateImpl(IElementStack sourceStack)
+        public CardStateImpl(ElementStackToken sourceStack)
         {
-            this.consumed = new Lazy<IElementStack>(() => GameAPI.TakeOneCard(sourceStack));
+            this.consumed = new Lazy<ElementStackToken>(() => GameAPI.TakeOneCard(sourceStack));
 
             this.elementId = sourceStack.EntityId;
             this.lifetimeRemaining = sourceStack.LifetimeRemaining;
@@ -75,7 +75,7 @@ namespace Autoccultist.GameState.Impl
         /// </summary>
         /// <param name="stack">The stack to derive card states from.</param>
         /// <returns>An enumerable of card states representing cards in the given stack.</returns>
-        public static IEnumerable<CardStateImpl> CardStatesFromStack(IElementStack stack)
+        public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStackToken stack)
         {
             for (var i = 0; i < stack.Quantity; i++)
             {
@@ -84,7 +84,7 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public IElementStack ToElementStack()
+        public ElementStackToken ToElementStack()
         {
             // FIXME: This is temporary, and can result in an existing ICardState being used up.
             //  We need to implement card consumption in place of this, so that

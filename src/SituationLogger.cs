@@ -55,7 +55,6 @@ namespace Autoccultist
             {
                 LogInfo("- - " + slot.GoverningSlotSpecification.Id);
                 LogInfo("- - - label: " + slot.GoverningSlotSpecification.Label);
-                LogInfo("- - - for: " + slot.GoverningSlotSpecification.ForVerb);
                 LogInfo("- - - description: " + slot.GoverningSlotSpecification.Description);
                 LogInfo("- - - greedy: " + slot.GoverningSlotSpecification.Greedy);
                 LogInfo("- - - consumes: " + slot.GoverningSlotSpecification.Consumes);
@@ -84,7 +83,7 @@ namespace Autoccultist
             }
         }
 
-        private static void DumpElements(IEnumerable<IElementStack> stacks)
+        private static void DumpElements(IEnumerable<ElementStackToken> stacks)
         {
             foreach (var stack in stacks)
             {

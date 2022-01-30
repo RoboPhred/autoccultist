@@ -13,7 +13,7 @@ namespace Autoccultist.Actor
     public static class AutoccultistActor
     {
         private static readonly Queue<PendingActionSet> PendingActionSets = new Queue<PendingActionSet>();
-        private static bool isPausedForActions;
+        // private static bool isPausedForActions;
         private static DateTime lastUpdate = DateTime.Now;
         private static PendingActionSet currentActionSet;
 
@@ -134,27 +134,29 @@ namespace Autoccultist.Actor
 
         private static void OnActive()
         {
-            // Only take over pause if it is not currently paused.
-            // We can still run our activties, but do not unpause it afterwards.
-            if (!GameAPI.IsPaused)
-            {
-                isPausedForActions = true;
-                GameAPI.SetPaused(true);
-            }
-            else if (GameAPI.IsInMansus)
-            {
-                // Hack to unpause after we leave the mansus.
-                isPausedForActions = true;
-            }
+            // Old code: No longer a single source of truth for pausing.
+            // // Only take over pause if it is not currently paused.
+            // // We can still run our activties, but do not unpause it afterwards.
+            // if (!GameAPI.IsPaused)
+            // {
+            //     isPausedForActions = true;
+            //     GameAPI.SetPaused(true);
+            // }
+            // else if (GameAPI.IsInMansus)
+            // {
+            //     // Hack to unpause after we leave the mansus.
+            //     isPausedForActions = true;
+            // }
         }
 
         private static void OnIdle()
         {
-            if (isPausedForActions)
-            {
-                isPausedForActions = false;
-                GameAPI.SetPaused(false);
-            }
+            // Old code: No longer a single source of truth for pausing.
+            // if (isPausedForActions)
+            // {
+            //     isPausedForActions = false;
+            //     GameAPI.SetPaused(false);
+            // }
         }
 
         private class PendingActionSet

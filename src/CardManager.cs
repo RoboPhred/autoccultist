@@ -1,6 +1,6 @@
 namespace Autoccultist
 {
-    using Assets.Core.Interfaces;
+    using Assets.CS.TabletopUI;
     using Autoccultist.GameState;
 
     /// <summary>
@@ -13,7 +13,7 @@ namespace Autoccultist
         /// </summary>
         /// <param name="choice">The card matcher to choose a card with.</param>
         /// <returns>The chosen card, or null if none was found.</returns>
-        public static IElementStack ChooseCard(ICardChooser choice)
+        public static ElementStackToken ChooseCard(ICardChooser choice)
         {
             var state = GameStateProvider.Current;
             return choice.ChooseCard(state.TabletopCards)?.ToElementStack();

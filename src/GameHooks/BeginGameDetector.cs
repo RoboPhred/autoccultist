@@ -6,7 +6,7 @@ namespace Autoccultist.GameHooks
     /// <summary>
     /// Hook for when the game proper begins.
     /// </summary>
-    [HarmonyPatch(typeof(TabletopManager), "BeginGame")]
+    [HarmonyPatch(typeof(TabletopManager), "Start")]
     internal sealed class BeginGameDetector
     {
         private static void Postfix()

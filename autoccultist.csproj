@@ -14,6 +14,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>.\externals\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Noon.Core.Enums">
+      <HintPath>.\externals\Noon.Core.Enums.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx">
       <HintPath>.\externals\BepInEx.dll</HintPath>
     </Reference>

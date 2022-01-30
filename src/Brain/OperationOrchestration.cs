@@ -5,6 +5,7 @@ namespace Autoccultist.Brain
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Assets.Core.Enums;
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
     using Autoccultist.Actor;

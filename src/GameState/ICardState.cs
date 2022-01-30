@@ -1,7 +1,7 @@
 namespace Autoccultist.GameState
 {
     using System.Collections.Generic;
-    using Assets.Core.Interfaces;
+    using Assets.CS.TabletopUI;
 
     /// <summary>
     /// Represents the state of a card in game.
@@ -35,6 +35,6 @@ namespace Autoccultist.GameState
         /// Gets the element stack of this card.
         /// </summary>
         /// <returns>An element stack of this singular card.</returns>
-        IElementStack ToElementStack();
+        ElementStackToken ToElementStack();
     }
 }

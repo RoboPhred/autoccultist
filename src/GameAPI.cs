@@ -7,7 +7,6 @@ namespace Autoccultist
     using Assets.Core.Interfaces;
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
-    using TabletopUi.Scripts.Interfaces;
     using UnityEngine;
 
     /// <summary>
@@ -58,16 +57,17 @@ namespace Autoccultist
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the game is paused.
-        /// </summary>
-        public static bool IsPaused
-        {
-            get
-            {
-                return TabletopManager.IsPaused();
-            }
-        }
+        // No longer a single source of truth for pausing.  See LocalNexus and GameSpeedState
+        // /// <summary>
+        // /// Gets a value indicating whether the game is paused.
+        // /// </summary>
+        // public static bool IsPaused
+        // {
+        //     get
+        //     {
+        //         return TabletopManager.IsPaused();
+        //     }
+        // }
 
         /// <summary>
         /// Gets the tabletop manager.
@@ -76,7 +76,7 @@ namespace Autoccultist
         {
             get
             {
-                var tabletopManager = (TabletopManager)Registry.Retrieve<ITabletopManager>();
+                var tabletopManager = Registry.Get<TabletopManager>();
                 if (tabletopManager == null)
                 {
                     AutoccultistPlugin.Instance.Fatal("Could not retrieve ITabletopManager");
@@ -105,14 +105,15 @@ namespace Autoccultist
             GameEventSource.GameEnded += OnGameEnded;
         }
 
-        /// <summary>
-        /// Sets the pause state of the game.
-        /// </summary>
-        /// <param name="paused">True if the game should pause, or False if it should unpause.</param>
-        public static void SetPaused(bool paused)
-        {
-            TabletopManager.SetPausedState(paused);
-        }
+        // No longer a single source of truth for pausing.  See LocalNexus and GameSpeedState
+        // /// <summary>
+        // /// Sets the pause state of the game.
+        // /// </summary>
+        // /// <param name="paused">True if the game should pause, or False if it should unpause.</param>
+        // public static void SetPaused(bool paused)
+        // {
+        //     TabletopManager.SetPausedState(paused);
+        // }
 
         /// <summary>
         /// Gets a situation by a situation id.
@@ -121,7 +122,7 @@ namespace Autoccultist
         /// <returns>The situation for the given situation id, or null.</returns>
         public static SituationController GetSituation(string situationId)
         {
-            return Registry.Retrieve<SituationsCatalogue>().GetRegisteredSituations().Find(x => x.situationToken.EntityId == situationId);
+            return Registry.Get<SituationsCatalogue>().GetRegisteredSituations().Find(x => x.situationToken.EntityId == situationId);
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace Autoccultist
         /// <returns>The recipe matching the recipe id.</returns>
         public static Recipe GetRecipe(string recipeId)
         {
-            return Registry.Retrieve<ICompendium>().GetRecipeById(recipeId);
+            return Registry.Get<ICompendium>().GetEntityById<Recipe>(recipeId);
         }
 
         /// <summary>
@@ -140,14 +141,14 @@ namespace Autoccultist
         /// <returns>A collection of all situations.</returns>
         public static ICollection<SituationController> GetAllSituations()
         {
-            return Registry.Retrieve<SituationsCatalogue>().GetRegisteredSituations();
+            return Registry.Get<SituationsCatalogue>().GetRegisteredSituations();
         }
 
         /// <summary>
         /// Gets all cards on the tabletop.
         /// </summary>
         /// <returns>A collection of all cards on the tabletop.</returns>
-        public static IReadOnlyCollection<IElementStack> GetTabletopCards()
+        public static IReadOnlyCollection<ElementStackToken> GetTabletopCards()
         {
             var candidates =
                 from token in TabletopTokenContainer.GetTokens()
@@ -162,7 +163,7 @@ namespace Autoccultist
         /// </summary>
         /// <param name="stack">The stack to obtain a card from.</param>
         /// <returns>A stack of a single card.</returns>
-        public static IElementStack TakeOneCard(IElementStack stack)
+        public static ElementStackToken TakeOneCard(ElementStackToken stack)
         {
             if (stack.Quantity > 1)
             {
@@ -183,7 +184,7 @@ namespace Autoccultist
         /// </summary>
         /// <param name="slot">The slot to place the card into.</param>
         /// <param name="stack">The card stack to pick a card from.</param>
-        public static void SlotCard(RecipeSlot slot, IElementStack stack)
+        public static void SlotCard(RecipeSlot slot, ElementStackToken stack)
         {
             var singleCard = TakeOneCard(stack);
             if (singleCard == null)
@@ -203,7 +204,7 @@ namespace Autoccultist
         {
             try
             {
-                Registry.Retrieve<INotifier>().ShowNotificationWindow(title, message);
+                Registry.Get<INotifier>().ShowNotificationWindow(title, message, false);
             }
             catch (ApplicationException)
             {

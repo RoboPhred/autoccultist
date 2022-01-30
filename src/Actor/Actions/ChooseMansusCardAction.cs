@@ -30,7 +30,7 @@ namespace Autoccultist.Actor.Actions
         /// <inheritdoc/>
         public void Execute()
         {
-            var mapController = Registry.Retrieve<MapController>();
+            var mapController = Registry.Get<MapController>();
             var activeDoor = GameAPI.TabletopManager.mapTokenContainer.GetActiveDoor();
 
             var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
