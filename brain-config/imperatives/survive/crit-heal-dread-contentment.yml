@@ -1,0 +1,15 @@
+name: Heal dread with contentment
+priority: critical
+requirements:
+  allOf:
+    - elementId: dread
+    - elementId: contentment
+operation:
+  name: Dream away dread
+  situation: dream
+  startingRecipe:
+    slots:
+      dream:
+        elementId: dread
+      reminders:
+        elementId: contentment
