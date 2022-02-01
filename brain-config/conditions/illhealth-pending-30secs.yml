@@ -1,6 +1,5 @@
 situation: time
 storedCardsMatch:
-  cardSet:
-    - elementId: seasonsickness
+  elementId: seasonsickness
 timeRemaining:
   lessThan: 30

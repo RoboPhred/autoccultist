@@ -8,4 +8,4 @@ completedWhen:
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
 imperatives:
-  - !import ../imperatives/goal-find-clerical-work.yml
+  - !import ../../imperatives/goal-find-clerical-work.yml

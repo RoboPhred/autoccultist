@@ -16,7 +16,17 @@ namespace Autoccultist.GameState.Impl
         /// <param name="mapController">The map controller to load state from.</param>
         public MansusStateImpl(MapController mapController)
         {
-            var activeDoor = Reflection.GetPrivateField<DoorSlot>(mapController, "activeSlot");
+            var tokenContainer = mapController ? Reflection.GetPrivateField<MapTokenContainer>(mapController, "_mapTokenContainer") : null;
+            if (mapController == null || tokenContainer == null)
+            {
+                this.IsActive = false;
+                this.DeckCards = new Dictionary<string, ICardState>();
+                this.FaceUpDeck = null;
+                this.FaceUpCard = null;
+                return;
+            }
+
+            var activeDoor = Reflection.GetPrivateField<DoorSlot>(tokenContainer, "activeSlot");
             if (activeDoor == null)
             {
                 this.IsActive = false;
@@ -28,7 +38,7 @@ namespace Autoccultist.GameState.Impl
 
             this.IsActive = true;
 
-            var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
+            var cards = Reflection.GetPrivateField<ElementStackToken[]>(tokenContainer, "cards");
 
             this.FaceUpCard = CardStateImpl.CardStatesFromStack(cards[0], CardLocation.Mansus).First();
 

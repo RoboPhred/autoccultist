@@ -9,4 +9,4 @@ completedWhen:
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
 imperatives:
-  - !import ../imperatives/goal-glover-promote-standard.yml
+  - !import ../../imperatives/goal-glover-promote-standard.yml

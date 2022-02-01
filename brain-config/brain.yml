@@ -1,6 +1,5 @@
-goals: []
-# goals:
-#   - !import goals/aspirant/begin-intro.yml
+goals:
+  - !import goals/aspirant/begin-intro.yml
 #   - !import goals/aspirant/study-bequest-passion.yml
 #   - name: Wait for health refresh
 #     requirements:

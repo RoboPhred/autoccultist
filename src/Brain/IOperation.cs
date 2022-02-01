@@ -1,6 +1,7 @@
 namespace Autoccultist.Brain
 {
     using System.Collections.Generic;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// A set of instructions to operate a situation from start to completion.

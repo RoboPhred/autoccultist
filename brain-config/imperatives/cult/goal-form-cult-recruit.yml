@@ -1,0 +1,8 @@
+name: Recruit the first cult member
+priority: goal
+requirements:
+  allOf:
+    - aspects: { acquaintance: 1}
+    - noneOf:
+      - situation: cult
+operation: !import ../../operations/cult/form-cult-recruit.yml

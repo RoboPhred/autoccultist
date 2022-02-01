@@ -21,6 +21,11 @@ namespace Autoccultist.Config
         public string Situation { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this operation should target an ongoign situation.
+        /// </summary>
+        public bool TargetOngoing { get; set; }
+
+        /// <summary>
         /// Gets or sets the recipe used to start this situation.
         /// </summary>
         public RecipeSolutionConfig StartingRecipe { get; set; }
@@ -44,7 +49,13 @@ namespace Autoccultist.Config
         /// <returns>True if this operation is able to execute at this moment, or False otherwise.</returns>
         public bool IsConditionMet(IGameState state)
         {
-            if (!state.IsSituationAvailable(this.Situation))
+            var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
+            if (situation == null)
+            {
+                return false;
+            }
+
+            if (this.TargetOngoing != situation.IsOccupied)
             {
                 return false;
             }

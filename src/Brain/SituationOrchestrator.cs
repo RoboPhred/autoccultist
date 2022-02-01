@@ -116,11 +116,6 @@ namespace Autoccultist.Brain
         /// <param name="operation">The operation to execute.</param>
         public static void ExecuteOperation(IOperation operation)
         {
-            if (!IsSituationAvailable(operation.Situation))
-            {
-                throw new OperationFailedException($"Cannot execute operation for situation {operation.Situation} because the situation is not available.");
-            }
-
             if (ExecutingOperationsBySituation.ContainsKey(operation.Situation))
             {
                 return;

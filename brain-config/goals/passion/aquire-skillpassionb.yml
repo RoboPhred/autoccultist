@@ -4,13 +4,13 @@ requirements:
 completedWhen:
   aspects: { passionskill: 2 }
 imperatives:
-  - extends: !import ../imperatives/goal-learn-lesson-glimmering.yml
+  - extends: !import ../../imperatives/goal-learn-lesson-glimmering.yml
     forbidders:
       # Do not monopolize study when we have glimmering lessons to study
       cardSet:
         - elementId: glimmeringplus
         - elementId: glimmeringplus
-  - !import ../imperatives/norm-glimmering-from-passion.yml
+  - !import ../../imperatives/norm-glimmering-from-passion.yml
   - name: Upgrade Vivid Imagination to Wild Imagination
     priority: goal
-    operation: !import ../operations/upgrade-skillpassiona.yml
+    operation: !import ../../operations/upgrade-skillpassiona.yml

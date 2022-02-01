@@ -4,5 +4,5 @@ requirements:
 completedWhen:
   aspects: { passionskill: 1 }
 imperatives:
-  - !import ../imperatives/goal-learn-lesson-glimmering.yml
-  - !import ../imperatives/norm-glimmering-from-passion.yml
+  - !import ../../imperatives/goal-learn-lesson-glimmering.yml
+  - !import ../../imperatives/norm-glimmering-from-passion.yml

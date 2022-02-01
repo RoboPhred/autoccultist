@@ -1,0 +1,15 @@
+name: Establish the Unflinching Order
+priority: goal
+requirements:
+  allOf:
+    - aspects: { forge: 1 }
+    - situation: cult
+    - noneOf:
+      - elementId: foo
+forbidders:
+  anyOf:
+    - situation: seasonsuspicion
+    - situation: time
+      containedCardsMatch:
+        elementId: seasonsuspicion
+operation: !import ../../operations/cult/form-cult-doctrine-forge.yml

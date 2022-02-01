@@ -31,7 +31,7 @@ namespace Autoccultist.Actor.Actions
 
             if (!gameState.Mansus.IsActive)
             {
-                AutoccultistPlugin.Instance.LogWarn("ChooseMansusCardAction: No mansus visit is in progress.");
+                throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");
             }
 
             if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
@@ -46,7 +46,7 @@ namespace Autoccultist.Actor.Actions
             }
             else
             {
-                AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.");
+                throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.");
             }
         }
     }

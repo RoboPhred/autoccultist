@@ -114,7 +114,6 @@ namespace Autoccultist.Brain
             var operations =
                 from goal in ActiveGoals
                 from imperative in goal.Imperatives
-                where SituationOrchestrator.IsSituationAvailable(imperative.Operation.Situation)
                 where imperative.CanExecute(state)
                 orderby imperative.Priority descending
                 group imperative.Operation by imperative.Operation.Situation into situationGroup

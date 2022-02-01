@@ -62,20 +62,23 @@ namespace Autoccultist.GUI
 
             GUILayout.EndScrollView();
 
-            GUILayout.Label("Available Goals (" + Library.Goals.Count + ")");
             availableGoalsScrollPosition = GUILayout.BeginScrollView(availableGoalsScrollPosition, GUILayout.Height(Height - 200));
+
+            GUILayout.Label("Available Goals");
 
             foreach (var goal in Library.Goals)
             {
+                if (goal.IsSatisfied(GameStateProvider.Current) || GoalDriver.CurrentGoals.Contains(goal))
+                {
+                    continue;
+                }
+
                 GUILayout.BeginHorizontal();
 
-                GUI.enabled = !GoalDriver.CurrentGoals.Contains(goal);
                 if (GUILayout.Button("Activate", GUILayout.Width(75)))
                 {
                     GoalDriver.AddGoal(goal);
                 }
-
-                GUI.enabled = true;
 
                 GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
 
@@ -84,12 +87,18 @@ namespace Autoccultist.GUI
                     GUILayout.Label("[CanActivate]", GUILayout.ExpandWidth(false));
                 }
 
-                if (goal.IsSatisfied(GameStateProvider.Current))
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.Label("Satisfied Goals");
+            foreach (var goal in Library.Goals)
+            {
+                if (!goal.IsSatisfied(GameStateProvider.Current))
                 {
-                    GUILayout.Label("[IsSatisfied]", GUILayout.ExpandWidth(false));
+                    continue;
                 }
 
-                GUILayout.EndHorizontal();
+                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
             }
 
             GUILayout.EndScrollView();

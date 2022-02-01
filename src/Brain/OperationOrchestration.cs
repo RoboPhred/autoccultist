@@ -122,8 +122,24 @@ namespace Autoccultist.Brain
                 throw new Exception("Tried to start a situation solution with no situation.");
             }
 
-            this.operationState = OperationState.Starting;
-            this.RunCoroutine(this.StartOperationCoroutine());
+            switch (this.Situation.SituationClock.State)
+            {
+                case SituationState.Unstarted:
+                case SituationState.RequiringExecution:
+                    this.operationState = OperationState.Starting;
+                    this.RunCoroutine(this.StartOperationCoroutine());
+                    break;
+                case SituationState.Ongoing:
+                    this.operationState = OperationState.Ongoing;
+                    if (!this.operation.OngoingRecipes.TryGetValue(this.Situation.SituationClock.RecipeId, out var recipeSolution))
+                    {
+                        // Operation does not know this recipe.
+                        return;
+                    }
+
+                    this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution));
+                    break;
+            }
         }
 
         /// <inheritdoc/>

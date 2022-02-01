@@ -42,8 +42,6 @@ namespace Autoccultist.Actor.Actions
                 case SituationState.Complete:
                     situation.situationWindow.DumpAllResultingCardsToDesktop();
                     break;
-                default:
-                    throw new ActionFailureException(this, "Situation is not in a state that can be dumped.");
             }
         }
     }
