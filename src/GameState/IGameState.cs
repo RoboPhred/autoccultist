@@ -16,5 +16,10 @@ namespace Autoccultist.GameState
         /// Gets a collection of situations currently present in the game.
         /// </summary>
         ICollection<ISituationState> Situations { get; }
+
+        /// <summary>
+        /// Gets the mansus state.
+        /// </summary>
+        IMansusState Mansus { get; }
     }
 }

@@ -2,6 +2,8 @@ namespace Autoccultist.GameState
 {
     using System;
     using System.Linq;
+    using Assets.CS.TabletopUI;
+    using Assets.TabletopUi.Scripts.Infrastructure;
     using Autoccultist.GameState.Impl;
 
     /// <summary>
@@ -53,7 +55,9 @@ namespace Autoccultist.GameState
                 let state = new SituationStateImpl(controller)
                 select state;
 
-            return new GameStateImpl(tabletopCards.ToArray(), situations.ToArray());
+            var mansus = new MansusStateImpl(Registry.Get<MapController>());
+
+            return new GameStateImpl(tabletopCards.ToArray(), situations.ToArray(), mansus);
         }
     }
 }

@@ -10,15 +10,19 @@ namespace Autoccultist.GameState.Impl
         private readonly ICollection<ICardState> tabletopCards;
         private readonly ICollection<ISituationState> situations;
 
+        private readonly IMansusState mansus;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GameStateImpl"/> class.
         /// </summary>
         /// <param name="tabletopCards">The tabletop cards in this state.</param>
         /// <param name="situations">The situations in this state.</param>
-        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ISituationState> situations)
+        /// <param name="mansus">The mansus state.</param>
+        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ISituationState> situations, IMansusState mansus)
         {
             this.tabletopCards = tabletopCards;
             this.situations = situations;
+            this.mansus = mansus;
         }
 
         /// <inheritdoc/>
@@ -38,6 +42,16 @@ namespace Autoccultist.GameState.Impl
             {
                 this.VerifyAccess();
                 return this.situations;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IMansusState Mansus
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.mansus;
             }
         }
     }

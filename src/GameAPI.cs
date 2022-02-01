@@ -225,6 +225,23 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Choose a card from the mansus.
+        /// </summary>
+        /// <param name="card">The card on the mansus to choose.</param>
+        /// <remarks>Throws <see cref="InvalidOperationException"/> if the mansus is not active.</remarks>
+        public static void ChooseMansusCard(ElementStackToken card)
+        {
+            var mapController = Registry.Get<MapController>();
+            var activeDoor = Reflection.GetPrivateField<DoorSlot>(mapController, "activeSlot");
+            if (activeDoor == null)
+            {
+                throw new InvalidOperationException("Mansus is not active.");
+            }
+
+            mapController.HideMansusMap(activeDoor.transform, card);
+        }
+
+        /// <summary>
         /// Display a notification toast to the user.
         /// </summary>
         /// <param name="title">The title of the toast.</param>

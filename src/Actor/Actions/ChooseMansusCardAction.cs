@@ -1,10 +1,7 @@
 namespace Autoccultist.Actor.Actions
 {
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi.Scripts.Infrastructure;
     using Autoccultist.Brain;
     using Autoccultist.GameState;
-    using Autoccultist.GameState.Impl;
 
     /// <summary>
     /// An action that closes a situation window.
@@ -30,38 +27,26 @@ namespace Autoccultist.Actor.Actions
         /// <inheritdoc/>
         public void Execute()
         {
-            var mapController = Registry.Get<MapController>();
-            var activeDoor = GameAPI.TabletopManager.mapTokenContainer.GetActiveDoor();
+            var gameState = GameStateProvider.Current;
 
-            var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
+            if (!gameState.Mansus.IsActive)
+            {
+                AutoccultistPlugin.Instance.LogWarn("ChooseMansusCardAction: No mansus visit is in progress.");
+            }
 
-            // FIXME: Move mansus stuff into IGameState, avoid instantiating state objects here.
-            var faceUpStates = CardStateImpl.CardStatesFromStack(cards[0]);
-
-            // Card 0 is always the face up card.
-            if (this.MansusSolution.FaceUpCard?.ChooseCard(faceUpStates) != null)
+            if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
             {
                 // This is the card we want.
-                mapController.HideMansusMap(activeDoor.transform, cards[0]);
+                GameAPI.ChooseMansusCard(gameState.Mansus.FaceUpCard.ToElementStack());
+            }
+            else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
+            {
+                // This is the card we want.
+                GameAPI.ChooseMansusCard(card.ToElementStack());
             }
             else
             {
-                if (this.MansusSolution.Deck == activeDoor.GetDeckName(0))
-                {
-                    mapController.HideMansusMap(activeDoor.transform, cards[0]);
-                }
-                else if (this.MansusSolution.Deck == activeDoor.GetDeckName(1))
-                {
-                    mapController.HideMansusMap(activeDoor.transform, cards[1]);
-                }
-                else if (this.MansusSolution.Deck == activeDoor.GetDeckName(2))
-                {
-                    mapController.HideMansusMap(activeDoor.transform, cards[2]);
-                }
-                else
-                {
-                    AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available on the mansus.");
-                }
+                AutoccultistPlugin.Instance.LogWarn($"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.");
             }
         }
     }
