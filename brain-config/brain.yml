@@ -1,33 +1,34 @@
-goals:
-  - !import goals/aspirant/begin-intro.yml
-  - !import goals/aspirant/study-bequest-passion.yml
-  - name: Wait for health refresh
-    requirements:
-      anyOf:
-        - elementId: fatigue
-        - elementId: hunger
-        - elementId: injury
-        - elementId: affliction
-    completedWhen:
-      anyOf:
-        - elementId: health
-        - aspects:
-            healthskill: 1
-    imperativeSets:
-      - !import imperative-sets/survive.yml
-    imperatives:
-      - !import imperatives/maint-refresh-health.yml
-  - !import goals/aquire-skillhealtha.yml
-  - !import goals/aquire-skillhealthb.yml
-  - !import goals/aquire-skillhealthc.yml
-  - !import goals/aquire-skillpassiona.yml
-  - !import goals/aquire-skillpassionb.yml
-  - !import goals/aquire-skillpassionc.yml
-  - !import goals/aquire-skillreasona.yml
-  - !import goals/aspirant/discover-bookdealer.yml
-  - !import goals/consume-bookdealer.yml
-  - !import goals/aspirant/find-collaborator.yml
-  - name: Survive
-    imperativeSets:
-      - !import imperative-sets/survive.yml
-      - !import imperative-sets/procure-funds-labor.yml
+goals: []
+# goals:
+#   - !import goals/aspirant/begin-intro.yml
+#   - !import goals/aspirant/study-bequest-passion.yml
+#   - name: Wait for health refresh
+#     requirements:
+#       anyOf:
+#         - elementId: fatigue
+#         - elementId: hunger
+#         - elementId: injury
+#         - elementId: affliction
+#     completedWhen:
+#       anyOf:
+#         - elementId: health
+#         - aspects:
+#             healthskill: 1
+#     imperativeSets:
+#       - !import imperative-sets/survive.yml
+#     imperatives:
+#       - !import imperatives/maint-refresh-health.yml
+#   - !import goals/aquire-skillhealtha.yml
+#   - !import goals/aquire-skillhealthb.yml
+#   - !import goals/aquire-skillhealthc.yml
+#   - !import goals/aquire-skillpassiona.yml
+#   - !import goals/aquire-skillpassionb.yml
+#   - !import goals/aquire-skillpassionc.yml
+#   - !import goals/aquire-skillreasona.yml
+#   - !import goals/aspirant/discover-bookdealer.yml
+#   - !import goals/consume-bookdealer.yml
+#   - !import goals/aspirant/find-collaborator.yml
+#   - name: Survive
+#     imperativeSets:
+#       - !import imperative-sets/survive.yml
+#       - !import imperative-sets/procure-funds-labor.yml

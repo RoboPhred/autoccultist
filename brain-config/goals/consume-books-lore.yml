@@ -1,4 +1,4 @@
-name: Read and translate books
+name: Read and translate lore books
 requirements: !import ../conditions/readable-or-translatable-books.yml
 completedWhen:
   noneOf:
@@ -7,6 +7,4 @@ imperativeSets:
   - !import ../imperative-sets/learn-languages.yml
   - !import ../imperative-sets/translate-books.yml
 imperatives:
-  - !import ../imperatives/maint-refresh-health.yml
-  - !import ../imperatives/maint-upgrade-excess-vitality.yml
-  - !import ../imperatives/books/maint-read-books.yml
+  - !import ../imperatives/books/maint-read-lore.yml

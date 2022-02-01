@@ -1,18 +1,7 @@
-name: Purchase and Read Morland books
+name: Purchase Morland books
 requirements:
-  allOf:
-    - elementId: locationbookdealer
-    - !import ../conditions/can-procure-funds-labor.yml
+  elementId: locationbookdealer
 completedWhen:
-  allOf:
-    - elementId: locationbookdealer_exhausted
-    - noneOf:
-        - !import ../conditions/readable-or-translatable-books.yml
-imperativeSets:
-  - !import ../imperative-sets/learn-languages.yml
-  - !import ../imperative-sets/translate-books.yml
+    elementId: locationbookdealer_exhausted
 imperatives:
-  - !import ../imperatives/maint-refresh-health.yml
-  - !import ../imperatives/maint-upgrade-excess-vitality.yml
   - !import ../imperatives/books/maint-buy-morland-books.yml
-  - !import ../imperatives/books/maint-read-books.yml

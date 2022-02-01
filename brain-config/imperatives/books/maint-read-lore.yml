@@ -1,0 +1,3 @@
+name: Read lore books
+priority: maintenance
+operation: !import ../../operations/books/read-lore.yml
