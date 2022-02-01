@@ -1,4 +1,4 @@
-name: Get Health skill B
+name: Aquire a Hardened Physique
 requirements:
   aspects: { healthskill: 1 }
 completedWhen:
@@ -6,21 +6,9 @@ completedWhen:
 imperativeSets:
   - !import ../imperative-sets/survive.yml
 imperatives:
-  - !import ../imperatives/maint-refresh-health.yml
-  - name: Stronger Physique work
-    priority: maintenance
-    operation: !import ../operations/work-skillhealth.yml
-    forbidders:
-      anyOf:
-        - # Don't steal away our health skill card when we need it to upgrade.
-          cardSet:
-            - elementId: vitalityplus
-            - elementId: vitalityplus
-          # Don't use health if we need it for an affliction
-        - !import ../conditions/illhealth-unsatisfied.yml
-        - !import ../conditions/illhealth-pending-30secs.yml
   - !import ../imperatives/norm-vitality-from-health.yml
-  - extends: !import ../imperatives/goal-learn-lesson-vitality.yml
+  - name: "Learn Lesson: Vitality"
+    extends: !import ../imperatives/goal-learn-lesson-vitality.yml
     forbidders:
       # Do not monopolize study when we have vitality lessons to study
       cardSet:

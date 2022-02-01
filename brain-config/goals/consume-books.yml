@@ -5,7 +5,7 @@ completedWhen:
     - !import ../conditions/readable-or-translatable-books.yml
 imperativeSets:
   - !import ../imperative-sets/survive.yml
-  - !import ../imperative-sets/procure-funds.yml
+  - !import ../imperative-sets/procure-funds-labor.yml
   - !import ../imperative-sets/learn-languages.yml
   - !import ../imperative-sets/translate-books.yml
 imperatives:

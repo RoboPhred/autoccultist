@@ -1,0 +1,14 @@
+name: Promote Glover & Glover Career from Junior
+requirements:
+  elementId: gloverandgloverjuniorjob
+completedWhen:
+  anyOf:
+    - elementId: gloverandglover_difficultbossa_job
+    - elementId: gloverandglover_difficultbossa_gone_job
+    - elementId: gloverandgloverseniorjob
+    - elementId: gloverandgloverseniorjob_youngerglovergone
+    - elementId: gloverandglovertopjob
+imperativeSets:
+  - !import ../imperative-sets/survive.yml
+imperatives:
+  - !import ../imperatives/goal-glover-promote-standard.yml

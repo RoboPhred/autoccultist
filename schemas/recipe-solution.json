@@ -4,6 +4,11 @@
   "description": "Instructions to resolve a recipe.",
   "type": "object",
   "properties": {
+    "requireCardsToStart": {
+      "title": "Require cards to start",
+      "description": "Whether or not to require all cards to start the recipe.",
+      "type": "boolean"
+    },
     "slots": {
       "title": "Card Slots",
       "description": "A map of card slot names to the card choosers that will populate them.",

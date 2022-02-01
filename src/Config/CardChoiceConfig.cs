@@ -36,6 +36,11 @@ namespace Autoccultist.Config
         public string ElementId { get; set; }
 
         /// <summary>
+        /// Gets or sets the list of element ids from which to choose a card.
+        /// </summary>
+        public List<string> AllowedElementIds { get; set; }
+
+        /// <summary>
         /// Gets or sets a dictionary of aspect names to degrees to filter the cards by.
         /// If set, a matching card must have all of the specified aspects of at least the given degree.
         /// </summary>
@@ -74,6 +79,7 @@ namespace Autoccultist.Config
             var candidates =
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
+                where this.AllowedElementIds?.Contains(card.ElementId) != false
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
@@ -103,9 +109,9 @@ namespace Autoccultist.Config
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
         {
-            if (string.IsNullOrEmpty(this.ElementId) && (this.Aspects == null || this.Aspects.Count == 0))
+            if (string.IsNullOrEmpty(this.ElementId) && (this.Aspects == null || this.Aspects.Count == 0) && (this.AllowedElementIds == null || this.AllowedElementIds.Count == 0))
             {
-                throw new InvalidConfigException("Card choice must have either an elementId or aspects.");
+                throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");
             }
         }
     }

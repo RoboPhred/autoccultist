@@ -1,5 +1,0 @@
-# This is a companion condition to imperative-sets/procure-funds
-# This condition should return true when the imperative set is capable of doing its job
-# TODO: Take into account: painting, selling spintria
-anyOf:
-  - elementId: health

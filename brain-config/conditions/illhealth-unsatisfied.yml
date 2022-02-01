@@ -1,2 +1,7 @@
-situation: illhealth
+allOf:
+  - situation: illhealth
+  - noneOf:
+    - allOf:
+      - elementId: health
+      - elementId: health
 # TODO: Only match if slot is empty.

@@ -1,0 +1,6 @@
+name: Work a junior job at Glover & Glover
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: gloverandgloverjuniorjob

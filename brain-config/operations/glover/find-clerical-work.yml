@@ -1,0 +1,6 @@
+name: Find Clerical Work
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: reason

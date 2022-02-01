@@ -1,3 +1,0 @@
-name: Survive
-imperativeSets:
-  - !import ../imperative-sets/survive.yml

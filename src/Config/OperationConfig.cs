@@ -62,6 +62,7 @@ namespace Autoccultist.Config
             {
                 requiredCards = requiredCards.Concat(
                     from ongoing in this.OngoingRecipes.Values
+                    where ongoing.RequireCardsToStart
                     from choice in ongoing.Slots.Values
                     select choice);
             }

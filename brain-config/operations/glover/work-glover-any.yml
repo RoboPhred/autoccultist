@@ -1,0 +1,27 @@
+name: Work at Glover & Glover with extra effort
+situation: work
+startingRecipe:
+  slots:
+    work:
+      allowedElementIds:
+        - gloverandgloverjuniorjob
+        - gloverandgloverjuniorjob_nodifficultbossa
+        - gloverandglover_difficultbossa_job
+        - gloverandglover_difficultbossa_gone_job
+        - gloverandgloverjob
+        - gloverandgloverjob_youngerglovergone
+        - gloverandgloverseniorjob
+        - gloverandgloverseniorjob_youngerglovergone
+        - gloverandglovertopjob
+        - gloverandglovertopjob_tainted
+ongoingRecipes:
+  gloverandglover_difficultbossa_overtime_initial:
+    requireCardsToStart: false
+    slots:
+      Attention:
+        elementId: reason
+  gloverandglover_difficultbossa_overtime:
+    requireCardsToStart: false
+    slots:
+      Attention:
+        elementId: reason

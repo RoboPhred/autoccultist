@@ -79,6 +79,7 @@ namespace Autoccultist.Brain
                 foreach (var imperative in goal.Imperatives.OrderBy(x => x.Priority))
                 {
                     AutoccultistPlugin.Instance.LogInfo("- - " + imperative.Name);
+                    AutoccultistPlugin.Instance.LogInfo("- - - Priority: " + imperative.Priority);
                     AutoccultistPlugin.Instance.LogInfo("- - - Requirements met: " + (imperative.Requirements?.IsConditionMet(state) != false));
                     AutoccultistPlugin.Instance.LogInfo("- - - Forbidders in place: " + (imperative.Forbidders?.IsConditionMet(state) == true));
                     AutoccultistPlugin.Instance.LogInfo("- - - Operation ready: " + imperative.Operation.IsConditionMet(state));

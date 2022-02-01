@@ -12,6 +12,11 @@ namespace Autoccultist.Config
     public class RecipeSolutionConfig : IRecipeSolution
     {
         /// <summary>
+        /// Gets or sets a value indicating whether this recipe requires its cards to start the operation.  This only applies to ongoing recipes.
+        /// </summary>
+        public bool RequireCardsToStart { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets a dictionary of slot names to card choices.
         /// </summary>
         public Dictionary<string, RecipeCardChoiceConfig> Slots { get; set; } = new Dictionary<string, RecipeCardChoiceConfig>();

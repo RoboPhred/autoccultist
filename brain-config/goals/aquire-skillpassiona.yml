@@ -5,7 +5,7 @@ completedWhen:
   aspects: { passionskill: 1 }
 imperativeSets:
   - !import ../imperative-sets/survive.yml
-  - !import ../imperative-sets/procure-funds.yml
+  - !import ../imperative-sets/procure-funds-labor.yml
 imperatives:
   - !import ../imperatives/goal-learn-lesson-glimmering.yml
   - !import ../imperatives/norm-glimmering-from-passion.yml

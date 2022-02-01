@@ -30,4 +30,4 @@ goals:
   - name: Survive
     imperativeSets:
       - !import imperative-sets/survive.yml
-      - !import imperative-sets/procure-funds.yml
+      - !import imperative-sets/procure-funds-labor.yml

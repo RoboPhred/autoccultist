@@ -25,7 +25,7 @@ namespace Autoccultist.Config
         /// Gets or sets the priority for this imperative.
         /// Imperatives with a higher priority will run before lower priority imperatives.
         /// </summary>
-        public TaskPriority? Priority { get; set; } = TaskPriority.Normal;
+        public TaskPriority? Priority { get; set; }
 
         /// <summary>
         /// Gets or sets a condition which must be met before this imperative can activate.

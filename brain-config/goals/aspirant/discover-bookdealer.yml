@@ -8,7 +8,7 @@ completedWhen:
     - elementId: hq.bookshop
 
 imperativeSets:
-  - !import ../../imperative-sets/procure-funds.yml
+  - !import ../../imperative-sets/procure-funds-labor.yml
   - !import ../../imperative-sets/survive.yml
 imperatives:
   - name: Study the map to morlands

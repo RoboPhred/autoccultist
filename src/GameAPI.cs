@@ -228,14 +228,13 @@ namespace Autoccultist
         /// <param name="message">The message of the toast.</param>
         public static void Notify(string title, string message)
         {
-            try
+            var notifier = Registry.Get<INotifier>();
+            if (notifier == null)
             {
-                Registry.Get<INotifier>().ShowNotificationWindow(title, message, false);
+                return;
             }
-            catch (ApplicationException)
-            {
-                // INotifier is not available until the game fully starts up.
-            }
+
+            notifier.ShowNotificationWindow(title, message, false);
         }
 
         private static void OnGameStarted(object sender, EventArgs e)

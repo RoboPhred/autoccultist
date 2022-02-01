@@ -8,6 +8,12 @@
       "description": "The ID of the card to match.",
       "type": "string"
     },
+    "allowedElementIds": {
+      "title": "Allowed element IDs",
+      "description": "Allow list of element IDs to match.",
+      "type": "array",
+      "item": { "type": "string" }
+    },
     "aspects": {
       "title": "Aspects",
       "description": "Require the matching card to have these aspects.",
@@ -42,9 +48,7 @@
   "additionalProperties": false,
   "anyOf": [
     { "required": ["elementId"] },
-    { "required": ["aspects"] },
-    { "required": ["unique"] },
-    { "required": ["forbiddenAspects"] },
-    { "required": ["forbiddenElementIds"] }
+    { "required": ["allowedElementIds"] },
+    { "required": ["aspects"] }
   ]
 }

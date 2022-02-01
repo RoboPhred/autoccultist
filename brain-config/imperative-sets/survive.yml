@@ -1,7 +1,7 @@
 # This set of imperatives deals with counteracting common ailments.
 # In general, they should all be critical, to take control and deal with the issue
 # on behalf of the implementing goal.
-- !import ../imperatives/survive/crit-dispose-restlessness-paint.yml
+
 - !import ../imperatives/survive/crit-heal-dread-contentment.yml
 - !import ../imperatives/survive/crit-heal-affliction-vitality.yml
 - !import ../imperatives/survive/crit-heal-affliction-funds.yml
@@ -9,3 +9,6 @@
 - !import ../imperatives/survive/crit-heal-injury-funds.yml
 - !import ../imperatives/survive/crit-heal-hunger.yml
 - !import ../imperatives/survive/crit-despair-buy-opium.yml
+
+# Lesser priority survival instincts.
+- !import ../imperatives/survive/maint-dread-buy-opium.yml

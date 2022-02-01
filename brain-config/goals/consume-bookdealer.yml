@@ -2,7 +2,7 @@ name: Purchase and Read Morland books
 requirements:
   allOf:
     - elementId: locationbookdealer
-    - !import ../conditions/can-procure-funds.yml
+    - !import ../conditions/can-procure-funds-labor.yml
 completedWhen:
   allOf:
     - elementId: locationbookdealer_exhausted
@@ -10,7 +10,7 @@ completedWhen:
         - !import ../conditions/readable-or-translatable-books.yml
 imperativeSets:
   - !import ../imperative-sets/survive.yml
-  - !import ../imperative-sets/procure-funds.yml
+  - !import ../imperative-sets/procure-funds-labor.yml
   - !import ../imperative-sets/learn-languages.yml
   - !import ../imperative-sets/translate-books.yml
 imperatives:
