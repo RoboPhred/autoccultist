@@ -3,8 +3,6 @@ requirements:
   aspects: { healthskill: 1 }
 completedWhen:
   aspects: { healthskill: 2 }
-imperativeSets:
-  - !import ../imperative-sets/survive.yml
 imperatives:
   - !import ../imperatives/norm-vitality-from-health.yml
   - name: "Learn Lesson: Vitality"

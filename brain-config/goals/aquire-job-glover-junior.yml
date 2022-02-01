@@ -7,7 +7,5 @@ completedWhen:
     - elementId: gloverandgloverseniorjob
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
-imperativeSets:
-  - !import ../imperative-sets/survive.yml
 imperatives:
   - !import ../imperatives/goal-find-clerical-work.yml

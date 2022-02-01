@@ -3,9 +3,6 @@ requirements:
   aspects: { passionskill: 1 }
 completedWhen:
   aspects: { passionskill: 2 }
-imperativeSets:
-  - !import ../imperative-sets/survive.yml
-  - !import ../imperative-sets/procure-funds-labor.yml
 imperatives:
   - extends: !import ../imperatives/goal-learn-lesson-glimmering.yml
     forbidders:

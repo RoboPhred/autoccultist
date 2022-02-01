@@ -12,5 +12,4 @@ requirements:
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
 imperativeSets:
-  - !import ../imperative-sets/survive.yml
   - !import ../imperative-sets/procure-funds-glover.yml

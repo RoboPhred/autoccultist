@@ -3,9 +3,6 @@ requirements:
   aspects: { reasonskill: 2 }
 completedWhen:
   aspects: { reasonskill: 3 }
-imperativeSets:
-  - !import ../imperative-sets/survive.yml
-  - !import ../imperative-sets/procure-funds-labor.yml
 imperatives:
   - extends: !import ../imperatives/goal-learn-lesson-erudition.yml
     forbidders:

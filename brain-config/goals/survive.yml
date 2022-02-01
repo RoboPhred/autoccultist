@@ -1,0 +1,5 @@
+name: Survive
+requirements:
+  situation: time
+imperativeSets:
+  - !import ../imperative-sets/survive.yml

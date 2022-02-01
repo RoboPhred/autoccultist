@@ -8,7 +8,5 @@ completedWhen:
     - elementId: gloverandgloverseniorjob
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
-imperativeSets:
-  - !import ../imperative-sets/survive.yml
 imperatives:
   - !import ../imperatives/goal-glover-promote-standard.yml

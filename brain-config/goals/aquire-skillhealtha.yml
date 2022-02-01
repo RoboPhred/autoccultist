@@ -3,8 +3,6 @@ requirements:
   elementId: health
 completedWhen:
   aspects: { healthskill: 1 }
-imperativeSets:
-  - !import ../imperative-sets/survive.yml
 imperatives:
   - !import ../imperatives/norm-vitality-from-health.yml
   - !import ../imperatives/maint-refresh-health.yml
