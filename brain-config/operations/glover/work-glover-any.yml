@@ -25,3 +25,8 @@ ongoingRecipes:
     slots:
       Attention:
         elementId: reason
+  gloverandgloverwork:
+    requireCardsToStart: false
+    slots:
+      Devotion:
+        elementId: reason

@@ -128,12 +128,15 @@ namespace Autoccultist
             if (pauseDepth == 0)
             {
                 prePauseSpeed = GameSpeed;
-                Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
+                if (prePauseSpeed != GameSpeed.Paused)
                 {
-                    ControlPriorityLevel = 1,
-                    GameSpeed = GameSpeed.Paused,
-                    WithSFX = true,
-                });
+                    Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
+                    {
+                        ControlPriorityLevel = 1,
+                        GameSpeed = GameSpeed.Paused,
+                        WithSFX = true,
+                    });
+                }
             }
 
             pauseDepth++;
@@ -290,7 +293,7 @@ namespace Autoccultist
                 this.isDisposed = true;
                 GC.SuppressFinalize(this);
                 pauseDepth--;
-                if (pauseDepth == 0)
+                if (pauseDepth == 0 && prePauseSpeed != GameSpeed.Paused)
                 {
                     Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
                     {
