@@ -24,6 +24,11 @@ namespace Autoccultist.GameState
         bool IsUnique { get; }
 
         /// <summary>
+        /// Gets a value indicating the location of this card.
+        /// </summary>
+        CardLocation Location { get; }
+
+        /// <summary>
         /// Gets a dictionary of aspects on this card.
         /// </summary>
         IReadOnlyDictionary<string, int> Aspects { get; }

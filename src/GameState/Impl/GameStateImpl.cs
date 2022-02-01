@@ -1,6 +1,7 @@
 namespace Autoccultist.GameState.Impl
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Provides the base implementation of a game state.
@@ -53,6 +54,20 @@ namespace Autoccultist.GameState.Impl
                 this.VerifyAccess();
                 return this.mansus;
             }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<ICardState> GetAllCards()
+        {
+            this.VerifyAccess();
+
+            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards)).Concat(this.situations.SelectMany(s => s.SlottedCards));
+            if (this.mansus.IsActive)
+            {
+                allCards = allCards.Concat(this.mansus.DeckCards.Values);
+            }
+
+            return allCards;
         }
     }
 }

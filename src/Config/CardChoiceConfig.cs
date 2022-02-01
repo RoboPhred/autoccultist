@@ -36,6 +36,11 @@ namespace Autoccultist.Config
         public string ElementId { get; set; }
 
         /// <summary>
+        /// Gets or sets the location the card must be at to be chosen.
+        /// </summary>
+        public CardLocation? Location { get; set; }
+
+        /// <summary>
         /// Gets or sets the list of element ids from which to choose a card.
         /// </summary>
         public List<string> AllowedElementIds { get; set; }
@@ -79,6 +84,7 @@ namespace Autoccultist.Config
             var candidates =
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
+                where this.Location == null || card.Location == this.Location
                 where this.AllowedElementIds?.Contains(card.ElementId) != false
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)

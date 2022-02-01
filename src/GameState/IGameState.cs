@@ -21,5 +21,11 @@ namespace Autoccultist.GameState
         /// Gets the mansus state.
         /// </summary>
         IMansusState Mansus { get; }
+
+        /// <summary>
+        /// Gets an enumerable of all cards in the game.
+        /// </summary>
+        /// <returns>An enumerable of all cards in the game.</returns>
+        IEnumerable<ICardState> GetAllCards();
     }
 }

@@ -20,7 +20,8 @@ namespace Autoccultist.GameState.Impl
         /// Initializes a new instance of the <see cref="CardStateImpl"/> class.
         /// </summary>
         /// <param name="sourceStack">The source stack to represent a card of.</param>
-        public CardStateImpl(ElementStackToken sourceStack)
+        /// <param name="location">The location of the card.</param>
+        public CardStateImpl(ElementStackToken sourceStack, CardLocation location)
         {
             this.consumed = new Lazy<ElementStackToken>(() => GameAPI.TakeOneCard(sourceStack));
 
@@ -28,6 +29,7 @@ namespace Autoccultist.GameState.Impl
             this.lifetimeRemaining = sourceStack.LifetimeRemaining;
             this.isUnique = sourceStack.Unique;
             this.aspects = new Dictionary<string, int>(sourceStack.GetAspects());
+            this.Location = location;
         }
 
         /// <inheritdoc/>
@@ -61,6 +63,9 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
+        public CardLocation Location { get; }
+
+        /// <inheritdoc/>
         public IReadOnlyDictionary<string, int> Aspects
         {
             get
@@ -74,12 +79,13 @@ namespace Autoccultist.GameState.Impl
         /// Gets an enumerable of card states for cards in the current stack.
         /// </summary>
         /// <param name="stack">The stack to derive card states from.</param>
+        /// <param name="location">The location of the card stack.</param>
         /// <returns>An enumerable of card states representing cards in the given stack.</returns>
-        public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStackToken stack)
+        public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStackToken stack, CardLocation location)
         {
             for (var i = 0; i < stack.Quantity; i++)
             {
-                yield return new CardStateImpl(stack);
+                yield return new CardStateImpl(stack, location);
             }
         }
 

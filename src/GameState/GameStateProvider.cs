@@ -47,7 +47,7 @@ namespace Autoccultist.GameState
 
             var tabletopCards =
                 from stack in GameAPI.GetTabletopCards()
-                from cardState in CardStateImpl.CardStatesFromStack(stack)
+                from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
                 select cardState;
 
             var situations =
