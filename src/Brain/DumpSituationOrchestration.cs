@@ -74,13 +74,7 @@ namespace Autoccultist.Brain
         {
             yield return new OpenSituationAction(this.SituationId);
             yield return new DumpSituationAction(this.SituationId);
-
-            // This action may fail if the situation no longer exists.
-            //  This happens with transient situations like suspicion.
-            yield return new CloseSituationAction(this.SituationId)
-            {
-                IgnoreFailures = true,
-            };
+            yield return new CloseSituationAction(this.SituationId);
         }
     }
 }

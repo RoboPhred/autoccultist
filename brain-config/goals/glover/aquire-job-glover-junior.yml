@@ -2,10 +2,16 @@ name: Find Clerical Work
 completedWhen:
   anyOf:
     - elementId: gloverandgloverjuniorjob
+    - elementId: gloverandgloverjuniorjob_nodifficultbossa
     - elementId: gloverandglover_difficultbossa_job
     - elementId: gloverandglover_difficultbossa_gone_job
+    - elementId: gloverandgloverjob
+    - elementId: gloverandgloverjob_youngerglovergone
     - elementId: gloverandgloverseniorjob
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
+    - elementId: gloverandglovertopjob_tainted
 imperatives:
-  - !import ../../imperatives/goal-find-clerical-work.yml
+  - name: Find clerical work
+    priority: goal
+    operation: !import ../../operations/glover/find-clerical-work.yml

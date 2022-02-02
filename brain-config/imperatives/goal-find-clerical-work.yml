@@ -1,3 +1,0 @@
-name: Find Clerical Work
-priority: goal
-operation: !import ../operations/glover/find-clerical-work.yml

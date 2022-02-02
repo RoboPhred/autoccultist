@@ -1,3 +1,0 @@
-name: Standard Work at Glover and Glover (with effort)
-priority: maintenance
-operation: !import ../operations/work-glover-standard-effort.yml

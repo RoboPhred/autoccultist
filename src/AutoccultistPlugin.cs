@@ -31,8 +31,7 @@ namespace Autoccultist
             get
             {
                 var assemblyLocation = typeof(AutoccultistPlugin).Assembly.Location;
-                var assemblyDir = Path.GetDirectoryName(assemblyLocation);
-                return assemblyDir;
+                return Path.GetDirectoryName(assemblyLocation);
             }
         }
 
@@ -53,6 +52,12 @@ namespace Autoccultist
             {
                 ParseErrorsGUI.IsShowing = true;
             }
+
+            GameEventSource.GameEnded += (o, e) =>
+            {
+                GoalDriver.Reset();
+                SituationOrchestrator.Abort();
+            };
 
             this.LogInfo("Autoccultist initialized.");
         }

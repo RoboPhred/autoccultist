@@ -1,5 +1,0 @@
-name: Advance Glover & Glover Career from Junior
-priority: goal
-requirements:
-  elementId: gloverandgloverjuniorjob
-operation: !import ../operations/glover/work-glover-junior-dilligent.yml

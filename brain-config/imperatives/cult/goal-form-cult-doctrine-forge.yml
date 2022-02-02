@@ -4,8 +4,6 @@ requirements:
   allOf:
     - aspects: { forge: 1 }
     - situation: cult
-    - noneOf:
-      - elementId: foo
 forbidders:
   anyOf:
     - situation: seasonsuspicion

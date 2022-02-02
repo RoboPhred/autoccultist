@@ -3,4 +3,6 @@ situation: work
 startingRecipe:
   slots:
     work:
-      elementId: gloverandgloverjuniorjob
+      allowedElementIds:
+        - gloverandgloverjuniorjob
+        - gloverandgloverjuniorjob_nodifficultbossa

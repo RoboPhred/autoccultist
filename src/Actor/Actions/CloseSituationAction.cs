@@ -19,34 +19,18 @@ namespace Autoccultist.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this action should ignore failures.
-        /// This can be useful for cases when the situation may dissapear after being interacted with.
-        /// </summary>
-        public bool IgnoreFailures { get; set; }
-
         /// <inheritdoc/>
         public void Execute()
         {
             if (GameAPI.IsInMansus)
             {
-                if (this.IgnoreFailures)
-                {
-                    return;
-                }
-
-                throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
+                return;
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {
-                if (this.IgnoreFailures)
-                {
-                    return;
-                }
-
-                throw new ActionFailureException(this, "Situation is not available.");
+                return;
             }
 
             situation.CloseWindow();

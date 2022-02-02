@@ -11,5 +11,16 @@ requirements:
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
-imperativeSets:
-  - !import ../../imperative-sets/procure-funds-glover.yml
+imperatives:
+- name: Work a junior job at Glover & Glover
+  priority: maintenance
+  operation: !import ../../operations/glover/work-glover-junior.yml
+- name: Work at Glover & Glover
+  priority: maintenance
+  operation: !import ../../operations/glover/work-glover-standard.yml
+- name: Work a senior job at Glover & Glover
+  priority: maintenance
+  operation: !import ../../operations/glover/work-glover-senior.yml
+- name: Plead for job at Glover & Glover
+  priority: maintenance
+  operation: !import ../../operations/glover/plead-glover.yml

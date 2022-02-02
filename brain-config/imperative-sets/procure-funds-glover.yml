@@ -1,6 +1,0 @@
-- name: Work at Glover & Glover
-  priority: maintenance
-  operation: !import ../operations/glover/work-glover-any.yml
-- name: Plead for job at Glover & Glover
-  priority: maintenance
-  operation: !import ../operations/glover/plead-glover.yml

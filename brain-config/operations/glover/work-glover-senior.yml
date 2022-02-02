@@ -1,0 +1,10 @@
+name: Work a Senior job Glover & Glover
+situation: work
+startingRecipe:
+  slots:
+    work:
+      allowedElementIds:
+        - gloverandgloverseniorjob
+        - gloverandgloverseniorjob_youngerglovergone
+    Devotion:
+      elementId: reason

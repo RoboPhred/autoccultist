@@ -2,9 +2,9 @@ name: Find a Collaborator
 requirements:
   elementId: contactintro
 completedWhen:
-  allOf:
-    - aspects:
-        acquaintance: 1
+  anyOf:
+    - aspects: { acquaintance: 1 }
+    - aspects: { follower: 1 }
 imperatives:
   - name: Contact Collaborator
     priority: goal

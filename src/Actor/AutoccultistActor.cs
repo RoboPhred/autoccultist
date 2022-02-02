@@ -86,9 +86,19 @@ namespace Autoccultist.Actor
                 }
 
                 // This is a new action set, start execution
-                if (!currentActionSet.PendingActions.MoveNext())
+                try
                 {
-                    // Empty pending action set?  Try again next time.
+                    if (!currentActionSet.PendingActions.MoveNext())
+                    {
+                        // Empty pending action set?  Try again next time.
+                        currentActionSet = null;
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Error pulling the next action from the enumerator.
+                    currentActionSet.TaskCompletion.TrySetException(ex);
                     currentActionSet = null;
                     return;
                 }
