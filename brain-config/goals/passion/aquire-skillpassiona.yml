@@ -3,6 +3,6 @@ requirements:
   elementId: passion
 completedWhen:
   aspects: { passionskill: 1 }
-imperatives:
-  - !import ../../imperatives/goal-learn-lesson-glimmering.yml
-  - !import ../../imperatives/norm-glimmering-from-passion.yml
+impulses:
+  - !import ../../impulses/goal-learn-lesson-glimmering.yml
+  - !import ../../impulses/norm-glimmering-from-passion.yml

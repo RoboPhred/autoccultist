@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft/2019-09/schema#",
   "name": "Goal",
-  "description": "A goal is a collection of imperatives to execute until a given game state is reached.",
+  "description": "A goal is a collection of impulses to execute until a given game state is reached.",
   "type": "object",
   "properties": {
     "name": {
@@ -19,23 +19,23 @@
       "description": "This goal is considered complete when the given condition is satisfied.  Goals will automatically stop when completed.  Goals that do not specify this property will continue forever.",
       "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
     },
-    "imperativeSets": {
-      "title": "Imperative Sets",
-      "description": "A collection of collection of imperatives.  These imperatives will be added to the goal's own imperatives.  Typically, this is a list whose elements are !import tags on items in the imperative-sets folder.",
+    "impulseSets": {
+      "title": "Impulse Sets",
+      "description": "A collection of collection of impulses.  These impulses will be added to the goal's own impulses.  Typically, this is a list whose elements are !import tags on items in the impulse-sets folder.",
       "type": "array",
       "items": {
         "type": "array",
         "items": {
-          "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/imperative.json"
+          "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/impulse.json"
         }
       }
     },
-    "imperatives": {
-      "title": "Imperatives",
-      "description": "A list of imperatives this goal will provide.  Imperatives are the mechanism by which the goal triggers gameplay mechanics.",
+    "impulses": {
+      "title": "Impulses",
+      "description": "A list of impulses this goal will provide.  Impulses are the mechanism by which the goal triggers gameplay mechanics.",
       "type": "array",
       "items": {
-        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/imperative.json"
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/impulse.json"
       }
     }
   }

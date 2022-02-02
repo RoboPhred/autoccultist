@@ -62,7 +62,7 @@ namespace Autoccultist.Brain
         {
             var state = GameStateProvider.Current;
             TryCompleteGoals(state);
-            TryStartImperatives(state);
+            TryStartImpulses(state);
         }
 
         /// <summary>
@@ -75,14 +75,14 @@ namespace Autoccultist.Brain
             foreach (var goal in ActiveGoals)
             {
                 AutoccultistPlugin.Instance.LogInfo("- " + goal.Name);
-                AutoccultistPlugin.Instance.LogInfo("- Imperatives");
-                foreach (var imperative in goal.Imperatives.OrderBy(x => x.Priority))
+                AutoccultistPlugin.Instance.LogInfo("- Impulses");
+                foreach (var impulse in goal.Impulses.OrderBy(x => x.Priority))
                 {
-                    AutoccultistPlugin.Instance.LogInfo("- - " + imperative.Name);
-                    AutoccultistPlugin.Instance.LogInfo("- - - Priority: " + imperative.Priority);
-                    AutoccultistPlugin.Instance.LogInfo("- - - Requirements met: " + (imperative.Requirements?.IsConditionMet(state) != false));
-                    AutoccultistPlugin.Instance.LogInfo("- - - Forbidders in place: " + (imperative.Forbidders?.IsConditionMet(state) == true));
-                    AutoccultistPlugin.Instance.LogInfo("- - - Operation ready: " + imperative.Operation.IsConditionMet(state));
+                    AutoccultistPlugin.Instance.LogInfo("- - " + impulse.Name);
+                    AutoccultistPlugin.Instance.LogInfo("- - - Priority: " + impulse.Priority);
+                    AutoccultistPlugin.Instance.LogInfo("- - - Requirements met: " + (impulse.Requirements?.IsConditionMet(state) != false));
+                    AutoccultistPlugin.Instance.LogInfo("- - - Forbidders in place: " + (impulse.Forbidders?.IsConditionMet(state) == true));
+                    AutoccultistPlugin.Instance.LogInfo("- - - Operation ready: " + impulse.Operation.IsConditionMet(state));
                 }
             }
         }
@@ -107,16 +107,16 @@ namespace Autoccultist.Brain
             BrainEventSink.OnGoalCompleted(goal);
         }
 
-        private static void TryStartImperatives(IGameState state)
+        private static void TryStartImpulses(IGameState state)
         {
-            // Scan through all possible imperatives and invoke the ones that can start.
-            //  Where multiple imperatives try for the same verb, invoke the highest priority
+            // Scan through all possible impulses and invoke the ones that can start.
+            //  Where multiple impulses try for the same verb, invoke the highest priority
             var operations =
                 from goal in ActiveGoals
-                from imperative in goal.Imperatives
-                where imperative.CanExecute(state)
-                orderby imperative.Priority descending
-                group imperative.Operation by imperative.Operation.Situation into situationGroup
+                from impulse in goal.Impulses
+                where impulse.CanExecute(state)
+                orderby impulse.Priority descending
+                group impulse.Operation by impulse.Operation.Situation into situationGroup
                 select situationGroup.FirstOrDefault();
 
             foreach (var operation in operations)

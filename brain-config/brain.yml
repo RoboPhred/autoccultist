@@ -13,10 +13,10 @@ goals:
 #         - elementId: health
 #         - aspects:
 #             healthskill: 1
-#     imperativeSets:
-#       - !import imperative-sets/survive.yml
-#     imperatives:
-#       - !import imperatives/maint-refresh-health.yml
+#     impulseSets:
+#       - !import impulse-sets/survive.yml
+#     impulses:
+#       - !import impulses/maint-refresh-health.yml
 #   - !import goals/aquire-skillhealtha.yml
 #   - !import goals/aquire-skillhealthb.yml
 #   - !import goals/aquire-skillhealthc.yml
@@ -28,6 +28,6 @@ goals:
 #   - !import goals/consume-bookdealer.yml
 #   - !import goals/aspirant/find-collaborator.yml
 #   - name: Survive
-#     imperativeSets:
-#       - !import imperative-sets/survive.yml
-#       - !import imperative-sets/procure-funds-labor.yml
+#     impulseSets:
+#       - !import impulse-sets/survive.yml
+#       - !import impulse-sets/procure-funds-labor.yml

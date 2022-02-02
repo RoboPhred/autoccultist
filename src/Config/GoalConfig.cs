@@ -9,10 +9,10 @@ namespace Autoccultist.Config
     using YamlDotNet.Core;
 
     /// <summary>
-    /// A Goal represents a collection of imperatives which activate under certain conditions,
+    /// A Goal represents a collection of impulses which activate under certain conditions,
     /// and continually run until an expected state is reached.
     /// <para>
-    /// Goals are made out of multiple imperatives, which trigger the actual actions against the game.
+    /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
     public class GoalConfig : INamedConfigObject, IGoal, IAfterYamlDeserialization
     {
@@ -35,18 +35,18 @@ namespace Autoccultist.Config
         public IGameStateConditionConfig CompletedWhen { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of bundles of imperatives to also include in this goal.
+        /// Gets or sets a list of bundles of impulses to also include in this goal.
         /// <para>
-        /// These imperatives will be lower priority than the goal's normal imperatives, unless overriden with an imperative's <see cref="ImperativeConfig.Priority"/> property.
+        /// These impulses will be lower priority than the goal's normal impulses, unless overriden with an impulse's <see cref="ImpulseConfig.Priority"/> property.
         /// </summary>
-        public List<List<ImperativeConfig>> ImperativeSets { get; set; } = new List<List<ImperativeConfig>>();
+        public List<List<ImpulseConfig>> ImpulseSets { get; set; } = new List<List<ImpulseConfig>>();
 
         /// <summary>
-        /// Gets or sets a list of imperatives this goal provides.
+        /// Gets or sets a list of impulses this goal provides.
         /// <para>
-        /// Each imperative provides an operation and conditions under which the operation will be performed.
+        /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        public List<ImperativeConfig> Imperatives { get; set; } = new List<ImperativeConfig>();
+        public List<ImpulseConfig> Impulses { get; set; } = new List<ImpulseConfig>();
 
         /// <inheritdoc/>
         string IGoal.Name => this.Name;
@@ -58,7 +58,7 @@ namespace Autoccultist.Config
         IGameStateCondition IGoal.CompletedWhen => this.CompletedWhen;
 
         /// <inheritdoc/>
-        IReadOnlyList<IImperative> IGoal.Imperatives => this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
+        IReadOnlyList<IImpulse> IGoal.Impulses => this.Impulses.Concat(this.ImpulseSets.SelectMany(set => set)).ToArray();
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.
@@ -98,10 +98,10 @@ namespace Autoccultist.Config
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
             }
 
-            var imperatives = this.Imperatives.Concat(this.ImperativeSets.SelectMany(set => set)).ToArray();
-            if (imperatives.Length == 0)
+            var impulses = this.Impulses.Concat(this.ImpulseSets.SelectMany(set => set)).ToArray();
+            if (impulses.Length == 0)
             {
-                throw new InvalidConfigException("Goal must have at least one imperative.");
+                throw new InvalidConfigException("Goal must have at least one impulse.");
             }
         }
     }

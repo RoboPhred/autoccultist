@@ -5,8 +5,8 @@ completedWhen:
     - elementId: locationbookdealer
     - noneOf:
       - !import ../conditions/readable-or-translatable-books.yml
-imperativeSets:
-  - !import ../imperative-sets/learn-languages.yml
-  - !import ../imperative-sets/translate-books.yml
-imperatives:
-  - !import ../imperatives/books/maint-read-lore.yml
+impulseSets:
+  - !import ../impulse-sets/learn-languages.yml
+  - !import ../impulse-sets/translate-books.yml
+impulses:
+  - !import ../impulses/books/maint-read-lore.yml

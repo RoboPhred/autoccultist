@@ -1,0 +1,14 @@
+# This set of impulses deals with counteracting common ailments.
+# In general, they should all be critical, to take control and deal with the issue
+# on behalf of the implementing goal.
+
+- !import ../impulses/survive/crit-heal-dread-contentment.yml
+- !import ../impulses/survive/crit-heal-affliction-vitality.yml
+- !import ../impulses/survive/crit-heal-affliction-funds.yml
+- !import ../impulses/survive/crit-heal-injury-vitality.yml
+- !import ../impulses/survive/crit-heal-injury-funds.yml
+- !import ../impulses/survive/crit-heal-hunger.yml
+- !import ../impulses/survive/crit-despair-buy-opium.yml
+
+# Lesser priority survival instincts.
+- !import ../impulses/survive/maint-dread-buy-opium.yml

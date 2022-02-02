@@ -4,7 +4,7 @@ namespace Autoccultist.Brain
     using Autoccultist.GameState;
 
     /// <summary>
-    /// A description of a task with a starting condition, a target game state, and a list of imperatives to complete it.
+    /// A description of a task with a starting condition, a target game state, and a list of impulses to complete it.
     /// </summary>
     public interface IGoal
     {
@@ -29,11 +29,11 @@ namespace Autoccultist.Brain
         IGameStateCondition CompletedWhen { get; }
 
         /// <summary>
-        /// Gets a list of imperatives this goal provides.
+        /// Gets a list of impulses this goal provides.
         /// <para>
-        /// Each imperative provides an operation and conditions under which the operation will be performed.
+        /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        IReadOnlyList<IImperative> Imperatives { get; }
+        IReadOnlyList<IImpulse> Impulses { get; }
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.

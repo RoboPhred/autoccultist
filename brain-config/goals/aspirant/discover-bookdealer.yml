@@ -6,7 +6,7 @@ completedWhen:
     - elementId: locationbookdealer
     - elementId: locationbookdealer_exhausted
     - elementId: hq.bookshop
-imperatives:
+impulses:
   - name: Study the map to morlands
     priority: goal
     operation:

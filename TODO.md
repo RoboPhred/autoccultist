@@ -1,5 +1,5 @@
-- extends property of imperatives should also be able to take a filename and auto-load that from the imperatives folder
-- imperativeSets property of goals should also be able to take a filename and auto-load that from the imperative-sets folder
+- extends property of impulses should also be able to take a filename and auto-load that from the impulses folder
+- impulseSets property of goals should also be able to take a filename and auto-load that from the impulse-sets folder
 - Deal with fascination. situation `visions`, counter card with aspect `fascination` using dream with `fleeting`, or let restlessness fester into dread
 - Rethink requirements on goals. When doing goals linearly, it doesn't make much sense.
   - Can also get us stuck with no goals at all. Should we have a fallback goal?

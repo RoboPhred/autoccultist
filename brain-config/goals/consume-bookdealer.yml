@@ -3,5 +3,5 @@ requirements:
   elementId: locationbookdealer
 completedWhen:
     elementId: locationbookdealer_exhausted
-imperatives:
-  - !import ../imperatives/books/maint-buy-morland-books.yml
+impulses:
+  - !import ../impulses/books/maint-buy-morland-books.yml

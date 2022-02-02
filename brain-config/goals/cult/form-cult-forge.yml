@@ -3,6 +3,6 @@ requirements:
   aspects: { aquaintance: 1 }
 completedWhen:
   aspects: { society: 1 }
-imperatives:
-  - !import ../../imperatives/cult/goal-form-cult-doctrine-forge.yml
-  - !import ../../imperatives/cult/goal-form-cult-recruit.yml
+impulses:
+  - !import ../../impulses/cult/goal-form-cult-doctrine-forge.yml
+  - !import ../../impulses/cult/goal-form-cult-recruit.yml

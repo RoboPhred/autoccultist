@@ -1,5 +1,5 @@
 # This is a companion set to conditions/can-procure-funds-labor
-# This condition should return true when the imperative set is capable of doing its job
+# This condition should return true when the impulse set is capable of doing its job
 # TODO: Take into account: painting, selling spintria
 - name: Skilled physical work
   priority: maintenance

@@ -3,15 +3,15 @@ requirements:
   aspects: { reasonskill: 2 }
 completedWhen:
   aspects: { reasonskill: 3 }
-imperatives:
-  - extends: !import ../../imperatives/goal-learn-lesson-erudition.yml
+impulses:
+  - extends: !import ../../impulses/goal-learn-lesson-erudition.yml
     forbidders:
       # Do not monopolize study when we have erudition lessons to study
       cardSet:
         - elementId: eruditionplus
         - elementId: eruditionplus
         - elementId: eruditionplus
-  - !import ../../imperatives/norm-erudition-from-reason.yml
+  - !import ../../impulses/norm-erudition-from-reason.yml
   - name: Upgrade Notable Scholarship to Profound Scholarship
     priority: goal
     operation: !import ../../operations/upgrade-skillreasonb.yml

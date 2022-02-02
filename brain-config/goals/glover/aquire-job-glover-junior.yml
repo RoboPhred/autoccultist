@@ -11,7 +11,7 @@ completedWhen:
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
-imperatives:
+impulses:
   - name: Find clerical work
     priority: goal
     operation: !import ../../operations/glover/find-clerical-work.yml

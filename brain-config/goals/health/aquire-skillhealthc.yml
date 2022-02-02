@@ -3,15 +3,15 @@ requirements:
   aspects: { healthskill: 2 }
 completedWhen:
   aspects: { healthskill: 3 }
-imperatives:
-  - extends: !import ../../imperatives/goal-learn-lesson-vitality.yml
+impulses:
+  - extends: !import ../../impulses/goal-learn-lesson-vitality.yml
     forbidders:
       # Stop using our skill card when we have enough lessons
       cardSet:
         - elementId: vitalityplus
         - elementId: vitalityplus
         - elementId: vitalityplus
-  - !import ../../imperatives/norm-vitality-from-health.yml
+  - !import ../../impulses/norm-vitality-from-health.yml
   - name: Upgrade Hardened Physique to Steely Physique
     priority: goal
     operation: !import ../../operations/upgrade-skillhealthb.yml
