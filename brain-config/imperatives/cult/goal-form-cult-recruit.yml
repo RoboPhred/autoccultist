@@ -2,7 +2,14 @@ name: Recruit the first cult member
 priority: goal
 requirements:
   allOf:
-    - aspects: { acquaintance: 1}
+    - aspects: { acquaintance: 1 }
     - noneOf:
       - situation: cult
+      - aspects: { society: 1 }
+forbidders:
+  anyOf:
+    - situation: seasonsuspicion
+    - situation: time
+      storedCardsMatch:
+        elementId: seasonsuspicion
 operation: !import ../../operations/cult/form-cult-recruit.yml

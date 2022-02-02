@@ -3,7 +3,7 @@ namespace Autoccultist.Brain
     using System.Collections.Generic;
 
     /// <summary>
-    /// /// Defines the driving force behind an automated playthrough of Cultist Simulator.
+    /// Defines the driving force behind an automated playthrough of Cultist Simulator.
     /// </summary>
     public interface IBrain
     {
