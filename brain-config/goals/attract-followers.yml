@@ -21,7 +21,7 @@ impulses:
       # Following rumors generates notariety.
       # We could opt to not follow up on any rumors, and we should still get everyone we need from talking with lore.
       anyOf:
-        - situation: seasonsuspicion
+        - situation: suspicion
         - situation: time
           storedCardsMatch:
             elementId: seasonsuspicion

@@ -90,24 +90,21 @@ namespace Autoccultist.GUI
             GUILayout.Label("Current Goals:");
             foreach (var goal in NucleusAccumbens.CurrentGoals)
             {
-                GUILayout.BeginHorizontal();
-
-                GUILayout.Label(goal.Name);
-
+                var prefix = string.Empty;
                 if (Ego.CurrentMotivation?.PrimaryGoals.Contains(goal) == true)
                 {
-                    GUILayout.Label("[Primary]");
+                    prefix = "[Primary]";
                 }
                 else if (Ego.CurrentMotivation?.SupportingGoals.Contains(goal) == true)
                 {
-                    GUILayout.Label("[Supporting]");
+                    prefix = "[Supporting]";
                 }
                 else
                 {
-                    GUILayout.Label("[Custom]");
+                    prefix = "[Custom]";
                 }
 
-                GUILayout.EndHorizontal();
+                GUILayout.Label($"{prefix} {goal.Name}");
             }
 
             if (GUILayout.Button("Toggle Goals Menu"))
