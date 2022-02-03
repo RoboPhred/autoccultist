@@ -11,6 +11,11 @@ completedWhen:
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
+    - elementId: gloverandgloverjob_demotion
+    - elementId: gloverandgloverjob_youngerglovergone_demotion
+    - elementId: gloverandgloverjuniorjob_demotion
+    - elementId: gloverandgloverjuniorjob_nodifficultbossa_demotion
+    - elementId: gloverandglovertopjob_tainted_demotion
 impulses:
   - name: Find clerical work
     priority: goal

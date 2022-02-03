@@ -76,8 +76,6 @@ namespace Autoccultist.Config
         /// <inheritdoc/>
         public ICardState ChooseCard(IEnumerable<ICardState> cards)
         {
-            // TODO: We could have some weighing mechanism to let a config specify which cards are higher priority than others?
-
             // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
             var aspectsAsCondition = this.Aspects?.ToDictionary(entry => entry.Key, entry => entry.Value as IValueCondition);
 

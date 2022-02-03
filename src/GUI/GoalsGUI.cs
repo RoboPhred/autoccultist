@@ -46,13 +46,13 @@ namespace Autoccultist.GUI
             GUILayout.Label("Current Goals");
             currentGoalsScrollPosition = GUILayout.BeginScrollView(currentGoalsScrollPosition, GUILayout.Height(100));
 
-            foreach (var goal in GoalDriver.CurrentGoals)
+            foreach (var goal in NucleusAccumbens.CurrentGoals)
             {
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("Cancel", GUILayout.Width(75)))
                 {
-                    GoalDriver.RemoveGoal(goal);
+                    NucleusAccumbens.RemoveGoal(goal);
                 }
 
                 GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
@@ -68,7 +68,7 @@ namespace Autoccultist.GUI
 
             foreach (var goal in Library.Goals)
             {
-                if (goal.IsSatisfied(GameStateProvider.Current) || GoalDriver.CurrentGoals.Contains(goal))
+                if (goal.IsSatisfied(GameStateProvider.Current) || NucleusAccumbens.CurrentGoals.Contains(goal))
                 {
                     continue;
                 }
@@ -77,7 +77,7 @@ namespace Autoccultist.GUI
 
                 if (GUILayout.Button("Activate", GUILayout.Width(75)))
                 {
-                    GoalDriver.AddGoal(goal);
+                    NucleusAccumbens.AddGoal(goal);
                 }
 
                 GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));

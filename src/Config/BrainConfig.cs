@@ -15,17 +15,17 @@ namespace Autoccultist.Config
         /// <para>
         /// Goals will operate in order, skipping over goals until one is found that can be activated.
         /// </summary>
-        public List<GoalConfig> Goals { get; set; }
+        public List<MotivationConfig> Motivations { get; set; } = new();
 
         /// <inheritdoc/>
-        IReadOnlyList<IGoal> IBrain.Goals => this.Goals;
+        IReadOnlyList<IMotivation> IBrain.Motivations => this.Motivations;
 
         /// <summary>
         /// Loads a BrainConfig from the given file.
         /// </summary>
         /// <param name="filePath">The path to the config file to load.</param>
         /// <returns>A BrainConfig loaded from the file.</returns>
-        /// <exception cref="Autoccultist.Brain.Config.InvalidConfigException">The config file at the path contains invalid configuration.</exception>
+        /// <exception cref="Brain.Config.InvalidConfigException">The config file at the path contains invalid configuration.</exception>
         public static BrainConfig Load(string filePath)
         {
             return Deserializer.Deserialize<BrainConfig>(filePath);
@@ -34,9 +34,9 @@ namespace Autoccultist.Config
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
         {
-            if (this.Goals == null || this.Goals.Count == 0)
+            if (this.Motivations == null || this.Motivations.Count == 0)
             {
-                throw new InvalidConfigException("Brain must have at least one goal.");
+                throw new InvalidConfigException("Brain must have at least one motivation.");
             }
         }
     }

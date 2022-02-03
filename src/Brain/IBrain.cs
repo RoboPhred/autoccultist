@@ -8,11 +8,8 @@ namespace Autoccultist.Brain
     public interface IBrain
     {
         /// <summary>
-        /// Gets the list of goals for this playthrough.
+        /// Gets the list of motivations for this playthrough.
         /// </summary>
-        /// <remarks>
-        /// Goals will be individually executed in order.
-        /// </value>
-        IReadOnlyList<IGoal> Goals { get; }
+        IReadOnlyList<IMotivation> Motivations { get; }
     }
 }

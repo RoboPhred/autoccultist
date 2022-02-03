@@ -1,33 +1,83 @@
-goals:
-  - !import goals/aspirant/begin-intro.yml
-#   - !import goals/aspirant/study-bequest-passion.yml
-#   - name: Wait for health refresh
-#     requirements:
-#       anyOf:
-#         - elementId: fatigue
-#         - elementId: hunger
-#         - elementId: injury
-#         - elementId: affliction
-#     completedWhen:
-#       anyOf:
-#         - elementId: health
-#         - aspects:
-#             healthskill: 1
-#     impulseSets:
-#       - !import impulse-sets/survive.yml
-#     impulses:
-#       - !import impulses/maint-refresh-health.yml
-#   - !import goals/aquire-skillhealtha.yml
-#   - !import goals/aquire-skillhealthb.yml
-#   - !import goals/aquire-skillhealthc.yml
-#   - !import goals/aquire-skillpassiona.yml
-#   - !import goals/aquire-skillpassionb.yml
-#   - !import goals/aquire-skillpassionc.yml
-#   - !import goals/aquire-skillreasona.yml
-#   - !import goals/aspirant/discover-bookdealer.yml
-#   - !import goals/consume-bookdealer.yml
-#   - !import goals/aspirant/find-collaborator.yml
-#   - name: Survive
-#     impulseSets:
-#       - !import impulse-sets/survive.yml
-#       - !import impulse-sets/procure-funds-labor.yml
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - !import goals/aspirant/begin-intro.yml
+  - name: Activate power temptation
+    primaryGoals:
+      - !import goals/aspirant/study-bequest-passion.yml
+  - name: Get a job
+    primaryGoals:
+      - !import goals/glover/aquire-job-glover-junior.yml
+    supportingGoals:
+      - !import goals/survive.yml
+  - name: Get a scholarship
+    primaryGoals:
+      - !import goals/reason/aquire-skillreasona.yml
+      - !import goals/reason/aquire-skillreasonb.yml
+      - !import goals/reason/aquire-skillreasonc.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Get a promotion
+    primaryGoals:
+      - !import goals/glover/aquire-job-glover-standard.yml
+    supportingGoals:
+      - !import goals/survive.yml
+  - name: Study bequest contents
+    primaryGoals:
+      - !import goals/aspirant/discover-bookdealer.yml
+      - !import goals/aspirant/find-collaborator.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Get a stronger physique
+    primaryGoals:
+      - !import goals/health/aquire-skillhealtha.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Establish the Unflinching Order
+    primaryGoals:
+      - !import goals/cult/form-cult-doctrine-forge.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Get passionate
+    primaryGoals:
+      - !import goals/passion/aquire-skillpassiona.yml
+      - !import goals/passion/aquire-skillpassionb.yml
+      - !import goals/passion/aquire-skillpassionc.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Buy books, find accomplices, and get swole
+    primaryGoals:
+      - !import goals/consume-bookdealer.yml
+      - !import goals/health/aquire-skillhealthb.yml
+      - !import goals/health/aquire-skillhealthc.yml
+    supportingGoals:
+      - !import goals/attract-followers.yml
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Read books, find accomplices, and explore the city
+    # This could theoretically start when we are buying books, but:
+    # - We need to be finished with skillhealth stuff so study is freed up
+    # - This goal ends when no books are left, so it can end prematurely if we are faster than consume-bookdealer
+    primaryGoals:
+      - !import goals/explore-city-follower.yml
+      - !import goals/consume-books-lore.yml
+    supportingGoals:
+      - !import goals/attract-followers.yml
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Recruit accomplices
+    primaryGoals:
+      - !import goals/cult/recruit-lore-forge.yml
+      - !import goals/attract-followers.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Work my life away
+    primaryGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml

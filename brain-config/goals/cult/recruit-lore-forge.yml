@@ -1,0 +1,12 @@
+name: Recruit acquaintances, by invoking Forge
+requirements:
+  aspects:
+    society: 1
+    venerationforge: 1
+completedWhen:
+  noneOf:
+    - aspects: { acquaintance: 1 }
+impulses:
+  - name: Recruit an acquaintance, by invoking Forge
+    priority: goal
+    operation: !import ../../operations/cult/recruit-lore-forge.yml

@@ -1,0 +1,6 @@
+name: Speak of esoteric matters
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { lore: 1 }

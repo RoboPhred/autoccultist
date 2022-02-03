@@ -105,7 +105,7 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"[OperationOrchestration Operation={this.operation.Name}]";
+            return $"[OperationOrchestration Operation=\"{this.operation.Name}\" State={this.operationState}]";
         }
 
         /// <inheritdoc/>

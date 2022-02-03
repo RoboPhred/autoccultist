@@ -1,10 +1,9 @@
 name: Read and translate lore books
 requirements: !import ../conditions/readable-or-translatable-books.yml
 completedWhen:
-  allOf: 
-    - elementId: locationbookdealer
+  allOf:
     - noneOf:
-      - !import ../conditions/readable-or-translatable-books.yml
+        - !import ../conditions/readable-or-translatable-books.yml
 impulseSets:
   - !import ../impulse-sets/learn-languages.yml
   - !import ../impulse-sets/translate-books.yml

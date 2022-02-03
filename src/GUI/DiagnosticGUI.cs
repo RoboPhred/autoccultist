@@ -49,6 +49,11 @@ namespace Autoccultist.GUI
                 }
             }
 
+            if (GUILayout.Button("Reload All Configs"))
+            {
+                AutoccultistPlugin.Instance.ReloadAll();
+            }
+
             var mechHeart = GUILayout.Toggle(MechanicalHeart.IsRunning, "Mechanical Heart");
             if (mechHeart != MechanicalHeart.IsRunning)
             {
@@ -62,30 +67,48 @@ namespace Autoccultist.GUI
                 }
             }
 
-            if (GUILayout.Button("Step Heart"))
+            if (GUILayout.Button("Trigger Heartbeat"))
             {
                 MechanicalHeart.Step();
             }
 
-            var taskRunner = GUILayout.Toggle(TaskDriver.IsRunning, "Task Driver");
-            if (taskRunner != TaskDriver.IsRunning)
+            var taskRunner = GUILayout.Toggle(Ego.IsRunning, "Ego");
+            if (taskRunner != Ego.IsRunning)
             {
                 if (taskRunner)
                 {
-                    TaskDriver.Start();
+                    Ego.Start();
                 }
                 else
                 {
-                    TaskDriver.Stop();
+                    Ego.Stop();
                 }
             }
 
-            if (GUILayout.Button("Reload All Configs"))
-            {
-                AutoccultistPlugin.Instance.ReloadTasks();
-            }
+            GUILayout.Label("Current Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
 
-            GUILayout.Label("Current Goals:\n" + string.Join("\n", GoalDriver.CurrentGoals.Select(x => x.Name)));
+            GUILayout.Label("Current Goals:");
+            foreach (var goal in NucleusAccumbens.CurrentGoals)
+            {
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Label(goal.Name);
+
+                if (Ego.CurrentMotivation?.PrimaryGoals.Contains(goal) == true)
+                {
+                    GUILayout.Label("[Primary]");
+                }
+                else if (Ego.CurrentMotivation?.SupportingGoals.Contains(goal) == true)
+                {
+                    GUILayout.Label("[Supporting]");
+                }
+                else
+                {
+                    GUILayout.Label("[Custom]");
+                }
+
+                GUILayout.EndHorizontal();
+            }
 
             if (GUILayout.Button("Toggle Goals Menu"))
             {

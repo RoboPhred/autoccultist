@@ -11,7 +11,7 @@ namespace Autoccultist.Config.Conditions
         /// <inheritdoc/>
         public virtual bool IsConditionMet(IGameState state)
         {
-            return this.ChooseCard(state.TabletopCards) != null;
+            return this.ChooseCard(state.GetAllCards()) != null;
         }
 
         /// <inheritdoc/>

@@ -47,7 +47,7 @@ namespace Autoccultist
 
             GameAPI.Initialize();
 
-            this.ReloadTasks();
+            this.ReloadAll();
             if (Library.ParseErrors.Count > 0)
             {
                 ParseErrorsGUI.IsShowing = true;
@@ -55,8 +55,8 @@ namespace Autoccultist
 
             GameEventSource.GameEnded += (o, e) =>
             {
-                GoalDriver.Reset();
-                SituationOrchestrator.Abort();
+                this.StopAutoccultist();
+                SuperEgo.SetMotivations(Library.Brain.Motivations);
             };
 
             this.LogInfo("Autoccultist initialized.");
@@ -65,14 +65,12 @@ namespace Autoccultist
         /// <summary>
         /// Reload all tasks in the TaskDriver.
         /// </summary>
-        public void ReloadTasks()
+        public void ReloadAll()
         {
-            this.LogInfo("Reloading tasks");
+            this.LogInfo("Reloading all configs");
             Library.LoadAll();
-            if (Library.Brain != null)
-            {
-                TaskDriver.SetTasks(Library.Brain.Goals);
-            }
+            SuperEgo.Clear();
+            SuperEgo.SetMotivations(Library.Brain.Motivations);
         }
 
         /// <summary>
@@ -155,7 +153,7 @@ namespace Autoccultist
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        this.ReloadTasks();
+                        this.ReloadAll();
                     }
                     else
                     {
@@ -171,7 +169,7 @@ namespace Autoccultist
             else if (Input.GetKeyDown(KeyCode.F9))
             {
                 this.LogInfo("Dumping status");
-                GoalDriver.DumpStatus();
+                NucleusAccumbens.DumpStatus();
                 SituationOrchestrator.LogStatus();
             }
             else if (Input.GetKeyDown(KeyCode.F8))
@@ -183,15 +181,15 @@ namespace Autoccultist
 
         private void StartAutoccultist()
         {
-            TaskDriver.Start();
+            Ego.Start();
             MechanicalHeart.Start();
         }
 
         private void StopAutoccultist()
         {
             MechanicalHeart.Stop();
-            TaskDriver.Stop();
-            GoalDriver.Reset();
+            Ego.Stop();
+            NucleusAccumbens.Reset();
         }
     }
 }

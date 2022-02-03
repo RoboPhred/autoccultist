@@ -8,9 +8,9 @@ namespace Autoccultist.Brain
     /// <summary>
     /// A static class responsible for managing goal execution.
     /// </summary>
-    public static class GoalDriver
+    public static class NucleusAccumbens
     {
-        private static readonly HashSet<IGoal> ActiveGoals = new HashSet<IGoal>();
+        private static readonly HashSet<IGoal> ActiveGoals = new();
 
         /// <summary>
         /// Raised when a goal is completed.

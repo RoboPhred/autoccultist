@@ -1,6 +1,6 @@
 name: Form the Unflinching Order
 requirements:
-  aspects: { aquaintance: 1 }
+  aspects: { acquaintance: 1 }
 completedWhen:
   aspects: { society: 1 }
 impulses:

@@ -64,7 +64,6 @@ namespace Autoccultist
         /// </summary>
         public static void Step()
         {
-            AutoccultistPlugin.Instance.LogTrace("Stepping Mechanical Heart.");
             Stop();
             TriggerMechanicalBeat();
         }
@@ -92,7 +91,7 @@ namespace Autoccultist
                 return;
             }
 
-            GoalDriver.Update();
+            NucleusAccumbens.Update();
             AutoccultistActor.Update();
             SituationOrchestrator.Update();
         }
