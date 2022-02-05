@@ -18,7 +18,7 @@ namespace Autoccultist.Yaml
         /// </summary>
         public static readonly INamingConvention NamingConvention = CamelCaseNamingConvention.Instance;
 
-        private static readonly Stack<string> ParsingFiles = new Stack<string>();
+        private static readonly Stack<string> ParsingFiles = new();
 
         /// <summary>
         /// Gets the path of the current file being processed.
@@ -84,8 +84,8 @@ namespace Autoccultist.Yaml
             }
             catch (YamlException ex) when (!(ex is YamlFileException))
             {
-                AutoccultistPlugin.Instance.LogWarn($"Error parsing file {CurrentFilePath}: {ex.Message}");
-                throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.Message, ex);
+                AutoccultistPlugin.Instance.LogWarn($"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
+                throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.GetInnermostMessage(), ex);
             }
             finally
             {
@@ -111,8 +111,8 @@ namespace Autoccultist.Yaml
             }
             catch (YamlException ex) when (!(ex is YamlFileException))
             {
-                AutoccultistPlugin.Instance.LogWarn($"Error parsing file {CurrentFilePath}: {ex.Message}");
-                throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.Message, ex);
+                AutoccultistPlugin.Instance.LogWarn($"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
+                throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.GetInnermostMessage(), ex);
             }
             finally
             {

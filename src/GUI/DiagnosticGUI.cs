@@ -54,6 +54,7 @@ namespace Autoccultist.GUI
                 AutoccultistPlugin.Instance.ReloadAll();
             }
 
+            GUILayout.BeginHorizontal();
             var mechHeart = GUILayout.Toggle(MechanicalHeart.IsRunning, "Mechanical Heart");
             if (mechHeart != MechanicalHeart.IsRunning)
             {
@@ -72,6 +73,8 @@ namespace Autoccultist.GUI
                 MechanicalHeart.Step();
             }
 
+            GUILayout.EndHorizontal();
+
             var taskRunner = GUILayout.Toggle(Ego.IsRunning, "Ego");
             if (taskRunner != Ego.IsRunning)
             {
@@ -87,7 +90,16 @@ namespace Autoccultist.GUI
 
             GUILayout.Label("Current Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
 
+            GUILayout.BeginHorizontal();
+
             GUILayout.Label("Current Goals:");
+            if (GUILayout.Button("Toggle Goals Menu"))
+            {
+                GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
+            }
+
+            GUILayout.EndHorizontal();
+
             foreach (var goal in NucleusAccumbens.CurrentGoals)
             {
                 var prefix = string.Empty;
@@ -107,12 +119,19 @@ namespace Autoccultist.GUI
                 GUILayout.Label($"{prefix} {goal.Name}");
             }
 
-            if (GUILayout.Button("Toggle Goals Menu"))
-            {
-                GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
-            }
+            GUILayout.Label("Current Orchestrations:");
 
-            GUILayout.Label("Current Orchestrations:\n" + string.Join("\n", SituationOrchestrator.CurrentOrchestrations.Select(entry => $"{entry.Key}: {entry.Value}")));
+            foreach (var entry in SituationOrchestrator.CurrentOrchestrations)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"{entry.Key}: {entry.Value}", GUILayout.ExpandWidth(true));
+                if (GUILayout.Button("Abort", GUILayout.ExpandWidth(false)))
+                {
+                    entry.Value.Abort();
+                }
+
+                GUILayout.EndHorizontal();
+            }
         }
     }
 }

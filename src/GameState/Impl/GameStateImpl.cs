@@ -61,7 +61,7 @@ namespace Autoccultist.GameState.Impl
         {
             this.VerifyAccess();
 
-            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards)).Concat(this.situations.SelectMany(s => s.SlottedCards));
+            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards.Concat(s.SlottedCards).Concat(s.OutputCards)));
             if (this.mansus.IsActive)
             {
                 allCards = allCards.Concat(this.mansus.DeckCards.Values);

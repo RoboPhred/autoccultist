@@ -1,0 +1,6 @@
+name: "Aquire Way: The wood"
+completedWhen:
+  elementId: waywood
+impulses:
+  - name: "Aquire Way: The wood"
+    operation: !import ../../operations/mansus/aquire-way-wood.yml

@@ -62,5 +62,11 @@ namespace Autoccultist.Yaml
         /// Gets the file the yaml exception occurred in.
         /// </summary>
         public string FilePath { get; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"File: {this.FilePath}\n{base.ToString()}";
+        }
     }
 }

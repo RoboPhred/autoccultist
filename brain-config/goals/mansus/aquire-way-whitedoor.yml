@@ -1,0 +1,6 @@
+name: "Aquire Way: The White Door"
+completedWhen:
+  elementId: waywhite
+impulses:
+  - name: "Aquire Way: The White Door"
+    operation: !import ../../operations/mansus/aquire-way-whitedoor.yml

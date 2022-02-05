@@ -35,11 +35,10 @@ namespace Autoccultist.GameState
         /// <returns>True if all card matchers can satisfy their matches, or False otherwise.</returns>
         public static bool CardsCanBeSatisfied(this IGameState state, IEnumerable<ICardChooser> choosers)
         {
-            // MissingMethodException ???
-            // var remainingCards = state.TabletopCards.ToHashSet();
             var remainingCards = new HashSet<ICardState>(state.TabletopCards);
             foreach (var chooser in choosers)
             {
+                // Note: Some card choosers have a choice of multiple cards.  We should take that into account and check all combinations.
                 var choice = chooser.ChooseCard(remainingCards);
                 if (choice == null)
                 {

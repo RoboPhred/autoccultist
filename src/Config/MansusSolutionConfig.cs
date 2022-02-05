@@ -12,7 +12,7 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets the card choice to match against the face up card.
         /// </summary>
-        public CardChoiceConfig FaceUpCard { get; set; }
+        public CardChooserConfig FaceUpCard { get; set; }
 
         /// <summary>
         /// Gets or sets the fallback deck to draw from if the face up card does not match <see cref="FaceUpCard"/>.
@@ -27,7 +27,7 @@ namespace Autoccultist.Config
         {
             if (this.Deck == null)
             {
-                throw new InvalidConfigException("fallbackDeckName is required.");
+                throw new InvalidConfigException("deck is required.");
             }
         }
     }

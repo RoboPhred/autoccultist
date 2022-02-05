@@ -15,6 +15,7 @@ namespace Autoccultist.GameState.Impl
         private readonly float? recipeTimeRemaining;
         private readonly IReadOnlyCollection<ICardState> storedCards;
         private readonly IReadOnlyCollection<ICardState> slottedCards;
+        private readonly IReadOnlyCollection<ICardState> outputCards;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationStateImpl"/> class.
@@ -49,8 +50,15 @@ namespace Autoccultist.GameState.Impl
                 from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Slotted)
                 select card;
 
+            // Consider output stacks to be tabletop, as they are immediately grabbable.
+            var output =
+                from stack in situation.situationWindow.GetOutputStacks()
+                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                select card;
+
             this.storedCards = stored.ToArray();
             this.slottedCards = slotted.ToArray();
+            this.outputCards = output.ToArray();
         }
 
         /// <inheritdoc/>
@@ -110,6 +118,16 @@ namespace Autoccultist.GameState.Impl
             {
                 this.VerifyAccess();
                 return this.slottedCards;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<ICardState> OutputCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.outputCards;
             }
         }
     }

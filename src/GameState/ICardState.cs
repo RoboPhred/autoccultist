@@ -29,6 +29,11 @@ namespace Autoccultist.GameState
         CardLocation Location { get; }
 
         /// <summary>
+        /// Gets a value whether this card can be slotted.
+        /// </summary>
+        bool IsSlottable { get; }
+
+        /// <summary>
         /// Gets a dictionary of aspects on this card.
         /// </summary>
         IReadOnlyDictionary<string, int> Aspects { get; }

@@ -38,7 +38,7 @@ namespace Autoccultist.GameState.Impl
 
             this.IsActive = true;
 
-            var cards = Reflection.GetPrivateField<ElementStackToken[]>(tokenContainer, "cards");
+            var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
 
             this.FaceUpCard = CardStateImpl.CardStatesFromStack(cards[0], CardLocation.Mansus).First();
 

@@ -14,8 +14,7 @@ namespace Autoccultist.GUI
     {
         private static readonly Lazy<int> WindowId = new Lazy<int>(() => GUIUtility.GetControlID(FocusType.Passive));
 
-        private static Vector2 currentGoalsScrollPosition = default;
-        private static Vector2 availableGoalsScrollPosition = default;
+        private static Vector2 scrollPosition = default;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Goals gui is being shown.
@@ -44,7 +43,8 @@ namespace Autoccultist.GUI
         private static void GoalsWindow(int id)
         {
             GUILayout.Label("Current Goals");
-            currentGoalsScrollPosition = GUILayout.BeginScrollView(currentGoalsScrollPosition, GUILayout.Height(100));
+
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(100));
 
             foreach (var goal in NucleusAccumbens.CurrentGoals)
             {
@@ -59,10 +59,6 @@ namespace Autoccultist.GUI
 
                 GUILayout.EndHorizontal();
             }
-
-            GUILayout.EndScrollView();
-
-            availableGoalsScrollPosition = GUILayout.BeginScrollView(availableGoalsScrollPosition, GUILayout.Height(Height - 200));
 
             GUILayout.Label("Available Goals");
 

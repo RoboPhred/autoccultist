@@ -19,7 +19,7 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets a dictionary of slot names to card choices.
         /// </summary>
-        public Dictionary<string, RecipeCardChoiceConfig> Slots { get; set; } = new Dictionary<string, RecipeCardChoiceConfig>();
+        public Dictionary<string, ISlottableCardChoiceConfig> Slots { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a solver for a mansus event triggered by this recipe.

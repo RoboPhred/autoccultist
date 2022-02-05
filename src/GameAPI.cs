@@ -269,15 +269,15 @@ namespace Autoccultist
 
         private static bool IsCardAccessable(ElementStackToken card)
         {
-            if (card.IsBeingAnimated)
-            {
-                return false;
-            }
+            // if (card.IsBeingAnimated)
+            // {
+            //     return false;
+            // }
 
-            if (card.IsInAir)
-            {
-                return false;
-            }
+            // if (card.IsInAir)
+            // {
+            //     return false;
+            // }
 
             if (card.Defunct)
             {

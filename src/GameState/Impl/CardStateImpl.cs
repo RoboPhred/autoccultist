@@ -14,6 +14,8 @@ namespace Autoccultist.GameState.Impl
         private readonly string elementId;
         private readonly float lifetimeRemaining;
         private readonly bool isUnique;
+        private readonly CardLocation location;
+        private readonly bool isSlottable;
         private readonly IReadOnlyDictionary<string, int> aspects;
 
         /// <summary>
@@ -29,7 +31,8 @@ namespace Autoccultist.GameState.Impl
             this.lifetimeRemaining = sourceStack.LifetimeRemaining;
             this.isUnique = sourceStack.Unique;
             this.aspects = new Dictionary<string, int>(sourceStack.GetAspects());
-            this.Location = location;
+            this.location = location;
+            this.isSlottable = location == CardLocation.Tabletop && !sourceStack.IsInAir && !sourceStack.IsBeingAnimated;
         }
 
         /// <inheritdoc/>
@@ -63,7 +66,24 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public CardLocation Location { get; }
+        public CardLocation Location
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.location;
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool IsSlottable
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.isSlottable;
+            }
+        }
 
         /// <inheritdoc/>
         public IReadOnlyDictionary<string, int> Aspects

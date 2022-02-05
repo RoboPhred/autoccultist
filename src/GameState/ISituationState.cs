@@ -37,5 +37,11 @@ namespace Autoccultist.GameState
         /// Typically, these are ongoing slots.
         /// </summary>
         IReadOnlyCollection<ICardState> SlottedCards { get; }
+
+        /// <summary>
+        /// Gets a collection of cards pending output in the situation.
+        /// </summary>
+        IReadOnlyCollection<ICardState> OutputCards { get; }
+
     }
 }

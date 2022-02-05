@@ -22,7 +22,7 @@ namespace Autoccultist.Actor
         /// <summary>
         /// Gets or sets the delay between each action.
         /// </summary>
-        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.2);
+        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.25);
 
         /// <summary>
         /// Perform the actions from the enumerable.

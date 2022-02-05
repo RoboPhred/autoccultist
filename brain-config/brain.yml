@@ -50,30 +50,29 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Buy books, find accomplices, and get swole
+  - name: Buy and read books, find and recurit accomplices, and get swole
     primaryGoals:
       - !import goals/consume-bookdealer.yml
+      - !import goals/consume-books-lore-waitmorland.yml
       - !import goals/health/aquire-skillhealthb.yml
       - !import goals/health/aquire-skillhealthc.yml
     supportingGoals:
       - !import goals/attract-followers.yml
+      - !import goals/cult/recruit-lore-forge.yml
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Read books, find accomplices, and explore the city
-    # This could theoretically start when we are buying books, but:
-    # - We need to be finished with skillhealth stuff so study is freed up
-    # - This goal ends when no books are left, so it can end prematurely if we are faster than consume-bookdealer
-    primaryGoals:
-      - !import goals/explore-city-follower.yml
-      - !import goals/consume-books-lore.yml
-    supportingGoals:
-      - !import goals/attract-followers.yml
-      - !import goals/survive.yml
-      - !import goals/glover/work-glover.yml
-  - name: Recruit accomplices
+  - name: Finish recruiting accomplices
     primaryGoals:
       - !import goals/cult/recruit-lore-forge.yml
       - !import goals/attract-followers.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Aquire the wood, white door, and stag door
+    primaryGoals:
+      - !import goals/mansus/aquire-way-wood.yml
+      - !import goals/mansus/aquire-way-whitedoor.yml
+      - !import goals/mansus/aquire-way-stagdoor.yml
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml

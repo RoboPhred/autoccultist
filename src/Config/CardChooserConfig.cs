@@ -11,7 +11,7 @@ namespace Autoccultist.Config
     /// <summary>
     /// Represents a choice of a card based on various attributes.
     /// </summary>
-    public class CardChoiceConfig : ICardChooser, IConfigObject, IAfterYamlDeserialization
+    public class CardChooserConfig : ICardChooser, IConfigObject, IAfterYamlDeserialization
     {
         /// <summary>
         /// Specify whether the card choice should go for the oldest or youngest card it can find.
@@ -73,7 +73,11 @@ namespace Autoccultist.Config
         /// </summary>
         public CardAgeSelection? AgeBias { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Choose a card from the given card states based on this filter's rules.
+        /// </summary>
+        /// <param name="cards">The cards to choose from.</param>
+        /// <returns>The chosen card, or <c>null</c> if none were chosen.</returns>
         public ICardState ChooseCard(IEnumerable<ICardState> cards)
         {
             // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
@@ -88,6 +92,7 @@ namespace Autoccultist.Config
                 where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
                 where !this.Unique.HasValue || card.IsUnique == this.Unique.Value
+                where this.AdditionalFilter(card)
                 select card;
 
             // Sort for age bias.
@@ -111,12 +116,22 @@ namespace Autoccultist.Config
         }
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        void IAfterYamlDeserialization.AfterDeserialized(Mark start, Mark end)
         {
             if (string.IsNullOrEmpty(this.ElementId) && (this.Aspects == null || this.Aspects.Count == 0) && (this.AllowedElementIds == null || this.AllowedElementIds.Count == 0))
             {
                 throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");
             }
+        }
+
+        /// <summary>
+        /// Performs additional filtering on a chosen card.
+        /// </summary>
+        /// <param name="card">The card to filter.</param>
+        /// <returns><c>true</c> if this card should be selected, or <c>false</c> if it should not.</returns>
+        protected virtual bool AdditionalFilter(ICardState card)
+        {
+            return true;
         }
     }
 }

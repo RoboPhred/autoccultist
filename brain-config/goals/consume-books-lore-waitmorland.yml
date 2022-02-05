@@ -1,8 +1,10 @@
-name: Read and translate lore books
+name: Read and translate lore books until Morland is closed
 requirements: !import ../conditions/readable-or-translatable-books.yml
 completedWhen:
-  noneOf:
-    - !import ../conditions/readable-or-translatable-books.yml
+  allOf:
+    - elementId: locationbookdealer_exhausted
+    - noneOf:
+        - !import ../conditions/readable-or-translatable-books.yml
 impulseSets:
   - !import ../impulse-sets/learn-languages.yml
   - !import ../impulse-sets/translate-books.yml

@@ -8,7 +8,7 @@
     /// A node that can contain any condition operating against a list of cards.
     /// </summary>
     [DuckTypeCandidate(typeof(CardSetCondition))]
-    [DuckTypeCandidate(typeof(CardChoiceCondition))]
+    [DuckTypeCandidate(typeof(CardExistsCondition))]
     public interface ICardConditionConfig : IGameStateConditionConfig
     {
         /// <summary>

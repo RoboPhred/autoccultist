@@ -1,0 +1,24 @@
+name: Aquire the Stag Door
+completedWhen:
+  elementId: waystag_after
+impulses:
+  - name: Aquire the Stag Riddle
+    forbidders:
+      anyOf:
+        - elementId: waystagbefore_1
+        - elementId: waystagbefore_2
+        - elementId: waystagbefore_3
+        - elementId: waystagbefore_4
+        - elementId: waystagbefore_5
+        - elementId: waystag_after
+    operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle.yml
+  - name: Answer riddle 1
+    operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+  - name: Answer riddle 2
+    operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+  - name: Answer riddle 3
+    operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+  - name: Answer riddle 4
+    operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+  - name: Answer riddle 5
+    operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-5.yml

@@ -91,16 +91,20 @@ namespace Autoccultist.Brain
 
         private static void TryCompleteGoals(IGameState state)
         {
+            // note: This PendingCompletions logic was an attempt to fix an issue where goals were completing prematurely.
+            // The root issue was that the cards in situation output stacks were not being counted, and has been fixed.
+
+            // note: ToHashSet throws a MissingMethodException in unity as it cant find the right HashSet ctor.
             var completedGoals =
-                (from goal in ActiveGoals
-                 where goal.IsSatisfied(state)
-                 select goal).ToHashSet();
+                new HashSet<IGoal>(from goal in ActiveGoals
+                                   where goal.IsSatisfied(state)
+                                   select goal);
 
             foreach (var goal in completedGoals)
             {
                 if (PendingCompletions.TryGetValue(goal, out var timeStamp))
                 {
-                    if (timeStamp > DateTime.Now.Ticks + 200)
+                    if (timeStamp + 200 < DateTime.Now.Ticks)
                     {
                         CompleteGoal(goal);
                     }

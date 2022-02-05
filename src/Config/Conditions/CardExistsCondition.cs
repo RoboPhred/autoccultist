@@ -6,7 +6,7 @@ namespace Autoccultist.Config.Conditions
     /// <summary>
     /// Represents a choice of a card based on various attributes.
     /// </summary>
-    public class CardChoiceCondition : CardChoiceConfig, ICardConditionConfig
+    public class CardExistsCondition : CardChooserConfig, ICardConditionConfig
     {
         /// <inheritdoc/>
         public virtual bool IsConditionMet(IGameState state)
