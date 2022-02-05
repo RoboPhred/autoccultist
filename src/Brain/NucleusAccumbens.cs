@@ -12,6 +12,8 @@ namespace Autoccultist.Brain
     {
         private static readonly HashSet<IGoal> ActiveGoals = new();
 
+        private static readonly Dictionary<IGoal, long> PendingCompletions = new();
+
         /// <summary>
         /// Raised when a goal is completed.
         /// </summary>
@@ -90,19 +92,38 @@ namespace Autoccultist.Brain
         private static void TryCompleteGoals(IGameState state)
         {
             var completedGoals =
-                from goal in ActiveGoals
-                where goal.IsSatisfied(state)
-                select goal;
+                (from goal in ActiveGoals
+                 where goal.IsSatisfied(state)
+                 select goal).ToHashSet();
 
-            foreach (var goal in completedGoals.ToArray())
+            foreach (var goal in completedGoals)
             {
-                CompleteGoal(goal);
+                if (PendingCompletions.TryGetValue(goal, out var timeStamp))
+                {
+                    if (timeStamp > DateTime.Now.Ticks + 200)
+                    {
+                        CompleteGoal(goal);
+                    }
+                }
+                else
+                {
+                    PendingCompletions.Add(goal, DateTime.Now.Ticks);
+                }
+            }
+
+            foreach (var goal in PendingCompletions.Keys.ToArray())
+            {
+                if (!completedGoals.Contains(goal))
+                {
+                    PendingCompletions.Remove(goal);
+                }
             }
         }
 
         private static void CompleteGoal(IGoal goal)
         {
             ActiveGoals.Remove(goal);
+            PendingCompletions.Remove(goal);
             OnGoalCompleted?.Invoke(null, new GoalCompletedEventArgs(goal));
             BrainEventSink.OnGoalCompleted(goal);
         }
