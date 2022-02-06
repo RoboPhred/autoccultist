@@ -16,40 +16,73 @@ impulses:
   #  per riddle type.
   - name: Ensure we have erudition
     priority: maintenance
+    requirements:
+      anyOf:
+        - elementId: waystagbefore_2
     forbidders:
-      # TODO: It takes some time to get to the use-erudition point, so we should ensure it has lifetime remaining.
       elementId: erudition
+      # It takes 60 seconds for the operation to get to a point where it needs this.
+      #  TODO: Should let the operation itself state this requirement.
+      lifetimeRemaining:
+        greaterThan: 60
     operation: !import ../../operations/study-reason.yml
   - name: Ensure we have glimmering
     priority: maintenance
+    requirements:
+      anyOf:
+        - elementId: waystagbefore_3
     forbidders:
-      # TODO: It takes some time to get to the use-glimmering point, so we should ensure it has lifetime remaining.
       elementId: glimmering
+      # It takes 60 seconds for the operation to get to a point where it needs this.
+      #  TODO: Should let the operation itself state this requirement.
+      lifetimeRemaining:
+        greaterThan: 60
     operation: !import ../../operations/study-passion.yml
-  # Begin Riddle 1
-  - name: Answer riddle 1
+  # Begin Riddle 1: Moth
+  #  Assuming we cleaned out morland, we should already have a fragmentmothc.
+  - name: Answer Ghirbi's riddle on Moth
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
   # Begin Riddle 2: Lantern
   - name: Combine A Mansus Glimpse
+    requirements:
+      elementId: waystagbefore_2
     forbidders:
       elementId: fragmentlanternc
-    operation: !import ../../operations/lore/lore-combine-lantern-b.yml
+    operation: !import ../../operations/lore/lantern/lore-combine-lantern-b.yml
   - name: Combine A Watchman's Secret
+    requirements:
+      elementId: waystagbefore_2
     forbidders:
       anyOf:
         - cardSet:
             - elementId: fragmentlanternb
             - elementId: fragmentlanternb
         - elementId: fragmentlanternc
-    operation: !import ../../operations/lore/lore-combine-lantern-a.yml
-  - name: Answer riddle 2
+    operation: !import ../../operations/lore/lantern/lore-combine-lantern-a.yml
+  - name: Answer Ghirbi's riddle on Lantern
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
-  # Begin Riddle 3
-  - name: Answer riddle 3
+  # Begin Riddle 3: Grail
+  - name: Combine Grail B
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      elementId: fragmentgrailc
+    operation: !import ../../operations/lore/grail/lore-combine-grail-b.yml
+  - name: Combine Grail A
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentgrailb
+            - elementId: fragmentgrailb
+        - elementId: fragmentgrailc
+    operation: !import ../../operations/lore/grail/lore-combine-grail-a.yml
+  - name: Answer Ghirbi's riddle on Grail
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
-  # Begin Riddle 4
-  - name: Answer riddle 4
+  # Begin Riddle 4: Knock
+  - name: Answer Ghirbi's riddle on Knock
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
-  # Begin Riddle 5
-  - name: Answer riddle 5
+  # Begin Riddle 5: Secret Histories
+  - name: Answer Ghirbi's riddle on Secret Histories
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-5.yml

@@ -385,7 +385,7 @@ namespace Autoccultist.Brain
             }
             catch (Exception ex)
             {
-                AutoccultistPlugin.Instance.LogWarn($"Failed to run operation {this.operation.Name}: {ex.Message}");
+                AutoccultistPlugin.Instance.LogWarn($"Failed to run operation {this.operation.Name}: {ex.Message}\n{ex.StackTrace}");
                 this.Abort();
             }
             finally
