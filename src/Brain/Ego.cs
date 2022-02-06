@@ -2,6 +2,7 @@ namespace Autoccultist.Brain
 {
     using System;
     using System.Linq;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// Executes goals in order.
@@ -71,15 +72,25 @@ namespace Autoccultist.Brain
                 return;
             }
 
+            var state = GameStateProvider.Current;
+
             foreach (var goal in CurrentMotivation.PrimaryGoals)
             {
-                NucleusAccumbens.AddGoal(goal);
+                if (!goal.IsSatisfied(state))
+                {
+                    NucleusAccumbens.AddGoal(goal);
+                }
             }
 
             foreach (var goal in CurrentMotivation.SupportingGoals)
             {
-                NucleusAccumbens.AddGoal(goal);
+                if (!goal.IsSatisfied(state))
+                {
+                    NucleusAccumbens.AddGoal(goal);
+                }
             }
+
+            CheckAllGoalsCompleted();
         }
 
         private static void TryStopMotivation()
@@ -100,6 +111,20 @@ namespace Autoccultist.Brain
             }
         }
 
+        private static void CheckAllGoalsCompleted()
+        {
+            if (CurrentMotivation.PrimaryGoals.Any(x => NucleusAccumbens.CurrentGoals.Contains(x)))
+            {
+                return;
+            }
+
+            AutoccultistPlugin.Instance.LogTrace($"Ego: All primary goals of motivation \"{CurrentMotivation.Name}\" are now complete.");
+            TryStopMotivation();
+            var completedMotivation = CurrentMotivation;
+            CurrentMotivation = null;
+            OnMotivationCompleted?.Invoke(null, new MotivationCompletedEventArgs(completedMotivation));
+        }
+
         private static void OnGoalCompleted(object sender, GoalCompletedEventArgs e)
         {
             if (!IsRunning || CurrentMotivation == null)
@@ -107,14 +132,7 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            if (CurrentMotivation.PrimaryGoals.All(x => !NucleusAccumbens.CurrentGoals.Contains(x)))
-            {
-                AutoccultistPlugin.Instance.LogTrace($"Ego: All primary goals of motivation \"{CurrentMotivation.Name}\" are now complete.");
-                TryStopMotivation();
-                var completedMotivation = CurrentMotivation;
-                CurrentMotivation = null;
-                OnMotivationCompleted?.Invoke(null, new MotivationCompletedEventArgs(completedMotivation));
-            }
+            CheckAllGoalsCompleted();
         }
     }
 }

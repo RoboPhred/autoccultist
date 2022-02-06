@@ -52,9 +52,9 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Buy and read books, get swole, get promoted through seduction
+  - name: Buy and read books, get swole, dispose of alden
     primaryGoals:
-      - !import goals/glover/aquire-job-glover-senior-seduce.yml
+      - !import goals/glover/glover-remove-boss-seduction.yml
       - !import goals/consume-bookdealer.yml
       - !import goals/consume-books-lore-waitmorland.yml
       - !import goals/health/aquire-skillhealthb.yml

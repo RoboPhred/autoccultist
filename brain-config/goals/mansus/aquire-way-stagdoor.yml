@@ -12,13 +12,44 @@ impulses:
         - elementId: waystagbefore_5
         - elementId: waystag_after
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle.yml
+  # FIXME: This is a mess.  We should instead be able to choose goals or motivations based on cards on the board, and have one goal
+  #  per riddle type.
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders:
+      # TODO: It takes some time to get to the use-erudition point, so we should ensure it has lifetime remaining.
+      elementId: erudition
+    operation: !import ../../operations/study-reason.yml
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders:
+      # TODO: It takes some time to get to the use-glimmering point, so we should ensure it has lifetime remaining.
+      elementId: glimmering
+    operation: !import ../../operations/study-passion.yml
+  # Begin Riddle 1
   - name: Answer riddle 1
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+  # Begin Riddle 2: Lantern
+  - name: Combine A Mansus Glimpse
+    forbidders:
+      elementId: fragmentlanternc
+    operation: !import ../../operations/lore/lore-combine-lantern-b.yml
+  - name: Combine A Watchman's Secret
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentlanternb
+            - elementId: fragmentlanternb
+        - elementId: fragmentlanternc
+    operation: !import ../../operations/lore/lore-combine-lantern-a.yml
   - name: Answer riddle 2
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+  # Begin Riddle 3
   - name: Answer riddle 3
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+  # Begin Riddle 4
   - name: Answer riddle 4
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+  # Begin Riddle 5
   - name: Answer riddle 5
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
