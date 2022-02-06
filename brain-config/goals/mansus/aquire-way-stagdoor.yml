@@ -19,24 +19,31 @@ impulses:
     requirements:
       anyOf:
         - elementId: waystagbefore_2
+        - elementId: waystagbefore_4
+        - elementId: waystagbefore_5
     forbidders:
-      elementId: erudition
-      # It takes 60 seconds for the operation to get to a point where it needs this.
-      #  TODO: Should let the operation itself state this requirement.
-      lifetimeRemaining:
-        greaterThan: 60
+      anyOf:
+        - elementId: erudition
+          # It takes 60 seconds for the operation to get to a point where it needs this.
+          #  TODO: Should let the operation itself state this requirement.
+          lifetimeRemaining:
+            greaterThan: 60
+        - elementId: waystag_after
     operation: !import ../../operations/study-reason.yml
   - name: Ensure we have glimmering
     priority: maintenance
     requirements:
       anyOf:
         - elementId: waystagbefore_3
+        - elementId: waystagbefore_4
     forbidders:
-      elementId: glimmering
-      # It takes 60 seconds for the operation to get to a point where it needs this.
-      #  TODO: Should let the operation itself state this requirement.
-      lifetimeRemaining:
-        greaterThan: 60
+      anyOf:
+        - elementId: glimmering
+          # It takes 60 seconds for the operation to get to a point where it needs this.
+          #  TODO: Should let the operation itself state this requirement.
+          lifetimeRemaining:
+            greaterThan: 60
+        - elementId: waystag_after
     operation: !import ../../operations/study-passion.yml
   # Begin Riddle 1: Moth
   #  Assuming we cleaned out morland, we should already have a fragmentmothc.
@@ -62,13 +69,13 @@ impulses:
   - name: Answer Ghirbi's riddle on Lantern
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
   # Begin Riddle 3: Grail
-  - name: Combine Grail B
+  - name: Combine A Megalesian Incantation
     requirements:
       elementId: waystagbefore_3
     forbidders:
       elementId: fragmentgrailc
     operation: !import ../../operations/lore/grail/lore-combine-grail-b.yml
-  - name: Combine Grail A
+  - name: Combine A Red Secret
     requirements:
       elementId: waystagbefore_3
     forbidders:
@@ -81,8 +88,64 @@ impulses:
   - name: Answer Ghirbi's riddle on Grail
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
   # Begin Riddle 4: Knock
+  # FIXME: This works, but burns up lantern, which we need to upgrade our forge lore.
+  # - name: Combine An Iguvine Rite
+  #   requirements:
+  #     elementId: waystagbefore_4
+  #   forbidders:
+  #     elementId: fragmentknockc
+  #   operation: !import ../../operations/lore/knock/lore-combine-knock-b.yml
+  # - name: Subvert A Mansus Glimpse to An Iguvine Rite
+  #   requirements:
+  #     elementId: waystagbefore_4
+  #   forbidders:
+  #     anyOf:
+  #       - cardSet:
+  #           - elementId: fragmentknockb
+  #           - elementId: fragmentknockb
+  #       - elementId: fragmentknockc
+  #   operation: !import ../../operations/lore/knock/lore-subvert-lantern-knock-b.yml
+  # - name: Combine A Locksmith's Secret
+  #   requirements:
+  #     elementId: waystagbefore_4
+  #   forbidders:
+  #     anyOf:
+  #       - cardSet:
+  #           - elementId: fragmentknockb
+  #           - elementId: fragmentknockb
+  #       - elementId: fragmentknockc
+  #   operation: !import ../../operations/lore/knock/lore-combine-knock-a.yml
+  # - name: Subvert A Watchman's Secret to A Locksmith's Secret
+  #   requirements:
+  #     elementId: waystagbefore_4
+  #   forbidders:
+  #     anyOf:
+  #       - cardSet:
+  #           - elementId: fragmentknockb
+  #           - elementId: fragmentknockb
+  #       - cardSet:
+  #           - elementId: fragmentknock
+  #           - elementId: fragmentknock
+  #       - elementId: fragmentknockc
+  #   operation: !import ../../operations/lore/knock/lore-subvert-lantern-knock-a.yml
   - name: Answer Ghirbi's riddle on Knock
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
   # Begin Riddle 5: Secret Histories
+  - name: Combine A Furtive Truth
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      elementId: fragmentsecrethistoriesc
+    operation: !import ../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+  - name: Combine An Occult Scrap
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistoriesb
+        - elementId: fragmentsecrethistoriesc
+    operation: !import ../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
   - name: Answer Ghirbi's riddle on Secret Histories
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-5.yml

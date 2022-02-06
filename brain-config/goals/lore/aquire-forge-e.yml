@@ -1,0 +1,62 @@
+name: Aquire the Formula Fissive
+completedWhen:
+  elementId: fragmentforgee
+requirements:
+  anyOf:
+    - elementId: fragmentforge
+    - elementId: fragmentforgeb
+    - elementId: fragmentforgec
+    - elementId: fragmentforged
+impulses:
+  # TODO: Need a chain of subversions to reach forge e.
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - elementId: erudition
+          # It takes 60 seconds for the operation to get to a point where it needs this.
+          #  TODO: Should let the operation itself state this requirement.
+          lifetimeRemaining:
+            greaterThan: 60
+        - elementId: waystag_after
+    operation: !import ../../operations/study-reason.yml
+  - name: Aquire the Formula Fissive
+    priority: goal
+    forbidders:
+      elementId: fragmentforgee
+    operation: !import ../../operations/lore/forge/lore-combine-forge-d.yml
+  - name: Aquire the Callidate Invocation
+    forbidders:
+      anyOf:
+        - elementId: fragmentforgee
+        - cardSet:
+            - elementId: fragmentforged
+            - elementId: fragmentforged
+    operation: !import ../../operations/lore/forge/lore-combine-forge-c.yml
+  - name: Aquire A Shaping Chant
+    priority: goal
+    forbidders:
+      anyOf:
+        - elementId: fragmentforgee
+        - cardSet:
+            - elementId: fragmentforged
+            - elementId: fragmentforged
+        - cardSet:
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
+    operation: !import ../../operations/lore/forge/lore-combine-forge-b.yml
+  - name: Aquire An Ardent Orison
+    priority: goal
+    forbidders:
+      anyOf:
+        - elementId: fragmentforgee
+        - cardSet:
+            - elementId: fragmentforged
+            - elementId: fragmentforged
+        - cardSet:
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
+        - cardSet:
+            - elementId: fragmentforgeb
+            - elementId: fragmentforgeb
+    operation: !import ../../operations/lore/forge/lore-combine-forge-a.yml

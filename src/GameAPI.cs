@@ -231,8 +231,24 @@ namespace Autoccultist
         /// <remarks>Throws <see cref="InvalidOperationException"/> if the mansus is not active.</remarks>
         public static void ChooseMansusCard(ElementStackToken card)
         {
+            if (!IsInMansus)
+            {
+                throw new InvalidOperationException("Mansus is not active.");
+            }
+
+            if (!IsMansusInteractable)
+            {
+                throw new InvalidOperationException("Mansus is not interactable.");
+            }
+
             var mapController = Registry.Get<MapController>();
-            var activeDoor = Reflection.GetPrivateField<DoorSlot>(mapController, "activeSlot");
+            var tokenContainer = mapController ? Reflection.GetPrivateField<MapTokenContainer>(mapController, "_mapTokenContainer") : null;
+            if (mapController == null || tokenContainer == null)
+            {
+                throw new ApplicationException("Failed to get map token controller.");
+            }
+
+            var activeDoor = Reflection.GetPrivateField<DoorSlot>(tokenContainer, "activeSlot");
             if (activeDoor == null)
             {
                 throw new InvalidOperationException("Mansus is not active.");

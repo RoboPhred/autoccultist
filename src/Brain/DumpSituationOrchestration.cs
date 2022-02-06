@@ -62,7 +62,7 @@ namespace Autoccultist.Brain
             }
             catch (Exception ex)
             {
-                AutoccultistPlugin.Instance.LogWarn($"Failed to dump situation {this.SituationId}: {ex.Message}");
+                AutoccultistPlugin.Instance.LogWarn(ex, $"Failed to dump situation {this.SituationId}: {ex.Message}");
             }
             finally
             {

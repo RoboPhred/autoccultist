@@ -62,6 +62,12 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
+  - name: Aquire the Formula Fissive
+    primaryGoals:
+      - !import goals/lore/aquire-forge-e.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
   - name: Aquire the wood, white door, and stag door
     primaryGoals:
       - !import goals/mansus/aquire-way-wood.yml

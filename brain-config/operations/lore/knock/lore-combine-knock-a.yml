@@ -1,0 +1,13 @@
+name: "Combine lore: A Locksmith's Secret"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknock
+    with:
+      elementId: fragmentknock
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition

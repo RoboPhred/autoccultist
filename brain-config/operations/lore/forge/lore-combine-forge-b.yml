@@ -1,0 +1,13 @@
+name: "Combine lore: An Ardent Orison"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentforgeb
+    with:
+      elementId: fragmentforgeb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition

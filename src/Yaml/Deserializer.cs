@@ -84,7 +84,7 @@ namespace Autoccultist.Yaml
             }
             catch (YamlException ex) when (!(ex is YamlFileException))
             {
-                AutoccultistPlugin.Instance.LogWarn($"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
+                AutoccultistPlugin.Instance.LogWarn(ex, $"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
                 throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.GetInnermostMessage(), ex);
             }
             finally
@@ -111,7 +111,7 @@ namespace Autoccultist.Yaml
             }
             catch (YamlException ex) when (!(ex is YamlFileException))
             {
-                AutoccultistPlugin.Instance.LogWarn($"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
+                AutoccultistPlugin.Instance.LogWarn(ex, $"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
                 throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.GetInnermostMessage(), ex);
             }
             finally

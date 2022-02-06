@@ -1,0 +1,13 @@
+name: "Combine lore: Callidate Invocation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentforged
+    with:
+      elementId: fragmentforged
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition

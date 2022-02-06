@@ -1,0 +1,13 @@
+name: "Subvert lore: A Mansus Glimpse to An Iguvine Rite"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknockb
+    with:
+      elementId: fragmentlanternb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition

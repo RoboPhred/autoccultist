@@ -1,0 +1,17 @@
+name: "Subvert lore: A Wood-Whisper to An Iguvine Rite"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknockb
+    with:
+      elementId: fragmentmothb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

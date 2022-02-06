@@ -1,0 +1,17 @@
+name: "Subvert lore: A Barber's Warning to A Locksmith's Secret"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknock
+    with:
+      elementId: fragmentmoth
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

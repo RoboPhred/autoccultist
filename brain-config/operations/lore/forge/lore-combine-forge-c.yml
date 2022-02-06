@@ -1,0 +1,13 @@
+name: "Combine lore: A Shaping Chant"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentforgec
+    with:
+      elementId: fragmentforgec
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        elementId: erudition

@@ -1,5 +1,6 @@
 namespace Autoccultist
 {
+    using System;
     using System.IO;
     using Autoccultist.Brain;
     using Autoccultist.Config;
@@ -125,6 +126,17 @@ namespace Autoccultist
         public void LogWarn(string message)
         {
             this.Logger.LogWarning(message);
+            GameAPI.Notify("Autoccultist Warning", message);
+        }
+
+        /// <summary>
+        /// Logs a warning-level message with an exception.
+        /// </summary>
+        /// <param name="ex">The exception to log.</param>
+        /// <param name="message">The message.</param>
+        public void LogWarn(Exception ex, string message)
+        {
+            this.Logger.LogWarning($"{message}\n{ex.Message}\n{ex.StackTrace}");
             GameAPI.Notify("Autoccultist Warning", message);
         }
 
