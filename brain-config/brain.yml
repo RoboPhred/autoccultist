@@ -50,21 +50,19 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Buy and read books, find and recurit accomplices, and get swole
+  - name: Buy and read books, find accomplices, and get swole
     primaryGoals:
       - !import goals/consume-bookdealer.yml
       - !import goals/consume-books-lore-waitmorland.yml
       - !import goals/health/aquire-skillhealthb.yml
       - !import goals/health/aquire-skillhealthc.yml
-    supportingGoals:
       - !import goals/attract-followers.yml
-      - !import goals/cult/recruit-lore-forge.yml
+    supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Finish recruiting accomplices
+  - name: Recruit accomplices
     primaryGoals:
       - !import goals/cult/recruit-lore-forge.yml
-      - !import goals/attract-followers.yml
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml

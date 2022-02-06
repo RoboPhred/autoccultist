@@ -7,9 +7,10 @@ completedWhen:
     - elementId: janningsready
     - elementId: poppyready
     - elementId: sulochana
-    # Could list out all followers here, but they can rebel, promote, or get killed.
-    # Instead, look for mistaken identity
-    - elementId: mistakenidentity
+    # Stop if we have all followers, but its possible for followers to die, so we also need to check if the deck is exhausted.
+    - anyOf:
+        - !import ../conditions/has-all-followers.yml
+        - elementId: mistakenidentity
 impulses:
   - name: Speak of esoteric matters
     priority: goal

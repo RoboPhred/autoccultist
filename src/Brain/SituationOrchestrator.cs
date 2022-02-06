@@ -134,6 +134,11 @@ namespace Autoccultist.Brain
                 throw new OperationFailedException($"Cannot dump situation {situationId} because the situation already has an orchestration running.");
             }
 
+            if (GameAPI.IsInMansus)
+            {
+                return;
+            }
+
             var orchestration = new DumpSituationOrchestration(situationId);
             ExecutingOperationsBySituation[situationId] = orchestration;
             orchestration.Completed += OnOrchestrationCompleted;

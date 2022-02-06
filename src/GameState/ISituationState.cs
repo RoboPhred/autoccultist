@@ -42,6 +42,5 @@ namespace Autoccultist.GameState
         /// Gets a collection of cards pending output in the situation.
         /// </summary>
         IReadOnlyCollection<ICardState> OutputCards { get; }
-
     }
 }

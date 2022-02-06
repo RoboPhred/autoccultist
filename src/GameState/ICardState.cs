@@ -29,7 +29,7 @@ namespace Autoccultist.GameState
         CardLocation Location { get; }
 
         /// <summary>
-        /// Gets a value whether this card can be slotted.
+        /// Gets a value indicating whether this card can be slotted.
         /// </summary>
         bool IsSlottable { get; }
 
