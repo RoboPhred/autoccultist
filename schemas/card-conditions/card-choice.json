@@ -47,6 +47,16 @@
           "description": "Choose either the oldest or youngest card available.  Oldest will choose the card with the largest lifetime remaining, Youngest will choose the card with the least lifetime remaining.",
           "type": "string",
           "enum": ["oldest", "youngest"]
+        },
+        "lifetimeRemaining": {
+          "title": "Lifetime Remaining",
+          "description": "Sets a condition on the lifetime remaining for the card.",
+          "type": "string",
+          "oneOf": [
+            {
+              "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
+            }
+          ]
         }
       },
       "additionalProperties": false,

@@ -74,6 +74,11 @@ namespace Autoccultist.Config
         public CardAgeSelection? AgeBias { get; set; }
 
         /// <summary>
+        /// Gets or sets a condition for the decay timer.
+        /// </summary>
+        public ValueCondition LifetimeRemaining { get; set; }
+
+        /// <summary>
         /// Choose a card from the given card states based on this filter's rules.
         /// </summary>
         /// <param name="cards">The cards to choose from.</param>
@@ -87,6 +92,7 @@ namespace Autoccultist.Config
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
                 where this.Location == null || card.Location == this.Location
+                where this.LifetimeRemaining == null || this.LifetimeRemaining.IsConditionMet(card.LifetimeRemaining)
                 where this.AllowedElementIds?.Contains(card.ElementId) != false
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)

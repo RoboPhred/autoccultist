@@ -1,0 +1,26 @@
+name: Get promoted by seducing Alden
+completedWhen:
+  anyOf:
+    - elementId: gloverandglover_difficultbossa_gone_job
+    - elementId: gloverandgloverjob
+    - elementId: gloverandgloverjob_youngerglovergone
+    - elementId: gloverandgloverseniorjob
+    - elementId: gloverandgloverseniorjob_youngerglovergone
+    - elementId: gloverandglovertopjob
+    - elementId: gloverandglovertopjob_tainted
+    - elementId: gloverandgloverjob_demotion
+    - elementId: gloverandgloverjob_youngerglovergone_demotion
+    - elementId: gloverandgloverjuniorjob_demotion
+    - elementId: gloverandgloverjuniorjob_nodifficultbossa_demotion
+    - elementId: gloverandglovertopjob_tainted_demotion
+impulses:
+  - name: Seduce Alden
+    priority: goal
+    forbidders:
+      # Don't run if our job is about to expire.
+      # Note: This assumes our work verb is free to take over the moment we stop attempting seduction.
+      # In general, if we are seducing constantly, the timer shouldnt have a chance to expire.
+      elementId: gloverandglover_difficultbossa_job
+      lifetimeRemaining:
+        lessThan: 5
+    operation: !import ../../operations/glover/seduce-alden.yml
