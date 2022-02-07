@@ -89,6 +89,8 @@ impulses:
     operation: !import ../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
   # Begin Riddle 4: Knock
   # FIXME: This works, but burns up lantern, which we need to upgrade our forge lore.
+  #  We probably want to use our single heart lore, and combine our 2 winter lore to winterb and subvert that.
+  #  We cannot use moth, as we need to subvert moth into lantern, then lantern into forge to get forgee
   # - name: Combine An Iguvine Rite
   #   requirements:
   #     elementId: waystagbefore_4

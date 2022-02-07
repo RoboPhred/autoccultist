@@ -9,6 +9,19 @@ requirements:
     - elementId: fragmentforged
 impulses:
   # TODO: Need a chain of subversions to reach forge e.
+  # From the output of morlands, we can reach it by:
+  # 2forge => forgeb
+  # 2forgeb => forgec
+  # 2lantern => lanternb
+  # 2lanternb => lanternc
+  # 2moth => mothb
+  # 2mothb => mothc
+  # 2mothc => 2lanternc
+  # lanternc => forgec
+  # 2forgec => forged
+  # 2lanternc => lanternd
+  # lanternd => forged
+  # 2forged => forgee
   - name: Ensure we have erudition
     priority: maintenance
     forbidders:
