@@ -3,4 +3,4 @@ situation: talk
 startingRecipe:
   slots:
     talk:
-      aspects: { acquaintance: 1}
+      aspects: { acquaintance: 1 }

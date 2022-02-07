@@ -1,3 +1,6 @@
+# Note: Getting close to loosing games due to lack of money.  Multi tasking strategy seems to take longer to get out of junior position so it bleeds money.
+# As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
+# Should look into rushing high passion and using painting.
 motivations:
   - name: Begin the game
     primaryGoals:
@@ -17,24 +20,26 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Get a scholarship and find people to recruit
+  - name: Get a scholarship while finding people to recruit
     primaryGoals:
-      - !import goals/attract-followers.yml
       - !import goals/reason/aquire-skillreasona.yml
       - !import goals/reason/aquire-skillreasonb.yml
       - !import goals/reason/aquire-skillreasonc.yml
     supportingGoals:
+      - !import goals/attract-followers.yml
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Get a promotion
+  - name: Get a promotion while finding people to recruit
     primaryGoals:
       - !import goals/glover/aquire-job-glover-standard.yml
     supportingGoals:
+      - !import goals/attract-followers.yml
       - !import goals/survive.yml
-  - name: Get a stronger physique
+  - name: Get a stronger physique while finding people to recruit
     primaryGoals:
       - !import goals/health/aquire-skillhealtha.yml
     supportingGoals:
+      - !import goals/attract-followers.yml
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
   - name: Establish the Unflinching Order
@@ -43,7 +48,16 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Recruit people and get passionate
+  - name: Finish finding people to recruit, get passionate
+    primaryGoals:
+      - !import goals/attract-followers.yml
+    supportingGoals:
+      - !import goals/passion/aquire-skillpassiona.yml
+      - !import goals/passion/aquire-skillpassionb.yml
+      - !import goals/passion/aquire-skillpassionc.yml
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Recruit everyone, get passionate
     primaryGoals:
       - !import goals/cult/recruit-lore-forge.yml
       - !import goals/passion/aquire-skillpassiona.yml
@@ -52,9 +66,16 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Buy and read books, get swole, dispose of alden
+  - name: Dispose of alden
+    # This is risky, as we are removing our method of making money while doing this.
+    # Instead, we try labor.
     primaryGoals:
       - !import goals/glover/glover-remove-boss-seduction.yml
+    supportingGoals:
+      - !import goals/work-labor.yml
+      - !import goals/survive.yml
+  - name: Buy and read books, get swole
+    primaryGoals:
       - !import goals/consume-bookdealer.yml
       - !import goals/consume-books-lore-waitmorland.yml
       - !import goals/health/aquire-skillhealthb.yml

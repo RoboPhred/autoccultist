@@ -12,15 +12,18 @@ requirements:
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
 impulses:
-- name: Work a junior job at Glover & Glover
-  priority: maintenance
-  operation: !import ../../operations/glover/work-glover-junior.yml
-- name: Work at Glover & Glover
-  priority: maintenance
-  operation: !import ../../operations/glover/work-glover-standard.yml
-- name: Work a senior job at Glover & Glover
-  priority: maintenance
-  operation: !import ../../operations/glover/work-glover-senior.yml
-- name: Plead for job at Glover & Glover
-  priority: maintenance
-  operation: !import ../../operations/glover/plead-glover.yml
+  - name: Work a junior job at Glover & Glover
+    priority: maintenance
+    operation: !import ../../operations/glover/work-glover-junior.yml
+  - name: Work at Glover & Glover under Alden
+    priority: maintenance
+    operation: !import ../../operations/glover/work-glover-alden.yml
+  - name: Work at Glover & Glover with dilligence
+    priority: maintenance
+    operation: !import ../../operations/glover/work-glover-diligence.yml
+  - name: Work a senior job at Glover & Glover
+    priority: maintenance
+    operation: !import ../../operations/glover/work-glover-senior.yml
+  - name: Plead for job at Glover & Glover
+    priority: maintenance
+    operation: !import ../../operations/glover/plead-glover.yml

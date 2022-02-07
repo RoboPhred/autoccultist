@@ -4,8 +4,8 @@ requirements:
   allOf:
     - aspects: { acquaintance: 1 }
     - noneOf:
-      - situation: cult
-      - aspects: { society: 1 }
+        - situation: cult
+        - aspects: { society: 1 }
 forbidders:
   anyOf:
     - situation: seasonsuspicion

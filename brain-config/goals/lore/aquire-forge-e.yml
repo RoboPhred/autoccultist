@@ -31,7 +31,6 @@ impulses:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-        - elementId: waystag_after
     operation: !import ../../operations/study-reason.yml
   - name: Aquire the Formula Fissive
     priority: goal

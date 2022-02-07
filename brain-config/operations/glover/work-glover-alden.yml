@@ -1,4 +1,4 @@
-name: Work at Glover & Glover with extra effort
+name: Work at Glover & Glover under Alden
 situation: work
 startingRecipe:
   slots:
@@ -6,8 +6,6 @@ startingRecipe:
       allowedElementIds:
         - gloverandglover_difficultbossa_job
         - gloverandglover_difficultbossa_gone_job
-        - gloverandgloverjob
-        - gloverandgloverjob_youngerglovergone
 ongoingRecipes:
   gloverandglover_difficultbossa_overtime_initial:
     slots:
@@ -18,10 +16,4 @@ ongoingRecipes:
     requireCardsToStart: false
     slots:
       Attention:
-        elementId: reason
-  gloverandgloverwork:
-    # HACK: These 3 recipes are mutually exclusive.  They all need reason, but we dont want the operation to require 3 reason to start.
-    requireCardsToStart: false
-    slots:
-      Devotion:
         elementId: reason

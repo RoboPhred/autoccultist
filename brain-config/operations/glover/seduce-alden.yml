@@ -3,7 +3,7 @@ situation: talk
 startingRecipe:
   slots:
     talk:
-      aspects: { follower_lustsensation: 1 }
+      aspects: { follower: 1, grail: 1 }
 ongoingRecipes:
   talktofollower:
     slots:

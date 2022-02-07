@@ -1,0 +1,15 @@
+name: Work at Glover & Glover with diligence
+situation: work
+startingRecipe:
+  slots:
+    work:
+      allowedElementIds:
+        - gloverandgloverjob
+        - gloverandgloverjob_youngerglovergone
+    Diligence:
+      elementId: reason
+ongoingRecipes:
+  gloverandgloverwork:
+    slots:
+      Devotion:
+        elementId: reason

@@ -139,6 +139,11 @@ namespace Autoccultist.Brain
 
                     this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution));
                     break;
+                default:
+                    // This happened to a the cult activity that should have been ongoing...  Got stuck on an unstarted state.
+                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} is in state {this.Situation.SituationClock.State}.");
+                    this.Abort();
+                    break;
             }
         }
 
