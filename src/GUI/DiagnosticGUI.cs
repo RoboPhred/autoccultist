@@ -88,7 +88,20 @@ namespace Autoccultist.GUI
                 }
             }
 
-            GUILayout.Label("Current Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label("Current SuperEgo Motivation: " + (SuperEgo.CurrentMotivation != null ? SuperEgo.CurrentMotivation.Name : "<None>"));
+            if (GUILayout.Button("Skip"))
+            {
+                SuperEgo.SkipCurrentMotivation();
+            }
+
+            GUILayout.EndHorizontal();
+
+            if (SuperEgo.CurrentMotivation != Ego.CurrentMotivation)
+            {
+                GUILayout.Label("Current Ego Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
+            }
 
             GUILayout.BeginHorizontal();
 

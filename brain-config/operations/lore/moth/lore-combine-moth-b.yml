@@ -1,0 +1,13 @@
+name: "Combine lore: A Wood-Whisper"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentmothb
+    with:
+      elementId: fragmentmothb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

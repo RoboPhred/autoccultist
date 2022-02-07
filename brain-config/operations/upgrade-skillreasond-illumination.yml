@@ -1,0 +1,19 @@
+name: Aquire a Rareified Mind
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: skillreasonc
+    specialisation:
+      oneOf:
+        - aspects: { lore: 1, lantern: 1 }
+        - aspects: { lore: 1, forge: 1 }
+        - aspects: { lore: 1, knock: 1 }
+    e1:
+      elementId: eruditionplus
+    e2:
+      elementId: eruditionplus
+    e3:
+      elementId: eruditionplus
+    e4:
+      elementId: eruditionplus

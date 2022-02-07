@@ -10,4 +10,10 @@ ongoingRecipes:
   studyresearch.attemptsolve.challenge.knowledge:
     slots:
       solvechallenge:
-        elementId: erudition
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health

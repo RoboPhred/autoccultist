@@ -1,0 +1,13 @@
+name: "Combine lore: A Barber's Warning"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentmoth
+    with:
+      elementId: fragmentmoth
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

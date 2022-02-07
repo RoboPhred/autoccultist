@@ -1,11 +1,11 @@
-name: "Subvert lore: A Watchman's Secret to fragmentknockb"
+name: "Subvert lore: A Mansus Glimpse to A Shaping Chant"
 situation: study
 startingRecipe:
   slots:
     study:
-      elementId: fragmentknock
+      elementId: fragmentlanternb
     with:
-      elementId: fragmentlantern
+      elementId: fragmentforgeb
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.knowledge:
     slots:

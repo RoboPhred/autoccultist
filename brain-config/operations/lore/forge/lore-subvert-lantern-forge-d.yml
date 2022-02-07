@@ -1,9 +1,9 @@
-name: "Combine lore: Callidate Invocation"
+name: "Subvert lore: the Phanaean Invocation to the Formula Fissive"
 situation: study
 startingRecipe:
   slots:
     study:
-      elementId: fragmentforged
+      elementId: fragmentlanternd
     with:
       elementId: fragmentforged
 ongoingRecipes:

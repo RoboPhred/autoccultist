@@ -1,6 +1,6 @@
 name: Aquire Profound Scholarship
 requirements:
-  aspects: { reasonskill: 2 }
+  elementId: skillreasonb
 completedWhen:
   aspects: { reasonskill: 3 }
 impulses:

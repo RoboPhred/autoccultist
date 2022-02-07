@@ -1,0 +1,83 @@
+name: Prepare lore fragments for the stag riddle and the Formula Fissive
+requirements:
+  cardSet:
+    - elementId: fragmentforge
+    - elementId: fragmentforge
+    - elementId: fragmentforgeb
+    - elementId: fragmentlantern
+    - elementId: fragmentlantern
+    - elementId: fragmentlanternb
+    - elementId: fragmentmoth
+    - elementId: fragmentmoth
+    - elementId: fragmentmothb
+completedWhen:
+  cardSet:
+    # Check by aspect, so we have a chance of still being considered complete if we resume the bot from past this point.
+    - aspects: { lore: 1, forge: 8 }
+    - aspects: { lore: 1, lantern: 6 }
+    - aspects: { lore: 1, moth: 6 }
+# We use latern in our march to fragmentforgee, but we need to also get fragmentlanternc to answer one of the stag's riddles.
+# Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb
+# From the output of morlands, we do:
+# moth + lantern = lanternb
+# moth + lantern = lanternb
+# => 2forge, forgeb, 3lanternb, mothb, mothc
+# forge + forge = forgeb
+# => 2forgeb, 3lanternb, mothb, mothc
+# forgeb + lanternb = forgec
+# forgeb + lanternb = forgec
+# => 2forgec, lanternb, mothb, mothc
+# forgec + forgec = forged
+# => forged, lanternb, mothb, mothc
+# mothb + lanternb = lanternc
+# => forged, lanternc, mothc
+# This leaves us with a lanternc for the stag, that can then be used with mothc for a mothd, which can then be used with forged for forgee
+impulses:
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - elementId: glimmering
+          # It takes 60 seconds for the operation to get to a point where it needs this.
+          #  TODO: Should let the operation itself state this requirement.
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: !import ../../../operations/study-passion.yml
+
+  # x
+  # moth + lantern = lanternb
+  - name: Subvert A Barber's Warning with A Watchman's Secret to get A Mansus-Glimpse
+    priority: goal
+    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-a.yml
+
+  # x
+  # forge + forge = forgeb
+  - name: Combine A Smith's Secret for An Ardent Orison
+    priority: goal
+    operation: !import ../../../operations/lore/forge/lore-combine-forge-a.yml
+
+  # xx
+  # forgeb + lanternb = forgec
+  - name: Subvert A Mansus Glimpse to A Shaping Chant
+    priority: goal
+    forbidders:
+      cardSet:
+        # Stop at 3
+        - elementId: fragmentforgec
+        - elementId: fragmentforgec
+        - elementId: fragmentforgec
+    operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-b.yml
+
+  # x
+  # forgec + forgec = forged
+  - name: Combine A Shaping Chant for Callidate Invocation
+    priority: goal
+    operation: !import ../../../operations/lore/forge/lore-combine-forge-c.yml
+
+  # mothb + lanternb = lanternc
+  - name: Subvert A Wood-Whisper to An Unmerciful Mantra
+    priority: goal
+    forbidders:
+      # Only do this once
+      elementId: fragmentlanternc
+    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-b.yml

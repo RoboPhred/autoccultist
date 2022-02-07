@@ -1,6 +1,6 @@
 name: Aquire Notable Scholarship
 requirements:
-  aspects: { reasonskill: 1 }
+  elementId: skillreasona
 completedWhen:
   aspects: { reasonskill: 2 }
 impulses:

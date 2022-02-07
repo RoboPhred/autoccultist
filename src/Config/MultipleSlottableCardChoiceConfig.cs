@@ -10,7 +10,7 @@ namespace Autoccultist.Config
     public class MultipleSlottableCardChoiceConfig : ISlottableCardChoiceConfig, IConfigObject
     {
         /// <summary>
-        /// Gets pr sets a list of slottable card choices to choose from.
+        /// Gets or sets a list of slottable card choices to choose from.
         /// </summary>
         public List<SlottableCardChoiceConfig> OneOf { get; set; } = new();
 

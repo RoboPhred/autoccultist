@@ -1,4 +1,4 @@
-name: "Subvert lore: A Barber's Warning to A Locksmith's Secret"
+name: "Subvert lore: A Barber's Warning to fragmentknockb"
 situation: study
 startingRecipe:
   slots:
@@ -10,7 +10,9 @@ ongoingRecipes:
   studyresearch.attemptsolve.challenge.knowledge:
     slots:
       solvechallenge:
-        elementId: erudition
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
   studyresearch.attemptsolve.challenge.intuition:
     slots:
       solvechallenge:

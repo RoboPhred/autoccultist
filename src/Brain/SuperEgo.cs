@@ -35,6 +35,16 @@ namespace Autoccultist.Brain
             TryNextMotivation();
         }
 
+        public static void SkipCurrentMotivation()
+        {
+            if (CurrentMotivation != null)
+            {
+                Ego.SetMotivation(null);
+            }
+
+            TryNextMotivation();
+        }
+
         /// <summary>
         /// Clears out all motivations.
         /// </summary>

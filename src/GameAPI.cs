@@ -264,7 +264,7 @@ namespace Autoccultist
         /// <param name="message">The message of the toast.</param>
         public static void Notify(string title, string message)
         {
-            var notifier = Registry.Get<INotifier>();
+            var notifier = Registry.Get<INotifier>(false);
             if (notifier == null)
             {
                 return;
@@ -285,16 +285,6 @@ namespace Autoccultist
 
         private static bool IsCardAccessable(ElementStackToken card)
         {
-            // if (card.IsBeingAnimated)
-            // {
-            //     return false;
-            // }
-
-            // if (card.IsInAir)
-            // {
-            //     return false;
-            // }
-
             if (card.Defunct)
             {
                 return false;
@@ -310,6 +300,9 @@ namespace Autoccultist
         {
             private bool isDisposed = false;
 
+            /// <summary>
+            /// Finalizes an instance of the <see cref="PauseToken"/> class.
+            /// </summary>
             ~PauseToken()
             {
                 AutoccultistPlugin.Instance.LogWarn("Leaked PauseToken");

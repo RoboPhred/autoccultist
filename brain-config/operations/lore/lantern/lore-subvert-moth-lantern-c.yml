@@ -1,22 +1,22 @@
-name: "Combine lore: Callidate Invocation"
+name: "Subvert lore: An Ecdysiast's Parable to the Phanaean Invocation"
 situation: study
 startingRecipe:
   slots:
     study:
-      elementId: fragmentforged
+      elementId: fragmentmothc
     with:
-      elementId: fragmentforged
+      elementId: fragmentlanternc
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.knowledge:
     slots:
       solvechallenge:
         oneOf:
           - aspects: { library: 1 }
-          - elementId: erudition
-  studyresearch.attemptsolve.challenge.practical:
+          # - elementId: erudition
+  studyresearch.attemptsolve.challenge.intuition:
     slots:
       solvechallenge:
-        elementId: health
+        elementId: glimmering
   studyresearch.attemptsolve.challenge.illumination:
     slots:
       solvechallenge:

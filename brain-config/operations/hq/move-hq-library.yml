@@ -1,0 +1,8 @@
+name: "Change of Premises: Library"
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationbookdealer_exhausted
+    Old HQ:
+      aspects: { hq: 1 }
