@@ -4,7 +4,7 @@ allOf:
     storedCardsMatch:
       elementId: dread
   - noneOf:
-    - situation: despair
-      slottedCardsMatch:
-        elementId: contentment
-    - elementId: contentment
+      - situation: despair
+        slottedCardsMatch:
+          elementId: contentment
+      - elementId: contentment

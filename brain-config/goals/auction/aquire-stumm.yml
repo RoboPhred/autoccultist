@@ -1,0 +1,13 @@
+name: Aquire Stumm
+requirements:
+  elementId: locationauctionhouse
+completedWhen:
+  elementId: ritefollowerconsumeinfluence
+impulses:
+  - name: Purchase items at auction
+    priority: goal
+    forbidders:
+      elementId: stumm
+    operation: !import ../../operations/auction-purchase.yml
+  - name: Watch Stumm
+    operation: !import ../../operations/watch-stumm.yml

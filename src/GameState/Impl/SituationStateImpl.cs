@@ -39,13 +39,15 @@ namespace Autoccultist.GameState.Impl
                 this.recipeTimeRemaining = null;
             }
 
+            var window = situation.situationWindow;
+
             // We can create new ICardState states here, as IGameState only creates states for tabled cards, of which these are not.
             var stored =
-                from stack in situation.situationWindow.GetStoredStacks()
+                from stack in window.GetStoredStacks()
                 from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Stored)
                 select card;
             var slotted =
-                from stack in situation.situationWindow.GetOngoingSlots().Select(x => x.GetElementStackInSlot())
+                from stack in window.GetStartingSlots().Concat(window.GetOngoingSlots()).Select(x => x.GetElementStackInSlot())
                 where stack != null
                 from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Slotted)
                 select card;

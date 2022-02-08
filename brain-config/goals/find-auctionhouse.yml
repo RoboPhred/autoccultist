@@ -1,0 +1,6 @@
+name: Find the Auction House
+completedWhen:
+  elementId: locationauctionhouse
+impulses:
+  - name: Explore the city
+    operation: !import ../operations/explore/explore-city.yml

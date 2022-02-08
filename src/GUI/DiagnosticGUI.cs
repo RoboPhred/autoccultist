@@ -11,17 +11,26 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class DiagnosticGUI
     {
-        private static readonly Lazy<int> WindowId = new Lazy<int>(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
 
         /// <summary>
         /// Gets or sets a value indicating whether the window is being shown.
         /// </summary>
         public static bool IsShowing { get; set; }
 
+        /// <summary>
+        /// Gets the width of the window.
+        /// </summary>
         public static float Width => Mathf.Min(Screen.width, 350);
 
+        /// <summary>
+        /// Gets the height of the window.
+        /// </summary>
         public static float Height => Mathf.Min(Screen.height, 500);
 
+        /// <summary>
+        /// Gets the X offset of the window.
+        /// </summary>
         public static float OffsetX => Screen.width - Width - 10;
 
         /// <summary>

@@ -1,0 +1,11 @@
+name: "Dream: The Serpant's Way"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: passion
+ongoingRecipes:
+  dreamstartingpassion:
+    slots:
+      Lore:
+        aspects: { lore: 1, knock: 2 }

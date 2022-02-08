@@ -1,0 +1,11 @@
+name: Explore the city
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      aspects: { follower: 1 }
+ongoingRecipes:
+  explorechoosepaycriminal:
+    slots:
+      Payment:
+        elementId: funds

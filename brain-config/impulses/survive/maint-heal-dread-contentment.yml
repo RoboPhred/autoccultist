@@ -4,6 +4,10 @@ requirements:
   allOf:
     - elementId: dread
     - elementId: contentment
+forbidders:
+  situation: visions
+  storedCardsMatch:
+    elementId: fascination
 operation:
   name: Dream away dread
   situation: dream

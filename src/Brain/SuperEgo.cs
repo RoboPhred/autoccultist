@@ -35,6 +35,9 @@ namespace Autoccultist.Brain
             TryNextMotivation();
         }
 
+        /// <summary>
+        /// Skips the current motivation.
+        /// </summary>
         public static void SkipCurrentMotivation()
         {
             if (CurrentMotivation != null)

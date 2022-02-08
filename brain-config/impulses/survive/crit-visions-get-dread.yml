@@ -1,0 +1,4 @@
+name: Develop dread to deal with visions.
+requirements: !import ../../conditions/visions-unsatisfied.yml
+priority: critical
+operation: !import ../../operations/dream-passion-knock.yml

@@ -1,6 +1,7 @@
-name: Prepare lore fragments for the stag riddle and the Formula Fissive
+name: Aquire the Stag Door and prepare for the Formula Fissive
 requirements:
   cardSet:
+    - elementId: waywhite
     - elementId: fragmentforge
     - elementId: fragmentforge
     - elementId: fragmentforgeb
@@ -11,11 +12,7 @@ requirements:
     - elementId: fragmentmoth
     - elementId: fragmentmothb
 completedWhen:
-  cardSet:
-    # Check by aspect, so we have a chance of still being considered complete if we resume the bot from past this point.
-    - aspects: { lore: 1, forge: 8 }
-    - aspects: { lore: 1, lantern: 6 }
-    - aspects: { lore: 1, moth: 6 }
+  elementId: waystag_after
 # We use latern in our march to fragmentforgee, but we need to also get fragmentlanternc to answer one of the stag's riddles.
 # Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb
 # From the output of morlands, we do:
@@ -33,6 +30,25 @@ completedWhen:
 # => forged, lanternc, mothc
 # This leaves us with a lanternc for the stag, that can then be used with mothc for a mothd, which can then be used with forged for forgee
 impulses:
+  - name: Aquire the Stag Riddle
+    forbidders:
+      anyOf:
+        - elementId: waystagbefore_1
+        - elementId: waystagbefore_2
+        - elementId: waystagbefore_3
+        - elementId: waystagbefore_4
+        - elementId: waystagbefore_5
+        - elementId: waystag_after
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle.yml
+  - name: Answer Ghirbi's riddle on Moth
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+  - name: Answer Ghirbi's riddle on Lantern
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+  - name: Answer Ghirbi's riddle on Grail
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+  - name: Answer Ghirbi's riddle on Knock
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+
   - name: Ensure we have glimmering
     priority: maintenance
     forbidders:
@@ -44,19 +60,55 @@ impulses:
             greaterThan: 60
     operation: !import ../../../operations/study-passion.yml
 
-  # x
+  # TODO: Get knockc from anything other than grail/lantern/moth/forge
+
+  # Begin Grail C
+  - name: Combine A Megalesian Incantation
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      elementId: fragmentgrailc
+    operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
+  - name: Combine A Red Secret
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentgrailb
+            - elementId: fragmentgrailb
+        - elementId: fragmentgrailc
+    operation: !import ../../../operations/lore/grail/lore-combine-grail-a.yml
+  # End Grail C
+
+  # Begin Secret Histories C
+  - name: Combine A Furtive Truth
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      elementId: fragmentsecrethistoriesc
+    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+  - name: Combine An Occult Scrap
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistoriesb
+        - elementId: fragmentsecrethistoriesc
+    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    # End Secret Histories C
+
+  # Begin Moth / Lantern / Forge juggling
   # moth + lantern = lanternb
   - name: Subvert A Barber's Warning with A Watchman's Secret to get A Mansus-Glimpse
     priority: goal
     operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-a.yml
-
-  # x
   # forge + forge = forgeb
   - name: Combine A Smith's Secret for An Ardent Orison
     priority: goal
     operation: !import ../../../operations/lore/forge/lore-combine-forge-a.yml
-
-  # xx
   # forgeb + lanternb = forgec
   - name: Subvert A Mansus Glimpse to A Shaping Chant
     priority: goal
@@ -67,13 +119,10 @@ impulses:
         - elementId: fragmentforgec
         - elementId: fragmentforgec
     operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-b.yml
-
-  # x
   # forgec + forgec = forged
   - name: Combine A Shaping Chant for Callidate Invocation
     priority: goal
     operation: !import ../../../operations/lore/forge/lore-combine-forge-c.yml
-
   # mothb + lanternb = lanternc
   - name: Subvert A Wood-Whisper to An Unmerciful Mantra
     priority: goal
@@ -81,3 +130,4 @@ impulses:
       # Only do this once
       elementId: fragmentlanternc
     operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-b.yml
+  # End Moth / Lantern / Forge juggling

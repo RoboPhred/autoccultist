@@ -188,6 +188,8 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public void Abort()
         {
+            // TODO: We might want to clean up, dump the contents and close the window.
+            // Doing so is tricky if we want to use the actor though, as it means the abort action is asynchronous.
             this.cancelCurrentTask?.Cancel();
             BrainEventSink.OnOperationAborted(this.operation);
             this.End();

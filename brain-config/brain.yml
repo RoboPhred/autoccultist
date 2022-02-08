@@ -82,6 +82,14 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
+  - name: Find rites from auction
+    primaryGoals:
+      - !import goals/find-auctionhouse.yml
+      - !import goals/auction/aquire-stumm.yml
+      - !import goals/auction/aquire-truecompleteasclepiangreek.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
   - name: Move into Morlands, aquire a Rarefied Mind
     # Move into morlands to use it for knowledge challenges.
     primaryGoals:
@@ -90,26 +98,38 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Prepare for the stag door and the Formula Fissive
-    primaryGoals:
-      - !import goals/victories/temptation-power/victory-temptation-power-prepare-lore.yml
-    supportingGoals:
-      - !import goals/survive.yml
-      - !import goals/glover/work-glover.yml
-  - name: Aquire the wood, white door, and stag door
+  - name: Aquire the wood and white door
     primaryGoals:
       - !import goals/mansus/aquire-way-wood.yml
       - !import goals/mansus/aquire-way-whitedoor.yml
-      - !import goals/mansus/aquire-way-stagdoor.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Aquire the Stag Door and prepare the Formula Fissive
+    primaryGoals:
+      - !import goals/victories/power/victory-temptation-power-lore-and-stag.yml
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
   - name: Aquire the Formula Fissive
     primaryGoals:
-      - !import goals/victories/temptation-power/victory-temptation-power-aquire-forge-e.yml
+      - !import goals/victories/power/victory-temptation-power-aquire-forge-e.yml
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
+  - name: Achieve the Marks of Power
+    primaryGoals:
+      - !import goals/victories/power/aquire-dedication-power.yml
+      - !import goals/victories/power/aquire-ascension-power.yml
+    supportingGoals:
+      - !import goals/survive.yml
+      - !import goals/glover/work-glover.yml
+  - name: Await the Seventh mark of Power
+    primaryGoals:
+      - !import goals/victories/power/aquire-mark-power-7.yml
+    supportingGoals:
+      - !import goals/glover/work-glover.yml
+      - !import goals/survive.yml
   - name: Work my life away
     primaryGoals:
       - !import goals/survive.yml

@@ -1,0 +1,6 @@
+name: Read A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: truecompleteasclepian

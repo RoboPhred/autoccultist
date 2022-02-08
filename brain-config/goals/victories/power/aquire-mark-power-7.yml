@@ -1,0 +1,80 @@
+name: Achieve the Seventh Mark of Power
+requirements:
+  elementId: ascensionpowerc
+completedWhen:
+  aspects: { desire: 7 }
+impulses:
+  - name: Explore the city for strange streets
+    forbidders:
+      anyOf:
+        # Don't search if we have the target of our search
+        - elementId: locationstreetstrange
+        # Dont search if we already have king crucible
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+        # Dont bother searching if we have one ready.
+        - aspects:
+            influence: 1
+            knock:
+              greaterThanOrEqualTo: 5
+    operation: !import ../../../operations/explore/explore-city.yml
+  - name: Explore strange streets by moonlight
+    priority: goal
+    forbidders:
+      anyOf:
+        # Careful to not let fascination build up too much
+        - cardSet:
+            - elementId: fascination
+            - elementId: fascination
+        - situation: visions
+          storedCardsMatch:
+            elementId: fascination
+        # Dont search if we already have king crucible
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+        # Dont bother searching if we have one ready.
+        - aspects:
+            influence: 1
+            knock:
+              greaterThanOrEqualTo: 5
+    operation: !import ../../../operations/explore/explore-locationstreetsstrange.yml
+  - name: Summon King Crucible
+    priority: goal
+    forbidders:
+      # There Can Only Be One
+      anyOf:
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+    operation:
+      name: Summon King Crucible
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            aspects: { follower: 1, lantern: 2 }
+          Offering:
+            aspects:
+              influence: 1
+              knock:
+                greaterThanOrEqualTo: 5
+            ageBias: oldest
+      ongoingRecipes:
+        summoninglosingcontrol:
+          # We aren't resource constrained, so dismiss and try again if needed
+          slots:
+            Effort:
+              elementId: reason
+  - name: Sustain King Crucible through Endless Banter
+    # Keep the king around until we need him
+    priority: maintenance
+    operation:
+      name: Sustain King Crucible through Endless Banter
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: spirit_forgee_edge

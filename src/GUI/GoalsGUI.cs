@@ -12,7 +12,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class GoalsGUI
     {
-        private static readonly Lazy<int> WindowId = new Lazy<int>(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
 
         private static Vector2 scrollPosition = default;
 
@@ -21,8 +21,14 @@ namespace Autoccultist.GUI
         /// </summary>
         public static bool IsShowing { get; set; }
 
+        /// <summary>
+        /// Gets the width of the window.
+        /// </summary>
         public static float Width => Mathf.Min(Screen.width, 500);
 
+        /// <summary>
+        /// Gets the height of the window.
+        /// </summary>
         public static float Height => Mathf.Min(Screen.height, 900);
 
         /// <summary>

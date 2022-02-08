@@ -98,11 +98,7 @@ namespace Autoccultist.Config
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
             }
 
-            var impulses = this.Impulses.Concat(this.ImpulseSets.SelectMany(set => set)).ToArray();
-            if (impulses.Length == 0)
-            {
-                throw new InvalidConfigException("Goal must have at least one impulse.");
-            }
+            // Used to require goals to have impulses, but we can have goals that wait for events.
         }
     }
 }

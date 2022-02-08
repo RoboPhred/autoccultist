@@ -1,0 +1,8 @@
+name: Watch Stumm!
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: stumm
+    projector:
+      elementId: funds

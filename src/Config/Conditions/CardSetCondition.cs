@@ -30,7 +30,22 @@ namespace Autoccultist.Config.Conditions
         /// <inheritdoc/>
         public bool IsConditionMet(IGameState state)
         {
-            return state.CardsCanBeSatisfied(this.CardSet);
+            var remaining = new HashSet<ICardState>(state.GetAllCards());
+            foreach (var chooser in this.CardSet)
+            {
+                // TODO: Each chooser individually chooses a card, so its possible for a chooser
+                // to have multiple choices, but choose the one that is the only viable card for another chooser.
+                // We should get all candidates for all choosers and try to satisfy them all.
+                var choice = chooser.ChooseCard(remaining);
+                if (choice == null)
+                {
+                    return false;
+                }
+
+                remaining.Remove(choice);
+            }
+
+            return true;
         }
 
         /// <inheritdoc/>

@@ -92,7 +92,7 @@ namespace Autoccultist.Config
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
                 where this.Location == null || card.Location == this.Location
-                where this.LifetimeRemaining == null || this.LifetimeRemaining.IsConditionMet(card.LifetimeRemaining)
+                where this.LifetimeRemaining?.IsConditionMet(card.LifetimeRemaining) != false
                 where this.AllowedElementIds?.Contains(card.ElementId) != false
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
                 where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)

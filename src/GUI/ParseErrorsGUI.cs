@@ -4,14 +4,13 @@ namespace Autoccultist.GUI
     using Autoccultist.Config;
     using Autoccultist.Yaml;
     using UnityEngine;
-    using YamlDotNet.Core;
 
     /// <summary>
     /// GUI for listing and activating goals.
     /// </summary>
     public static class ParseErrorsGUI
     {
-        private static readonly Lazy<int> WindowId = new Lazy<int>(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
 
         private static Vector2 errorsScrollPosition = default;
 
@@ -32,7 +31,7 @@ namespace Autoccultist.GUI
 
             var width = Mathf.Min(Screen.width, 500);
             var height = Mathf.Min(Screen.height, 700);
-            var offsetX = (Screen.width * 3 / 4) - (width / 2);
+            var offsetX = Screen.width - DiagnosticGUI.Width - width - 10;
             var offsetY = 10;
             GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, width, height), ParseErrorsWindow, "Autoccultist Parse Errors");
         }
