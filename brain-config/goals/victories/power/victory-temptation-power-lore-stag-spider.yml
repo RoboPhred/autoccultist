@@ -1,4 +1,4 @@
-name: Aquire the Stag Door and prepare for the Formula Fissive
+name: Aquire the Stag Door, Spider Door, and prepare for the Formula Fissive
 requirements:
   cardSet:
     - elementId: waywhite
@@ -12,7 +12,12 @@ requirements:
     - elementId: fragmentmoth
     - elementId: fragmentmothb
 completedWhen:
-  elementId: waystag_after
+  allOf:
+    - elementId: waystag_after
+    - elementId: wayspider
+    - elementId: fragmentforgee
+    # - elementId: fragmentlanternc
+    # - elementId: fragmentmothc
 # We use latern in our march to fragmentforgee, but we need to also get fragmentlanternc to answer one of the stag's riddles.
 # Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb
 # From the output of morlands, we do:
@@ -28,7 +33,7 @@ completedWhen:
 # => forged, lanternb, mothb, mothc
 # mothb + lanternb = lanternc
 # => forged, lanternc, mothc
-# This leaves us with a lanternc for the stag, that can then be used with mothc for a mothd, which can then be used with forged for forgee
+# This leaves us with a lanternc for the stag, that can then be used with mothc for a lanternd, which can then be used with forged for forgee
 impulses:
   - name: Aquire the Stag Riddle
     forbidders:
@@ -48,6 +53,29 @@ impulses:
     operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
   - name: Answer Ghirbi's riddle on Knock
     operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+
+  # After we aquire the stag door, it is safe to consume our lanternc
+  # mothc + lanternc = lanternd
+  - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
+    priority: goal
+    requirements:
+      elementId: waystag_after
+    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-c.yml
+
+  # After we have the spider door, it is safe to consume our lanternd
+  # forged + lanternd = forgee
+  - name: Subvert the Phanaean Invocation to the Formula Fissive
+    priority: goal
+    requirements:
+      allOf:
+        - elementId: waystag_after
+        - elementId: wayspider
+    operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-d.yml
+
+  - name: Aquire the Spider Door
+    forbidders:
+      elementId: wayspider
+    operation: !import ../../../operations/mansus/aquire-way-spiderdoor.yml
 
   - name: Ensure we have glimmering
     priority: maintenance

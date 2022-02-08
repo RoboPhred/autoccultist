@@ -1,0 +1,28 @@
+name: Respond to critical dread with Opium
+priority: critical
+requirements:
+  # Dread is critical if we have 2 sitting around
+  anyOf:
+    - situation: despair
+      storedCardsMatch:
+        cardSet:
+          - elementId: dread
+          - elementId: dread
+    - cardSet:
+        - elementId: dread
+          location: tabletop
+        - elementId: dread
+          location: tabletop
+    - allOf:
+        - situation: despair
+          storedCardsMatch:
+            elementId: dread
+        - elementId: dread
+          location: tabletop
+operation:
+  name: Buy a Tincture of Opium
+  situation: dream
+  startingRecipe:
+    slots:
+      dream:
+        elementId: funds

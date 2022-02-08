@@ -57,13 +57,16 @@ motivations:
       - !import goals/passion/aquire-skillpassionc.yml
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Recruit everyone, get passionate
+  - name: Recruit everyone, get passionate, hit the books
+    # Could start buying books at this point.
     primaryGoals:
       - !import goals/cult/recruit-lore-forge.yml
       - !import goals/passion/aquire-skillpassiona.yml
       - !import goals/passion/aquire-skillpassionb.yml
       - !import goals/passion/aquire-skillpassionc.yml
     supportingGoals:
+      - !import goals/consume-bookdealer.yml
+      - !import goals/consume-books-lore-waitmorland.yml
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
   - name: Dispose of alden
@@ -98,22 +101,16 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Aquire the wood and white door
+  - name: Aquire the Wood and White Door
     primaryGoals:
       - !import goals/mansus/aquire-way-wood.yml
       - !import goals/mansus/aquire-way-whitedoor.yml
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Aquire the Stag Door and prepare the Formula Fissive
+  - name: Aquire the Stag Door, Spider Door, and the Formula Fissive
     primaryGoals:
-      - !import goals/victories/power/victory-temptation-power-lore-and-stag.yml
-    supportingGoals:
-      - !import goals/survive.yml
-      - !import goals/glover/work-glover.yml
-  - name: Aquire the Formula Fissive
-    primaryGoals:
-      - !import goals/victories/power/victory-temptation-power-aquire-forge-e.yml
+      - !import goals/victories/power/victory-temptation-power-lore-stag-spider.yml
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
@@ -124,13 +121,8 @@ motivations:
     supportingGoals:
       - !import goals/survive.yml
       - !import goals/glover/work-glover.yml
-  - name: Await the Seventh mark of Power
+  - name: Aquire the Seventh mark of Power
     primaryGoals:
       - !import goals/victories/power/aquire-mark-power-7.yml
     supportingGoals:
-      - !import goals/glover/work-glover.yml
       - !import goals/survive.yml
-  - name: Work my life away
-    primaryGoals:
-      - !import goals/survive.yml
-      - !import goals/glover/work-glover.yml

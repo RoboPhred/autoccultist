@@ -23,6 +23,7 @@ namespace Autoccultist.Brain
         private OperationState operationState = OperationState.Unstarted;
 
         private string ongoingRecipe;
+        private float ongoingRecipeTimeRemaining;
 
         private DateTime? completionDebounceTime = null;
 
@@ -219,14 +220,21 @@ namespace Autoccultist.Brain
 
         private void ContinueOperation()
         {
-            var currentRecipe = this.Situation.SituationClock.RecipeId;
-            if (this.ongoingRecipe == currentRecipe)
+            var clock = this.Situation.SituationClock;
+            var currentRecipe = clock.RecipeId;
+
+            // We need to check the time remaining, because a recipe can repeat.
+            if (this.ongoingRecipe == currentRecipe && clock.TimeRemaining <= this.ongoingRecipeTimeRemaining)
             {
                 // Recipe has not changed.
+                this.ongoingRecipeTimeRemaining = clock.TimeRemaining;
                 return;
             }
 
+            AutoccultistPlugin.Instance.LogTrace($"Continuing operation {this.operation.Name}.  From recipe {this.ongoingRecipe} to {currentRecipe}.");
+
             this.ongoingRecipe = currentRecipe;
+            this.ongoingRecipeTimeRemaining = clock.TimeRemaining;
 
             if (this.operation.OngoingRecipes == null)
             {

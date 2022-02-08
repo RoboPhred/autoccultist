@@ -1,0 +1,39 @@
+name: Respond to critical dread with contentment
+priority: maintenance
+requirements:
+  # Dread is critical if we have 2 sitting around
+  allOf:
+    - elementId: contentment
+      location: tabletop
+    - anyOf:
+        - situation: despair
+          storedCardsMatch:
+            cardSet:
+              - elementId: dread
+              - elementId: dread
+        - cardSet:
+            - elementId: dread
+              location: tabletop
+            - elementId: dread
+              location: tabletop
+        - allOf:
+            - situation: despair
+              storedCardsMatch:
+                elementId: dread
+            - elementId: dread
+              location: tabletop
+forbidders:
+  situation: visions
+  storedCardsMatch:
+    elementId: fascination
+operation:
+  name: Dream away dread
+  situation: dream
+  startingRecipe:
+    slots:
+      dream:
+        elementId: dread
+        ageBias: youngest
+      reminders:
+        elementId: contentment
+        ageBias: oldest
