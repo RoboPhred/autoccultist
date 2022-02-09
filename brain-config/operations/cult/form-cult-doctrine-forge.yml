@@ -13,4 +13,11 @@ ongoingRecipes:
   cultfoundation_firstrecruit:
     slots:
       Recruit:
-        aspects: { acquaintance: 1 }
+        oneOf:
+          - elementId: valciane_a
+          - elementId: tristan_a
+          - elementId: laidlaw_a
+          - elementId: elridge_a
+          - elementId: rose_a
+          - elementId: victor_a
+          - aspects: { acquaintance: 1 }
