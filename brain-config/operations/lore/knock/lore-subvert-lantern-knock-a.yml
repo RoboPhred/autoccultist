@@ -1,0 +1,15 @@
+name: "Subvert lore: A Watchman's Secret to fragmentknockb"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknock
+    with:
+      elementId: fragmentlantern
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

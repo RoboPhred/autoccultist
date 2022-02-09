@@ -1,0 +1,10 @@
+name: Learn lesson from erudition
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: erudition
+      ageBias: oldest
+    moreerudition:
+      elementId: erudition
+      ageBias: oldest

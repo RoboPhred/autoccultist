@@ -1,0 +1,11 @@
+allOf:
+  # TODO: Might want to make this take into account decay time:
+  #  Should only trigger if seasondespair is pending, or we have multiple dreads.
+  - elementId: dread
+    location: tabletop
+  - noneOf:
+      - elementId: contentment
+  - noneOf:
+      - situation: visions
+        storedCardsMatch:
+          elementId: fascination

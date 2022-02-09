@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "name": "Goal",
+  "description": "A goal is a collection of impulses to execute until a given game state is reached.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Name",
+      "description": "The human-friendly name of this goal.",
+      "type": "string"
+    },
+    "requirements": {
+      "title": "Requirements",
+      "description": "Require this condition to be met for the goal to be considered activatable.  Not all tasks take this into account, and goals may be manually started without meeting their requirements.",
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+    },
+    "completedWhen": {
+      "title": "Completed When",
+      "description": "This goal is considered complete when the given condition is satisfied.  Goals will automatically stop when completed.  Goals that do not specify this property will continue forever.",
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+    },
+    "impulseSets": {
+      "title": "Impulse Sets",
+      "description": "A collection of collection of impulses.  These impulses will be added to the goal's own impulses.  Typically, this is a list whose elements are !import tags on items in the impulse-sets folder.",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/impulse.json"
+        }
+      }
+    },
+    "impulses": {
+      "title": "Impulses",
+      "description": "A list of impulses this goal will provide.  Impulses are the mechanism by which the goal triggers gameplay mechanics.",
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/impulse.json"
+      }
+    }
+  }
+}

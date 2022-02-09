@@ -1,0 +1,12 @@
+name: Translate books
+priority: maintenance
+operation:
+  name: Translate a book (S)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: scholarsanskrit
+      Text:
+        aspects: {textsanskrit: 1}
+  

@@ -1,0 +1,15 @@
+name: Purchase an item at auction
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+ongoingRecipes:
+  auctionbuy:
+    slots:
+      Bid:
+        elementId: funds
+  auctionbidmatched:
+    slots:
+      Bid:
+        elementId: funds

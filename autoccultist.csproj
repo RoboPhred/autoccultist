@@ -1,16 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>preview</LangVersion>
     <RootNamespace>Autoccultist</RootNamespace>
+        <CodeAnalysisRuleSet>./StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>.\externals\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Noon.Core.Enums">
+      <HintPath>.\externals\Noon.Core.Enums.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx">
       <HintPath>.\externals\BepInEx.dll</HintPath>
+    </Reference>
+        <Reference Include="0Harmony">
+      <HintPath>.\externals\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>.\externals\UnityEngine.dll</HintPath>
@@ -21,9 +34,19 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>.\externals\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>.\externals\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>.\externals\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>.\externals\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
-  <PropertyGroup>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
+    <PackageReference Include="YamlDotNet" Version="8.1.2" />
+  </ItemGroup>
 </Project>

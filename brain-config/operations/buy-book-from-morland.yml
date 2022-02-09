@@ -1,0 +1,8 @@
+name: Buy a book from Morland
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationbookdealer
+    Cost:
+      elementId: funds

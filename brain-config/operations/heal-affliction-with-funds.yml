@@ -1,0 +1,8 @@
+name: Heal Affliction with funds
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: affliction
+    medicine:
+      elementId: funds

@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Impulse",
+  "description": "An impulse is responsible for triggering an operation when certain conditions are met.",
+  "type": "object",
+  "properties": {
+    "extends": {
+      "title": "Extends",
+      "description": "Another impulse to copy settings from.  Any settings provided by the core impulse will override the extended one.",
+      "$ref": "#"
+    },
+    "name": {
+      "title": "Name",
+      "description": "The human-friendly name of this impulse.  If none is specified, it is auto generated from the file and line the impulse is defined at.",
+      "type": "string"
+    },
+    "priority": {
+      "title": "Priority",
+      "description": "The priority of this impulse.  Higher priority impulses will take precidence when both impulses try to access the same cards or situation.",
+      "type": "string",
+      "enum": ["maintenance", "normal", "goal", "critical"]
+    },
+    "requirements": {
+      "title": "Requirements",
+      "description": "Require this condition to be met for the impulse to activate.",
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+    },
+    "forbidders": {
+      "title": "Forbidders",
+      "description": "If this condition is met, the impulse will not activate.",
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+    },
+    "operation": {
+      "title": "Operation",
+      "description": "The operation this impulse should perform when activated.",
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/operation.json"
+    }
+  },
+  "additionalProperties": false,
+  "anyOf": [{ "required": ["extends"] }, { "required": ["operation"] }]
+}

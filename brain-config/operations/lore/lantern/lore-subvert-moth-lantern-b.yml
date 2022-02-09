@@ -1,0 +1,19 @@
+name: "Subvert lore: A Wood-Whisper to An Unmerciful Mantra"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentmothb
+    with:
+      elementId: fragmentlanternb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

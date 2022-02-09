@@ -1,0 +1,11 @@
+# This set of impulses deals with learning languages.
+# In general, they should all be maint, to defer to anything
+# more important to do with the textbooks or the Study Verb.
+- !import ../impulses/books/maint-learn-fucine.yml
+- !import ../impulses/books/maint-learn-vak.yml
+- !import ../impulses/books/maint-learn-greek.yml
+- !import ../impulses/books/maint-learn-phrygian.yml
+- !import ../impulses/books/maint-learn-mandaic.yml
+- !import ../impulses/books/maint-learn-latin.yml
+- !import ../impulses/books/maint-learn-aramaic.yml
+- !import ../impulses/books/maint-learn-sanskrit.yml

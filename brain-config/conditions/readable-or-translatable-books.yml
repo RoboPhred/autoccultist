@@ -1,0 +1,80 @@
+anyOf:
+  - aspects: { text: 1 } # Non-translatable books
+    forbiddenAspects:
+      - textlatin
+      - textgreek
+      - textsanskrit
+      - textaramaic
+      - textphrygian
+      - textmandaic
+      - textfucine
+      - textvak
+    forbiddenElementIds:
+      - textbookreason
+      - textbookpassion
+      - textbookgreek
+      - textbooklatin
+      - textbooksanskrit
+      - textbookaramaic
+      - textbookphrygian
+      - textbookfucine
+      - textbookmandaic
+      - textbookvak
+      - genericrubbishbook
+  - allOf: # greek book that is translatable
+      - aspects: { textgreek: 1 }
+      - elementId: scholargreek
+  - allOf: # latin book that is translatable
+      - aspects: { textlatin: 1 }
+      - elementId: scholarlatin
+  - allOf: # sanskrit book that is translatable
+      - aspects: { textsanskrit: 1 }
+      - elementId: scholarsanskrit
+  - allOf: # aramaic book that is translatable
+      - aspects: { textaramaic: 1 }
+      - elementId: scholararamaic
+  - allOf: # phrygian book that is translatable
+      - aspects: { textphrygian: 1 }
+      - elementId: scholarphrygian
+  - allOf: # fucine book that is translatable
+      - aspects: { textfucine: 1 }
+      - elementId: scholarfucine
+  - allOf: # mandaic book that is translatable
+      - aspects: { textmandaic: 1 }
+      - elementId: scholarmandaic
+  - allOf: # vak book that is translatable
+      - aspects: { textvak: 1 }
+      - elementId: scholarvak
+  - anyOf: # textbook for a language we don't know
+      - allOf:
+          - elementId: textbookgreek
+          - noneOf:
+            - elementId: scholargreek
+      - allOf:
+          - elementId: textbookaramaic
+          - noneOf:
+            - elementId: scholararamaic
+      - allOf:
+          - elementId: textbooksanskrit
+          - noneOf:
+            - elementId: scholarsanskrit
+      - allOf:
+          - elementId: textbooklatin
+          - noneOf:
+            - elementId: scholarlatin
+      - allOf:
+          - elementId: textbookmandaic
+          - noneOf:
+            - elementId: scholarmandaic
+      - allOf:
+          - elementId: textbookfucine
+          - noneOf:
+            - elementId: scholarfucine
+      - allOf:
+          - elementId: textbookphrygian
+          - noneOf:
+            - elementId: scholarphrygian
+      - allOf:
+          - elementId: textbookvak
+          - noneOf:
+            - elementId: scholarvak

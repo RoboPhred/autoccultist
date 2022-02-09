@@ -1,0 +1,15 @@
+# Depsair is unsatisfied if it contains a dread, but does not contain a contentment, and we have no contentment on the board.
+allOf:
+  - situation: visions
+    storedCardsMatch:
+      elementId: fascination
+  - noneOf:
+      - situation: visions
+        slottedCardsMatch:
+          elementId: dread
+      - anyOf:
+          - elementId: dread
+          # This decays to dread
+          - elementId: restlessness
+          # This decays to restlessness
+          - elementId: influencemoth

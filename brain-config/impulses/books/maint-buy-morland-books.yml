@@ -1,0 +1,14 @@
+name: Buy books from Miss Morland
+priority: maintenance
+requirements:
+  cardSet:
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+    - elementId: funds
+operation: !import ../../operations/buy-book-from-morland.yml

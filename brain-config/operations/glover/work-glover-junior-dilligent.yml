@@ -1,0 +1,11 @@
+name: Extra Effort as a junior at Glover & Glover
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: gloverandgloverjuniorjob
+ongoingRecipes:
+  gloverandgloverjuniorwork:
+    slots:
+      Diligence:
+        elementId: reason

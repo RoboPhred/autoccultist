@@ -1,0 +1,8 @@
+name: Heal injury
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: injury
+    medicines:
+      elementId: funds

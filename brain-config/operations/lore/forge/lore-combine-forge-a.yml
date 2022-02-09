@@ -1,0 +1,15 @@
+name: "Combine lore: A Smith's Secret"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentforge
+    with:
+      elementId: fragmentforge
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

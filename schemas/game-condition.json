@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Game Condition",
+  "description": "A condition that matches against the current game state.",
+  "oneOf": [
+    {
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
+    },
+    {
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-set.json"
+    },
+    {
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-conditions/compound.json"
+    },
+    {
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-conditions/situation.json"
+    }
+  ]
+}

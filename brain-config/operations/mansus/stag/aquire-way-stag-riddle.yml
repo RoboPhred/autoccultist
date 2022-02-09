@@ -1,0 +1,11 @@
+name: "Aquire Way: Stag riddle"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: waywhite
+ongoingRecipes:
+  dreamusewhiteway:
+    slots:
+      Ascent:
+        aspects: { desire: 1 }

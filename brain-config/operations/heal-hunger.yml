@@ -1,0 +1,8 @@
+name: Heal Hunger with funds
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: hunger
+    nourishment:
+      elementId: funds

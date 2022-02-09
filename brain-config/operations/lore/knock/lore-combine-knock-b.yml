@@ -1,0 +1,15 @@
+name: "Combine lore: An Iguvine Rite"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknockb
+    with:
+      elementId: fragmentknockb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

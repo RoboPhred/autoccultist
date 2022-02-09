@@ -1,0 +1,12 @@
+name: Work with health
+priority: maintenance
+forbidders:
+  anyOf:
+    - !import ../conditions/illhealth-unsatisfied.yml
+    - allOf: # Consider pending ill health if we would take away the last health
+        - noneOf:
+            - cardSet:
+                - elementId: health
+                - elementId: health
+        - !import ../conditions/illhealth-pending-30secs.yml
+operation: !import ../operations/work-health.yml

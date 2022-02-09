@@ -1,0 +1,21 @@
+name: Heal dread with contentment
+priority: maintenance
+requirements:
+  allOf:
+    - elementId: dread
+    - elementId: contentment
+forbidders:
+  situation: visions
+  storedCardsMatch:
+    elementId: fascination
+operation:
+  name: Dream away dread
+  situation: dream
+  startingRecipe:
+    slots:
+      dream:
+        elementId: dread
+        ageBias: youngest
+      reminders:
+        elementId: contentment
+        ageBias: oldest

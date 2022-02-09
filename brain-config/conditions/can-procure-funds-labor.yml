@@ -1,0 +1,4 @@
+# This is a companion condition to impulse-sets/procure-funds-labor
+# This condition should return true when the impulse set is capable of doing its job
+anyOf:
+  - elementId: health

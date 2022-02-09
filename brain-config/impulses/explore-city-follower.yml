@@ -1,0 +1,4 @@
+name: Explore the city with a follower
+priority: goal
+# We reqiure passion to find an acquaintance, and reason to find a patron
+operation: !import ../operations/explore-city-follower.yml

@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Card choice condition",
+  "description": "A condition that requires the presence of a matching card on the tabletop.",
+  "oneOf": [
+    {
+      "type": "object",
+      "description": "A choice of a specific card.",
+      "properties": {
+        "elementId": {
+          "title": "Element ID",
+          "description": "The ID of the card to match.",
+          "type": "string"
+        },
+        "allowedElementIds": {
+          "title": "Allowed element IDs",
+          "description": "Allow list of element IDs to match.",
+          "type": "array",
+          "item": { "type": "string" }
+        },
+        "aspects": {
+          "title": "Aspects",
+          "description": "Require the matching card to have these aspects.",
+          "additionalProperties": {
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
+          }
+        },
+        "unique": {
+          "title": "Unique",
+          "description": "Requires the matching card to be or not be unique.",
+          "type": "boolean"
+        },
+        "forbiddenAspects": {
+          "title": "Forbidden Aspects",
+          "description": "Deny any card with any of the given aspects.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "forbiddenElementIds": {
+          "title": "Forbidden Element IDs",
+          "description": "Deny any cards that match one of the given element ids.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "ageBias": {
+          "title": "Age Bias",
+          "description": "Choose either the oldest or youngest card available.  Oldest will choose the card with the largest lifetime remaining, Youngest will choose the card with the least lifetime remaining.",
+          "type": "string",
+          "enum": ["oldest", "youngest"]
+        },
+        "lifetimeRemaining": {
+          "title": "Lifetime Remaining",
+          "description": "Sets a condition on the lifetime remaining for the card.",
+          "type": "string",
+          "oneOf": [
+            {
+              "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["elementId"] },
+        { "required": ["allowedElementIds"] },
+        { "required": ["aspects"] }
+      ]
+    },
+    {
+      "type": "object",
+      "description": "Select the first choice to match.",
+      "properties": {
+        "oneOf": {
+          "title": "One of",
+          "description": "Select the first choice to match.",
+          "type": "array",
+          "items": { "$ref": "#" }
+        }
+      },
+      "required": ["oneOf"]
+    }
+  ]
+}

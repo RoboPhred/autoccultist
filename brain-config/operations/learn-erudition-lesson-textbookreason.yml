@@ -1,0 +1,6 @@
+name: Read a collection of scholarly articles
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: textbookreason

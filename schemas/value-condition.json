@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Value condition",
+  "description": "A condition that compares a decimal value.",
+  "oneOf": [
+    {
+      "type": "number"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "greaterThan": {
+          "title": "Greater Than",
+          "description": "Requires the value to be greater than the given value.",
+          "type": "number"
+        },
+        "greaterThanOrEqualTo": {
+          "title": "Greater Than or Equal TO",
+          "description": "Requires the value to be greater than or equal to the given value.",
+          "type": "number"
+        },
+        "lessThan": {
+          "title": "Less Than",
+          "description": "Requires the value to be less than the given value.",
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["greaterThan"] },
+        { "required": ["greaterThanOrEqualTo"] },
+        { "required": ["lessThan"] }
+      ]
+    }
+  ]
+}

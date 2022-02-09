@@ -1,0 +1,6 @@
+name: Study Reason
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: reason

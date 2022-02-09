@@ -1,0 +1,10 @@
+name: Learn lesson from vitality
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: vitality
+      ageBias: oldest
+    morevitality:
+      elementId: vitality
+      ageBias: oldest

@@ -1,0 +1,16 @@
+name: Find a Collaborator
+requirements:
+  elementId: contactintro
+completedWhen:
+  anyOf:
+    - aspects: { acquaintance: 1 }
+    - aspects: { follower: 1 }
+impulses:
+  - name: Contact Collaborator
+    priority: goal
+    operation:
+      situation: study
+      startingRecipe:
+        slots:
+          study:
+            elementId: contactintro

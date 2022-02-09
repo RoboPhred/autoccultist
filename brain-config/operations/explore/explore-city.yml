@@ -1,0 +1,6 @@
+name: Explore the city
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      aspects: { follower: 1 }

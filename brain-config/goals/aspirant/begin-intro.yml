@@ -1,0 +1,16 @@
+name: Begin the Intro
+requirements:
+  elementId: introjob
+completedWhen:
+  anyOf:
+    - elementId: bequestintro
+    - situation: time
+impulses:
+  - name: Work the intro job
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: introjob

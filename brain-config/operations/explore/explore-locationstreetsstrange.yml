@@ -1,0 +1,6 @@
+name: Explore Strange Steets by Moonlight
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationstreetsstrange

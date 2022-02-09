@@ -1,0 +1,15 @@
+name: "Subvert lore: A Mansus Glimpse to A Shaping Chant"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentlanternb
+    with:
+      elementId: fragmentforgeb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

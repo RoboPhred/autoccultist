@@ -1,0 +1,6 @@
+name: Buy a Tincture of Opium
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: funds

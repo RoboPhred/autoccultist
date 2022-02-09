@@ -1,0 +1,11 @@
+name: Dedicate myself to power
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: ascensionpowera
+ongoingRecipes:
+  dreamascensionpowera:
+    slots:
+      Calculation:
+        aspects: { lore: 1, forge: 6 }

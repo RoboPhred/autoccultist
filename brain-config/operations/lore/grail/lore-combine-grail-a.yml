@@ -1,0 +1,13 @@
+name: "Combine lore: A Red Secret"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentgrail
+    with:
+      elementId: fragmentgrail
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

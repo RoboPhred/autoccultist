@@ -1,0 +1,8 @@
+name: Achieve Composure
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: fascination
+    reminders:
+      elementId: fleeting

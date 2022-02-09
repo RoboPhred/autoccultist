@@ -1,0 +1,10 @@
+name: Aquire a Wild Imagination
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: skillpassiona
+    G1:
+      elementId: glimmeringplus
+    G2:
+      elementId: glimmeringplus

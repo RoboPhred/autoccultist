@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Card Condition",
+  "description": "A condition that can match against a set of cards.  When used as a game condition, it will match against all cards on the tabletop.",
+  "oneOf": [
+    {
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
+    },
+    {
+      "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-set.json"
+    }
+  ]
+}

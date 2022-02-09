@@ -1,152 +1,124 @@
 # Autoccultist
 
-An experimental AI for playing Cultist Simulator.
+An experimental automaton for playing Cultist Simulator.
 
-## Current Status
+**WARNING**: This is experimental software that is still under development. It does its job, but it is **NOT** user-friendly. Only attempt to use this if you are willing to dig in to how this mod works and get your hands dirty writing configs. Others may want to wait until the mod is more refined and user-friendly before attempting to use it.
 
-Capable of handling an aspirant start.  Currently reads the bequest, finds the aquaintance, then levels up health until it gets to the Iron Physique.
+**WARNING**: This is prerelease documentation. It is incomplete, and as changes are made, may be incorrect.
 
+The purpose of this mod is to provide a means of making Cultist Simulator play itself. Either though individual ongoing tasks (EG: Obtain, work, and submit a commission, and sell a Spintria if funds are low), or through a higher level list of tasks.
 
-## Issues
+## Usage
 
-Aspirant brain died to health because it uses health instantly from the completion of one verb to the start of another, giving the magnet slot no time to yank the card.
-Need to satisfy the magnet slots, which means waiting the 20 ticks for them to trigger.  Might be cheating if I force the card into the magnet slot, but instantanious
-card movement is already cheaty.
-Probably something for the card manager / slotting scheduler to handle.
+First, you must configure the behaviors you want. See [configuration](#configuration). You can then hit F10 to open the control panel when in a game.
 
-## Notes
+### The diagnostic panel
 
-Slot solutions - support by element id, and by aspects (required and rejected).
-Also have optimistic slot solutions (do not lock cards, report readyness when cards are not available) and pessimistic slot solutions (lock cards, refuse to start situation solution until all cards are present)
-Ongoing slots should take into account the delay before they can slot cards, to calculate if cards will be available by the time we are ready.
+The panel has these options:
 
-### Card Manager 
-Card manager should support taking reservations for cards, locking them from use by other solutions.  This will let solutions reserve cards when they need a card for an ongoing slot.
-Since card choosers can choose by aspects, we may need to pick out cards at lock-time to be the target card.  If it was just by element id, we could simply track the number of locks
-and make sure to leave that number of cards free.
+If there were errors reading the config, the panel will say how many, and reveal a button to view those errors.
 
-If asked for a card type that is expirable, the card manager should return the card with the shortest expiration time.
+The `Mechanical Heart` checkbox acts as the master switch for this mod. Nothing will happen without this checkbox checked.
+A `Step heart` button is also available. This makes the mod perform exactly one action then stop. Useful for debugging.
 
-### Imperatives should try to preemptively reserve cards
+The `Task Driver` checkbox enables reading the main `brain.yml` file and running all tasks. This is intended for full game play automation, you can ignore it if you just want the mod to automate a few tasks.
 
-This one is fiddly.  An imperative should, on seeing all cards it needs to run, reserve those cards even if its verb is still busy.
-This needs to take into account card expiration (fail to reserve if its verb will be busy for longer than the card exists), ongoing
-recipe duration (fail to reserve if the card will be gone by the time its called for), priority of the imperative (higher priority
-imperatives should be able to break the reservation).
+The `Toggle goals list` button opens up a new window containing the goals panel. This is where you will be able to start the mod performing specific tasks.
 
-### Slotting manager
+### The goals panel
 
-Need a way to schedule card movement and let it take place a few ticks after.  Few advantages for this:
+This is where you can turn on or off individual automations (called "goals") for the mod, and is particularly useful for people who just want to automate one or two tasks without having the mod take over the game entirely.
 
-- Give magnet slots a chance to act.
-    This is critical for things like sickness, where the bot might happily commit its health card straight out of
-    another verb's output slot and prevent sickness from ever seeing healt.  This ends in death.
-- Make the bot more interesting to look at.
-    The bot should open and close verb windows, and slot cards one after the other.  Makes it more pleasing to watch.
+The top of the window shows your active goals. Click `Cancel` on these goals to cancel them.
+Depending on how you set up the goal, the goal may run forever, or may run until it has completed its designated task.
 
-## Proposed architecture
+The button of the panel shows available goals. Click the `Activate` button on goals you want to start.
 
-The AI will have no state to track the game.  Instead, it uses the existance or nonexistance of cards to determine what to do next.
-This will allow it to never get caught off guard by random events or card draws, and let it react to any occurance.
+## Installation
 
-### BrainConfig
+This mod uses BepInEx 5.2.
 
-A set of goals to accomplish.  This drives the playthrough the AI will make.
-The goals are not in any particular order.  Instead, they will get chosen depending on their conditions and the available cards.
+- Install the x86 version of BepInEx [version 5.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.2) or later by extracting the zip file into your Cultist Simulator install location
+- Run the game once, to let BepInEx create its folder structure.
+- Extract the autoccultist folder from the download into `Cultist Simulator/BepInEx/Plugins`
 
-### Goal
+## Configuration
+
+This automata is entirely configurable by yaml files.
+
+**WARNING**: This documentation is incomplete, and does not explain how to write the config files. More detailed documentation is forthcoming. Until then, inspect the config files included with the mod for examples.
+
+### BrainConfig (brain.yml)
+
+A set of goals to accomplish. This drives the play through the AI will make.
+The goals are not in any particular order. Instead, they will get chosen to depend on their conditions and the available cards.
+
+### Goal (`goals[]`)
 
 A high level task for the AI to accomplish.
-Example: Increase basic health skill to advanced health skill (healthskilla => healthskillb)
+Example: Increase basic health skill to advanced health skill (healthskilla =&gt; healthskillb)
 
 A goal has a starting condition, and a satisfied condition.
-Goals are ready to activate if starting condition is met, and satisifed condition is not met.
+Goals are ready to activate if starting condition is met, and satisfied condition is not met.
 
 Goals do not explicitly declare dependencies, but can depend on each other by their starting conditions.
 For example, goal B depends on goal A if A produces a "healthskillb" card, and B declares "healthskillb" a starting requirement.
 
-On startup, AI will go through its goals, find goals that are not satisified yet meet their starting condition, and run one at a time.
-To avoid conflicting verb constraints, lets stick to one goal at a time, and design goals so that all their imperatives coexist.
-Conflicting verbs may be sometimes ok, but other times we will be dealing with expiring cards.  If dealing with expiring cards, the AI
-might get stuck in a loop where it keeps switching which goal controls a contested verb, resulting in cards expiring before they can be used to complete
+On startup, AI will go through its goals, find goals that are not satisfied yet meet their starting condition, and run one at a time.
+To avoid conflicting situation constraints, lets stick to one goal at a time, and design goals so that all their impulses coexist.
+Conflicting situation may be sometimes ok, but other times we will be dealing with expiring cards. If dealing with expiring cards, the AI
+might get stuck in a loop where it keeps switching which goal controls a contested situation, resulting in cards expiring before they can be used to complete
 either goal.
 
-A goal contains a collection of imperatives, all of which are active and working at the same time.
+A goal contains a collection of impulses, all of which are active and working at the same time.
 
-### Imperative
+### Impulse (`goals[].impulses`)
 
-This is just the name I had in my notes, could use a better one.  Imperative might mean a higher level concept than a goal...
+An impulse is a set of conditions which, when satisfied, cause the automation to perform an action on a situation / verb.
+An impulse targets a single situation, so multiple impulses can trigger at once. However, only one impulse may interact with a situation at a time.
+An impulse will activate when its conditions are met, the situation is free, and no higher priority impulses want to use the same situation.
 
-An imperative is a set of conditions on which to activate a verb and perform a situation solution.
-An imperative targets a single situation, so multiple imperatives can trigger at once.
-An imperative will activate a solution when its conditions are met, the situation is free, and no higher priority imperatives want to use the same situation.
+Impulses have 4 priorities
 
-Imperatives have 3 priorites
-- Critical - Things that need to be done in order to survive.  These might get triggered if funds are low or the visions situation is ongoing.
-- GoalOriented - Performing this imperative will bring us closer to our goal.  Most imperatives should be this priority.
-- Maintenance - This imperative is to do basic ongoing tasks like make money or take care of a dead card.  It can be deferred if a goal oriented task is pending.
+- critical - Things that need to be done in order to survive. These might get triggered if funds are low or despair triggers.
+- goal - Performing this impulse will bring us closer to our goal. Most impulses should be this priority.
+- normal - Tasks that should be performed, but are secondary to accomplishing the goal.
+- maintenance - This impulse is to do basic ongoing tasks like make money or take care of a dead card. It can be deferred if a goal oriented task is pending.
 
+### Operation (`goals[].impulses[].operation`)
 
-## Installation
-
-This mod uses BepInEx 5.0.  You must install BepInEx to use this mod.
-
-### Setting up BepInEx 5.0
-You must use the [version 5.0 RC1](https://github.com/BepInEx/BepInEx/releases/tag/v5.0-RC1) or later, as earlier versions rely on Harmony.
-
-Once you install BepInEx 5.0, you need to shut off harmony support, or no plugins will load.  To do this, edit `Cultist Simulator/BepInEx/config/BepInEx.cfg` and set `ApplyRuntimePatches` to false:
-You may have to run Cultist Simulator once after installing BepInEx to generate the config file.
-```
-[Preloader]
-ApplyRuntimePatches = false
-```
-
-### Installing the mod to BepInEx
-
-Place the CultistAutofill.dll file in `Cultist Sumulator/BepInEx/Plugins`
+An operation is instructions for a full cycle of a verb or situation. It contains the starting recipe, and all ongoing recipes to drive the situation to completion.
 
 ### Troubleshooting
 
 If the mod isn't working, you can turn on the BepInEx logs to see what is going on.
 
-Open your BepInEx config file at `Cultist Simulator/BepInEx/config/BepInEx.cfg` and enable the console by changing the `Enabled` key of `[Logging.Console]` to `true`.
-```
-[Logging.Console]
-Enabled = true
-```
+Open your BepInEx con fig file at `Cultist Simulator/BepInEx/con fig/BepInEx.cfg` and enable the console by changing the `Enabled` key of `[Logging. Console]` to `true`.
 
-Doing this will create a terminal window when you launch cultist simulator.  If you do not see this new window open, then BepInEx is probably not installed correctly,
-or the config file is misconfigured.
+“` [Logging. Console] Enabled = true “`
 
-Once you get the window, check its output after you hit the play button on the Cultist Simulator launcher.  You can either drag the terminal window to another
-monitor, or tab out of Cultist Simulator to check it after launch.
+Doing this will create a terminal window when you launch cultist simulator. If you do not see this new window open, then BepInEx is probably not installed correctly,
+or the con fig file is misconfigured.
+
+Once you get the window, check its output after you hit the play button on the Cultist Simulator launcher. You can either drag the terminal window to another
+monitor, or tab out of Cultist Simulator to check it after launches.
 
 If BepInEx is installed and configured properly, you should see messages similar to the following:
-```
-[Message:   BepInEx] BepInEx 5.0.0.0 RC1 - cultistsimulator
-[Message:   BepInEx] Compiled in Unity v2018 mode
-[Info   :   BepInEx] Running under Unity v2019.1.0.2698131
-[Message:   BepInEx] Preloader started
-[Info   :   BepInEx] 1 patcher plugin(s) loaded
-[Info   :   BepInEx] Patching [UnityEngine.CoreModule] with [BepInEx.Chainloader]
-[Message:   BepInEx] Preloader finished
-```
 
-If you do not see these messages, and your terminal window remains blank, then you probably forgot to turn off `AllowRuntimePatches`.  Read the section on Installing again.
+“` [Message: BepInEx] BepInEx 5.0.0.0 RC1 - cultist simulator [Message: BepInEx] Compiled in Unity v2018 mode [Info : BepInEx] Running under Unity v2019.1.0.2698131 [Message: BepInEx] Preloader started [Info : BepInEx] 1 patcher plugin(s) loaded [Info : BepInEx] Patching [UnityEngine.CoreModule] with [BepInEx.Chain loader] [Message: BepInEx] Preloader finished “`
 
-Once you have confirmed BepInEx is installed properly, look for the mod loading message.  Once you start the game from the launcher, the terminal window should contain:
-```
-[Info   :   BepInEx] Loading [CultistAutofill 0.0.1]
-```
+Once you have confirmed BepInEx is installed properly, look for the mod loading message. Once you start the game from the launcher, the terminal window should contain:
+
+“` [Info : BepInEx] Loading [Autoccultist 0.0.1] “`
+
 and
-```
-[Info   :CultistAutofill] CultistAutofill initialized.
-```
 
-If you do not see these lines, then the mod isn't in the correct folder.  Check the Installation instructions for details on where to put the mod.
+“` [Info :Autoccultist] Autoccultist initialized. “`
 
-If you have confirmed all of the above and still are having trouble, try looking at the terminal for lines starting with `[Error  :CultistAutofill]`.  The mod will
-try to log errors when it cannot do it's job properly.  Create a github issue with any CultistAutofill error messages you find, and I will try to help you further.
+If you do not see these lines, then the mod isn't in the correct folder. Check the Installation instructions for details on where to put the mod.
+
+If you have confirmed all the above and still are having trouble, try looking at the terminal for lines starting with `[Error :Autoccultist]`. The mod will
+try to log errors when it cannot do its job properly. Create a github issue with any Occultist error messages you find, and I will try to help you further.
 
 ## Development
 
@@ -154,12 +126,17 @@ try to log errors when it cannot do it's job properly.  Create a github issue wi
 
 Project dependencies should be placed in a folder called `externals` in the project's root directory.
 This folder should include:
-- BepInEx.dll - Copied from the BepInEx 5.0 installation under `BepInEx/core`
+
+- BepInEx.dll - Copied from the BepInEx installation under `BepInEx/core`
+- 0Harmony.dll - Copied from the BepInEx installation under `BepInEx/core`
 - Assembly-CSharp.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
+- UnityEngine.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
 - UnityEngine.CoreModule.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
 - UnityEngine.UI.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
-- UnityEngine.dll - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
+- UnityEngine.InputLegacyModule - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
+- UnityEngine.IMGUIModule - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
+- UnityEngine.UIModule - Copied from `Cultist Simulator/cultistsimulator_Data/Managed`
 
 ### Compiling
 
-This project uses the dotnet cli, provided by the .Net SDK.  To compile, simply use `dotnet build` on the project's root directory.
+This project uses the dotnet cli, provided by the .Net SDK. To compile, simply use `dotnet build` on the project's root directory.

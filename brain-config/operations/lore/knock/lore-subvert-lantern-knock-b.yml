@@ -1,0 +1,15 @@
+name: "Subvert lore: A Mansus Glimpse to Afragmentknockc"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknockb
+    with:
+      elementId: fragmentlanternb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

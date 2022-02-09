@@ -1,3 +1,8 @@
 /externals/
 /obj/
 /bin/
+/.vs/
+/.vscode/
+/src/Experiments/
+/brain-config/net471 - Shortcut.lnk
+/autoccultist.sln

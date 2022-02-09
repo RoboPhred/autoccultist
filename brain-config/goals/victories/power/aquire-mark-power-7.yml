@@ -1,0 +1,202 @@
+name: Achieve the Seventh Mark of Power
+requirements:
+  elementId: ascensionpowerc
+completedWhen:
+  aspects: { desire: 7 }
+impulses:
+  - name: Work a junior job at Glover & Glover
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      allOf:
+        - elementId: ascensionpowerf
+        - elementId: spirit_forgee_edge
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-junior.yml
+  - name: Work at Glover & Glover under Alden
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      allOf:
+        - elementId: ascensionpowerf
+        - elementId: spirit_forgee_edge
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-alden.yml
+  - name: Work at Glover & Glover with dilligence
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      allOf:
+        - elementId: ascensionpowerf
+        - elementId: spirit_forgee_edge
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-diligence.yml
+  - name: Work a senior job at Glover & Glover
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      allOf:
+        - elementId: ascensionpowerf
+        - elementId: spirit_forgee_edge
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-senior.yml
+  - name: Plead for job at Glover & Glover
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      allOf:
+        - elementId: ascensionpowerf
+        - elementId: spirit_forgee_edge
+    priority: maintenance
+    operation: !import ../../../operations/glover/plead-glover.yml
+
+  - name: Explore the city for strange streets
+    forbidders:
+      anyOf:
+        # Don't search if we have the target of our search
+        - elementId: locationstreetstrange
+        # Dont search if we already have king crucible
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+        # Dont bother searching if we have two saved up.
+        # Note: Increased to 2 because we might loose one while working.
+        - cardSet:
+            - aspects:
+                influence: 1
+                knock:
+                  greaterThanOrEqualTo: 5
+            - aspects:
+                influence: 1
+                knock:
+                  greaterThanOrEqualTo: 5
+    operation: !import ../../../operations/explore/explore-city.yml
+  - name: Explore strange streets by moonlight
+    priority: goal
+    forbidders:
+      anyOf:
+        # Careful to not let fascination build up too much
+        - cardSet:
+            - elementId: fascination
+            - elementId: fascination
+        - situation: visions
+          storedCardsMatch:
+            elementId: fascination
+        # Dont search if we already have king crucible
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+        # Dont bother searching if we have two saved up.
+        # Note: Increased to 2 because we might loose one while working.
+        - cardSet:
+            - aspects:
+                influence: 1
+                knock:
+                  greaterThanOrEqualTo: 5
+            - aspects:
+                influence: 1
+                knock:
+                  greaterThanOrEqualTo: 5
+    operation: !import ../../../operations/explore/explore-locationstreetsstrange.yml
+  - name: Summon King Crucible
+    priority: goal
+    forbidders:
+      # There Can Only Be One
+      anyOf:
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+    operation:
+      name: Summon King Crucible
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            aspects: { follower: 1, lantern: 2 }
+          Offering:
+            aspects:
+              influence: 1
+              knock:
+                greaterThanOrEqualTo: 5
+            ageBias: oldest
+      ongoingRecipes:
+        summoninglosingcontrol:
+          # We aren't resource constrained, so dismiss and try again if needed
+          slots:
+            Effort:
+              elementId: reason
+  - name: Sustain King Crucible through Endless Banter
+    # Keep the king around until we need him
+    priority: maintenance
+    forbidders:
+      allOf:
+        # Dont keep crucible occupied if we are ready to ascend.
+        - elementId: ascensionpowerf
+        - elementId: influenceforgeg
+    operation:
+      name: Sustain King Crucible through Endless Banter
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: spirit_forgee_edge
+
+  - name: Get a prisoner
+    requirements:
+      allOf:
+        # Wait until King Crucible is ready
+        - elementId: spirit_forgee_edge
+        # Wait until we are ready
+        - elementId: ascensionpowerf
+    forbidders:
+      anyOf:
+        - elementId: influenceforgeg
+        - aspects: { prisoner: 1 }
+    operation:
+      name: Get a prisoner
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            aspects: { hq: 1 }
+          Cellar:
+            aspects: { follower: 1 }
+
+  - name: Enter the spider door
+    requirements:
+      allOf:
+        # Wait until King Crucible is ready
+        - elementId: spirit_forgee_edge
+        # Wait until we are ready
+        - elementId: ascensionpowerf
+    forbidders:
+      elementId: influenceforgef
+    operation:
+      name: Enter the spider door
+      situation: dream
+      startingRecipe:
+        slots:
+          dream:
+            elementId: wayspider
+      ongoingRecipes:
+        dreamusespiderway:
+          slots:
+            Ascent:
+              aspects: { prisoner: 1 }
+        dreamenterspider:
+          mansusChoice:
+            deck: mansus_spiderdoor1
+
+  - name: Ascend
+    priority: goal
+    operation:
+      name: Ascend
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            elementId: spirit_forgee_edge
+          Offering:
+            elementId: influenceforgeg
+          Desire:
+            elementId: ascensionpowerf

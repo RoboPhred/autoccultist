@@ -1,0 +1,12 @@
+name: Translate books
+priority: maintenance
+operation:
+  name: Translate a book (V)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: scholarvak
+      Text:
+        aspects: {textvak: 1}
+  

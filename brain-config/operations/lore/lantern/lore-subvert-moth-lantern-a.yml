@@ -1,0 +1,19 @@
+name: "Subvert lore: An Barber's Warning to A Mansus-Glimpse"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentmoth
+    with:
+      elementId: fragmentlantern
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

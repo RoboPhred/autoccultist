@@ -1,0 +1,6 @@
+name: Follow up on a rumor
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: rumour

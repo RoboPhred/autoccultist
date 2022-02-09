@@ -1,0 +1,3 @@
+name: Achieve Composure
+priority: critical
+operation: !import ../../operations/dispose-fascination-reminders.yml

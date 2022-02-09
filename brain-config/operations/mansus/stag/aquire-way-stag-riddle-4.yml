@@ -1,0 +1,14 @@
+name: Answer the Stag's Riddle (4)
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: waystagbefore_4
+ongoingRecipes:
+  dream_answerstagriddle_router:
+    slots:
+      Answer:
+        elementId: fragmentknockc
+  dreamenterstag:
+    mansusChoice:
+      deck: mansus_stagdoor

@@ -1,0 +1,13 @@
+name: Translate books
+priority: maintenance
+forbidders:
+  anyOf:
+    - elementId: scholarvak
+operation:
+  name: Learn a Language (V)
+  situation: study
+  startingRecipe:
+    slots:
+      study:
+        elementId: textbookvak
+  

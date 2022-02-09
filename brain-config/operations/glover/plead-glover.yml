@@ -1,0 +1,13 @@
+name: Plead for job at Glover & Glover
+situation: work
+startingRecipe:
+  slots:
+    work:
+      allowedElementIds:
+        - gloverandgloverjob_demotion
+        - gloverandgloverjob_youngerglovergone_demotion
+        - gloverandgloverjuniorjob_demotion
+        - gloverandgloverjuniorjob_nodifficultbossa_demotion
+        - gloverandglovertopjob_tainted_demotion
+    passion:
+      elementId: passion

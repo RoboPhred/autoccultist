@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Compound condition",
+  "description": "A condition that combines the result of multiple conditions.",
+  "oneOf": [
+    {
+      "title": "One Of",
+      "description": "Denotates all of the contained conditions must be true.",
+      "properties": {
+        "allOf": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["allOf"]
+    },
+    {
+      "title": "Any Of",
+      "description": "Denotates one or more of the contained conditions must be true.",
+      "properties": {
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["anyOf"]
+    },
+    {
+      "title": "None Of",
+      "description": "Denotates none of the contained conditions must be true.",
+      "properties": {
+        "noneOf": {
+          "type": "array",
+          "items": {
+            "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/game-condition.json"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["noneOf"]
+    }
+  ]
+}

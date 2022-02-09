@@ -1,0 +1,12 @@
+name: Upgrade Hardened Physique
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: skillhealthb
+    V1:
+      elementId: vitalityplus
+    V2:
+      elementId: vitalityplus
+    V3:
+      elementId: vitalityplus

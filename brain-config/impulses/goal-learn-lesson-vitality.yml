@@ -1,0 +1,3 @@
+name: Learn lesson from vitality
+priority: goal
+operation: !import ../operations/learn-vitality-lesson.yml

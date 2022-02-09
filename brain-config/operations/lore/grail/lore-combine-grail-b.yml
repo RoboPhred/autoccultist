@@ -1,0 +1,13 @@
+name: "Combine lore: A Megalesian Incantation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentgrailb
+    with:
+      elementId: fragmentgrailb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

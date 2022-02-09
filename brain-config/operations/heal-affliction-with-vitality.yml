@@ -1,0 +1,9 @@
+name: Heal Affliction with vitality
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: affliction
+    medicine:
+      elementId: vitality
+      ageBias: oldest

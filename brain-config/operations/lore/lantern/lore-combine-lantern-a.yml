@@ -1,0 +1,15 @@
+name: "Combine lore: A Watchman's Secret"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentlantern
+    with:
+      elementId: fragmentlantern
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

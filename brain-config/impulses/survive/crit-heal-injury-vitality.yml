@@ -1,0 +1,3 @@
+name: Heal injury with vitality
+priority: critical
+operation: !import ../../operations/heal-injury-with-vitality.yml

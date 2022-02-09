@@ -1,0 +1,6 @@
+name: Recruit the first cult member
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { acquaintance: 1 }

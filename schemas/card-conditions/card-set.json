@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Card set condition",
+  "description": "Provides a condition wherein each contained card choice must match an independent card.",
+  "properties": {
+    "cardSet": {
+      "title": "Card Set",
+      "description": "The array of card choices that must be satisfiable.  Once one card choice finds a card, the remaining choices cannot use it for their choice.",
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["cardSet"]
+}

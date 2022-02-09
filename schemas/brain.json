@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "type": "object",
+  "properties": {
+    "motivations": {
+      "title": "Motivations",
+      "description": "The motivations to run, in order.",
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/motivation.json"
+      }
+    }
+  }
+}

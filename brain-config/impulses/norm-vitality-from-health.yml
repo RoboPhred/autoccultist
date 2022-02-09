@@ -1,0 +1,7 @@
+name: Gain vitality from health
+priority: normal
+forbidders:
+  anyOf:
+    - !import ../conditions/illhealth-pending-30secs.yml
+    - !import ../conditions/illhealth-unsatisfied.yml
+operation: !import ../operations/study-health.yml

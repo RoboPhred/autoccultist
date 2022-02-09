@@ -1,0 +1,8 @@
+name: Form the Unflinching Order
+requirements:
+  aspects: { acquaintance: 1 }
+completedWhen:
+  aspects: { society: 1 }
+impulses:
+  - !import ../../impulses/cult/goal-form-cult-doctrine-forge.yml
+  - !import ../../impulses/cult/goal-form-cult-recruit.yml

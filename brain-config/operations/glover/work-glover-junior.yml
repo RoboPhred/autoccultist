@@ -1,0 +1,8 @@
+name: Work a junior job at Glover & Glover
+situation: work
+startingRecipe:
+  slots:
+    work:
+      allowedElementIds:
+        - gloverandgloverjuniorjob
+        - gloverandgloverjuniorjob_nodifficultbossa
