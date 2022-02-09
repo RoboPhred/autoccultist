@@ -12,6 +12,13 @@ requirements:
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
 impulses:
+  - name: Work diligently at junior job at Glover & Glover
+    priority: maintenance
+    operation: !import ../../operations/glover/work-glover-junior-dilligent.yml
+    requirements:
+      cardSet:
+        - elementId: reason
+        - elementId: reason
   - name: Work a junior job at Glover & Glover
     priority: maintenance
     operation: !import ../../operations/glover/work-glover-junior.yml
