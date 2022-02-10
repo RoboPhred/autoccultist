@@ -6,29 +6,27 @@ namespace Autoccultist.Config
     using YamlDotNet.Core;
 
     /// <summary>
-    /// A full configuration object representing instructions to play a game of Cultist Simulator.
+    /// The configuration for an <see cref="IArc"/>.
     /// </summary>
-    public class BrainConfig : IConfigObject, IBrain, IAfterYamlDeserialization
+    public class ArcConfig : IConfigObject, IArc, IAfterYamlDeserialization
     {
         /// <summary>
-        /// Gets or sets a list of goals for this brain config to achieve.
-        /// <para>
-        /// Goals will operate in order, skipping over goals until one is found that can be activated.
+        /// Gets or sets a list of motivations that will drive the execution of this arc.
         /// </summary>
         public List<MotivationConfig> Motivations { get; set; } = new();
 
         /// <inheritdoc/>
-        IReadOnlyList<IMotivation> IBrain.Motivations => this.Motivations;
+        IReadOnlyList<IMotivation> IArc.Motivations => this.Motivations;
 
         /// <summary>
-        /// Loads a BrainConfig from the given file.
+        /// Loads an ArcConfig from the given file.
         /// </summary>
         /// <param name="filePath">The path to the config file to load.</param>
-        /// <returns>A BrainConfig loaded from the file.</returns>
+        /// <returns>A ArcConfig loaded from the file.</returns>
         /// <exception cref="Brain.Config.InvalidConfigException">The config file at the path contains invalid configuration.</exception>
-        public static BrainConfig Load(string filePath)
+        public static ArcConfig Load(string filePath)
         {
-            return Deserializer.Deserialize<BrainConfig>(filePath);
+            return Deserializer.Deserialize<ArcConfig>(filePath);
         }
 
         /// <inheritdoc/>
