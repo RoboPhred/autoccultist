@@ -7,7 +7,7 @@ completedWhen:
   noneOf:
     - aspects: { acquaintance: 1 }
 impulses:
-  - name: Recruit an acquaintance, by invoking Forge
+  - name: Recruit an acquaintance, by burning Restlessness
     priority: goal
     operation: !import ../../operations/cult/recruit-influence-restlessness.yml
   - name: Recruit an acquaintance, by invoking Forge
