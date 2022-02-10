@@ -50,7 +50,7 @@ namespace Autoccultist.GUI
         {
             GUILayout.Label("Current Goals");
 
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(100));
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 
             foreach (var goal in NucleusAccumbens.CurrentGoals)
             {

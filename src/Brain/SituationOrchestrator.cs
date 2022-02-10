@@ -64,7 +64,7 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Aborts all ongoing operations.
         /// </summary>
-        public static void Abort()
+        public static void AbortAll()
         {
             foreach (var operation in ExecutingOperationsBySituation.Values.ToArray())
             {

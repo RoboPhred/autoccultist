@@ -2,6 +2,7 @@ namespace Autoccultist.Config
 {
     using System.Collections.Generic;
     using Autoccultist.Brain;
+    using Autoccultist.Config.Conditions;
     using Autoccultist.Yaml;
     using YamlDotNet.Core;
 
@@ -11,12 +12,25 @@ namespace Autoccultist.Config
     public class ArcConfig : IConfigObject, IArc, IAfterYamlDeserialization
     {
         /// <summary>
+        /// Gets or sets the name of this arc.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of motivations that will drive the execution of this arc.
         /// </summary>
         public List<MotivationConfig> Motivations { get; set; } = new();
 
+        /// <summary>
+        /// Gets or sets the selection hint to be used to determine the current arc on loading a save.
+        /// </summary>
+        public IGameStateConditionConfig SelectionHint { get; set; }
+
         /// <inheritdoc/>
         IReadOnlyList<IMotivation> IArc.Motivations => this.Motivations;
+
+        /// <inheritdoc/>
+        IGameStateCondition IArc.SelectionHint => this.SelectionHint;
 
         /// <summary>
         /// Loads an ArcConfig from the given file.

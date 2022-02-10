@@ -49,6 +49,11 @@ namespace Autoccultist.GUI
 
         private static void DiagnosticsWindow(int id)
         {
+            if (GUILayout.Button("Reload All Configs"))
+            {
+                AutoccultistPlugin.Instance.ReloadAll();
+            }
+
             if (Library.ParseErrors.Count > 0)
             {
                 GUILayout.Label($"{Library.ParseErrors.Count} parse errors.");
@@ -56,11 +61,6 @@ namespace Autoccultist.GUI
                 {
                     ParseErrorsGUI.IsShowing = !ParseErrorsGUI.IsShowing;
                 }
-            }
-
-            if (GUILayout.Button("Reload All Configs"))
-            {
-                AutoccultistPlugin.Instance.ReloadAll();
             }
 
             GUILayout.BeginHorizontal();
@@ -84,6 +84,18 @@ namespace Autoccultist.GUI
 
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label($"Current Arc: {Superego.CurrentArc?.Name ?? "None"}");
+
+            if (GUILayout.Button("Arcs", GUILayout.ExpandWidth(false)))
+            {
+                GoalsGUI.IsShowing = false;
+                ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
+            }
+
+            GUILayout.EndHorizontal();
+
             var taskRunner = GUILayout.Toggle(Ego.IsRunning, "Ego");
             if (taskRunner != Ego.IsRunning)
             {
@@ -99,15 +111,15 @@ namespace Autoccultist.GUI
 
             GUILayout.BeginHorizontal();
 
-            GUILayout.Label("Current SuperEgo Motivation: " + (SuperEgo.CurrentMotivation != null ? SuperEgo.CurrentMotivation.Name : "<None>"));
+            GUILayout.Label("Current SuperEgo Motivation: " + (Superego.CurrentMotivation != null ? Superego.CurrentMotivation.Name : "<None>"));
             if (GUILayout.Button("Skip"))
             {
-                SuperEgo.SkipCurrentMotivation();
+                Superego.SkipCurrentMotivation();
             }
 
             GUILayout.EndHorizontal();
 
-            if (SuperEgo.CurrentMotivation != Ego.CurrentMotivation)
+            if (Superego.CurrentMotivation != Ego.CurrentMotivation)
             {
                 GUILayout.Label("Current Ego Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
             }
@@ -117,6 +129,7 @@ namespace Autoccultist.GUI
             GUILayout.Label("Current Goals:");
             if (GUILayout.Button("Toggle Goals Menu"))
             {
+                ArcsGUI.IsShowing = false;
                 GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
             }
 

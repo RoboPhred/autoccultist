@@ -2,6 +2,7 @@ namespace Autoccultist
 {
     using System;
     using System.IO;
+    using System.Linq;
     using Autoccultist.Brain;
     using Autoccultist.Config;
     using Autoccultist.GameState;
@@ -54,10 +55,20 @@ namespace Autoccultist
                 ParseErrorsGUI.IsShowing = true;
             }
 
-            GameEventSource.GameEnded += (o, e) =>
+            GameEventSource.GameStarted += (_, __) =>
+            {
+                var state = GameStateProvider.Current;
+                var arc = Library.Arcs.FirstOrDefault(arc => arc.SelectionHint.IsConditionMet(state));
+                if (arc != null)
+                {
+                    Superego.SetArc(arc);
+                }
+            };
+
+            GameEventSource.GameEnded += (_, __) =>
             {
                 this.StopAutoccultist();
-                SuperEgo.SetMotivations(Library.Brain.Motivations);
+                Superego.SetArc(null);
             };
 
             this.LogInfo("Autoccultist initialized.");
@@ -70,8 +81,8 @@ namespace Autoccultist
         {
             this.LogInfo("Reloading all configs");
             Library.LoadAll();
-            SuperEgo.Clear();
-            SuperEgo.SetMotivations(Library.Brain.Motivations);
+            Superego.Clear();
+            SituationOrchestrator.AbortAll();
         }
 
         /// <summary>
@@ -89,6 +100,7 @@ namespace Autoccultist
 
             DiagnosticGUI.OnGUI();
             GoalsGUI.OnGUI();
+            ArcsGUI.OnGUI();
         }
 
         /// <summary>

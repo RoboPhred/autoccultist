@@ -2,7 +2,6 @@ namespace Autoccultist.Config
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using Autoccultist.Yaml;
 
     /// <summary>
@@ -11,7 +10,8 @@ namespace Autoccultist.Config
     public static class Library
     {
         private static readonly List<YamlFileException> LibraryParseErrors = new();
-        private static readonly Dictionary<string, GoalConfig> LibraryGoals = new();
+        private static readonly List<GoalConfig> LibraryGoals = new();
+        private static readonly List<ArcConfig> LibraryArcs = new();
 
         /// <summary>
         /// Gets a collection of errors encountered while loading the library.
@@ -25,27 +25,40 @@ namespace Autoccultist.Config
         }
 
         /// <summary>
-        /// Gets a collection of goals loaded by the library.
+        /// Gets the collection of loaded goals.
         /// </summary>
         public static IReadOnlyCollection<GoalConfig> Goals
         {
             get
             {
-                return LibraryGoals.Values.ToArray();
+                return LibraryGoals.ToArray();
             }
         }
 
         /// <summary>
-        /// Gets the singular brain.
+        /// Gets the collection of loaded arcs.
         /// </summary>
-        // TODO: Should load multiple of these from a folder and show a ui for choosing which to use.
-        public static BrainConfig Brain { get; private set; }
+        public static IReadOnlyCollection<ArcConfig> Arcs
+        {
+            get
+            {
+                return LibraryArcs.ToArray();
+            }
+        }
 
         private static string GoalsDirectory
         {
             get
             {
                 return Path.Combine(AutoccultistPlugin.AssemblyDirectory, "goals");
+            }
+        }
+
+        private static string ArcsDirectory
+        {
+            get
+            {
+                return Path.Combine(AutoccultistPlugin.AssemblyDirectory, "arcs");
             }
         }
 
@@ -56,7 +69,7 @@ namespace Autoccultist.Config
         {
             LibraryParseErrors.Clear();
             LoadGoals();
-            LoadBrain(Path.Combine(AutoccultistPlugin.AssemblyDirectory, "brain.yml"));
+            LoadArcs();
         }
 
         private static void LoadGoals()
@@ -67,11 +80,10 @@ namespace Autoccultist.Config
 
         private static void LoadGoal(string filePath)
         {
-            var localPath = FilesystemHelpers.GetRelativePath(filePath, GoalsDirectory);
             try
             {
                 var goal = Deserializer.Deserialize<GoalConfig>(filePath);
-                LibraryGoals.Add(localPath, goal);
+                LibraryGoals.Add(goal);
             }
             catch (YamlFileException ex)
             {
@@ -79,11 +91,18 @@ namespace Autoccultist.Config
             }
         }
 
-        private static void LoadBrain(string filePath)
+        private static void LoadArcs()
+        {
+            LibraryArcs.Clear();
+            FilesystemHelpers.WalkDirectory(ArcsDirectory, LoadArc);
+        }
+
+        private static void LoadArc(string filePath)
         {
             try
             {
-                Brain = Deserializer.Deserialize<BrainConfig>(filePath);
+                var arc = Deserializer.Deserialize<ArcConfig>(filePath);
+                LibraryArcs.Add(arc);
             }
             catch (YamlFileException ex)
             {
