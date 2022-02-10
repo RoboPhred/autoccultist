@@ -50,7 +50,7 @@ motivations:
       - !import goals/glover/work-glover.yml
   - name: Finish finding people to recruit, get passionate
     primaryGoals:
-      - !import goals/attract-followers.yml
+      - !import goals/followers/attract-grail-follower.yml
     supportingGoals:
       - !import goals/passion/aquire-skillpassiona.yml
       - !import goals/passion/aquire-skillpassionb.yml

@@ -1,0 +1,26 @@
+name: Find a Grail follower
+completedWhen:
+  allOf:
+    # Stop if we have a Grail follower, but its possible for followers to die, so we also need to check if the deck is exhausted.
+    - anyOf:
+        - !import ../../conditions/has-grail-follower.yml
+        - elementId: mistakenidentity
+impulses:
+  - name: Speak of esoteric matters
+    # Leave this at normal so that indoctrinating members takes priority.
+    priority: normal
+    # We need passion to find an acquaintance, and reason to find a patron.  Might want to mark these as requirements
+    operation: !import ../../operations/talk-lore.yml
+  - name: Follow up on rumors
+    priority: goal
+    forbidders:
+      # Following rumors generates notariety.
+      # We could opt to not follow up on any rumors, and we would still get everyone we need from talking with lore.
+      anyOf:
+        - situation: suspicion
+        - situation: time
+          storedCardsMatch:
+            elementId: seasonsuspicion
+        - elementId: evidence
+        - elementId: evidenceb
+    operation: !import ../../operations/explore-rumor.yml
