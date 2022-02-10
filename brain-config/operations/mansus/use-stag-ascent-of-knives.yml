@@ -1,0 +1,14 @@
+name: "Climb the Ascent of Knives"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: waystag_after
+ongoingRecipes:
+  dreamusewoodway:
+    slots:
+      Path:
+        elementId: reason
+  dreamenterwood:
+    mansusChoice:
+      deck: mansus_stag1
