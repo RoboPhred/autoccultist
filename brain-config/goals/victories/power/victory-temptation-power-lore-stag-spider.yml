@@ -104,7 +104,7 @@ impulses:
     operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-a.yml
   - name: Combine An Iguvine Rite
     requirements:
-      elementId: waystagbefore_3
+      elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
     operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
