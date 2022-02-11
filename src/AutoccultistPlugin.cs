@@ -79,10 +79,10 @@ namespace Autoccultist
         /// </summary>
         public void ReloadAll()
         {
+            this.StopAutoccultist();
             this.LogInfo("Reloading all configs");
             Library.LoadAll();
             Superego.Clear();
-            SituationOrchestrator.AbortAll();
         }
 
         /// <summary>
@@ -214,6 +214,7 @@ namespace Autoccultist
             MechanicalHeart.Stop();
             Ego.Stop();
             NucleusAccumbens.Reset();
+            SituationOrchestrator.AbortAll();
         }
     }
 }

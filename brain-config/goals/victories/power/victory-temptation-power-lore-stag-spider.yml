@@ -10,8 +10,7 @@ requirements:
     - elementId: fragmentlantern
     - elementId: fragmentlantern
     - elementId: fragmentlanternb
-    - elementId: fragmentmoth
-    - elementId: fragmentmoth
+    - elementId: fragmentheart
     - elementId: fragmentmothb
     - elementId: fragmentwinter
 completedWhen:
@@ -19,8 +18,6 @@ completedWhen:
     - elementId: waystag_after
     - elementId: wayspider
     - elementId: fragmentforgee
-    # - elementId: fragmentlanternc
-    # - elementId: fragmentmothc
 # We use latern in our march to fragmentforgee, but we need to also get fragmentlanternc to answer one of the stag's riddles.
 # Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb
 # From the output of morlands, we do:
@@ -92,22 +89,33 @@ impulses:
     operation: !import ../../../operations/study-passion.yml
 
   # Begin Knock C
-  - name: Subvert Sexton's Secret to Knock
+  # heart + knock = knockb
+  - name: Subvert A Thunderous Secret to An Iguvine Rite
     requirements:
       elementId: waystagbefore_4
     forbidders:
       anyOf:
         - cardSet:
-            - elementId: fragmentknockb
-            - elementId: fragmentknockb
+            - elementId: fragmentknock
+            - elementId: fragmentknock
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-a.yml
-  - name: Combine An Iguvine Rite
+    operation: !import ../../../operations/lore/knock/lore-subvert-heart-knock-a.yml
+  # winter + winter = winterb
+  - name: Combine A Sexton's Secret
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - elementId: fragmentwinterb
+        - elementId: fragmentknockc
+    operation: !import ../../../operations/lore/winter/lore-combine-winter-a.yml
+  # winterb + knockb = knockc
+  - name: Subvert A Wood Whisper to A Consent of Wounds
     requirements:
       elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
+    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-b.yml
   # End Knock C
 
   # Begin Grail C

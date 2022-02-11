@@ -1,0 +1,15 @@
+name: "Subvert lore: A White Ceremony to A Consent of Wounds"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknockb
+    with:
+      elementId: fragmentwinterb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
