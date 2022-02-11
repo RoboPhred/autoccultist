@@ -78,7 +78,7 @@ namespace Autoccultist.Config.Conditions
         /// Aspects are taken from all contained cards, both slotted and stored.
         /// If null, this condition will not be checked.
         /// </summary>
-        public Dictionary<string, ValueCondition> ContainedAspects { get; set; }
+        public Dictionary<string, ValueCondition> ContainsAspects { get; set; }
 
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
@@ -143,12 +143,12 @@ namespace Autoccultist.Config.Conditions
                 }
             }
 
-            if (this.ContainedAspects != null)
+            if (this.ContainsAspects != null)
             {
                 var aspects = situation.GetAspects();
 
                 // Damned lack of covariance on IReadOnlyDictionary
-                var containedAspects = this.ContainedAspects.ToDictionary(entry => entry.Key, entry => (IValueCondition)entry.Value);
+                var containedAspects = this.ContainsAspects.ToDictionary(entry => entry.Key, entry => (IValueCondition)entry.Value);
 
                 if (!aspects.HasAspects(containedAspects))
                 {

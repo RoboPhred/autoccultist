@@ -39,8 +39,8 @@
       "description": "Only match the condition if the situation contains either stored or slotted cards matching this card condition.",
       "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-condition.json"
     },
-    "containedAspects": {
-      "name": "Contained Aspects",
+    "containsAspects": {
+      "name": "Contained Aspects match",
       "description": "Only match this condition if all the given aspects match their value conditions.",
       "type": "object",
       "additionalProperties": {
