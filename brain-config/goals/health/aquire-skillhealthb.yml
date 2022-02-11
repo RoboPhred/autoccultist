@@ -14,4 +14,4 @@ impulses:
         - elementId: vitalityplus
   - name: Upgrade Stronger Physique to Hardened Physique
     priority: goal
-    operation: !import ../../operations/upgrade-skillhealtha.yml
+    operation: !import ../../operations/health/upgrade-skillhealtha.yml

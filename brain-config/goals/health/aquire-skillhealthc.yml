@@ -14,4 +14,4 @@ impulses:
   - !import ../../impulses/norm-vitality-from-health.yml
   - name: Upgrade Hardened Physique to Steely Physique
     priority: goal
-    operation: !import ../../operations/upgrade-skillhealthb.yml
+    operation: !import ../../operations/health/upgrade-skillhealthb.yml

@@ -13,4 +13,4 @@ impulses:
   - !import ../../impulses/norm-erudition-from-reason.yml
   - name: Upgrade Scholarship to Notable Scholarship
     priority: goal
-    operation: !import ../../operations/upgrade-skillreasona.yml
+    operation: !import ../../operations/reason/upgrade-skillreasona.yml

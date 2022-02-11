@@ -93,7 +93,6 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Move into Morlands, aquire a Rarefied Mind
-    # Move into morlands to use it for knowledge challenges.
     primaryGoals:
       - !import ../../goals/hq/move-hq-library.yml
       - !import ../../goals/reason/aquire-skillreasond-illumination.yml

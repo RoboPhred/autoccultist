@@ -47,7 +47,7 @@ impulses:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/study-passion.yml
+    operation: !import ../../../operations/passion/study-passion.yml
 
   # Begin Knock C
   - name: Subvert Sexton's Secret to Knock
@@ -67,7 +67,7 @@ impulses:
       elementId: fragmentknockc
     operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
   # End Knock C
-  
+
   # Begin Grail C
   - name: Combine A Megalesian Incantation
     requirements:

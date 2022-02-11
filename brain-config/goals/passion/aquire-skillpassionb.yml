@@ -13,4 +13,4 @@ impulses:
   - !import ../../impulses/norm-glimmering-from-passion.yml
   - name: Upgrade Vivid Imagination to Wild Imagination
     priority: goal
-    operation: !import ../../operations/upgrade-skillpassiona.yml
+    operation: !import ../../operations/passion/upgrade-skillpassiona.yml

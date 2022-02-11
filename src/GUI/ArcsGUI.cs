@@ -58,12 +58,7 @@ namespace Autoccultist.GUI
 
             if (GUILayout.Button("Autodetect", GUILayout.ExpandWidth(false)))
             {
-                var state = GameStateProvider.Current;
-                var arc = Library.Arcs.FirstOrDefault(arc => arc.SelectionHint.IsConditionMet(state));
-                if (arc != null)
-                {
-                    Superego.SetArc(arc);
-                }
+                Superego.AutoselectArc();
             }
 
             GUILayout.EndHorizontal();

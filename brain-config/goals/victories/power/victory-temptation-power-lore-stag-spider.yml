@@ -86,7 +86,7 @@ impulses:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/study-passion.yml
+    operation: !import ../../../operations/passion/study-passion.yml
 
   # Begin Knock C
   # heart + knock = knockb

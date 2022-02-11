@@ -55,15 +55,7 @@ namespace Autoccultist
                 ParseErrorsGUI.IsShowing = true;
             }
 
-            GameEventSource.GameStarted += (_, __) =>
-            {
-                var state = GameStateProvider.Current;
-                var arc = Library.Arcs.FirstOrDefault(arc => arc.SelectionHint.IsConditionMet(state));
-                if (arc != null)
-                {
-                    Superego.SetArc(arc);
-                }
-            };
+            GameEventSource.GameStarted += (_, __) => Superego.AutoselectArc();
 
             GameEventSource.GameEnded += (_, __) =>
             {
@@ -83,6 +75,10 @@ namespace Autoccultist
             this.LogInfo("Reloading all configs");
             Library.LoadAll();
             Superego.Clear();
+            if (GameAPI.IsRunning)
+            {
+                Superego.AutoselectArc();
+            }
         }
 
         /// <summary>
