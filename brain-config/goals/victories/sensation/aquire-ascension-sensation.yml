@@ -1,0 +1,14 @@
+name: Aquire the Thid Mark
+requirements:
+  anyOf:
+    - elementId: ascensionsensationbf
+    - elementId: ascensionsensationbm
+completedWhen:
+  aspects: { desire: 3 }
+impulses:
+  - name: Aquire the Second Mark
+    forbidders:
+      aspects:
+        sensationmarks:
+          greaterThan: 2
+    operation: !import ../../../operations/victories/sensation/aquire-ascension-sensation.yml
