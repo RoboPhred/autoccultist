@@ -1,0 +1,15 @@
+name: Recruit an acquaintance, by invoking Grail
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationgrail: 1
+    Associate:
+      aspects:
+        acquaintance: 1
+    Ceremony:
+      aspects:
+        lore: 1
+        grail: 1
