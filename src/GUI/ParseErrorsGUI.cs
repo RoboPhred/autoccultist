@@ -38,7 +38,7 @@ namespace Autoccultist.GUI
 
         private static void ParseErrorsWindow(int id)
         {
-            errorsScrollPosition = GUILayout.BeginScrollView(errorsScrollPosition, GUILayout.Height(600));
+            errorsScrollPosition = GUILayout.BeginScrollView(errorsScrollPosition);
 
             foreach (var ex in Library.ParseErrors)
             {
@@ -46,7 +46,7 @@ namespace Autoccultist.GUI
                 GUILayout.Label(ex.GetInnermostMessage());
                 if (GUILayout.Button("Copy to clipboard"))
                 {
-                    TextEditor textEditor = new TextEditor { text = ex.ToString() };
+                    var textEditor = new TextEditor { text = ex.ToString() };
 
                     textEditor.SelectAll();
                     textEditor.Copy();
