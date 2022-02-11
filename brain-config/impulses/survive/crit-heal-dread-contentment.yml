@@ -1,5 +1,5 @@
 name: Respond to critical dread with contentment
-priority: maintenance
+priority: critical
 requirements:
   # Dread is critical if we have 2 sitting around
   allOf:
