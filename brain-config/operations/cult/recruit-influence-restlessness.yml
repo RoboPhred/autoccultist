@@ -5,20 +5,20 @@ startingRecipe:
     talk:
       oneOf:
         - aspects:
-          society: 1
-          venerationforge: 1
+            society: 1
+            venerationforge: 1
         - aspects:
-          society: 1
-          venerationheart: 1
+            society: 1
+            venerationheart: 1
         - aspects:
-          society: 1
-          venerationgrail: 1
+            society: 1
+            venerationgrail: 1
         - aspects:
-          society: 1
-          venerationlantern: 1
+            society: 1
+            venerationlantern: 1
         - aspects:
-          society: 1
-          venerationmoth: 1
+            society: 1
+            venerationmoth: 1
     Associate:
       aspects:
         acquaintance: 1

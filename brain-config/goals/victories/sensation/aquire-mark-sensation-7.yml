@@ -59,11 +59,11 @@ impulses:
     forbidders:
       anyOf:
         - cardSet:
-          - aspects: { prisoner: 1 }
-          - aspects: { prisoner: 1 }
+            - aspects: { prisoner: 1 }
+            - aspects: { prisoner: 1 }
         - cardSet:
-          - aspects: { desire: 7 }
-          - aspects: { prisoner: 1 }
+            - aspects: { desire: 7 }
+            - aspects: { prisoner: 1 }
     operation:
       name: Get a prisoner
       situation: talk
@@ -73,13 +73,13 @@ impulses:
             aspects: { hq: 1 }
           Cellar:
             aspects:
-              - follower: 1
-              - romanticinterest:
-                  lessThan: 1
-              - exalted:
-                  lessThan: 1
-              - grail:
-                  lessThan: 5
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
 
   - name: Obtain Grail Influence from the Stag Door
     operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
@@ -98,6 +98,6 @@ impulses:
           Assistant:
             aspects: { interested: 1, grail: 11 }
           Offering:
-            elementId: { influence: 1, grail: 6 }
+            aspects: { influence: 1, grail: 6 }
           Desire:
             elementId: ascensionsensationf
