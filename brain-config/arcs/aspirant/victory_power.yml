@@ -62,40 +62,28 @@ motivations:
   - name: Finish finding people to recruit, get passionate
     primaryGoals:
       - !import ../../goals/attract-followers.yml
-    supportingGoals:
       - !import ../../goals/passion/aquire-skillpassiona.yml
-      - !import ../../goals/passion/aquire-skillpassionb.yml
-      - !import ../../goals/passion/aquire-skillpassionc.yml
+    supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Recruit everyone, get passionate, hit the books
-    # Could start buying books at this point.
+  - name: Recruit everyone, buy books, get swole
     primaryGoals:
       - !import ../../goals/cult/recruit-lore-forge.yml
-      - !import ../../goals/passion/aquire-skillpassiona.yml
-      - !import ../../goals/passion/aquire-skillpassionb.yml
-      - !import ../../goals/passion/aquire-skillpassionc.yml
+      - !import ../../goals/health/aquire-skillhealthb.yml
+      - !import ../../goals/health/aquire-skillhealthc.yml
     supportingGoals:
       - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Dispose of alden
+  - name: Dispose of alden, buy and read books
     primaryGoals:
       - !import ../../goals/glover/glover-remove-boss-seduction.yml
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
     supportingGoals:
       # Switch to labor while the glover card is being used.
       - !import ../../goals/work-labor.yml
       - !import ../../goals/survive.yml
-  - name: Buy and read books, get swole
-    primaryGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
-      - !import ../../goals/health/aquire-skillhealthb.yml
-      - !import ../../goals/health/aquire-skillhealthc.yml
-    supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
   - name: Find rites from auction
     primaryGoals:
       - !import ../../goals/find-auctionhouse.yml
