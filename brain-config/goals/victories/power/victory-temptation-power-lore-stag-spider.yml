@@ -5,12 +5,15 @@ requirements:
     - elementId: fragmentforge
     - elementId: fragmentforge
     - elementId: fragmentforgeb
+    - elementId: fragmentknock
+    - elementId: fragmentknockb
     - elementId: fragmentlantern
     - elementId: fragmentlantern
     - elementId: fragmentlanternb
     - elementId: fragmentmoth
     - elementId: fragmentmoth
     - elementId: fragmentmothb
+    - elementId: fragmentwinter
 completedWhen:
   allOf:
     - elementId: waystag_after
@@ -88,7 +91,24 @@ impulses:
             greaterThan: 60
     operation: !import ../../../operations/study-passion.yml
 
-  # TODO: Get knockc from anything other than grail/lantern/moth/forge
+  # Begin Knock C
+  - name: Subvert Sexton's Secret to Knock
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentknockb
+            - elementId: fragmentknockb
+        - elementId: fragmentknockc
+    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-a.yml
+  - name: Combine An Iguvine Rite
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      elementId: fragmentknockc
+    operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
+  # End Knock C
 
   # Begin Grail C
   - name: Combine A Megalesian Incantation

@@ -1,0 +1,15 @@
+name: "Subvert lore: A Sexton's Secret to An Iguvine Rite"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentknock
+    with:
+      elementId: fragmentwinter
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
