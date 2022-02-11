@@ -68,6 +68,8 @@ namespace Autoccultist.GUI
 
             GUILayout.EndHorizontal();
 
+            GUILayout.Label("Available Arcs");
+
             foreach (var arc in Library.Arcs)
             {
                 GUILayout.BeginHorizontal();
@@ -78,6 +80,8 @@ namespace Autoccultist.GUI
                 {
                     Superego.SetArc(arc);
                 }
+
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndScrollView();

@@ -34,6 +34,11 @@ namespace Autoccultist.Brain
 
             CurrentArc = arc;
 
+            if (arc == null)
+            {
+                return;
+            }
+
             foreach (var motivation in arc.Motivations)
             {
                 Motivations.Enqueue(motivation);
