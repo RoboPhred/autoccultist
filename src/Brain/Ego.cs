@@ -5,9 +5,7 @@ namespace Autoccultist.Brain
     using Autoccultist.GameState;
 
     /// <summary>
-    /// Executes goals in order.
-    /// <para>
-    /// Perhaps some day, we will have parallel and looping goal tasks.
+    /// Tracks execution of a single motivation.
     /// </summary>
     public static class Ego
     {
