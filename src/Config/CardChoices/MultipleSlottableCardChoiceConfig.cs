@@ -1,4 +1,4 @@
-namespace Autoccultist.Config
+namespace Autoccultist.Config.CardChoices
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -12,7 +12,7 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets a list of slottable card choices to choose from.
         /// </summary>
-        public List<SlottableCardChoiceConfig> OneOf { get; set; } = new();
+        public List<SlottableCardChooserConfig> OneOf { get; set; } = new();
 
         /// <inheritdoc/>
         public ICardState ChooseCard(IEnumerable<ICardState> cards)

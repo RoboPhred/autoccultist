@@ -6,7 +6,7 @@ namespace Autoccultist.Brain
     using Autoccultist.GameState;
 
     /// <summary>
-    /// A static class responsible for managing goal execution.
+    /// Manages goal execution.
     /// </summary>
     public static class NucleusAccumbens
     {

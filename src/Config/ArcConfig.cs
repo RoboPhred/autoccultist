@@ -46,6 +46,11 @@ namespace Autoccultist.Config
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
         {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
+            }
+
             if (this.Motivations == null || this.Motivations.Count == 0)
             {
                 throw new InvalidConfigException("Brain must have at least one motivation.");

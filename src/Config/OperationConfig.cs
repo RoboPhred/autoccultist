@@ -3,6 +3,7 @@ namespace Autoccultist.Config
     using System.Collections.Generic;
     using System.Linq;
     using Autoccultist.Brain;
+    using Autoccultist.Config.CardChoices;
     using Autoccultist.GameState;
     using Autoccultist.Yaml;
     using YamlDotNet.Core;
