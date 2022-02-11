@@ -5,29 +5,36 @@ namespace Autoccultist.Brain
     /// <summary>
     /// Class responsible for running through the motivations.
     /// </summary>
-    public static class SuperEgo
+    public static class Superego
     {
-        static SuperEgo()
+        static Superego()
         {
             Ego.OnMotivationCompleted += HandleMotivationComplete;
         }
 
         /// <summary>
-        /// Gets the current motivation.
+        /// Gets the arc the superego is currently running.
+        /// </summary>
+        public static IArc CurrentArc { get; private set; }
+
+        /// <summary>
+        /// Gets the current motivation being tracked by the superego.
         /// </summary>
         public static IMotivation CurrentMotivation { get; private set; }
 
         private static Queue<IMotivation> Motivations { get; } = new();
 
         /// <summary>
-        /// Set the motivation list to operate from.
+        /// Set the driving arc for the superego.
         /// </summary>
-        /// <param name="motivations">An enumerable of motivations to run.</param>
-        public static void SetMotivations(IEnumerable<IMotivation> motivations)
+        /// <param name="arc">The arc to drive the superego.</param>
+        public static void SetArc(IArc arc)
         {
             Clear();
 
-            foreach (var motivation in motivations)
+            CurrentArc = arc;
+
+            foreach (var motivation in arc.Motivations)
             {
                 Motivations.Enqueue(motivation);
             }
@@ -54,6 +61,7 @@ namespace Autoccultist.Brain
         public static void Clear()
         {
             Ego.SetMotivation(null);
+            CurrentArc = null;
             CurrentMotivation = null;
             Motivations.Clear();
         }
