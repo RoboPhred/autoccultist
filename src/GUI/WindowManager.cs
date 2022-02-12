@@ -14,7 +14,7 @@ namespace Autoccultist.GUI
         /// </summary>
         public static void OnPreGUI()
         {
-            consumedWidth = Screen.width - 10;
+            consumedWidth = 0;
         }
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace Autoccultist.GUI
         /// <returns>The rect to use for the window.</returns>
         public static Rect GetWindowRect(float width, float height)
         {
-            var rect = new Rect(Screen.width - consumedWidth, 0, width, height);
             consumedWidth += width + 5;
-            return rect;
+            var x = new Rect(Screen.width - consumedWidth, 0, width, height);
+            return x;
         }
     }
 }

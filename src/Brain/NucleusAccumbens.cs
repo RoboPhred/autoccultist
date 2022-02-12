@@ -3,6 +3,7 @@ namespace Autoccultist.Brain
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Autoccultist.GameState;
 
     /// <summary>
@@ -68,25 +69,29 @@ namespace Autoccultist.Brain
         }
 
         /// <summary>
-        /// Write out status to the console.
+        /// Dumps the status of all goals to a string.
         /// </summary>
-        public static void DumpStatus()
+        /// <returns>The status.</returns>
+        public static string DumpStatus()
         {
+            var sb = new StringBuilder();
             var state = GameStateProvider.Current;
-            AutoccultistPlugin.Instance.LogInfo("Active Goals:");
+            sb.Append("Active Goals:\n");
             foreach (var goal in ActiveGoals)
             {
-                AutoccultistPlugin.Instance.LogInfo("- " + goal.Name);
-                AutoccultistPlugin.Instance.LogInfo("- Impulses");
+                sb.AppendFormat("- {0}\n", goal.Name);
+                sb.AppendFormat("- Impulses\n");
                 foreach (var impulse in goal.Impulses.OrderBy(x => x.Priority))
                 {
-                    AutoccultistPlugin.Instance.LogInfo("- - " + impulse.Name);
-                    AutoccultistPlugin.Instance.LogInfo("- - - Priority: " + impulse.Priority);
-                    AutoccultistPlugin.Instance.LogInfo("- - - Requirements met: " + (impulse.Requirements?.IsConditionMet(state) != false));
-                    AutoccultistPlugin.Instance.LogInfo("- - - Forbidders in place: " + (impulse.Forbidders?.IsConditionMet(state) == true));
-                    AutoccultistPlugin.Instance.LogInfo("- - - Operation ready: " + impulse.Operation.IsConditionMet(state));
+                    sb.AppendFormat("- - {0}\n", impulse.Name);
+                    sb.AppendFormat("- - - Priority: {0}\n", impulse.Priority);
+                    sb.AppendFormat("- - - Requirements met: {0}\n", impulse.Requirements?.IsConditionMet(state) != false);
+                    sb.AppendFormat("- - - Forbidders in place: {0}\n", impulse.Forbidders?.IsConditionMet(state) == true);
+                    sb.AppendFormat("- - - Operation ready: {0}\n", impulse.Operation.IsConditionMet(state));
                 }
             }
+
+            return sb.ToString();
         }
 
         private static void TryCompleteGoals(IGameState state)
