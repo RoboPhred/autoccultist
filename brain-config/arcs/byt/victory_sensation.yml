@@ -38,20 +38,15 @@ motivations:
       - !import ../../goals/reason/aquire-skillreasonb.yml
       - !import ../../goals/reason/aquire-skillreasonc.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Get a promotion while finding people to recruit
-    primaryGoals:
-      - !import ../../goals/glover/aquire-job-glover-standard.yml
-    supportingGoals:
-      - !import ../../goals/attract-followers.yml
-      - !import ../../goals/survive.yml
+  # Note: Used to promote glover from junior to standard here, but that happens automatically now by work-glover when we hit 2 reason.
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
       - !import ../../goals/health/aquire-skillhealtha.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Establish the Order of the Bloody Cup

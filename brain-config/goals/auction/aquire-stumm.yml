@@ -6,6 +6,17 @@ completedWhen:
 impulses:
   - name: Purchase items at auction
     priority: goal
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
     forbidders:
       anyOf:
         - elementId: stumm

@@ -130,6 +130,7 @@ namespace Autoccultist.Brain
                     this.operationState = OperationState.Starting;
                     this.RunCoroutine(this.StartOperationCoroutine());
                     break;
+                case SituationState.FreshlyStarted:
                 case SituationState.Ongoing:
                     this.operationState = OperationState.Ongoing;
                     if (!this.operation.OngoingRecipes.TryGetValue(this.Situation.SituationClock.RecipeId, out var recipeSolution))

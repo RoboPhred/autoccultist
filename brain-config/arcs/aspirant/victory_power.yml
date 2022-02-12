@@ -37,20 +37,20 @@ motivations:
       - !import ../../goals/reason/aquire-skillreasonb.yml
       - !import ../../goals/reason/aquire-skillreasonc.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Get a promotion while finding people to recruit
     primaryGoals:
       - !import ../../goals/glover/aquire-job-glover-standard.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
       - !import ../../goals/health/aquire-skillhealtha.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Establish the Unflinching Order
@@ -59,33 +59,43 @@ motivations:
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Finish finding people to recruit, get passionate
+  - name: Get swole, find people to recruit
     primaryGoals:
-      - !import ../../goals/attract-followers.yml
-      - !import ../../goals/passion/aquire-skillpassiona.yml
-    supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
-  - name: Recruit everyone, buy books, get swole
-    primaryGoals:
-      - !import ../../goals/cult/recruit-lore-forge.yml
       - !import ../../goals/health/aquire-skillhealthb.yml
       - !import ../../goals/health/aquire-skillhealthc.yml
     supportingGoals:
-      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Dispose of alden, buy and read books
+  - name: Finish finding people to recruit, buy and read books
     primaryGoals:
-      - !import ../../goals/glover/glover-remove-boss-seduction.yml
+      - !import ../../goals/followers/attract-followers.yml
+    supportingGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Recruit everyone, buy and read books
+    primaryGoals:
+      - !import ../../goals/cult/recruit-lore-forge.yml
     supportingGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Dispose of Alden, buy and read books
+    primaryGoals:
+      - !import ../../goals/glover/glover-remove-boss-seduction.yml
+    supportingGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
       # Switch to labor while the glover card is being used.
       - !import ../../goals/work-labor.yml
       - !import ../../goals/survive.yml
-  - name: Find rites from auction
+  - name: Finish up Morlands, find rites from auction
     primaryGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/auction/aquire-stumm.yml
       - !import ../../goals/auction/aquire-truecompleteasclepiangreek.yml

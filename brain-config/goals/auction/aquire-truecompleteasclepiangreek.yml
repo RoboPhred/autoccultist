@@ -1,11 +1,24 @@
 name: Aquire A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
 requirements:
-  elementId: locationauctionhouse
+  allOf:
+    - elementId: locationauctionhouse
+    - elementId: scholargreek
 completedWhen:
   elementId: ritetoolconsumeinfluence
 impulses:
   - name: Purchase items at auction
     priority: goal
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
     forbidders:
       anyOf:
         - elementId: truecompleteasclepiangreek
