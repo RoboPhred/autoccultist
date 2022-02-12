@@ -5,11 +5,11 @@ startingRecipe:
     dream:
       elementId: waystag_after
 ongoingRecipes:
-  dreamusewhiteway:
+  dreamusestagway:
     slots:
       Ascent:
         elementId: reason
-  dreamenterwhite:
+  dreamenterstag:
     mansusChoice:
       # The Stag Door has a bug where the face-down card can be predicted 99% of the time.
       # influenceforgec indicates that the face-down card in mansus_stagdoor1 is influencewintere.

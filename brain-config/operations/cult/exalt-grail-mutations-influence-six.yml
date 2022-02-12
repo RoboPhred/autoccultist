@@ -7,6 +7,6 @@ startingRecipe:
     Associate:
       aspects: { follower: 1, disciple: 1, grail: 7, potential: 1 }
     Ceremony:
-      aspects: { lore: 1, grail: 8}
+      aspects: { lore: 1, grail: 8 }
     Trappings:
-      aspects: { lore: 1, grail: 6}
+      aspects: { influence: 1, grail: 6 }

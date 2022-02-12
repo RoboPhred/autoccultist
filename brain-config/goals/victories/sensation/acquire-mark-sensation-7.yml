@@ -78,7 +78,7 @@ impulses:
   - name: Get a prisoner
     requirements:
       cardSet:
-        # Wait until we are ready
+        # Wait until the lore is ready
         - elementId: fragmentgraild
         # Wait until our Cyprian is ready
         - aspects:
@@ -113,6 +113,11 @@ impulses:
                 lessThan: 5
 
   - name: Obtain Grail Influence from the Stag Door
+    requirements:
+      # Wait until we are ready to ascend
+      elementId: ascensionsensationf
+    forbidders:
+      elementId: influencegrailc
     operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
 
   - name: Ascend

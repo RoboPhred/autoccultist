@@ -9,4 +9,7 @@ startingRecipe:
     Know:
       elementId: waystag_after
     Power:
-      aspects: { lore: 1, grail: 6 }
+      aspects:
+        lore: 1
+        grail:
+          greaterThanOrEqualTo: 6

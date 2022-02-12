@@ -40,14 +40,27 @@ namespace Autoccultist.GameState.Impl
 
             var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
 
-            this.FaceUpCard = CardStateImpl.CardStatesFromStack(cards[0], CardLocation.Mansus).First();
+            if (cards[0] != null)
+            {
+                this.FaceUpCard = CardStateImpl.CardStatesFromStack(cards[0], CardLocation.Mansus).First();
+            }
 
-            this.DeckCards = new Dictionary<string, ICardState>
+            var deckCards = new Dictionary<string, ICardState>
             {
                 { activeDoor.GetDeckName(0), this.FaceUpCard },
-                { activeDoor.GetDeckName(1), CardStateImpl.CardStatesFromStack(cards[1], CardLocation.Mansus).First() },
-                { activeDoor.GetDeckName(2), CardStateImpl.CardStatesFromStack(cards[2], CardLocation.Mansus).First() },
             };
+
+            if (cards[1] != null)
+            {
+                deckCards.Add(activeDoor.GetDeckName(1), CardStateImpl.CardStatesFromStack(cards[1], CardLocation.Mansus).First());
+            }
+
+            if (cards[2] != null)
+            {
+                deckCards.Add(activeDoor.GetDeckName(2), CardStateImpl.CardStatesFromStack(cards[2], CardLocation.Mansus).First());
+            }
+
+            this.DeckCards = deckCards;
         }
 
         /// <inheritdoc/>

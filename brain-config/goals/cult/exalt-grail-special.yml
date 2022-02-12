@@ -1,10 +1,14 @@
-name: Exalt a Grail disciple
+name: Exalt a special Grail disciple
 requirements:
   aspects:
     society: 1
     venerationgrail: 1
 completedWhen:
-  aspects: { follower: 1, exalt: 1, grail: 10, follower_lustsensation: 1 }
+  aspects:
+    follower: 1
+    exalted: 1
+    grail:
+      greaterThanOrEqualTo: 10
 impulses:
   - name: Exalt a special Grail Disciple by using a sixth-order influence
     priority: goal

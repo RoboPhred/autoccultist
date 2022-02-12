@@ -4,7 +4,14 @@ requirements:
     society: 1
     venerationgrail: 1
 completedWhen:
-    aspects: { follower: 1, disciple: 1, potential: 1, grail: 5, follower_lustsensation: 1 }
+  noneOf:
+    # Promote until we have no more grail followers who are not promoted
+    - aspects:
+        follower: 1
+        grail:
+          greaterThanOrEqualTo: 1
+        disciple:
+          lessThan: 1
 impulses:
   - name: Promote a special Grail Believer, while burning Restlessness
     priority: goal

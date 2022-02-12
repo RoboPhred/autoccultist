@@ -149,13 +149,11 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-  - name: Promote a Grail believer, dedicate to horny
+  - name: Promote Grail believers, dedicate to horny
     primaryGoals:
       - !import ../../goals/cult/promote-grail-with-grail.yml
       - !import ../../goals/victories/sensation/acquire-dedication-sensation.yml
     supportingGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
@@ -169,7 +167,7 @@ motivations:
       - !import ../../goals/romance/maintain-relationships.yml
   - name: Prepare a Cyprian and achieve the Marks of Sensation
     primaryGoals:
-      - !import ../../goals/cult/exalt-grail.yml
+      - !import ../../goals/cult/exalt-grail-special.yml
       - !import ../../goals/victories/sensation/acquire-ascension-sensation.yml
     supportingGoals:
       - !import ../../goals/survive.yml

@@ -5,7 +5,10 @@ startingRecipe:
     dream:
       elementId: ascensionsensationa
 ongoingRecipes:
-  dreamascensionpowera:
+  dreamascensionsensationa:
     slots:
-      Calculation:
-        aspects: { lore: 1, grail: 6 }
+      Musing:
+        aspects:
+          lore: 1
+          grail:
+            greaterThanOrEqualTo: 6
