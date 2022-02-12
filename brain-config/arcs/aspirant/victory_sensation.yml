@@ -67,16 +67,19 @@ motivations:
       - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-      - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Dispose of Alden
     primaryGoals:
       - !import ../../goals/glover/glover-remove-boss-seduction.yml
     supportingGoals:
       - !import ../../goals/work-labor.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/romance/maintain-relationships.yml
       - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Go on a date
+    primaryGoals:
+      - !import ../../goals/romance/gain-relationship-grail.yml
+    supportingGoals:
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/survive.yml
   - name: Recruit everyone
     primaryGoals:
       - !import ../../goals/followers/attract-followers.yml
