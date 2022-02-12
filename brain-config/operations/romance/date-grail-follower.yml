@@ -10,8 +10,6 @@ startingRecipe:
         - elementId: saliba_d
         - elementId: saliba_c
         - elementId: saliba_b
-      forbiddenAspects:
-        - follower_honoured
 ongoingRecipes:
   talktofollower:
     slots:
