@@ -7,8 +7,7 @@ forbidders:
         - !import ../../conditions/illhealth-pending-30secs.yml
         - situation: rose
           storedCardsMatch:
-            anyOf:
-              - aspects: { follower_lustpower: 1 }
+            aspects: { follower_lustpower: 1 }
         - noneOf:
             - cardSet:
                 - elementId: health

@@ -145,14 +145,14 @@ motivations:
   #TODO: Grind the Ascent of Knives for a Grail influence to promote Renira/Saliba into a Cyprian
   - name: Achieve the Marks of Sensation
     primaryGoals:
-      - !import ../../goals/victories/sensation/aquire-ascension-sensation.yml
+      - !import ../../goals/victories/sensation/acquire-ascension-sensation.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       # TODO: Maintain existing relationships
   - name: Aquire the Seventh mark of Sensation
     primaryGoals:
-      - !import ../../goals/victories/sensation/aquire-mark-sensation-7.yml
+      - !import ../../goals/victories/sensation/acquire-mark-sensation-7.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       # TODO: Maintain existing relationships
