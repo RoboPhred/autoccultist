@@ -31,6 +31,7 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
   - name: Get horny while finding people to recruit
+    primaryGoals:
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
