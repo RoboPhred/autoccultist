@@ -1,0 +1,20 @@
+name: Promote a Grail believer, by invoking Grail
+requirements:
+  aspects:
+    society: 1
+    venerationgrail: 1
+completedWhen:
+    aspects: { follower: 1, disciple: 1, potential: 1, grail: 5, follower_lustsensation: 1 }
+impulses:
+  - name: Promote a special Grail Believer, while burning Restlessness
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail-mutation-restlessness.yml
+  - name: Promote a Grail Believer, while burning Restlessness
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail-restlessness.yml
+  - name: Promote a special Grail Believer
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail-mutation.yml
+  - name: Promote a Grail Believer, by invoking Grail
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail.yml

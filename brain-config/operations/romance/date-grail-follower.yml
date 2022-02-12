@@ -1,0 +1,23 @@
+name: Get a Grail SO
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      oneOf:
+        - elementId: renira_d
+        - elementId: renira_c
+        - elementId: renira_b
+        - elementId: saliba_d
+        - elementId: saliba_c
+        - elementId: saliba_b
+      forbiddenAspects:
+        - follower_honoured
+ongoingRecipes:
+  talktofollower:
+    slots:
+      Subject:
+        elementId: locationcabaret
+  L_talk_roseopportunity:
+    slots:
+      ascension:
+        aspects: { sensationmarks: 1 }

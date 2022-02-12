@@ -1,0 +1,16 @@
+name: Continue a relationship based on Blood
+priority: maintenance
+forbidders:
+  allOf: # Consider pending ill health if we would take away the last health
+    - anyOf:
+        - !import ../conditions/illhealth-unsatisfied.yml
+        - !import ../conditions/illhealth-pending-30secs.yml
+        - situation: rose
+            storedCardsMatch:
+              anyOf:
+                -  aspects: summoned
+        - noneOf:
+            - cardSet:
+                - elementId: health
+                - elementId: health
+operation: !import ../../operations/romance/continue-relationship-risen.yml

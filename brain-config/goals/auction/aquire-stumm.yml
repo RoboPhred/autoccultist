@@ -5,6 +5,17 @@ completedWhen:
   elementId: ritefollowerconsumeinfluence
 impulses:
   - name: Purchase items at auction
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
     priority: goal
     requirements:
       cardSet:

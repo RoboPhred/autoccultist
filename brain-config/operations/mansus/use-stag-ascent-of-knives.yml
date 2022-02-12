@@ -5,10 +5,16 @@ startingRecipe:
     dream:
       elementId: waystag_after
 ongoingRecipes:
-  dreamusewoodway:
+  dreamusewhiteway:
     slots:
-      Path:
+      Ascent:
         elementId: reason
-  dreamenterwood:
+  dreamenterwhite:
     mansusChoice:
-      deck: mansus_stag1
+      # The Stag Door has a bug where the face-down card can be predicted 99% of the time.
+      # influenceforgec indicates that the face-down card in mansus_stagdoor1 is influencewintere.
+      # Winter influences eventually decay into Dread, so we're better off without it.
+      # (The card for mansus_stagdoor2 would be an Erudition lesson, but we can't tell it to grab that one.)
+      faceUpCard:
+        elementId: influenceforgec
+      deck: mansus_stagdoor1

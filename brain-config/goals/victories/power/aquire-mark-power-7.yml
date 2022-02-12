@@ -97,6 +97,7 @@ impulses:
       # There Can Only Be One
       anyOf:
         - elementId: spirit_forgee_edge
+        - elementId: spirit_forgee_edge.defunct
         - elementId: pre.spirit_forgee_edge
     operation:
       name: Summon King Crucible

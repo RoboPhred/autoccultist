@@ -1,4 +1,4 @@
-name: Aquire the Stag Door and prepare for the Thiatic Invocation
+name: Acquire the Stag Door and prepare for the Thiatic Invocation
 requirements:
   cardSet:
     - elementId: waywhite
@@ -6,7 +6,6 @@ requirements:
     - elementId: fragmentforge
     - elementId: fragmentforgeb
     - elementId: fragmentknock
-    - elementId: fragmentknockb
     - elementId: fragmentlantern
     - elementId: fragmentlantern
     - elementId: fragmentlanternb
@@ -14,12 +13,13 @@ requirements:
     - elementId: fragmentmoth
     - elementId: fragmentmothb
     - elementId: fragmentwinter
+    - elementId: fragmentwinterc
 completedWhen:
   allOf:
     - elementId: waystag_after
     - elementId: fragmentgraild
 impulses:
-  - name: Aquire the Stag Riddle
+  - name: Acquire the Stag Riddle
     forbidders:
       anyOf:
         - elementId: waystagbefore_1
@@ -60,12 +60,21 @@ impulses:
             - elementId: fragmentknockb
         - elementId: fragmentknockc
     operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-a.yml
-  - name: Combine An Iguvine Rite
+  - name: Break down Operation of Declining Sun
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentwinterb
+            - elementId: fragmentwinterb
+        - elementId: fragmentknockc
+  - name: Subvert A White Ceremony to Knock
     requirements:
       elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
+    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-b.yml
   # End Knock C
 
   # Begin Grail C

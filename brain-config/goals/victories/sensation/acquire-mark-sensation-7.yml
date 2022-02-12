@@ -8,47 +8,78 @@ impulses:
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
+        - elementId: ascensionsensationf
+        - aspects:
+            romanticinterest: 1
+            follower_honoured: 1
+            exalted: 1
+            grail:
+              greaterThanOrEqualTo: 12
+        - elementId: fragmentgraild
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-junior.yml
   - name: Work at Glover & Glover under Alden
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
+        - elementId: ascensionsensationf
+        - aspects:
+            romanticinterest: 1
+            follower_honoured: 1
+            exalted: 1
+            grail:
+              greaterThanOrEqualTo: 12
+        - elementId: fragmentgraild
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-alden.yml
   - name: Work at Glover & Glover with diligence
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
+        - elementId: ascensionsensationf
+        - aspects:
+            romanticinterest: 1
+            follower_honoured: 1
+            exalted: 1
+            grail:
+              greaterThanOrEqualTo: 12
+        - elementId: fragmentgraild
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-diligence.yml
   - name: Work a senior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
+        - elementId: ascensionsensationf
+        - aspects:
+            romanticinterest: 1
+            follower_honoured: 1
+            exalted: 1
+            grail:
+              greaterThanOrEqualTo: 12
+        - elementId: fragmentgraild
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-senior.yml
   - name: Plead for job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
+        - elementId: ascensionsensationf
+        - aspects:
+            romanticinterest: 1
+            follower_honoured: 1
+            exalted: 1
+            grail:
+              greaterThanOrEqualTo: 12
+        - elementId: fragmentgraild
     priority: maintenance
     operation: !import ../../../operations/glover/plead-glover.yml
+
   - name: Get a prisoner
     requirements:
       cardSet:
         # Wait until we are ready
-        - elementId: fragmentgraile
+        - elementId: fragmentgraild
         # Wait until our Cyprian is ready
         - aspects:
             romanticinterest: 1
@@ -94,9 +125,9 @@ impulses:
           work:
             elementId: ritefollowerconsumeinfluence
           Invocation:
-            aspects: { lore: 1, grail: 10 }
+            aspects: { lore: 1, grail: 8 }
           Assistant:
-            aspects: { interested: 1, grail: 11 }
+            aspects: { follower: 1, interested: 1, grail: 12 }
           Offering:
             aspects: { influence: 1, grail: 6 }
           Desire:

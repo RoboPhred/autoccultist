@@ -1,0 +1,209 @@
+# As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
+# Should look into rushing high passion and using painting.
+name: Aspirant Sensation Ascension
+selectionHint:
+  anyOf:
+    - elementId: ascensionsensationa
+    - elementId: ascensionsensationbf
+    - elementId: ascensionsensationbm
+    - elementId: ascensionsensationc
+    - elementId: ascensionsensationd
+    - elementId: ascensionsensatione
+    - elementId: ascensionsensationf
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - !import ../../goals/aspirant/begin-intro.yml
+  - name: Activate power temptation
+    primaryGoals:
+      - !import ../../goals/aspirant/study-bequest-passion.yml
+  - name: Get a job
+    primaryGoals:
+      - !import ../../goals/glover/aquire-job-glover-junior.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+  - name: Study bequest contents
+    primaryGoals:
+      - !import ../../goals/aspirant/discover-bookdealer.yml
+      - !import ../../goals/aspirant/find-collaborator.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
+  - name: Get horny while finding people to recruit
+      - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
+    supportingGoals:
+      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Get a scholarship while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/reason/aquire-skillreasona.yml
+      - !import ../../goals/glover/aquire-job-glover-standard.yml
+      - !import ../../goals/reason/aquire-skillreasonb.yml
+      - !import ../../goals/reason/aquire-skillreasonc.yml
+    supportingGoals:
+      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Get a stronger physique while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/aquire-skillhealtha.yml
+    supportingGoals:
+      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Establish the Order of the Bloody Cup
+    primaryGoals:
+      - !import ../../goals/cult/form-cult-doctrine-grail.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Find someone special, get passionate
+    primaryGoals:
+      - !import ../../goals/followers/attract-grail-follower.yml
+    supportingGoals:
+      - !import ../../goals/passion/aquire-skillpassiona.yml
+      - !import ../../goals/passion/aquire-skillpassionb.yml
+      - !import ../../goals/passion/aquire-skillpassionc.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+  - name: Recruit everyone, get passionate, hit the books
+    primaryGoals:
+      - !import ../../goals/cult/recruit-lore-grail.yml
+      - !import ../../goals/passion/aquire-skillpassiona.yml
+      - !import ../../goals/passion/aquire-skillpassionb.yml
+      - !import ../../goals/passion/aquire-skillpassionc.yml
+    supportingGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Promote a Grail believer
+    primaryGoals:
+      - !import ../../goals/cult/promote-grail-with-grail.yml
+    supportingGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Dispose of Alden
+    primaryGoals:
+      - !import ../../goals/glover/glover-remove-boss-seduction.yml
+      - !import ../../goals/victories/sensation/acquire-dedication-sensation.yml
+    supportingGoals:
+      - !import ../../goals/work-labor.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Buy and read books, get swole
+    primaryGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/health/aquire-skillhealthb.yml
+      - !import ../../goals/health/aquire-skillhealthc.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/mansus/aquire-way-wood.yml
+      - !import ../../goals/mansus/aquire-way-whitedoor.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Acquire the Wood and White Door
+    primaryGoals:
+      - !import ../../goals/mansus/aquire-way-wood.yml
+      - !import ../../goals/mansus/aquire-way-whitedoor.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Find cabaret and auction house, collect rites
+    primaryGoals:
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/auction/aquire-stumm.yml
+      - !import ../../goals/auction/aquire-truecompleteasclepiangreek.yml
+      - !import ../../goals/vaults/st-agnes-hospital.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Make this relationship official
+    primaryGoals:
+      - !import ../../goals/romance/gain-relationship-grail.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/vaults/st-agnes-hospital.yml
+  - name: Find and raid St. Agnes
+    primaryGoals:
+      - !import ../../goals/vaults/st-agnes-hospital.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Honour our Interested Disciple
+    primaryGoals:
+      - !import ../../goals/vaults/st-agnes-hospital.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Honour our Interested Disciple
+    primaryGoals:
+      - !import ../../goals/victories/sensation/honour-interested-disciple.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Move into Morlands, acquire a Rarefied Mind
+    # Move into morlands to use it for knowledge challenges.
+    primaryGoals:
+      - !import ../../goals/hq/move-hq-library.yml
+      - !import ../../goals/reason/aquire-skillreasond-illumination.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Acquire the Stag Door and the Thiatic Invocation
+    primaryGoals:
+      - !import ../../goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
+      - !import ../../goals/auction/aquire-stumm.yml
+      - !import ../../goals/auction/aquire-truecompleteasclepiangreek.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Prepare a Cyprian and achieve the Marks of Sensation
+    primaryGoals:
+      - !import ../../goals/cult/exalt-grail.yml
+      - !import ../../goals/victories/sensation/acquire-ascension-sensation.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Acquire the Seventh mark of Sensation
+    primaryGoals:
+      - !import ../../goals/victories/sensation/acquire-mark-sensation-7.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/romance/maintain-relationships.yml

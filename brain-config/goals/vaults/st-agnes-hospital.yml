@@ -1,0 +1,91 @@
+name: Find and explore St. Agnes Hospital
+# Because the Hospital is absolutely garbage as am HQ, it's reasonably safe to say the player won't move in.
+# Nonetheless, there's no perfect way to know whether the vault has been done.
+# We fall back on toolgrailb and hq.hospital, just to be safe.
+completedWhen:
+  anyOf:
+    - elementId: hq.hospital.potential
+    - elementId: hq.hospital
+    - elementId: toolgrailb
+impulses:
+  - name: Collect Secret Histories lore:
+    forbidders:
+      anyOf:
+        - cardSet:
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+        - cardSet:
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - elementId: fragmentsecrethistories
+        - cardSet:
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+        - cardSet:
+            - aspects: vaultcapital
+            - aspects: vaultcapital
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+        - cardSet:
+            - aspects: vaultcapital
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+        - cardSet:
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+    operation: !import ../../operations/mansus/use-wood-secrethistories.yml
+  - name: Find Capital vaults
+    forbidders:
+      elementId: vaultcapital4
+    operation:
+      name: Find Capital vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistories
+  - name: Explore St. Agnes
+    priority: goal
+    forbidders:
+      anyOf:
+        - elementId: notoriety
+        - elementId: evidence
+        - elementId: evidenceb
+    operation:
+      name: Explore St. Agnes Hospital
+      situation: work
+      startingRecipe:
+        slots:
+          expeditionmember:
+            oneOf:
+              - aspects: { follower: 1, heart: 10 }
+              - aspects: { follower: 1, lantern: 10 }
+              - aspects: { follower: 1, heart: 8 }
+              - aspects: { follower: 1, lantern: 8 }
+              - aspects: { follower: 1, heart: 5 }
+              - aspects: { follower: 1, lantern: 5 }
+              - aspects: { follower: 1, heart: 3 }
+              - aspects: { follower: 1, lantern: 3 }
+              - aspects: { follower: 1 }
+          expeditionmember2:
+              - aspects: { follower: 1, heart: 5 }
+              - aspects: { follower: 1, lantern: 5 }
+              - aspects: { follower: 1, heart: 2 }
+              - aspects: { follower: 1, lantern: 2 }
+              - aspects: { follower: 1 }
+          expeditionfunds:
+            elementId: funds

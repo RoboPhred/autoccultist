@@ -1,0 +1,8 @@
+name: "Break down lore: An Operation of the Declining Sun"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentwinterc
+    with:
+      elementId: reason
