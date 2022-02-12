@@ -1,4 +1,4 @@
-name: Aquire the Stag Door and prepare for the Thiatic Invocation
+name: Acquire the Stag Door and prepare for the Thiatic Invocation
 requirements:
   cardSet:
     - elementId: waywhite
@@ -19,7 +19,7 @@ completedWhen:
     - elementId: waystag_after
     - elementId: fragmentgraild
 impulses:
-  - name: Aquire the Stag Riddle
+  - name: Acquire the Stag Riddle
     forbidders:
       anyOf:
         - elementId: waystagbefore_1
