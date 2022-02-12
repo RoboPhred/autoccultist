@@ -3,7 +3,6 @@ namespace Autoccultist
     using System.Collections.Generic;
     using System.Text;
     using Assets.Core;
-    using Assets.Core.Interfaces;
     using Assets.CS.TabletopUI;
     using Assets.TabletopUi;
 

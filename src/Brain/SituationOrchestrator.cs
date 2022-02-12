@@ -75,18 +75,6 @@ namespace Autoccultist.Brain
         }
 
         /// <summary>
-        /// Dumps the status of the situation orchestrator to the console.
-        /// </summary>
-        public static void LogStatus()
-        {
-            AutoccultistPlugin.Instance.LogInfo("We are orchestrating:");
-            foreach (var entry in ExecutingOperationsBySituation)
-            {
-                AutoccultistPlugin.Instance.LogInfo($"-- {entry.Key}: {entry.Value}");
-            }
-        }
-
-        /// <summary>
         /// Determines if the situation is available for use.
         /// </summary>
         /// <param name="situationId">The situation id of the situation to check.</param>

@@ -7,9 +7,9 @@ namespace Autoccultist.GUI
     using UnityEngine;
 
     /// <summary>
-    /// GUI for general diagnostics.
+    /// GUI for controlling autoccultist.
     /// </summary>
-    public static class DiagnosticGUI
+    public static class ControlGUI
     {
         private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
 
@@ -28,10 +28,10 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 500), DiagnosticsWindow, "Autoccultist Diagnostics");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 500), ControlWindow, "Autoccultist Control");
         }
 
-        private static void DiagnosticsWindow(int id)
+        private static void ControlWindow(int id)
         {
             if (GUILayout.Button("Reload All Configs"))
             {
@@ -121,7 +121,7 @@ namespace Autoccultist.GUI
 
             foreach (var goal in NucleusAccumbens.CurrentGoals)
             {
-                var prefix = string.Empty;
+                var prefix = "[Custom]";
                 if (Ego.CurrentMotivation?.PrimaryGoals.Contains(goal) == true)
                 {
                     prefix = "[Primary]";
@@ -129,10 +129,6 @@ namespace Autoccultist.GUI
                 else if (Ego.CurrentMotivation?.SupportingGoals.Contains(goal) == true)
                 {
                     prefix = "[Supporting]";
-                }
-                else
-                {
-                    prefix = "[Custom]";
                 }
 
                 GUILayout.Label($"{prefix} {goal.Name}");

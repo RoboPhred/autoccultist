@@ -96,7 +96,8 @@ namespace Autoccultist
                 return;
             }
 
-            DiagnosticGUI.OnGUI();
+            ControlGUI.OnGUI();
+            DiagnosticsGUI.OnGUI();
             GoalsGUI.OnGUI();
             ArcsGUI.OnGUI();
         }
@@ -186,13 +187,7 @@ namespace Autoccultist
             }
             else if (Input.GetKeyDown(KeyCode.F10))
             {
-                DiagnosticGUI.IsShowing = !DiagnosticGUI.IsShowing;
-            }
-            else if (Input.GetKeyDown(KeyCode.F9))
-            {
-                this.LogInfo("Dumping status");
-                NucleusAccumbens.DumpStatus();
-                SituationOrchestrator.LogStatus();
+                ControlGUI.IsShowing = !ControlGUI.IsShowing;
             }
             else if (Input.GetKeyDown(KeyCode.F8))
             {
