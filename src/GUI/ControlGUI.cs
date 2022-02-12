@@ -28,7 +28,9 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 500), ControlWindow, "Autoccultist Control");
+            var rect = WindowManager.GetWindowRect(350, 500);
+            Debug.Log("Control window rect: " + rect);
+            GUILayout.Window(WindowId.Value, rect, ControlWindow, "Autoccultist Control");
         }
 
         private static void ControlWindow(int id)
@@ -74,7 +76,6 @@ namespace Autoccultist.GUI
 
             if (GUILayout.Button("Arcs", GUILayout.ExpandWidth(false)))
             {
-                GoalsGUI.IsShowing = false;
                 ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
             }
 
@@ -113,7 +114,6 @@ namespace Autoccultist.GUI
             GUILayout.Label("Current Goals:");
             if (GUILayout.Button("Toggle Goals Menu"))
             {
-                ArcsGUI.IsShowing = false;
                 GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
             }
 

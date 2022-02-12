@@ -29,7 +29,9 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 700), ParseErrorsWindow, "Autoccultist Parse Errors");
+            var rect = WindowManager.GetWindowRect(500, 700);
+            Debug.Log("Parse errors rect " + rect);
+            GUILayout.Window(WindowId.Value, rect, ParseErrorsWindow, "Autoccultist Parse Errors");
         }
 
         private static void ParseErrorsWindow(int id)
