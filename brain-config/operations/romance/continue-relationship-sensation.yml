@@ -1,0 +1,8 @@
+name: Maintain a relationship based on Sensation
+situation: rose
+targetOngoing: true
+ongoingRecipes:
+  L_continuerose_enlightenment:
+    slots:
+      What?:
+        elementId: passion
