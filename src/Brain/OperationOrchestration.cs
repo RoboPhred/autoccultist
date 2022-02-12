@@ -326,16 +326,14 @@ namespace Autoccultist.Brain
 
             // Get the first card.  Slotting this will usually create additional slots
             var firstSlotAction = this.CreateSlotActionFromRecipe(firstSlot, recipe);
-            if (firstSlotAction == null)
+            if (firstSlotAction != null)
             {
-                // Not sure if the first slot of ongoing actions is always required...
-                throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlot.GoverningSlotSpecification.Id} has no card choice.");
+                yield return firstSlotAction;
+
+                // Refresh the slots and get the rest of the cards
+                slots = this.Situation.situationWindow.GetOngoingSlots();
             }
 
-            yield return firstSlotAction;
-
-            // Refresh the slots and get the rest of the cards
-            slots = this.Situation.situationWindow.GetOngoingSlots();
             foreach (var slot in slots.Skip(1))
             {
                 var slotAction = this.CreateSlotActionFromRecipe(slot, recipe);

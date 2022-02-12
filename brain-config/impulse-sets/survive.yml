@@ -7,8 +7,8 @@
 - !import ../impulses/survive/crit-heal-injury-vitality.yml
 - !import ../impulses/survive/crit-heal-injury-funds.yml
 - !import ../impulses/survive/crit-heal-hunger.yml
-- !import ../impulses/survive/crit-despair-buy-opium.yml
 - !import ../impulses/survive/crit-heal-dread-contentment.yml
+- !import ../impulses/survive/crit-despair-buy-opium.yml
 - !import ../impulses/survive/crit-dread-buy-opium.yml
 - !import ../impulses/survive/crit-dispose-fascination-reminders.yml
 - !import ../impulses/survive/crit-visions-get-dread.yml

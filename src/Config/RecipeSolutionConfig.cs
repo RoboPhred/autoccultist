@@ -4,6 +4,7 @@ namespace Autoccultist.Config
     using System.Linq;
     using Assets.CS.TabletopUI;
     using Autoccultist.Brain;
+    using Autoccultist.Config.CardChoices;
     using Autoccultist.GameState;
 
     /// <summary>

@@ -60,9 +60,9 @@ namespace Autoccultist.Brain
         /// </summary>
         public static void Clear()
         {
-            Ego.SetMotivation(null);
             CurrentArc = null;
             CurrentMotivation = null;
+            Ego.SetMotivation(null);
             Motivations.Clear();
         }
 
