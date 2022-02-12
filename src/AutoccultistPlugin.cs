@@ -86,6 +86,8 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
+            WindowManager.OnPreGUI();
+
             // Allow ParseErrorsGUI to run when the core game is not in play.
             ParseErrorsGUI.OnGUI();
 
