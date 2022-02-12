@@ -109,6 +109,11 @@ namespace Autoccultist.GUI
                 GUILayout.Label("Current Ego Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
             }
 
+            if (GUILayout.Button("Diagnostics"))
+            {
+                DiagnosticsGUI.IsShowing = !DiagnosticsGUI.IsShowing;
+            }
+
             GUILayout.BeginHorizontal();
 
             GUILayout.Label("Current Goals:");

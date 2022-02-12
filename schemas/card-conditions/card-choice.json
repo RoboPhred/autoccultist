@@ -25,6 +25,11 @@
             "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/value-condition.json"
           }
         },
+        "location": {
+          "title": "Location",
+          "description": "Require the card to be at a certain location",
+          "enum": ["tabletop", "slotted", "stored", "mansus"]
+        },
         "unique": {
           "title": "Unique",
           "description": "Requires the matching card to be or not be unique.",
