@@ -55,13 +55,21 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Recruit a Grail believer, explore the city, get beefy
+  - name: Find a Grail believer, explore the city, get beefy
     primaryGoals:
       - !import ../../goals/followers/attract-grail-follower.yml
-      - !import ../../goals/cult/recruit-lore-grail.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
       - !import ../../goals/health/acquire-skillhealtha.yml
+    supportingGoals:
+      - !import ../../goals/cult/recruit-lore-grail.yml
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Recruit a Grail believer
+    primaryGoals:
+      - !import ../../goals/cult/recruit-grail-lore-grail.yml
     supportingGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml

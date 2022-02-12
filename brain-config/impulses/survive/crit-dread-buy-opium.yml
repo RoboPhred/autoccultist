@@ -19,6 +19,8 @@ requirements:
             elementId: dread
         - elementId: dread
           location: tabletop
+forbidders:
+  elementId: contentment
 operation:
   name: Buy a Tincture of Opium
   situation: dream

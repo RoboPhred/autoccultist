@@ -1,0 +1,10 @@
+name: Recruit Grail acquaintances, by invoking Grail
+requirements:
+  aspects:
+    society: 1
+    venerationgrail: 1
+completedWhen: !import ../../conditions/has-grail-follower.yml
+impulses:
+  - name: Recruit a grail acquaintance, by invoking Grail
+    priority: goal
+    operation: !import ../../operations/cult/recruit-grail-lore-grail.yml
