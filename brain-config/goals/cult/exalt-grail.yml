@@ -4,11 +4,11 @@ requirements:
     society: 1
     venerationgrail: 1
 completedWhen:
-    aspects: { follower: 1, exalt: 1, grail: 10, follower_lustsensation: 1 }
+  aspects: { follower: 1, exalt: 1, grail: 10, follower_lustsensation: 1 }
 impulses:
   - name: Exalt a special Grail Disciple by using a sixth-order influence
     priority: goal
     operation: !import ../../operations/cult/exalt-grail-mutations-influence-six.yml
   - name: Climb the Ascent of Knives
-    priority: maint
+    priority: maintenance
     operation: !import ../../operations/mansus/use-stag-ascent-of-knives.yml

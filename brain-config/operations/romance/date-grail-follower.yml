@@ -5,13 +5,23 @@ startingRecipe:
     talk:
       oneOf:
         - elementId: renira_d
+          forbiddenAspects:
+            - follower_honoured
         - elementId: renira_c
+          forbiddenAspects:
+            - follower_honoured
         - elementId: renira_b
+          forbiddenAspects:
+            - follower_honoured
         - elementId: saliba_d
+          forbiddenAspects:
+            - follower_honoured
         - elementId: saliba_c
+          forbiddenAspects:
+            - follower_honoured
         - elementId: saliba_b
-      forbiddenAspects:
-        - follower_honoured
+          forbiddenAspects:
+            - follower_honoured
 ongoingRecipes:
   talktofollower:
     slots:

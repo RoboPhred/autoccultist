@@ -69,6 +69,7 @@ impulses:
             - elementId: fragmentwinterb
             - elementId: fragmentwinterb
         - elementId: fragmentknockc
+    operation: !import ../../../operations/lore/winter/lore-breakdown-winter-c.yml
   - name: Subvert A White Ceremony to Knock
     requirements:
       elementId: waystagbefore_4

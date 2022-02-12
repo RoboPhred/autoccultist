@@ -33,7 +33,7 @@ motivations:
   - name: Get horny while finding people to recruit
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Get a scholarship while finding people to recruit
@@ -43,14 +43,14 @@ motivations:
       - !import ../../goals/reason/aquire-skillreasonb.yml
       - !import ../../goals/reason/aquire-skillreasonc.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
       - !import ../../goals/health/aquire-skillhealtha.yml
     supportingGoals:
-      - !import ../../goals/attract-followers.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Establish the Order of the Bloody Cup

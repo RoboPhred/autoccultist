@@ -8,35 +8,35 @@ completedWhen:
     - elementId: hq.hospital
     - elementId: toolgrailb
 impulses:
-  - name: Collect Secret Histories lore:
+  - name: Collect Secret Histories lore
     forbidders:
       anyOf:
         - cardSet:
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - aspects: vaultcapital
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
         - cardSet:
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - elementId: fragmentsecrethistories
-        - cardSet:
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - elementId: fragmentsecrethistories
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
             - elementId: fragmentsecrethistories
         - cardSet:
-            - aspects: vaultcapital
-            - aspects: vaultcapital
-            - elementId: fragmentsecrethistories
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
             - elementId: fragmentsecrethistories
             - elementId: fragmentsecrethistories
         - cardSet:
-            - aspects: vaultcapital
+            - aspects: { vaultcapital: 1 }
+            - aspects: { vaultcapital: 1 }
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+        - cardSet:
+            - aspects: { vaultcapital: 1 }
             - elementId: fragmentsecrethistories
             - elementId: fragmentsecrethistories
             - elementId: fragmentsecrethistories
@@ -82,6 +82,7 @@ impulses:
               - aspects: { follower: 1, lantern: 3 }
               - aspects: { follower: 1 }
           expeditionmember2:
+            oneOf:
               - aspects: { follower: 1, heart: 5 }
               - aspects: { follower: 1, lantern: 5 }
               - aspects: { follower: 1, heart: 2 }

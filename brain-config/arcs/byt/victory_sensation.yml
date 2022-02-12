@@ -83,7 +83,7 @@ motivations:
   - name: Dispose of alden
     primaryGoals:
       - !import ../../goals/glover/glover-remove-boss-seduction.yml
-      - !import ../../goals/victories/sensation/aquire-dedication-sensation.yml
+      - !import ../../goals/victories/sensation/acquire-dedication-sensation.yml
     supportingGoals:
       - !import ../../goals/work-labor.yml
       - !import ../../goals/survive.yml
