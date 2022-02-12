@@ -39,18 +39,13 @@ motivations:
   - name: Get a scholarship while finding people to recruit
     primaryGoals:
       - !import ../../goals/reason/aquire-skillreasona.yml
+      - !import ../../goals/glover/aquire-job-glover-standard.yml
       - !import ../../goals/reason/aquire-skillreasonb.yml
       - !import ../../goals/reason/aquire-skillreasonc.yml
     supportingGoals:
       - !import ../../goals/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Get a promotion while finding people to recruit
-    primaryGoals:
-      - !import ../../goals/glover/aquire-job-glover-standard.yml
-    supportingGoals:
-      - !import ../../goals/attract-followers.yml
-      - !import ../../goals/survive.yml
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
       - !import ../../goals/health/aquire-skillhealtha.yml
