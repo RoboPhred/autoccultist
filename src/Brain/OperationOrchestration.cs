@@ -96,7 +96,7 @@ namespace Autoccultist.Brain
                 var situation = GameAPI.GetSituation(this.SituationId);
                 if (situation == null)
                 {
-                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} not found.");
+                    AutoccultistPlugin.Instance.LogWarn($"Cannot find solution - Situation {this.SituationId} not found.");
                 }
 
                 return situation;

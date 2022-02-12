@@ -9,44 +9,51 @@ completedWhen:
     - elementId: toolgrailb
 impulses:
   - name: Collect Secret Histories lore
+    # Just look for vaultcapital4
     forbidders:
       anyOf:
-        - cardSet:
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-        - cardSet:
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - elementId: fragmentsecrethistories
-        - cardSet:
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-        - cardSet:
-            - aspects: { vaultcapital: 1 }
-            - aspects: { vaultcapital: 1 }
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-        - cardSet:
-            - aspects: { vaultcapital: 1 }
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-        - cardSet:
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
-            - elementId: fragmentsecrethistories
+        - elementId: vaultcapital4
+        - elementId: fragmentsecrethistories
+          # Ignore the one being searched, in case it doesnt find anything
+          location: tabletop
+    # forbidders:
+    #   anyOf:
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
     operation: !import ../../operations/mansus/use-wood-secrethistories.yml
   - name: Find Capital vaults
     forbidders:
@@ -67,9 +74,11 @@ impulses:
         - elementId: evidenceb
     operation:
       name: Explore St. Agnes Hospital
-      situation: work
+      situation: explore
       startingRecipe:
         slots:
+          explore:
+            elementId: vaultcapital4
           expeditionmember:
             oneOf:
               - aspects: { follower: 1, heart: 10 }

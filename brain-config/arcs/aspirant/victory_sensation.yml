@@ -34,8 +34,10 @@ motivations:
     primaryGoals:
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
       # Get skillreasona to make Alden easier to deal with
+      # We need all the way up to c, as we expect dry soul curse to steal one.
       - !import ../../goals/reason/acquire-skillreasona.yml
       - !import ../../goals/reason/acquire-skillreasonb.yml
+      - !import ../../goals/reason/acquire-skillreasonc.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
@@ -134,18 +136,15 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-  - name: Honour our Interested Disciple
+  - name: Move into Morlands
     primaryGoals:
-      - !import ../../goals/victories/sensation/honour-interested-disciple.yml
+      - !import ../../goals/hq/move-hq-library.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-      - !import ../../goals/romance/maintain-relationships.yml
   - name: Acquire the Stag Door and the Thiatic Invocation
     primaryGoals:
       - !import ../../goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
-      - !import ../../goals/auction/acquire-stumm.yml
-      - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -161,6 +160,13 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
       - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Honour our Interested Disciple
+    primaryGoals:
+      - !import ../../goals/victories/sensation/honour-interested-disciple.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
   - name: Prepare a Cyprian and achieve the Marks of Sensation
     primaryGoals:
       - !import ../../goals/cult/exalt-grail.yml

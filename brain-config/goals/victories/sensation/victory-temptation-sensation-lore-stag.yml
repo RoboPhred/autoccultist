@@ -79,15 +79,12 @@ impulses:
   # End Knock C
 
   # Begin Grail C
+  # Always do this even if this isn't the riddle, as we need it for the ascension
   - name: Combine A Megalesian Incantation
-    requirements:
-      elementId: waystagbefore_3
     forbidders:
       elementId: fragmentgrailc
     operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
   - name: Combine A Red Secret
-    requirements:
-      elementId: waystagbefore_3
     forbidders:
       anyOf:
         - cardSet:
@@ -116,33 +113,27 @@ impulses:
     operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
   # End Secret Histories C
 
-  # Begin Moth / Lantern / Forge juggling
-  # moth + lantern = lanternb
-  - name: Subvert A Barber's Warning with A Watchman's Secret to get A Mansus-Glimpse
+  # Begin Lantern C
+  - name: Combine A Watchman's Secret
     priority: goal
-    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-a.yml
-  # forge + forge = forgeb
-  - name: Combine A Smith's Secret for An Ardent Orison
-    priority: goal
-    operation: !import ../../../operations/lore/forge/lore-combine-forge-a.yml
-  # forgeb + lanternb = forgec
-  - name: Subvert A Mansus Glimpse to A Shaping Chant
-    priority: goal
+    requirements:
+      elementId: waystagbefore_2
     forbidders:
-      cardSet:
-        # Stop at 3
-        - elementId: fragmentforgec
-        - elementId: fragmentforgec
-        - elementId: fragmentforgec
-    operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-b.yml
-  # mothb + lanternb = lanternc
-  - name: Subvert A Wood-Whisper to An Unmerciful Mantra
+      anyOf:
+        - cardSet:
+            - elementId: fragmentlanternb
+            - elementId: fragmentlanternb
+        - elementId: fragmentlanternc
+    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-a.yml
+  - name: Combine An Iguvine Rite
     priority: goal
+    requirements:
+      elementId: waystagbefore_2
     forbidders:
-      # Only do this once
-      elementId: fragmentlanternc
-    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-b.yml
-  # End Moth / Lantern / Forge juggling
+      anyOf:
+        - elementId: fragmentlanternc
+    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-b.yml
+  # End Lantern C
 
   # heartc + grailc = graild
   - name: Subvert A Waking Chant for Thiatic Invocation
