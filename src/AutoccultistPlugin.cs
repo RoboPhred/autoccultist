@@ -71,13 +71,20 @@ namespace Autoccultist
         /// </summary>
         public void ReloadAll()
         {
+            var previousArcName = Superego.CurrentArc?.Name;
+
             this.StopAutoccultist();
             this.LogInfo("Reloading all configs");
             Library.LoadAll();
             Superego.Clear();
+
             if (GameAPI.IsRunning)
             {
-                Superego.AutoselectArc();
+                var arc = Library.Arcs.FirstOrDefault(a => a.Name == previousArcName);
+                if (arc != null)
+                {
+                    Superego.SetArc(arc);
+                }
             }
         }
 
