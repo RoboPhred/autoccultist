@@ -73,7 +73,6 @@ motivations:
     supportingGoals:
       - !import ../../goals/work-labor.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Go on a date
     primaryGoals:
       - !import ../../goals/romance/gain-relationship-grail.yml
