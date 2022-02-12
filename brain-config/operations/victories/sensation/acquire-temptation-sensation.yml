@@ -1,0 +1,15 @@
+name: Dedicate myself to sensation
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      aspects: { desire: 1 }
+ongoingRecipes:
+  dreamascensionenlightenmenta:
+    slots:
+      Reflection:
+        elementId: health
+  dreamascensionpowera:
+    slots:
+      Calculation:
+        elementId: health
