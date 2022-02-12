@@ -26,7 +26,7 @@ namespace Autoccultist.GUI
         public static Rect GetWindowRect(float width, float height)
         {
             consumedWidth += width + 5;
-            var x = new Rect(Screen.width - consumedWidth, 0, width, height);
+            var x = new Rect(Screen.width - consumedWidth, 30, width, height);
             return x;
         }
     }
