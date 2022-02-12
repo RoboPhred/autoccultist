@@ -3,7 +3,10 @@ situation: talk
 startingRecipe:
   slots:
     talk:
-      aspects: { follower: 1, grail: 1 }
+      aspects:
+        follower: 1
+        grail:
+          greaterThanOrEqualTo: 1
 ongoingRecipes:
   talktofollower:
     slots:
