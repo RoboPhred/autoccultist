@@ -1,0 +1,15 @@
+name: Date a Grail Follower
+requirements:
+  anyOf:
+    - elementId: renira_b
+    - elementId: renira_c
+    - elementId: renira_d
+    - elementId: saliba_b
+    - elementId: saliba_c
+    - elementId: saliba_d
+completedWhen:
+  aspects: { romanticinterest: 1 }
+impulses:
+  - name: Date a Grail Follower
+    priority: goal
+    operation: !import ../../../operations/romance/date-grail-follower.yml
