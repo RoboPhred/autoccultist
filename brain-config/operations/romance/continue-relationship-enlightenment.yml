@@ -3,6 +3,7 @@ situation: rose
 targetOngoing: true
 ongoingRecipes:
   L_continuerose_enlightenment:
+    requireCardsToStart: false
     slots:
       What?:
         elementId: reason

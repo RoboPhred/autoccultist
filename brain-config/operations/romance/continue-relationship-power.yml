@@ -2,7 +2,8 @@ name: Maintain a relationship based on Power
 situation: rose
 targetOngoing: true
 ongoingRecipes:
-  L_continuerose_enlightenment:
+  L_continuerose_power:
+    requireCardsToStart: false
     slots:
       What?:
         elementId: health

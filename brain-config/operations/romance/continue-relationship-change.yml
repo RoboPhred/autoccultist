@@ -2,7 +2,8 @@ name: Maintain a relationship based on Change
 situation: rose
 targetOngoing: true
 ongoingRecipes:
-  L_continuerose_enlightenment:
+  L_continuerose_change:
+    requireCardsToStart: false
     slots:
       What?:
         elementId: passion
