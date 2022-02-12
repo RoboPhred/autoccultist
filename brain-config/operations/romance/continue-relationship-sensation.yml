@@ -3,6 +3,12 @@ situation: rose
 targetOngoing: true
 ongoingRecipes:
   L_continuerose_enlightenment:
+    requireCardsToStart: false
+    slots:
+      What?:
+        elementId: passion
+  L_continuerose_sensation:
+    requireCardsToStart: false
     slots:
       What?:
         elementId: passion

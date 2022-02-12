@@ -1,4 +1,4 @@
-name: Aquire a Rarefied Mind
+name: Acquire a Rarefied Mind
 requirements:
   allOf:
     - elementId: skillreasonc
@@ -9,7 +9,7 @@ requirements:
 completedWhen:
   elementId: skillreasond_illumination
 impulses:
-  - name: Aquire erudition
+  - name: Acquire erudition
     priority: maintenance
     forbidders:
       anyOf:
@@ -22,7 +22,7 @@ impulses:
             - elementId: eruditionplus
             - elementId: eruditionplus
     operation: !import ../../operations/reason/study-reason.yml
-  - name: Aquire an erudition lesson through study
+  - name: Acquire an erudition lesson through study
     priority: goal
     forbidders:
       cardSet:
@@ -31,7 +31,7 @@ impulses:
         - elementId: eruditionplus
         - elementId: eruditionplus
     operation: !import ../../operations/learn-erudition-lesson.yml
-  - name: Aquire an erudition lesson through books
+  - name: Acquire an erudition lesson through books
     priority: goal
     requirements:
       # Hold off until we have at least one erudition from study, as we will not have
@@ -44,6 +44,6 @@ impulses:
         - elementId: eruditionplus
         - elementId: eruditionplus
     operation: !import ../../operations/learn-erudition-lesson-textbookreason.yml
-  - name: Aquire a Rarefied Mind
+  - name: Acquire a Rarefied Mind
     priority: goal
     operation: !import ../../operations/reason/upgrade-skillreasond-illumination.yml

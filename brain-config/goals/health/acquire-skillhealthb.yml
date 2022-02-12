@@ -1,4 +1,4 @@
-name: Aquire a Hardened Physique
+name: Acquire a Hardened Physique
 requirements:
   aspects: { healthskill: 1 }
 completedWhen:

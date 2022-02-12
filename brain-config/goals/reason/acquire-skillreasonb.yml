@@ -1,8 +1,8 @@
-name: Aquire Profound Scholarship
+name: Acquire Notable Scholarship
 requirements:
-  elementId: skillreasonb
+  elementId: skillreasona
 completedWhen:
-  aspects: { reasonskill: 3 }
+  aspects: { reasonskill: 2 }
 impulses:
   - extends: !import ../../impulses/goal-learn-lesson-erudition.yml
     forbidders:
@@ -10,8 +10,7 @@ impulses:
       cardSet:
         - elementId: eruditionplus
         - elementId: eruditionplus
-        - elementId: eruditionplus
   - !import ../../impulses/norm-erudition-from-reason.yml
-  - name: Upgrade Notable Scholarship to Profound Scholarship
+  - name: Upgrade Scholarship to Notable Scholarship
     priority: goal
-    operation: !import ../../operations/reason/upgrade-skillreasonb.yml
+    operation: !import ../../operations/reason/upgrade-skillreasona.yml

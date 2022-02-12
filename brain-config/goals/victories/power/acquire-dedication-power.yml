@@ -8,4 +8,4 @@ completedWhen:
 impulses:
   - name: Dedicate myself to power
     priority: goal
-    operation: !import ../../../operations/victories/power/aquire-dedication-power.yml
+    operation: !import ../../../operations/victories/power/acquire-dedication-power.yml

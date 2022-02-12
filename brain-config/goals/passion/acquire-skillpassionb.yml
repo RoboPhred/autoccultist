@@ -1,8 +1,8 @@
-name: Aquire a Fevered Imagination
+name: Acquire a Wild Imagination
 requirements:
-  aspects: { passionskill: 2 }
+  aspects: { passionskill: 1 }
 completedWhen:
-  aspects: { passionskill: 3 }
+  aspects: { passionskill: 2 }
 impulses:
   - extends: !import ../../impulses/goal-learn-lesson-glimmering.yml
     forbidders:
@@ -10,8 +10,7 @@ impulses:
       cardSet:
         - elementId: glimmeringplus
         - elementId: glimmeringplus
-        - elementId: glimmeringplus
   - !import ../../impulses/norm-glimmering-from-passion.yml
-  - name: Upgrade Wild Imagination to Fevered Imagination
+  - name: Upgrade Vivid Imagination to Wild Imagination
     priority: goal
-    operation: !import ../../operations/passion/upgrade-skillpassionb.yml
+    operation: !import ../../operations/passion/upgrade-skillpassiona.yml

@@ -1,12 +1,12 @@
-name: Aquire the Thid Mark
+name: Acquire the Thid Mark
 requirements:
   elementId: ascensionpowerb
 completedWhen:
   aspects: { desire: 3 }
 impulses:
-  - name: Aquire the Second Mark
+  - name: Acquire the Second Mark
     forbidders:
       aspects:
         powermarks:
           greaterThan: 2
-    operation: !import ../../../operations/victories/power/aquire-ascension-power.yml
+    operation: !import ../../../operations/victories/power/acquire-ascension-power.yml

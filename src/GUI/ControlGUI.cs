@@ -28,9 +28,7 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var rect = WindowManager.GetWindowRect(350, 500);
-            Debug.Log("Control window rect: " + rect);
-            GUILayout.Window(WindowId.Value, rect, ControlWindow, "Autoccultist Control");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 500), ControlWindow, "Autoccultist Control");
         }
 
         private static void ControlWindow(int id)

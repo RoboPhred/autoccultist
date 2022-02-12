@@ -19,7 +19,7 @@ motivations:
       - !import ../../goals/aspirant/study-bequest-passion.yml
   - name: Get a job
     primaryGoals:
-      - !import ../../goals/glover/aquire-job-glover-junior.yml
+      - !import ../../goals/glover/acquire-job-glover-junior.yml
     supportingGoals:
       - !import ../../goals/survive.yml
   - name: Study bequest contents
@@ -34,14 +34,17 @@ motivations:
     primaryGoals:
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
       # Get skillreasona to make Alden easier to deal with
-      - !import ../../goals/reason/aquire-skillreasona.yml
+      - !import ../../goals/reason/acquire-skillreasona.yml
+      - !import ../../goals/reason/acquire-skillreasonb.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Find grail lore
+  - name: Find grail lore, get passionate
     primaryGoals:
       - !import ../../goals/bookdealer/find-bookdealer-grail.yml
+      - !import ../../goals/passion/acquire-skillpassiona.yml
+      - !import ../../goals/passion/acquire-skillpassionb.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -52,12 +55,13 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Recruit a Grail believer, explore the city
+  - name: Recruit a Grail believer, explore the city, get beefy
     primaryGoals:
       - !import ../../goals/followers/attract-grail-follower.yml
       - !import ../../goals/cult/recruit-lore-grail.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/health/acquire-skillhealtha.yml
     supportingGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
@@ -68,7 +72,6 @@ motivations:
   - name: Dispose of Alden
     primaryGoals:
       - !import ../../goals/glover/glover-remove-boss-seduction.yml
-      - !import ../../goals/victories/sensation/acquire-dedication-sensation.yml
     supportingGoals:
       - !import ../../goals/work-labor.yml
       - !import ../../goals/survive.yml
@@ -87,8 +90,8 @@ motivations:
       - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
-      - !import ../../goals/mansus/aquire-way-wood.yml
-      - !import ../../goals/mansus/aquire-way-whitedoor.yml
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -98,9 +101,9 @@ motivations:
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
-      - !import ../../goals/auction/aquire-stumm.yml
+      - !import ../../goals/auction/acquire-stumm.yml
       # Might not need this.  Power ascention ended up not needing it.
-      # - !import ../../goals/auction/aquire-truecompleteasclepiangreek.yml
+      # - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -131,15 +134,16 @@ motivations:
   - name: Acquire the Stag Door and the Thiatic Invocation
     primaryGoals:
       - !import ../../goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
-      - !import ../../goals/auction/aquire-stumm.yml
-      - !import ../../goals/auction/aquire-truecompleteasclepiangreek.yml
+      - !import ../../goals/auction/acquire-stumm.yml
+      - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-  - name: Promote a Grail believer
+  - name: Promote a Grail believer, dedicate to horny
     primaryGoals:
       - !import ../../goals/cult/promote-grail-with-grail.yml
+      - !import ../../goals/victories/sensation/acquire-dedication-sensation.yml
     supportingGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
