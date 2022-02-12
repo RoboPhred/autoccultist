@@ -83,7 +83,20 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
-# TODO: Promote Renira or Saliba to a Disciple.
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Promote a Grail believer
+    primaryGoals:
+      - !import ../../goals/cult/promote-grail-with-grail.yml
+    supportingGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Dispose of Alden
     primaryGoals:
       - !import ../../goals/glover/glover-remove-boss-seduction.yml
@@ -93,6 +106,8 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Buy and read books, get swole
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
@@ -106,6 +121,8 @@ motivations:
       - !import ../../goals/mansus/aquire-way-whitedoor.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import ../../goals/mansus/aquire-way-wood.yml
@@ -116,6 +133,7 @@ motivations:
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
       - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Find cabaret and auction house, collect rites
     primaryGoals:
       - !import ../../goals/find-auctionhouse.yml
@@ -126,7 +144,14 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-#TODO: Date Disciple-level Renira or Saliba
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Make this relationship official
+    primaryGoals:
+      - !import ../../goals/romance/gain-relationship-grail.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
 #TODO: grind the Mansus for low-level SH lore and find St. Agnes.
 #TODO: visit St. Agnes
 #TODO: give the gross bloody gloves to the Interested Disciple
@@ -148,9 +173,9 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-#TODO: Grind the Ascent of Knives for a Grail influence to promote Renira/Saliba into a Cyprian
-  - name: Achieve the Marks of Sensation
+  - name: Prepare a Cyprian and achieve the Marks of Sensation
     primaryGoals:
+      - !import ../../goals/cult/exalt-grail.yml
       - !import ../../goals/victories/sensation/acquire-ascension-sensation.yml
     supportingGoals:
       - !import ../../goals/survive.yml
