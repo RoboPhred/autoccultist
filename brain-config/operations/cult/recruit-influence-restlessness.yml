@@ -22,5 +22,5 @@ startingRecipe:
     Associate:
       aspects:
         acquaintance: 1
-    Ceremony:
+    Trappings:
       elementId: restlessness
