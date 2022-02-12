@@ -19,21 +19,6 @@ namespace Autoccultist.GUI
         public static bool IsShowing { get; set; }
 
         /// <summary>
-        /// Gets the width of the window.
-        /// </summary>
-        public static float Width => Mathf.Min(Screen.width, 350);
-
-        /// <summary>
-        /// Gets the height of the window.
-        /// </summary>
-        public static float Height => Mathf.Min(Screen.height, 500);
-
-        /// <summary>
-        /// Gets the X offset of the window.
-        /// </summary>
-        public static float OffsetX => Screen.width - Width - 10;
-
-        /// <summary>
         /// Draw gui.
         /// </summary>
         public static void OnGUI()
@@ -43,8 +28,7 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var height = Mathf.Min(Screen.height, 500);
-            GUILayout.Window(WindowId.Value, new Rect(OffsetX, 10, Width, Height), DiagnosticsWindow, "Autoccultist Diagnostics");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 500), DiagnosticsWindow, "Autoccultist Diagnostics");
         }
 
         private static void DiagnosticsWindow(int id)

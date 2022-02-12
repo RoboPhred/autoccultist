@@ -29,11 +29,7 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var width = Mathf.Min(Screen.width, 500);
-            var height = Mathf.Min(Screen.height, 700);
-            var offsetX = Screen.width - DiagnosticGUI.Width - width - 10;
-            var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, width, height), ParseErrorsWindow, "Autoccultist Parse Errors");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 700), ParseErrorsWindow, "Autoccultist Parse Errors");
         }
 
         private static void ParseErrorsWindow(int id)
