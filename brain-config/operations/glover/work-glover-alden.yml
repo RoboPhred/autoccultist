@@ -12,8 +12,8 @@ ongoingRecipes:
       Attention:
         elementId: reason
   gloverandglover_difficultbossa_overtime:
-    # HACK: These 3 recipes are mutually exclusive.  They all need reason, but we dont want the operation to require 3 reason to start.
-    requireCardsToStart: false
+    # HACK: These 2 recipes are mutually exclusive.  They all need reason, but we dont want the operation to require 3 reason to start.
+    requireSlotCards: false
     slots:
       Attention:
         elementId: reason
