@@ -1,4 +1,4 @@
-name: Promote a Grail believer, by invoking Grail
+name: Promote Grail believers, by invoking Grail
 requirements:
   aspects:
     society: 1
@@ -11,6 +11,12 @@ completedWhen:
         grail:
           greaterThanOrEqualTo: 1
         disciple:
+          lessThan: 1
+        exalted:
+          lessThan: 1
+        hireling:
+          lessThan: 1
+        summoned:
           lessThan: 1
 impulses:
   - name: Promote a special Grail Believer, while burning Restlessness
