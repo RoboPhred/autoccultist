@@ -4,10 +4,18 @@
   "description": "Instructions to resolve a recipe.",
   "type": "object",
   "properties": {
-    "requireCardsToStart": {
-      "title": "Require cards to start",
-      "description": "Whether or not to require all cards to start the recipe.",
+    "requireSlotCards": {
+      "title": "Require Slot Cards",
+      "description": "Whether or not all cards specified in slots are required to start the recipe.  If false, slot cards will be ignored when determining if the recipe can be started.",
       "type": "boolean"
+    },
+    "cardRequirements": {
+      "title": "Card Requirements",
+      "description": "Specifies the cards required to start the recipe.  If not set, the required cards are inferred from slots.",
+      "type": "array",
+      "item": {
+        "$ref": "https://raw.githubusercontent.com/RoboPhred/autoccultist/develop/schemas/card-conditions/card-choice.json"
+      }
     },
     "slots": {
       "title": "Card Slots",

@@ -5,7 +5,6 @@ namespace Autoccultist.Config
     using Assets.CS.TabletopUI;
     using Autoccultist.Brain;
     using Autoccultist.Config.CardChoices;
-    using Autoccultist.GameState;
 
     /// <summary>
     /// Configuration for a solution to a situation recipe.
@@ -15,7 +14,13 @@ namespace Autoccultist.Config
         /// <summary>
         /// Gets or sets a value indicating whether this recipe requires its cards to start the operation.  This only applies to ongoing recipes.
         /// </summary>
-        public bool RequireCardsToStart { get; set; } = true;
+        public bool RequireSlotCards { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the required cards to start this operation.
+        /// If not specified, the required cards will be assumed from the slots.
+        /// </summary>
+        public List<ISlottableCardChoiceConfig> CardRequirements { get; set; }
 
         /// <summary>
         /// Gets or sets a dictionary of slot names to card choices.
@@ -31,13 +36,11 @@ namespace Autoccultist.Config
         IMansusSolution IRecipeSolution.MansusChoice => this.MansusChoice;
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
+        public IEnumerable<ICardChooser> GetRequiredCards()
         {
-            // TODO: Optional card slots.
-            var desiredCards =
-                from choice in this.Slots.Values
-                select choice;
-            return state.CardsCanBeSatisfied(desiredCards);
+            var explicitRequirements = (IEnumerable<ISlottableCardChoiceConfig>)this.CardRequirements ?? new ISlottableCardChoiceConfig[0];
+            var implicitRequirements = this.RequireSlotCards ? this.Slots.Values.Select(x => x) : new ISlottableCardChoiceConfig[0];
+            return explicitRequirements.Concat(implicitRequirements).ToArray();
         }
 
         /// <inheritdoc/>

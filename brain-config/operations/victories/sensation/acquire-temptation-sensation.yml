@@ -10,7 +10,7 @@ ongoingRecipes:
       Reflection:
         elementId: health
   dreamascensionpowera:
-    requireCardsToStart: false
+    requireSlotCards: false
     slots:
       Calculation:
         elementId: health
