@@ -132,7 +132,7 @@ impulses:
           Invocation:
             aspects: { lore: 1, grail: 8 }
           Assistant:
-            aspects: { follower: 1, interested: 1, grail: 12 }
+            aspects: { follower: 1, romanticinterest: 1, grail: 12 }
           Offering:
             aspects: { influence: 1, grail: 6 }
           Desire:
