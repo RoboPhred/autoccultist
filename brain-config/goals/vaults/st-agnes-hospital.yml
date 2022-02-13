@@ -14,7 +14,7 @@ impulses:
       anyOf:
         - elementId: vaultcapital4
         - elementId: fragmentsecrethistories
-          # Ignore the one being searched, in case it doesnt find anything
+          # Ignore the one being searched, in case it doesn't find anything
           location: tabletop
     # forbidders:
     #   anyOf:
@@ -23,12 +23,6 @@ impulses:
     #         - aspects: { vaultcapital: 1 }
     #         - aspects: { vaultcapital: 1 }
     #         - aspects: { vaultcapital: 1 }
-    #         - aspects: { vaultcapital: 1 }
-    #     - cardSet:
-    #         - aspects: { vaultcapital: 1 }
-    #         - aspects: { vaultcapital: 1 }
-    #         - aspects: { vaultcapital: 1 }
-    #         - aspects: { vaultcapital: 1 }
     #         - elementId: fragmentsecrethistories
     #     - cardSet:
     #         - aspects: { vaultcapital: 1 }
@@ -54,6 +48,7 @@ impulses:
     #         - elementId: fragmentsecrethistories
     #         - elementId: fragmentsecrethistories
     #         - elementId: fragmentsecrethistories
+    #     - elementId: vaultcapital4
     operation: !import ../../operations/mansus/use-wood-secrethistories.yml
   - name: Find Capital vaults
     forbidders:
@@ -65,37 +60,17 @@ impulses:
         slots:
           explore:
             elementId: fragmentsecrethistories
-  - name: Explore St. Agnes
-    priority: goal
-    forbidders:
-      anyOf:
-        - elementId: notoriety
-        - elementId: evidence
-        - elementId: evidenceb
-    operation:
-      name: Explore St. Agnes Hospital
-      situation: explore
-      startingRecipe:
-        slots:
-          explore:
-            elementId: vaultcapital4
-          expeditionmember:
-            oneOf:
-              - aspects: { follower: 1, heart: 10 }
-              - aspects: { follower: 1, lantern: 10 }
-              - aspects: { follower: 1, heart: 8 }
-              - aspects: { follower: 1, lantern: 8 }
-              - aspects: { follower: 1, heart: 5 }
-              - aspects: { follower: 1, lantern: 5 }
-              - aspects: { follower: 1, heart: 3 }
-              - aspects: { follower: 1, lantern: 3 }
-              - aspects: { follower: 1 }
-          expeditionmember2:
-            oneOf:
-              - aspects: { follower: 1, heart: 5 }
-              - aspects: { follower: 1, lantern: 5 }
-              - aspects: { follower: 1, heart: 2 }
-              - aspects: { follower: 1, lantern: 2 }
-              - aspects: { follower: 1 }
-          expeditionfunds:
-            elementId: funds
+
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-10.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-10.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-8-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-8-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-3-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-3-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-any.yml
