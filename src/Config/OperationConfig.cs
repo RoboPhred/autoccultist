@@ -63,19 +63,18 @@ namespace Autoccultist.Config
 
             // We currently take advantage of only ever having RecipeSolutionConfigs and rely on knowledge of
             //  their optional cards.  This may be problematic if we ever get other types of recipe solutions.
-            IEnumerable<ISlottableCardChoiceConfig> requiredCards = new ISlottableCardChoiceConfig[0];
+            IEnumerable<ICardChooser> requiredCards = new ICardChooser[0];
 
             if (this.StartingRecipe != null)
             {
-                requiredCards = requiredCards.Concat(this.StartingRecipe.Slots.Values);
+                requiredCards = requiredCards.Concat(this.StartingRecipe.GetRequiredCards());
             }
 
             if (this.OngoingRecipes != null)
             {
                 requiredCards = requiredCards.Concat(
                     from ongoing in this.OngoingRecipes.Values
-                    where ongoing.RequireCardsToStart
-                    from choice in ongoing.Slots.Values
+                    from choice in ongoing.GetRequiredCards()
                     select choice);
             }
 

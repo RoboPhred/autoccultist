@@ -3,7 +3,7 @@ situation: rose
 targetOngoing: true
 ongoingRecipes:
   L_continuerose_risen:
-    requireCardsToStart: false
+    requireSlotCards: false
     slots:
       Blood?:
         elementId: health

@@ -10,14 +10,14 @@ ongoingRecipes:
   gloverandglover_difficultbossa_overtime_initial:
     # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
     # we don't have reason available.
-    requireCardsToStart: false
+    requireSlotCards: false
     slots:
       Attention:
         elementId: reason
   gloverandglover_difficultbossa_overtime:
     # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
     # we don't have reason available.
-    requireCardsToStart: false
+    requireSlotCards: false
     slots:
       Attention:
         elementId: reason
