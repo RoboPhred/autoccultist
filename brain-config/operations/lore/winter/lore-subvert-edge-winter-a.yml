@@ -1,0 +1,20 @@
+name: "Subvert lore: A Knife's Secret to A White Ceremony"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentedge
+    with:
+      elementId: fragmentwinter
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        oneOf:
+          - elementId: health

@@ -1,0 +1,8 @@
+name: "Break down lore: A Delightful Sacrament"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentgrailc
+    with:
+      elementId: reason

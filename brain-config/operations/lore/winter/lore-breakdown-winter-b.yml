@@ -1,0 +1,8 @@
+name: "Break down lore: A White Ceremony"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentwinterb
+    with:
+      elementId: reason

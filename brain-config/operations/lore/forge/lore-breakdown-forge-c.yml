@@ -1,0 +1,8 @@
+name: "Break down lore: A Shaping Chant"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentforgec
+    with:
+      elementId: reason
