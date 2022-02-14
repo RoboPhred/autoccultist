@@ -1,0 +1,21 @@
+name: "Subvert lore: Winter to Heart"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentwinterb
+    with:
+      elementId: fragmentheartb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

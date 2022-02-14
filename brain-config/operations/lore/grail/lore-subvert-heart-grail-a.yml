@@ -1,0 +1,15 @@
+name: "Subvert lore: Heart to Grail"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentheart
+    with:
+      elementId: fragmentgrail
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering

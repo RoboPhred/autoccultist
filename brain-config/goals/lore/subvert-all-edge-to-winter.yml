@@ -1,0 +1,44 @@
+name: "Subvert all lore: Edge to Winter"
+completedWhen:
+  noneOf:
+    - aspects:
+        lore: 1
+        # There are times when things have the Lore aspect but aren't traditional lore.
+        subvertable_lore: 1
+        edge:
+          greaterThanOrEqualTo: 2
+impulses:
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - aspects: { library: 1 }
+        - elementId: erudition
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: !import ../../../operations/reason/study-reason.yml
+
+  - name: Downgrade Winter C
+    requirements:
+      anyOf:
+        - elementId: fragmentedge
+        - elementId: fragmentedgeb
+    forbidders:
+      elementId: fragmentwinterb
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
+
+  - name: Downgrade Winter B
+    requirements:
+      elementId: fragmentedge
+    forbidders:
+      elementId: fragmentwinter
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.yml
+
+  - name: Downgrade Edge C
+    operation: !import ../../operations/lore/edge/lore-breakdown-edge-c.yml
+
+  - name: Downgrade Edge B
+    operation: !import ../../operations/lore/edge/lore-breakdown-edge-b.yml
+    
+  - name: Subvert Edge to Winter
+    operation: !import ../../operations/lore/winter/lore-subvert-edge-winter-a.yml

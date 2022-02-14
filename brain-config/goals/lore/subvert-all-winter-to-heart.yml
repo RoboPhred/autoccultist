@@ -1,0 +1,68 @@
+name: "Subvert all lore: Winter to Heart"
+completedWhen:
+  noneOf:
+    - aspects:
+        lore: 1
+        # There are times when things have the Lore aspect but aren't traditional lore.
+        subvertable_lore: 1
+        winter:
+          greaterThanOrEqualTo: 2
+impulses:
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - aspects: { sanctuary: 1 }
+        - elementId: glimmering
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: !import ../../../operations/passion/study-passion.yml
+
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - aspects: { library: 1 }
+        - elementId: erudition
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: !import ../../../operations/reason/study-reason.yml
+
+  - name: Downgrade Heart C
+    requirements:
+      anyOf:
+        - elementId: fragmentwinter
+        - elementId: fragmentwinterb
+    forbidders:
+      elementId: fragmentheartb
+    operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
+    
+  - name: Subvert Winter B to Heart
+    priority: goal
+    operation: !import ../../operations/lore/heart/lore-subvert-winter-heart-b.yml
+    
+  - name: Combine Winter A
+    requirements:
+      elementId: fragmentheartb
+    operation: !import ../../operations/lore/winter/lore-combine-winter-a.yml
+    
+  - name: Subvert Winter to Heart
+    operation: !import ../../operations/lore/heart/lore-subvert-winter-heart-a.yml
+
+  - name: Downgrade Heart B
+    requirements:
+      elementId: fragmentwinter
+    forbidders:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentwinterb
+        - cardSet:
+            - elementId: fragmentwinter
+            - elementId: fragmentwinter
+    operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
+
+  - name: Downgrade Winter C
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
+
+  - name: Downgrade Winter B
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.yml

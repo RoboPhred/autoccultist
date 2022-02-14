@@ -1,0 +1,56 @@
+name: Upgrade all Grail lore
+completedWhen:
+  noneOf:
+    - cardSet:
+        - elementId: fragmentgrail
+        - elementId: fragmentgrail
+    - cardSet:
+        - elementId: fragmentgrailb
+        - elementId: fragmentgrailb
+    - cardSet:
+        - elementId: fragmentgrailc
+        - elementId: fragmentgrailc
+    - cardSet:
+        - elementId: fragmentgraild
+        - elementId: fragmentgraild
+    - cardSet:
+        - elementId: fragmentgraile
+        - elementId: fragmentgraile
+        - oneOf:
+            - elementId: skillpassiond_folly
+            - aspects: { sanctuary: 1 }
+    - allOf:
+        - cardSet:
+            - elementId: fragmentgrailf
+            - elementId: fragmentgrailf
+            - oneOf:
+                - elementId: skillpassiond_folly
+                - aspects: { sanctuary: 1 }
+        - noneOf:
+            - elementId: fragmentgrailg
+impulses:
+  - name: Combine Grail A
+    operation: !import ../../operations/lore/grail/lore-combine-grail-a.yml
+
+  - name: Combine Grail B
+    operation: !import ../../operations/lore/grail/lore-combine-grail-b.yml
+
+  - name: Combine Grail C
+    operation: !import ../../operations/lore/grail/lore-combine-grail-c.yml
+
+  - name: Combine Grail D
+    operation: !import ../../operations/lore/grail/lore-combine-grail-d.yml
+
+  - name: Combine Grail E
+    requirements:
+      oneOf:
+        - elementId: skillpassiond_folly
+        - aspects: { sanctuary: 1 }
+    operation: !import ../../operations/lore/grail/lore-combine-grail-e.yml
+
+  - name: Combine Grail F
+    requirements:
+      oneOf:
+        - elementId: skillpassiond_folly
+        - aspects: { sanctuary: 1 }
+    operation: !import ../../operations/lore/grail/lore-combine-grail-f.yml
