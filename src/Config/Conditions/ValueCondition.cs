@@ -83,9 +83,14 @@ namespace Autoccultist.Config.Conditions
                     throw new YamlException(scalar.Start, scalar.End, "ValueComparison must be an object or a floating point value.");
                 }
 
-                if (value >= 0)
+                if (value > 0)
                 {
                     this.GreaterThanOrEqualTo = value;
+                }
+                else if (value == 0)
+                {
+                    this.GreaterThanOrEqualTo = 0;
+                    this.LessThanOrEqualTo = 0;
                 }
                 else
                 {
