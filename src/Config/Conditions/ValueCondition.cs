@@ -99,6 +99,7 @@ namespace Autoccultist.Config.Conditions
                 var objectForm = (ValueComparisonObject)nestedObjectDeserializer(typeof(ValueComparisonObject));
                 this.GreaterThanOrEqualTo = objectForm.GreaterThanOrEqualTo;
                 this.GreaterThan = objectForm.GreaterThan;
+                this.LessThanOrEqualTo = objectForm.LessThanOrEqualTo;
                 this.LessThan = objectForm.LessThan;
             }
         }
@@ -116,25 +117,22 @@ namespace Autoccultist.Config.Conditions
         {
             /// <summary>
             /// Gets or sets a value indicating that the target value must be greater than this amount.
-            /// <para>
-            /// Only <see cref="GreaterThan"/> or <see cref="LessThan"/> can be specified at once, not both.
-            /// </summary>
             public float? GreaterThan { get; set; }
 
             /// <summary>
             /// Gets or sets a value indicating that the target value must be greater or equal to this amount.
             /// </summary>
-            /// <remarks>
-            /// This exists mainly for the shorthand number assignment.
-            /// </remarks>
             public float? GreaterThanOrEqualTo { get; set; }
 
             /// <summary>
             /// Gets or sets a value indicating that the target value must be less than this amount.
-            /// <para>
-            /// Only <see cref="GreaterThan"/> or <see cref="LessThan"/> can be specified at once, not both.
             /// </summary>
             public float? LessThan { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating that the target value must be less than or equal to this amount.
+            /// </summary>
+            public float? LessThanOrEqualTo { get; set; }
         }
     }
 }
