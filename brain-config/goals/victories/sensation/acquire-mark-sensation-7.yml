@@ -1,6 +1,10 @@
 name: Achieve the Seventh Mark of Sensation
 requirements:
-  elementId: ascensionsensationc
+  anyOf:
+    - elementId: ascensionsensationc
+    - elementId: ascensionsensationd
+    - elementId: ascensionsensatione
+    - elementId: ascensionsensationf
 completedWhen:
   aspects: { desire: 7 }
 impulses:
@@ -167,6 +171,24 @@ impulses:
     forbidders:
       elementId: influencegrailc
     operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
+    
+#  - name: Keep the hunter out of our hair
+#    requirements:
+#      allOf:
+#        - situation: time
+#            storedCardsMatch:
+#              elementId: seasonsuspicion
+#            timeRemaining:
+#              lessThan: 2
+#        - elementId: evidenceb
+#    priority: critical
+#    operation:
+#      name: Do something rash
+#      situation: talk
+#      startingRecipe:
+#        slots:
+#          talk:
+#            aspects: { hunter: 1 }
 
   - name: Ascend
     priority: goal

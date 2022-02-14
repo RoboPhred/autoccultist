@@ -114,8 +114,6 @@ motivations:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/auction/acquire-stumm.yml
-      # Might not need this.  Power ascention ended up not needing it.
-      # - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -129,6 +127,12 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
       - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Move into Morlands
+    primaryGoals:
+      - !import ../../goals/hq/move-hq-library.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
   - name: Make this relationship official
     primaryGoals:
       - !import ../../goals/romance/gain-relationship-grail.yml
@@ -136,15 +140,38 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-  - name: Move into Morlands
+  - name: Acquire the Stag Door
     primaryGoals:
-      - !import ../../goals/hq/move-hq-library.yml
+#      - !import ../../goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
+      - !import ../../goals/victories/sensation/acquire-lore-stag.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Acquire the Stag Door and the Thiatic Invocation
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Subvert all Edge lore to Winter
     primaryGoals:
-      - !import ../../goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
+      - !import ../../goals/lore/sensation/subvert-all-edge-to-winter.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Subvert all Winter lore to Heart
+    primaryGoals:
+      - !import ../../goals/lore/sensation/subvert-all-winter-to-heart.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Subvert all Heart lore to Grail
+    primaryGoals:
+      - !import ../../goals/lore/sensation/subvert-all-heart-to-grail.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+  - name: Upgrade all Grail lore to the highest we can
+    primaryGoals:
+      - !import ../../goals/lore/sensation/upgrade-all-grail.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -157,7 +184,6 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Honour our Interested Disciple
     primaryGoals:
       - !import ../../goals/victories/sensation/honour-interested-disciple.yml
