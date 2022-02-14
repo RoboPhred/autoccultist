@@ -59,10 +59,11 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
   - name: Find a Grail believer, explore the city, get beefy
     primaryGoals:
+      - !import ../../goals/health/acquire-skillhealtha.yml
       - !import ../../goals/followers/attract-grail-follower.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
-      - !import ../../goals/health/acquire-skillhealtha.yml
+      - !import ../../goals/followers/find-sulochana.yml
     supportingGoals:
       - !import ../../goals/cult/recruit-lore-grail.yml
       - !import ../../goals/consume-bookdealer.yml
@@ -91,7 +92,6 @@ motivations:
       - !import ../../goals/survive.yml
   - name: Recruit everyone
     primaryGoals:
-      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/cult/recruit-lore-grail.yml
     supportingGoals:
       - !import ../../goals/consume-bookdealer.yml

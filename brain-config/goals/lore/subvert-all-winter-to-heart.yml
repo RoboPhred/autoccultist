@@ -28,6 +28,18 @@ impulses:
             greaterThan: 60
     operation: !import ../../../operations/reason/study-reason.yml
 
+  - name: Talk to Sulochana about a Glimmering
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - situation: study
+            storedCardsMatch:
+              allOf:
+                - noneOf:
+                    - aspects: { challenge.knowledge: 1 }
+                - aspects: { challenge.intuition: 1 }
+    operation: !import ../../../operations/sulochana/chat-glimmering.yml
+
   - name: Downgrade Heart C
     requirements:
       anyOf:
