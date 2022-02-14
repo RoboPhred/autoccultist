@@ -13,8 +13,6 @@ namespace Autoccultist.Config.Conditions
     {
         /// <summary>
         /// Gets or sets a value indicating that the target value must be greater than this amount.
-        /// <para>
-        /// Only <see cref="GreaterThan"/> or <see cref="LessThan"/> can be specified at once, not both.
         /// </summary>
         public float? GreaterThan { get; set; }
 
@@ -28,22 +26,20 @@ namespace Autoccultist.Config.Conditions
 
         /// <summary>
         /// Gets or sets a value indicating that the target value must be less than this amount.
-        /// <para>
-        /// Only <see cref="GreaterThan"/> or <see cref="LessThan"/> can be specified at once, not both.
         /// </summary>
         public float? LessThan { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating that the target value must be less than or equal to this amount.
+        /// </summary>
+        public float? LessThanOrEqualTo { get; set; }
 
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
         {
-            if (this.GreaterThan.HasValue && this.LessThan.HasValue && this.GreaterThan.Value > this.LessThan.Value)
+            if (!this.GreaterThan.HasValue && !this.LessThan.HasValue && !this.GreaterThanOrEqualTo.HasValue && !this.LessThanOrEqualTo.HasValue)
             {
-                throw new InvalidConfigException("Value comparison must either have a greaterThan, a lessThan, or have greaterThan be less than lessThan.");
-            }
-
-            if (this.GreaterThanOrEqualTo.HasValue && this.LessThan.HasValue && this.GreaterThanOrEqualTo.Value > this.LessThan.Value)
-            {
-                throw new InvalidConfigException("If greaterThanOrEqualTo and lessThan are specified, greaterThanOrEqualTo must be less than lessThan.");
+                throw new InvalidConfigException("Value condition must specify at least one of: greaterThan, greaterThanOrEqualTo, lessThan, lessThanOrEqualTo");
             }
         }
 
@@ -65,6 +61,11 @@ namespace Autoccultist.Config.Conditions
             }
 
             if (this.LessThan.HasValue && value >= this.LessThan.Value)
+            {
+                return false;
+            }
+
+            if (this.LessThanOrEqualTo.HasValue && value > this.LessThanOrEqualTo.Value)
             {
                 return false;
             }
