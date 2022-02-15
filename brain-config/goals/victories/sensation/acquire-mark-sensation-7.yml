@@ -52,13 +52,7 @@ impulses:
             grail:
               greaterThanOrEqualTo: 12
     forbidders:
-      anyOf:
-        - cardSet:
-            - aspects: { prisoner: 1 }
-            - aspects: { prisoner: 1 }
-        - cardSet:
-            - aspects: { desire: 6 }
-            - aspects: { prisoner: 1 }
+      aspects: { prisoner: 1 }
     operation:
       name: Get a prisoner
       situation: talk
