@@ -13,19 +13,20 @@ completedWhen:
     - cardSet:
         - elementId: fragmentgraild
         - elementId: fragmentgraild
-    - cardSet:
-        - elementId: fragmentgraile
-        - elementId: fragmentgraile
-        - oneOf:
+    - allOf:
+        - cardSet:
+            - elementId: fragmentgraile
+            - elementId: fragmentgraile
+        - anyOf:
             - elementId: skillpassiond_folly
             - aspects: { sanctuary: 1 }
     - allOf:
         - cardSet:
             - elementId: fragmentgrailf
             - elementId: fragmentgrailf
-            - oneOf:
-                - elementId: skillpassiond_folly
-                - aspects: { sanctuary: 1 }
+        - anyOf:
+            - elementId: skillpassiond_folly
+            - aspects: { sanctuary: 1 }
         - noneOf:
             - elementId: fragmentgrailg
 impulses:
@@ -43,14 +44,14 @@ impulses:
 
   - name: Combine Grail E
     requirements:
-      oneOf:
+      anyOf:
         - elementId: skillpassiond_folly
         - aspects: { sanctuary: 1 }
     operation: !import ../../operations/lore/grail/lore-combine-grail-e.yml
 
   - name: Combine Grail F
     requirements:
-      oneOf:
+      anyOf:
         - elementId: skillpassiond_folly
         - aspects: { sanctuary: 1 }
     operation: !import ../../operations/lore/grail/lore-combine-grail-f.yml

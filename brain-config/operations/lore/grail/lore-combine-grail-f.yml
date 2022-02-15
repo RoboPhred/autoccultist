@@ -21,10 +21,10 @@ ongoingRecipes:
         oneOf:
           - elementId: skillpassiond_folly
           - aspects: { sanctuary: 1 }
-          - condition:
-              noneOf:
-                - situation: study
-                  storedCardsMatch:
-                    aspects: { sanctuary: 1 }
-            choice:
-              elementId: passion
+#          - condition:
+#              noneOf:
+#                - situation: study
+#                  storedCardsMatch:
+#                    aspects: { sanctuary: 1 }
+#            choice:
+#              elementId: passion

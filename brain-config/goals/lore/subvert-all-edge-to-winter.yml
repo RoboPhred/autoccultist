@@ -16,7 +16,7 @@ impulses:
         - elementId: erudition
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/reason/study-reason.yml
+    operation: !import ../../operations/reason/study-reason.yml
 
   - name: Downgrade Winter C
     requirements:

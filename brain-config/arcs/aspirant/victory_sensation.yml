@@ -150,28 +150,28 @@ motivations:
       - !import ../../goals/romance/maintain-relationships.yml
   - name: Subvert all Edge lore to Winter
     primaryGoals:
-      - !import ../../goals/lore/sensation/subvert-all-edge-to-winter.yml
+      - !import ../../goals/lore/subvert-all-edge-to-winter.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
   - name: Subvert all Winter lore to Heart
     primaryGoals:
-      - !import ../../goals/lore/sensation/subvert-all-winter-to-heart.yml
+      - !import ../../goals/lore/subvert-all-winter-to-heart.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
   - name: Subvert all Heart lore to Grail
     primaryGoals:
-      - !import ../../goals/lore/sensation/subvert-all-heart-to-grail.yml
+      - !import ../../goals/lore/subvert-all-heart-to-grail.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
   - name: Upgrade all Grail lore to the highest we can
     primaryGoals:
-      - !import ../../goals/lore/sensation/upgrade-all-grail.yml
+      - !import ../../goals/lore/upgrade-all-grail.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml

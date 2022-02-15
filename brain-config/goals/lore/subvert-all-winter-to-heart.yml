@@ -16,7 +16,7 @@ impulses:
         - elementId: glimmering
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/passion/study-passion.yml
+    operation: !import ../../operations/passion/study-passion.yml
 
   - name: Ensure we have erudition
     priority: maintenance
@@ -26,19 +26,20 @@ impulses:
         - elementId: erudition
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/reason/study-reason.yml
+    operation: !import ../../operations/reason/study-reason.yml
 
   - name: Talk to Sulochana about a Glimmering
     priority: maintenance
-    forbidders:
-      anyOf:
+    requirements:
+      allOf:
         - situation: study
-            storedCardsMatch:
-              allOf:
-                - noneOf:
-                    - aspects: { challenge.knowledge: 1 }
-                - aspects: { challenge.intuition: 1 }
-    operation: !import ../../../operations/sulochana/chat-glimmering.yml
+          storedCardsMatch:
+            aspects: { challenge.intuition: 1 }
+        - noneOf:
+            - situation: study
+              storedCardsMatch:
+                aspects: { challenge.knowledge: 1 }
+    operation: !import ../../operations/sulochana/chat-glimmering.yml
 
   - name: Downgrade Heart C
     requirements:

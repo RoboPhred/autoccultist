@@ -16,7 +16,7 @@ impulses:
         - elementId: glimmering
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/passion/study-passion.yml
+    operation: !import ../../operations/passion/study-passion.yml
 
   - name: Subvert Heart to Grail
     operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-c.yml

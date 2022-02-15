@@ -2,7 +2,7 @@ name: Find Sulochana
 completedWhen:
   # Sulochana is immortal and cannot die.
   # However, there is ONE circumstance in which she might leave....
-  oneOf:
+  anyOf:
     - elementId: sulochana
     - elementId: marinette
     - elementId: apostlegrail.pillar4

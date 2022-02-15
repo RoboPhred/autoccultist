@@ -11,31 +11,31 @@ impulses:
   - name: Work a junior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ./conditions/ascension-lore-and-cyprian.yml
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-junior.yml
   - name: Work at Glover & Glover under Alden
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ./conditions/ascension-lore-and-cyprian.yml
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-alden.yml
   - name: Work at Glover & Glover with diligence
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ./conditions/ascension-lore-and-cyprian.yml
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-diligence.yml
   - name: Work a senior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ./conditions/ascension-lore-and-cyprian.yml
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
     operation: !import ../../../operations/glover/work-glover-senior.yml
   - name: Plead for job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ./conditions/ascension-lore-and-cyprian.yml
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
     operation: !import ../../../operations/glover/plead-glover.yml
 
@@ -64,7 +64,7 @@ impulses:
       situation: talk
       startingRecipe:
         requireSlotCards: false
-        requiredCardSet:
+        cardRequirements:
           - aspects: { hq: 1 }
           - aspects:
               follower: 1
@@ -167,7 +167,7 @@ impulses:
   - name: Obtain Grail Influence from the Stag Door
     requirements:
       # Wait until we are ready to ascend
-      !import ./conditions/ascension-lore-and-cyprian.yml
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
     forbidders:
       elementId: influencegrailc
     operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
@@ -176,10 +176,10 @@ impulses:
     requirements:
       allOf:
         - situation: time
-            storedCardsMatch:
-              elementId: seasonsuspicion
-            timeRemaining:
-              lessThan: 2
+          storedCardsMatch:
+            elementId: seasonsuspicion
+          timeRemaining:
+            lessThan: 2
         - elementId: evidenceb
     priority: critical
     operation:
