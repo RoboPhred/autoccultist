@@ -176,10 +176,11 @@ impulses:
     requirements:
       allOf:
         - situation: time
+          recipe: needs
           storedCardsMatch:
             elementId: seasonsuspicion
           timeRemaining:
-            lessThan: 2
+            lessThan: 5
         - elementId: evidenceb
     priority: critical
     operation:

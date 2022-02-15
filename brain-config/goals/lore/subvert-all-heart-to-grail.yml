@@ -24,6 +24,16 @@ impulses:
   - name: Downgrade Heart C
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
 
+  - name: Downgrade Grail D
+    requirements:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+        - elementId: fragmentheartc
+    forbidders:
+      elementId: fragmentgrailc
+    operation: !import ../../operations/lore/grail/lore-breakdown-grail-d.yml
+
   - name: Downgrade Grail C
     requirements:
       anyOf:

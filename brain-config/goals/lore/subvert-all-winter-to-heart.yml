@@ -35,10 +35,9 @@ impulses:
         - situation: study
           storedCardsMatch:
             aspects: { challenge.intuition: 1 }
-        - noneOf:
-            - situation: study
-              storedCardsMatch:
-                aspects: { challenge.knowledge: 1 }
+        - situation: study
+          storedCardsMatch:
+            aspects: { challenge.knowledge: 1 }
     operation: !import ../../operations/sulochana/chat-glimmering.yml
 
   - name: Downgrade Heart C
@@ -78,4 +77,6 @@ impulses:
     operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
 
   - name: Downgrade Winter B
+    forbidders:
+      elementId: fragmentwinter
     operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.yml

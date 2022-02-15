@@ -28,11 +28,20 @@ motivations:
       - !import ../../goals/aspirant/find-collaborator.yml
     supportingGoals:
       - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/work-labor.yml
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
-  - name: Get horny, get smart
+  - name: Get horny, get beefy
     primaryGoals:
+      - !import ../../goals/health/acquire-skillhealtha.yml
+      - !import ../../goals/health/acquire-skillhealthb.yml
+      - !import ../../goals/health/acquire-skillhealthc.yml
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Get smart
+    primaryGoals:
       # Get skillreasona to make Alden easier to deal with
       # We need all the way up to c, as we expect dry soul curse to steal one.
       - !import ../../goals/reason/acquire-skillreasona.yml
@@ -50,6 +59,7 @@ motivations:
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
   - name: Establish the Order of the Bloody Cup
     primaryGoals:
       - !import ../../goals/cult/form-cult-doctrine-grail.yml
@@ -59,7 +69,7 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
   - name: Find a Grail believer, explore the city, get beefy
     primaryGoals:
-      - !import ../../goals/health/acquire-skillhealtha.yml
+      - !import ../../goals/health/acquire-skillhealthb.yml
       - !import ../../goals/followers/attract-grail-follower.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
@@ -100,20 +110,20 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
       - !import ../../goals/romance/gain-relationship-grail.yml
-  - name: Acquire the Wood and White Door
-    primaryGoals:
-      - !import ../../goals/mansus/acquire-way-wood.yml
-      - !import ../../goals/mansus/acquire-way-whitedoor.yml
-    supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
-      - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Finish Morlands, collect rites
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/auction/acquire-stumm.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/romance/gain-relationship-grail.yml
+  - name: Acquire the Wood and White Door
+    primaryGoals:
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
