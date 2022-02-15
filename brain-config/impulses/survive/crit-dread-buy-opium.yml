@@ -2,23 +2,35 @@ name: Respond to critical dread with Opium
 priority: critical
 requirements:
   # Dread is critical if we have 2 sitting around
-  anyOf:
-    - situation: despair
-      storedCardsMatch:
-        cardSet:
-          - elementId: dread
-          - elementId: dread
-    - cardSet:
-        - elementId: dread
-          location: tabletop
-        - elementId: dread
-          location: tabletop
-    - allOf:
+  allOf:
+    - anyOf:
+        - situation: despair
+        - situation: time
+          storedCardsMatch:
+            elementId: seasondespair
+    - anyOf:
         - situation: despair
           storedCardsMatch:
-            elementId: dread
-        - elementId: dread
-          location: tabletop
+            cardSet:
+              - elementId: dread
+              - elementId: dread
+        - cardSet:
+            - elementId: dread
+              location: tabletop
+              lifetimeRemaining:
+                greaterThan: 60
+            - elementId: dread
+              location: tabletop
+              lifetimeRemaining:
+                greaterThan: 60
+        - allOf:
+            - situation: despair
+              storedCardsMatch:
+                elementId: dread
+            - elementId: dread
+              location: tabletop
+              lifetimeRemaining:
+                greaterThan: 60
 forbidders:
   elementId: contentment
 operation:

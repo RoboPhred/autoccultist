@@ -6,5 +6,5 @@ startingRecipe:
       elementId: fascination
       ageBias: youngest
     reminders:
-      elementId: fleeting
-      ageBias: oldest
+      elementId: dread
+      ageBias: youngest
