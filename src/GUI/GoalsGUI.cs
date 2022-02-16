@@ -12,7 +12,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class GoalsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 scrollPosition = default;
 
