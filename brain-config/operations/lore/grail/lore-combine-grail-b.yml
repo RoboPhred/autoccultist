@@ -1,11 +1,28 @@
 name: "Combine lore: A Megalesian Incantation"
 situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentgrailb
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentgrailb
+        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
-      elementId: fragmentgrailb
+      oneOf:
+        - elementId: fragmentgrailb
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailb
     with:
-      elementId: fragmentgrailb
+      oneOf:
+        - elementId: fragmentgrailb
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailb
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:

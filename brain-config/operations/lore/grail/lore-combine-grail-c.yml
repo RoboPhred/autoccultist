@@ -1,11 +1,28 @@
 name: "Combine lore: A Delightful Sacrament"
 situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentgrailc
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentgrailc
+        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
-      elementId: fragmentgrailc
+      oneOf:
+        - elementId: fragmentgrailc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailc
     with:
-      elementId: fragmentgrailc
+      oneOf:
+        - elementId: fragmentgrailc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailc
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:

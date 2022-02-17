@@ -1,11 +1,28 @@
 name: "Combine lore: Thiatic Invocation"
 situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentgraild
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentgraild
+        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
-      elementId: fragmentgraild
+      oneOf:
+        - elementId: fragmentgraild
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraild
     with:
-      elementId: fragmentgraild
+      oneOf:
+        - elementId: fragmentgraild
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraild
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:
