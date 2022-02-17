@@ -1,0 +1,25 @@
+name: "Combine lore: Geminate Invocation"
+situation: study
+startingRecipe:
+  cardRequirements:
+    - oneOf:
+      - aspects: { sanctuary: 1 }
+      - elementId: glimmering
+        lifetimeRemaining:
+          greaterThan: 60
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentheartd
+    with:
+      oneOf:
+        - elementId: fragmentheartd
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health
