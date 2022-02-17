@@ -143,9 +143,10 @@ motivations:
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Make this relationship official
+  - name: Make this relationship official and read the books from St. Agnes
     primaryGoals:
       - !import ../../goals/romance/gain-relationship-grail.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
