@@ -1,0 +1,30 @@
+name: "Combine lore: A Thunderous Secret"
+situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentheart
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentheart
+        aspects: { challenge.intuition: -1 }
+startingRecipe:
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentheart
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheart
+    with:
+      oneOf:
+        - elementId: fragmentheart
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheart
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering

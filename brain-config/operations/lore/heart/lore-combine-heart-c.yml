@@ -1,0 +1,34 @@
+name: "Combine lore: A Waking Chant"
+situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentheartc
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentheartc
+        aspects: { challenge.intuition: -1 }
+startingRecipe:
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentheartc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheartc
+    with:
+      oneOf:
+        - elementId: fragmentheartc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheartc
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health
