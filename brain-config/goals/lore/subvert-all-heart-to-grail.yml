@@ -1,12 +1,10 @@
 name: "Subvert all lore: Heart to Grail"
 completedWhen:
   noneOf:
-    - aspects:
-        lore: 1
-        # There are times when things have the Lore aspect but aren't traditional lore.
-        subvertable_lore: 1
-        heart:
-          greaterThanOrEqualTo: 2
+    - elementId: fragmentheart
+    - elementId: fragmentheartb
+    - elementId: fragmentheartc
+# TODO: Add more levels of Heart lore as their operations are added.
 impulses:
   - name: Ensure we have glimmering
     priority: maintenance
@@ -17,12 +15,59 @@ impulses:
           lifetimeRemaining:
             greaterThan: 60
     operation: !import ../../operations/passion/study-passion.yml
+    
+  - name: Combine Heart A
+    requirements:
+      elementId: fragmentgrailb
+    operation: !import ../../operations/lore/heart/lore-combine-heart-a.yml
+    
+  - name: Combine Heart B
+    requirements:
+      elementId: fragmentgrailc
+    operation: !import ../../operations/lore/heart/lore-combine-heart-a.yml
 
   - name: Subvert Heart to Grail
     operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-c.yml
 
   - name: Downgrade Heart C
+    forbidders:
+      anyOf:
+        - elementId: fragmentheartb
+        - elementId: fragmentgrailc
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
+
+  - name: Subvert Heart to Grail
+    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-b.yml
+
+  - name: Downgrade Heart B
+    forbidders:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentgrailb
+    operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
+    
+  - name: Subvert Heart to Grail
+    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-a.yml
+
+  - name: Downgrade Grail B
+    requirements:
+      elementId: fragmentheart
+    forbidders:
+      anyOf:
+        - elementId: fragmentgrail
+        - elementId: fragmentheartb
+    operation: !import ../../operations/lore/grail/lore-breakdown-grail-b.yml
+
+  - name: Downgrade Grail C
+    requirements:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+    forbidders:
+      anyOf:
+        - elementId: fragmentgrailb
+        - elementId: fragmentheartc
+    operation: !import ../../operations/lore/grail/lore-breakdown-grail-c.yml
 
   - name: Downgrade Grail D
     requirements:
@@ -33,28 +78,3 @@ impulses:
     forbidders:
       elementId: fragmentgrailc
     operation: !import ../../operations/lore/grail/lore-breakdown-grail-d.yml
-
-  - name: Downgrade Grail C
-    requirements:
-      anyOf:
-        - elementId: fragmentheart
-        - elementId: fragmentheartb
-    forbidders:
-      elementId: fragmentgrailb
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-c.yml
-
-  - name: Subvert Heart to Grail
-    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-b.yml
-
-  - name: Downgrade Heart B
-    operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
-
-  - name: Downgrade Grail B
-    requirements:
-      elementId: fragmentheart
-    forbidders:
-      elementId: fragmentgrail
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-b.yml
-    
-  - name: Subvert Heart to Grail
-    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-a.yml

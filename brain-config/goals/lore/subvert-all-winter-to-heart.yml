@@ -1,22 +1,19 @@
 name: "Subvert all lore: Winter to Heart"
 completedWhen:
   noneOf:
-    - aspects:
-        lore: 1
-        # There are times when things have the Lore aspect but aren't traditional lore.
-        subvertable_lore: 1
-        winter:
-          greaterThanOrEqualTo: 2
+    - elementId: fragmentwinter
+    - elementId: fragmentwinterb
+    - elementId: fragmentwinterc
+# TODO: Add more levels of Heart lore as their operations are added.
 impulses:
-  - name: Ensure we have glimmering
-    priority: maintenance
-    forbidders:
+  - name: Downgrade Heart C
+    requirements:
       anyOf:
-        - aspects: { sanctuary: 1 }
-        - elementId: glimmering
-          lifetimeRemaining:
-            greaterThan: 60
-    operation: !import ../../operations/passion/study-passion.yml
+        - elementId: fragmentwinter
+        - elementId: fragmentwinterb
+    forbidders:
+      elementId: fragmentheartb
+    operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
 
   - name: Ensure we have erudition
     priority: maintenance
@@ -28,38 +25,63 @@ impulses:
             greaterThan: 60
     operation: !import ../../operations/reason/study-reason.yml
 
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - aspects: { sanctuary: 1 }
+        - elementId: glimmering
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: !import ../../operations/passion/study-passion.yml
+
   - name: Talk to Sulochana about a Glimmering
     priority: maintenance
     requirements:
       allOf:
         - situation: study
+          recipe: studyresearch.entrypoint
           storedCardsMatch:
             aspects: { challenge.intuition: 1 }
         - situation: study
+          recipe: studyresearch.entrypoint
           storedCardsMatch:
             aspects: { challenge.knowledge: 1 }
     operation: !import ../../operations/sulochana/chat-glimmering.yml
-
-  - name: Downgrade Heart C
-    requirements:
-      anyOf:
-        - elementId: fragmentwinter
-        - elementId: fragmentwinterb
-    forbidders:
-      elementId: fragmentheartb
-    operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
     
   - name: Subvert Winter B to Heart
     priority: goal
     operation: !import ../../operations/lore/heart/lore-subvert-winter-heart-b.yml
     
+  - name: Combine Heart A
+    requirements:
+      - elementId: glimmering
+        lifetimeRemaining:
+          greaterThan: 60
+    forbidders:
+      elementId: fragmentwinter
+    operation: !import ../../operations/lore/heart/lore-combine-heart-a.yml
+    
   - name: Combine Winter A
     requirements:
-      elementId: fragmentheartb
+      anyOf:
+        - elementId: fragmentheartb
+        - elementId: fragmentheartc
     operation: !import ../../operations/lore/winter/lore-combine-winter-a.yml
     
-  - name: Subvert Winter to Heart
+  - name: Subvert Winter A to Heart
+    requirements:
+      allOf:
+        - elementId: erudition
+          lifetimeRemaining:
+            greaterThan: 60
+        - elementId: glimmering
+          lifetimeRemaining:
+            greaterThan: 60
     operation: !import ../../operations/lore/heart/lore-subvert-winter-heart-a.yml
+
+  - name: Downgrade Winter C
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
 
   - name: Downgrade Heart B
     requirements:
@@ -72,11 +94,3 @@ impulses:
             - elementId: fragmentwinter
             - elementId: fragmentwinter
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
-
-  - name: Downgrade Winter C
-    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
-
-  - name: Downgrade Winter B
-    forbidders:
-      elementId: fragmentwinter
-    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.yml

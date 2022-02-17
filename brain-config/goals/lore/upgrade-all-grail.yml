@@ -64,4 +64,6 @@ impulses:
       anyOf:
         - elementId: skillpassiond_folly
         - aspects: { sanctuary: 1 }
+    forbidders:
+      elementId: fragmentgrailg
     operation: !import ../../operations/lore/grail/lore-combine-grail-f.yml
