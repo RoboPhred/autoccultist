@@ -1,21 +1,5 @@
 name: "Subvert lore: Winter A to Heart"
 situation: study
-cardRequirements:
-  cardSet:
-    - oneOf:
-        - elementId: fragmentheart
-          aspects: { challenge.intuition: -1 }
-        - aspects: { sanctuary: 1 }
-        - elementId: glimmering
-          lifetimeRemaining:
-            greaterThan: 60
-    - oneOf:
-        - elementId: fragmentwinter
-          aspects: { challenge.knowledge: -1 }
-        - aspects: { library: 1 }
-        - elementId: erudition
-          lifetimeRemaining:
-            greaterThan: 60
 startingRecipe:
   slots:
     study:

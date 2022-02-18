@@ -88,7 +88,7 @@ impulses:
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
 
   - name: Downgrade Winter C
-    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
 
   - name: Downgrade Heart C
     requirements:
@@ -104,4 +104,4 @@ impulses:
       elementId: fragmentheart
     forbidders:
       aspects: { lore: 1, heart: 4 }
-    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.yml

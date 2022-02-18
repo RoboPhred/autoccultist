@@ -1,13 +1,5 @@
 name: "Subvert lore: A Knife's Secret to A White Ceremony"
 situation: study
-cardRequirements:
-  oneOf:
-    - elementId: fragmentwinter
-      aspects: { challenge.knowledge: -1 }
-    - aspects: { library: 1 }
-    - elementId: erudition
-      lifetimeRemaining:
-        greaterThan: 60
 startingRecipe:
   slots:
     study:

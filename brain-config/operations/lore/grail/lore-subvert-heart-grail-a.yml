@@ -1,16 +1,5 @@
 name: "Subvert lore: Heart to Grail"
 situation: study
-cardRequirements:
-  oneOf:
-  - aspects: { sanctuary: 1 }
-  - elementId: glimmering
-    lifetimeRemaining:
-      greaterThan: 60
-  - cardSet:
-      - elementId: fragmentheart
-        aspects: { challenge.intuition: -1 }
-      - elementId: fragmentgrail
-        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
