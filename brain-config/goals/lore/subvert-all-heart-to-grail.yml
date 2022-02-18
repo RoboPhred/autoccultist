@@ -69,6 +69,27 @@ impulses:
         - elementId: fragmentheart
         - aspects: { lore: 1, grail: 4 }
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
+    
+  - name: Subvert Heart to Grail
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
+    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-a.yml
+
+  - name: Combine Grail A
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
+    forbidders:
+      elementId: fragmentheart
+    operation: !import ../../operations/lore/grail/lore-combine-grail-a.yml
+
+  - name: Combine Grail B
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
+    forbidders:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+    operation: !import ../../operations/lore/grail/lore-combine-grail-b.yml
 
   - name: Downgrade Grail D
     requirements:
@@ -78,11 +99,6 @@ impulses:
         - elementId: fragmentheartc
     forbidders:
       anyOf:
-        - elementId: fragmentgrail
-        - elementId: fragmentheartb
+        - elementId: fragmentgrailc
+        - elementId: fragmentheartd
     operation: !import ../../operations/lore/grail/lore-breakdown-grail-d.yml
-    
-  - name: Subvert Heart to Grail
-    requirements:
-      !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-a.yml
