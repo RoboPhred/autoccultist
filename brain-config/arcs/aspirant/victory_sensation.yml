@@ -100,16 +100,6 @@ motivations:
     supportingGoals:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/survive.yml
-  - name: Recruit everyone
-    primaryGoals:
-      - !import ../../goals/cult/recruit-lore-grail.yml
-    supportingGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
-      - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
   - name: Finish Morlands, collect rites
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
@@ -119,7 +109,7 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import ../../goals/mansus/acquire-way-wood.yml
@@ -128,7 +118,7 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
   - name: Raid the hospital
     primaryGoals:
       - !import ../../goals/vaults/st-agnes-hospital.yml
@@ -136,20 +126,22 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
-      - !import ../../goals/romance/gain-relationship-grail.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
   - name: Move into Morlands
     primaryGoals:
       - !import ../../goals/hq/move-hq-library.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Make this relationship official
+      - !import ../../goals/cult/recruit-away-influences.yml
+  - name: Read the books from St. Agnes
     primaryGoals:
-      - !import ../../goals/romance/gain-relationship-grail.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
   - name: Acquire the Stag Door
     primaryGoals:
 #      - !import ../../goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
@@ -158,6 +150,7 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
   - name: Subvert all Edge lore to Winter
     primaryGoals:
       - !import ../../goals/lore/subvert-all-edge-to-winter.yml
@@ -165,6 +158,7 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
   - name: Subvert all Winter lore to Heart
     primaryGoals:
       - !import ../../goals/lore/subvert-all-winter-to-heart.yml
@@ -179,6 +173,8 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
   - name: Upgrade all Grail lore to the highest we can
     primaryGoals:
       - !import ../../goals/lore/upgrade-all-grail.yml
@@ -186,6 +182,8 @@ motivations:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
   - name: Promote Grail believers, dedicate to horny
     primaryGoals:
       - !import ../../goals/cult/promote-grail-with-grail.yml
