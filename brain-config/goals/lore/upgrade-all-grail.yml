@@ -33,35 +33,45 @@ impulses:
   - name: Ensure we have glimmering
     priority: maintenance
     forbidders:
-      anyOf:
-        - aspects: { sanctuary: 1 }
-        - elementId: glimmering
-          lifetimeRemaining:
-            greaterThan: 60
+      !import ../../conditions/can-answer-challenge-intuition.yml
     operation: !import ../../operations/passion/study-passion.yml
 
   - name: Combine Grail A
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
     operation: !import ../../operations/lore/grail/lore-combine-grail-a.yml
 
   - name: Combine Grail B
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
     operation: !import ../../operations/lore/grail/lore-combine-grail-b.yml
 
   - name: Combine Grail C
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
     operation: !import ../../operations/lore/grail/lore-combine-grail-c.yml
 
   - name: Combine Grail D
+    requirements:
+      !import ../../conditions/can-answer-challenge-intuition.yml
     operation: !import ../../operations/lore/grail/lore-combine-grail-d.yml
 
   - name: Combine Grail E
     requirements:
-      anyOf:
-        - elementId: skillpassiond_folly
-        - aspects: { sanctuary: 1 }
+      allOf:
+        - !import ../../conditions/can-answer-challenge-intuition.yml
+        - anyOf:
+            - elementId: skillpassiond_folly
+            - aspects: { sanctuary: 1 }
     operation: !import ../../operations/lore/grail/lore-combine-grail-e.yml
 
   - name: Combine Grail F
     requirements:
-      anyOf:
-        - elementId: skillpassiond_folly
-        - aspects: { sanctuary: 1 }
+      allOf:
+        - !import ../../conditions/can-answer-challenge-intuition.yml
+        - anyOf:
+            - elementId: skillpassiond_folly
+            - aspects: { sanctuary: 1 }
+    forbidders:
+      elementId: fragmentgrailg
     operation: !import ../../operations/lore/grail/lore-combine-grail-f.yml
