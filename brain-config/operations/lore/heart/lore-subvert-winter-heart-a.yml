@@ -1,11 +1,17 @@
-name: "Subvert lore: Winter to Heart"
+name: "Subvert lore: Winter A to Heart"
 situation: study
 startingRecipe:
   slots:
     study:
-      elementId: fragmentwinter
+      oneOf:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - elementId: fragmentwinter
     with:
-      elementId: fragmentheart
+      oneOf:
+        - elementId: fragmentheart
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheart
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:
