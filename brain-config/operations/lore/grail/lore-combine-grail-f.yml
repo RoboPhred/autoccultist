@@ -1,11 +1,28 @@
 name: "Combine lore: Anthic Elaboration"
 situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentgrailf
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentgrailf
+        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
-      elementId: fragmentgrailf
+      oneOf:
+        - elementId: fragmentgrailf
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailf
     with:
-      elementId: fragmentgrailf
+      oneOf:
+        - elementId: fragmentgrailf
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailf
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:

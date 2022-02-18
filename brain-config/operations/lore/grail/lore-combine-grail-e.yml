@@ -1,11 +1,28 @@
 name: "Combine lore: Formulae Voluptuous"
 situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentgraile
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentgraile
+        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
-      elementId: fragmentgraile
+      oneOf:
+        - elementId: fragmentgraile
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraile
     with:
-      elementId: fragmentgraile
+      oneOf:
+        - elementId: fragmentgraile
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraile
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:

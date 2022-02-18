@@ -24,7 +24,7 @@ impulses:
       allOf:
         - aspects: { lore: 1, grail: 6 }
         - !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/heart/lore-combine-heart-a.yml
+    operation: !import ../../operations/lore/heart/lore-combine-heart-b.yml
 
   - name: Subvert Heart to Grail
     requirements:
@@ -35,18 +35,17 @@ impulses:
     forbidders:
       anyOf:
         - elementId: fragmentheartb
-        - elementId: fragmentgrailc
+        - aspects: { lore: 1, grail: 6 }
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
 
-  - name: Downgrade Grail D
+  - name: Downgrade Grail B
     requirements:
-      anyOf:
-        - elementId: fragmentheart
-        - elementId: fragmentheartb
-        - elementId: fragmentheartc
+      elementId: fragmentheart
     forbidders:
-      elementId: fragmentgrailc
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-d.yml
+      anyOf:
+        - elementId: fragmentgrail
+        - elementId: fragmentheartb
+    operation: !import ../../operations/lore/grail/lore-breakdown-grail-b.yml
 
   - name: Downgrade Grail C
     requirements:
@@ -59,7 +58,7 @@ impulses:
         - elementId: fragmentheartc
     operation: !import ../../operations/lore/grail/lore-breakdown-grail-c.yml
 
-  - name: Subvert Heart to Grail
+  - name: Subvert Heart B to Grail
     requirements:
       !import ../../conditions/can-answer-challenge-intuition.yml
     operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-b.yml
@@ -68,17 +67,20 @@ impulses:
     forbidders:
       anyOf:
         - elementId: fragmentheart
-        - elementId: fragmentgrailb
+        - aspects: { lore: 1, grail: 4 }
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
 
-  - name: Downgrade Grail B
+  - name: Downgrade Grail D
     requirements:
-      elementId: fragmentheart
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+        - elementId: fragmentheartc
     forbidders:
       anyOf:
         - elementId: fragmentgrail
         - elementId: fragmentheartb
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-b.yml
+    operation: !import ../../operations/lore/grail/lore-breakdown-grail-d.yml
     
   - name: Subvert Heart to Grail
     requirements:

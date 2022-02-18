@@ -1,11 +1,28 @@
 name: "Combine lore: A Sexton's Secret"
 situation: study
+cardRequirements:
+  oneOf:
+    - cardSet:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+    - aspects: { library: 1 }
+    - elementId: erudition
+      lifetimeRemaining:
+        greaterThan: 60
 startingRecipe:
   slots:
     study:
-      elementId: fragmentwinter
+      oneOf:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - elementId: fragmentwinter
     with:
-      elementId: fragmentwinter
+      oneOf:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - elementId: fragmentwinter
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.knowledge:
     slots:

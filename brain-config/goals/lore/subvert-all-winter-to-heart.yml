@@ -31,15 +31,6 @@ impulses:
           storedCardsMatch:
             aspects: { challenge.knowledge: 1 }
     operation: !import ../../operations/sulochana/chat-glimmering.yml
-
-  - name: Downgrade Heart C
-    requirements:
-      anyOf:
-        - elementId: fragmentwinter
-        - elementId: fragmentwinterb
-    forbidders:
-      elementId: fragmentheartb
-    operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
     
   - name: Subvert Winter B to Heart
     priority: goal
@@ -97,4 +88,20 @@ impulses:
     operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
 
   - name: Downgrade Winter C
-    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.
+
+  - name: Downgrade Heart C
+    requirements:
+      anyOf:
+        - elementId: fragmentwinter
+        - elementId: fragmentwinterb
+    forbidders:
+      elementId: fragmentheartb
+    operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
+
+  - name: Downgrade Winter B
+    requirements:
+      elementId: fragmentheart
+    forbidders:
+      aspects: { lore: 1, heart: 4 }
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.

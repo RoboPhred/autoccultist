@@ -1,11 +1,28 @@
 name: "Subvert lore: the Waking Chant to the Thiatic Invocation"
 situation: study
+cardRequirements:
+  oneOf:
+  - aspects: { sanctuary: 1 }
+  - elementId: glimmering
+    lifetimeRemaining:
+      greaterThan: 60
+  - cardSet:
+      - elementId: fragmentheartc
+        aspects: { challenge.intuition: -1 }
+      - elementId: fragmentgrailc
+        aspects: { challenge.intuition: -1 }
 startingRecipe:
   slots:
     study:
-      elementId: fragmentheartc
+      oneOf:
+        - elementId: fragmentheartc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheartc
     with:
-      elementId: fragmentgrailc
+      oneOf:
+        - elementId: fragmentgrailc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailc
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:
