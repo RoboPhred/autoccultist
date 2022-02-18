@@ -28,14 +28,14 @@ motivations:
       - !import ../../goals/aspirant/find-collaborator.yml
     supportingGoals:
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
   - name: Get horny, get beefy
     primaryGoals:
+      - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
       - !import ../../goals/health/acquire-skillhealtha.yml
       - !import ../../goals/health/acquire-skillhealthb.yml
       - !import ../../goals/health/acquire-skillhealthc.yml
-      - !import ../../goals/victories/sensation/acquire-temptation-sensation.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
@@ -67,22 +67,22 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Find a Grail believer, explore the city, get beefy
+  - name: Find a Grail believer, meet Sulochana, explore the city
     primaryGoals:
-      - !import ../../goals/health/acquire-skillhealthb.yml
       - !import ../../goals/followers/attract-grail-follower.yml
+      - !import ../../goals/followers/find-sulochana.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
-      - !import ../../goals/followers/find-sulochana.yml
     supportingGoals:
       - !import ../../goals/cult/recruit-lore-grail.yml
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Recruit a Grail believer
+  - name: Recruit all Grail and Heart followers
     primaryGoals:
       - !import ../../goals/cult/recruit-grail-lore-grail.yml
+      - !import ../../goals/cult/recruit-heart-lore-grail.yml
     supportingGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
