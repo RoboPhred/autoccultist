@@ -10,7 +10,9 @@ ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:
       solvechallenge:
-        elementId: glimmering
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering
   studyresearch.attemptsolve.challenge.practical:
     slots:
       solvechallenge:
