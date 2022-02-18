@@ -107,6 +107,24 @@ impulses:
             - elementId: fragmentsecrethistoriesb
         - elementId: fragmentsecrethistoriesc
     operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+  - name: Mansus-grind for SH lore
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      anyOf:
+        - cardSet:
+          - elementId: fragmentsecrethistoriesb
+          - elementId: fragmentsecrethistoriesb
+        - cardSet:
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistoriesb
+        - cardSet:
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+    operation: !import ../../../operations/mansus/use-wood-secrethistories.yml
   # End Secret Histories C
 
   # Begin Lantern C
