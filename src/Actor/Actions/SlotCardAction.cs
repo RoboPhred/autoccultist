@@ -1,14 +1,16 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
-    using System.Collections.Generic;
     using System.Linq;
-    using Assets.CS.TabletopUI;
+    using AutoccultistNS.GameState;
+    using SecretHistories.Enums;
 
     /// <summary>
     /// An action to slot a card into a slot of a situation.
     /// </summary>
     public class SlotCardAction : IAutoccultistAction
     {
+        private bool executed = false;
+
         // TODO: This should take a specific card reservation, not a card matcher.
 
         /// <summary>
@@ -19,6 +21,7 @@ namespace Autoccultist.Actor.Actions
         /// <param name="cardMatcher">The card matcher to choose a card to slot.</param>
         public SlotCardAction(string situationId, string slotId, ICardChooser cardMatcher)
         {
+            NoonUtility.LogWarning("Created slot card action with situation id: " + situationId + " and slot id: " + slotId);
             this.SituationId = situationId;
             this.SlotId = slotId;
             this.CardMatcher = cardMatcher;
@@ -42,6 +45,15 @@ namespace Autoccultist.Actor.Actions
         /// <inheritdoc/>
         public void Execute()
         {
+            if (this.executed)
+            {
+                throw new ActionFailureException(this, "This action has already been executed.");
+            }
+
+            this.executed = true;
+
+            NoonUtility.LogWarning("Executing slot card action with situation id: " + this.SituationId + " and slot id: " + this.SlotId);
+
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -53,32 +65,25 @@ namespace Autoccultist.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
-            IList<RecipeSlot> slots;
-            switch (situation.SituationClock.State)
+            var sphere = situation.GetSpheresByCategory(SphereCategory.Threshold).FirstOrDefault(x => x.GoverningSphereSpec.Id == this.SlotId);
+            if (sphere == null)
             {
-                case SituationState.Unstarted:
-                    slots = situation.situationWindow.GetStartingSlots();
-                    break;
-                case SituationState.Ongoing:
-                    slots = situation.situationWindow.GetOngoingSlots();
-                    break;
-                default:
-                    throw new ActionFailureException(this, "Situation is not in an appropriate state to slot cards.");
-            }
-
-            var slot = slots.FirstOrDefault(x => x.GoverningSlotSpecification.Id == this.SlotId);
-            if (!slot)
-            {
-                throw new ActionFailureException(this, "Situation has no matching slot.");
+                throw new ActionFailureException(this, $"Situation {this.SituationId} has no matching slot {this.SlotId}.");
             }
 
             var card = CardManager.ChooseCard(this.CardMatcher);
             if (card == null)
             {
-                throw new ActionFailureException(this, "No matching card was found.");
+                throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
             }
 
-            GameAPI.SlotCard(slot, card);
+            if (!GameAPI.TrySlotCard(sphere, card.ToElementStack()))
+            {
+                throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
+            }
+
+            GameStateProvider.Invalidate();
+            Autoccultist.Instance.LogTrace($"Slotted card {card.ElementId} into situation {this.SituationId} slot {this.SlotId}.");
         }
     }
 }

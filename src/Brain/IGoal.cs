@@ -1,7 +1,7 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// A description of a task with a starting condition, a target game state, and a list of impulses to complete it.

@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     /// <summary>
     /// Defines locations a card may be in.

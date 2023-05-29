@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,6 +8,11 @@ namespace Autoccultist.GameState
     /// </summary>
     public static class SituationStateExtensions
     {
+        public static IEnumerable<ICardState> GetSlottedCards(this ISituationState situationState)
+        {
+            return situationState.RecipeSlots.Select(x => x.Card).Where(x => x != null);
+        }
+
         /// <summary>
         /// Get all aspects contained within the situation.
         /// </summary>
@@ -16,7 +21,7 @@ namespace Autoccultist.GameState
         public static IReadOnlyDictionary<string, int> GetAspects(this ISituationState situationState)
         {
             var degreesByAspect =
-                from card in situationState.SlottedCards.Concat(situationState.StoredCards)
+                from card in situationState.GetSlottedCards().Concat(situationState.StoredCards)
                 from aspectEntry in card.Aspects
                 group aspectEntry by aspectEntry.Key into aspectGroup
                 select new { Aspect = aspectGroup.Key, Degree = aspectGroup.Sum(x => x.Value) };

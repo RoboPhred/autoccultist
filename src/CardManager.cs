@@ -1,7 +1,6 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
-    using Assets.CS.TabletopUI;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Static classes for dealing with cards in the game.
@@ -13,10 +12,10 @@ namespace Autoccultist
         /// </summary>
         /// <param name="choice">The card matcher to choose a card with.</param>
         /// <returns>The chosen card, or null if none was found.</returns>
-        public static ElementStackToken ChooseCard(ICardChooser choice)
+        public static ICardState ChooseCard(ICardChooser choice)
         {
             var state = GameStateProvider.Current;
-            return choice.ChooseCard(state.TabletopCards)?.ToElementStack();
+            return choice.ChooseCard(state.TabletopCards);
         }
     }
 }

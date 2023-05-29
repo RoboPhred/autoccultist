@@ -1,15 +1,14 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Assets.Core.Enums;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi;
-    using Autoccultist.Actor;
-    using Autoccultist.Actor.Actions;
+    using AutoccultistNS.Actor;
+    using AutoccultistNS.Actor.Actions;
+    using AutoccultistNS.GameState;
+    using SecretHistories.Enums;
 
     /// <summary>
     /// An orchestration of a situation that executes an operation.
@@ -89,20 +88,6 @@ namespace Autoccultist.Brain
             }
         }
 
-        private SituationController Situation
-        {
-            get
-            {
-                var situation = GameAPI.GetSituation(this.SituationId);
-                if (situation == null)
-                {
-                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} not found.");
-                }
-
-                return situation;
-            }
-        }
-
         /// <inheritdoc/>
         public override string ToString()
         {
@@ -112,28 +97,23 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public void Start()
         {
+            var situation = this.GetSituationState();
+
             if (this.operationState != OperationState.Unstarted)
             {
                 return;
             }
 
-            var situation = this.Situation;
-            if (situation == null)
+            switch (situation.State)
             {
-                throw new Exception("Tried to start a situation solution with no situation.");
-            }
-
-            switch (this.Situation.SituationClock.State)
-            {
-                case SituationState.Unstarted:
-                case SituationState.RequiringExecution:
+                case StateEnum.Unstarted:
+                case StateEnum.RequiringExecution:
                     this.operationState = OperationState.Starting;
                     this.RunCoroutine(this.StartOperationCoroutine());
                     break;
-                case SituationState.FreshlyStarted:
-                case SituationState.Ongoing:
+                case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
-                    if (!this.operation.OngoingRecipes.TryGetValue(this.Situation.SituationClock.RecipeId, out var recipeSolution))
+                    if (!this.operation.OngoingRecipes.TryGetValue(situation.CurrentRecipe, out var recipeSolution))
                     {
                         // Operation does not know this recipe.
                         return;
@@ -143,7 +123,7 @@ namespace Autoccultist.Brain
                     break;
                 default:
                     // This happened to a the cult activity that should have been ongoing...  Got stuck on an unstarted state.
-                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} is in state {this.Situation.SituationClock.State}.");
+                    NoonUtility.LogWarning($"Cannot start solution - Situation {this.SituationId} is in state {situation.State}.");
                     this.Abort();
                     break;
             }
@@ -152,37 +132,36 @@ namespace Autoccultist.Brain
         /// <inheritdoc/>
         public void Update()
         {
-            if (this.operationState == OperationState.Unstarted)
+            var situation = this.GetSituationState();
+
+            if (this.operationState != OperationState.Ongoing)
             {
                 return;
             }
 
-            if (this.operationState == OperationState.Ongoing)
+            var clockState = situation.State;
+            if (clockState == StateEnum.Ongoing)
             {
-                var clockState = this.Situation.SituationClock.State;
-                if (clockState == SituationState.Ongoing)
-                {
-                    // The situation is running its recipe.
-                    //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
-                    this.completionDebounceTime = null;
+                // The situation is running its recipe.
+                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
+                this.completionDebounceTime = null;
 
-                    // See if we need to slot new cards.
-                    this.ContinueOperation();
-                }
-                else if (clockState == SituationState.Complete || clockState == SituationState.Unstarted)
+                // See if we need to slot new cards.
+                this.ContinueOperation();
+            }
+            else if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
+            {
+                if (this.completionDebounceTime == null)
                 {
-                    if (this.completionDebounceTime == null)
-                    {
-                        // Start the timer for waiting out to see if this is a real completion.
-                        // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
-                        //  so we need to delay to make sure this is a full and final completion.
-                        this.completionDebounceTime = DateTime.Now + CompleteAwaitTime;
-                    }
-                    else if (this.completionDebounceTime <= DateTime.Now)
-                    {
-                        // Enough time has passed that we can consider this operation completed.
-                        this.Complete();
-                    }
+                    // Start the timer for waiting out to see if this is a real completion.
+                    // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
+                    //  so we need to delay to make sure this is a full and final completion.
+                    this.completionDebounceTime = DateTime.Now + CompleteAwaitTime;
+                }
+                else if (this.completionDebounceTime <= DateTime.Now)
+                {
+                    // Enough time has passed that we can consider this operation completed.
+                    this.Complete();
                 }
             }
         }
@@ -197,21 +176,33 @@ namespace Autoccultist.Brain
             this.End();
         }
 
+        private ISituationState GetSituationState()
+        {
+            var situation = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.SituationId);
+            if (situation == null)
+            {
+                throw new Exception($"Tried to run an operation orchistration for situation {this.SituationId}, but no situation was found.");
+            }
+
+            return situation;
+        }
+
         private async void Complete()
         {
+            var situation = this.GetSituationState();
+
             // We currently assume mansus only ever occurs as the last recipe of a situation.
-            var recipeId = this.Situation.SituationClock.RecipeId;
-            var recipe = GameAPI.GetRecipe(recipeId);
-            if (recipe.PortalEffect != PortalEffect.None && GameAPI.IsInMansus)
+            // FIXME: Engine supports multiple portal / otherworld / mansus types, but we just assume the one.
+            if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.IsActive)
             {
-                if (this.operation.OngoingRecipes.TryGetValue(recipeId, out var recipeSolution) && recipeSolution.MansusChoice != null)
+                if (this.operation.OngoingRecipes.TryGetValue(situation.CurrentRecipe, out var recipeSolution) && recipeSolution.MansusChoice != null)
                 {
                     this.operationState = OperationState.Mansus;
                     await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice));
                 }
                 else
                 {
-                    AutoccultistPlugin.Instance.LogWarn($"Unhandled mansus event for recipeId {recipeId} in operation {this.operation.Name}.");
+                    NoonUtility.LogWarning($"Unhandled mansus event for recipeId {situation.CurrentRecipe} in operation {this.operation.Name}.");
                 }
             }
 
@@ -221,21 +212,22 @@ namespace Autoccultist.Brain
 
         private void ContinueOperation()
         {
-            var clock = this.Situation.SituationClock;
-            var currentRecipe = clock.RecipeId;
+            var situation = this.GetSituationState();
+
+            var currentRecipe = situation.CurrentRecipe;
 
             // We need to check the time remaining, because a recipe can repeat.
-            if (this.ongoingRecipe == currentRecipe && clock.TimeRemaining <= this.ongoingRecipeTimeRemaining)
+            if (this.ongoingRecipe == currentRecipe && situation.RecipeTimeRemaining <= this.ongoingRecipeTimeRemaining)
             {
                 // Recipe has not changed.
-                this.ongoingRecipeTimeRemaining = clock.TimeRemaining;
+                this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining.Value;
                 return;
             }
 
-            AutoccultistPlugin.Instance.LogTrace($"Continuing operation {this.operation.Name}.  From recipe {this.ongoingRecipe} to {currentRecipe}.");
+            NoonUtility.LogWarning($"Continuing operation {this.operation.Name}.  From recipe {this.ongoingRecipe} to {currentRecipe}.");
 
             this.ongoingRecipe = currentRecipe;
-            this.ongoingRecipeTimeRemaining = clock.TimeRemaining;
+            this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining ?? 0;
 
             if (this.operation.OngoingRecipes == null)
             {
@@ -257,32 +249,62 @@ namespace Autoccultist.Brain
             BrainEventSink.OnOperationStarted(this.operation);
 
             yield return new OpenSituationAction(this.SituationId);
-            yield return new DumpSituationAction(this.SituationId);
+            yield return new ConcludeSituationAction(this.SituationId);
 
-            // TODO: Use reserved cards
+            Autoccultist.Instance.LogTrace($"Our known slots are {string.Join(", ", this.operation.StartingRecipe.SlotSolutions.Keys)}");
+
+            var populatedSlots = new HashSet<string>();
 
             // Get the first card.  Slotting this will usually create additional slots
-            var slots = this.Situation.situationWindow.GetStartingSlots();
-            var firstSlot = slots[0];
-            var firstSlotAction = this.CreateSlotActionFromRecipe(firstSlot, this.operation.StartingRecipe);
+            var slots = this.GetSituationState().RecipeSlots;
+            var firstSlot = slots.First();
+            var firstSlotSpecId = firstSlot.SpecId;
+            Autoccultist.Instance.LogTrace($"First slot is {firstSlot.SpecId}.");
+
+            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlot, this.operation.StartingRecipe);
             if (firstSlotAction == null)
             {
+                Autoccultist.Instance.LogTrace($"We did not find a card for {firstSlot.SpecId}.");
                 // First slot of starting situation is required.
-                throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlot.GoverningSlotSpecification.Id} has no card choice.");
+                throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlot.SpecId} has no card choice.");
             }
 
+            Autoccultist.Instance.LogTrace($"We found a card for first slot {firstSlot.SpecId}.");
+
+            populatedSlots.Add(firstSlot.SpecId);
             yield return firstSlotAction;
 
+            Autoccultist.Instance.LogTrace("Continuing with remaining slots.");
+
             // Refresh the slots and get the rest of the cards.
-            slots = this.Situation.situationWindow.GetStartingSlots();
-            foreach (var slot in slots.Skip(1))
+            // We need to fetch the state fresh, as this code continues after the first slot was triggered.
+            slots = this.GetSituationState().RecipeSlots;
+            Autoccultist.Instance.LogTrace($"We have {slots.Count} slots: {string.Join(", ", slots.Select(x => x.SpecId))}.");
+            foreach (var slot in slots.Where(x => x.SpecId != firstSlotSpecId))
             {
-                var slotAction = this.CreateSlotActionFromRecipe(slot, this.operation.StartingRecipe);
+                Autoccultist.Instance.LogTrace($"Additional slot is {slot.SpecId}.");
+                var slotAction = this.GetSlotActionForRecipeSlotSpec(slot, this.operation.StartingRecipe);
                 if (slotAction != null)
                 {
+                    Autoccultist.Instance.LogTrace($"We found a card for additional slot {slot.SpecId}.");
+                    populatedSlots.Add(slot.SpecId);
                     yield return slotAction;
+                    Autoccultist.Instance.LogTrace($"We slotted a card for additional slot {slot.SpecId}.");
+                }
+                else
+                {
+                    Autoccultist.Instance.LogTrace($"We did not find a card for {slot.SpecId}.");
                 }
             }
+
+            // Check that all required slots were populated.
+            var missingSlots = this.operation.StartingRecipe.SlotSolutions.Keys.Except(populatedSlots);
+            if (missingSlots.Any())
+            {
+                Autoccultist.Instance.LogTrace($"We are missing starting recipe slots {string.Join(", ", missingSlots)}.");
+            }
+
+            Autoccultist.Instance.LogTrace($"Starting situation.");
 
             // Start the situation
             yield return new StartSituationRecipeAction(this.SituationId);
@@ -291,7 +313,8 @@ namespace Autoccultist.Brain
             this.operationState = OperationState.Ongoing;
 
             // Accept the current recipe and fill its needs
-            this.ongoingRecipe = this.Situation.SituationClock.RecipeId;
+            this.ongoingRecipe = this.GetSituationState().CurrentRecipe;
+            Autoccultist.Instance.LogTrace($"Transitioned to recipe {this.ongoingRecipe}.");
             if (this.operation.OngoingRecipes != null && this.operation.OngoingRecipes.TryGetValue(this.ongoingRecipe, out var ongoingRecipeSolution))
             {
                 foreach (var item in this.ContinueSituationCoroutine(ongoingRecipeSolution, false))
@@ -300,21 +323,22 @@ namespace Autoccultist.Brain
                 }
             }
 
+            Autoccultist.Instance.LogTrace($"Closing situation.");
             yield return new CloseSituationAction(this.SituationId);
         }
 
         private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(IRecipeSolution recipe, bool standalone = true)
         {
-            var slots = this.Situation.situationWindow.GetOngoingSlots();
+            var slots = this.GetSituationState().RecipeSlots;
             if (slots.Count == 0)
             {
                 // Nothing to do.
                 yield break;
             }
 
-            var firstSlot = slots[0];
+            var firstSlot = slots.First();
 
-            if (firstSlot.GetTokenInSlot() != null)
+            if (firstSlot.Card != null)
             {
                 // Something is already slotted in, we already handled this.
                 yield break;
@@ -326,18 +350,19 @@ namespace Autoccultist.Brain
             }
 
             // Get the first card.  Slotting this will usually create additional slots
-            var firstSlotAction = this.CreateSlotActionFromRecipe(firstSlot, recipe);
+            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlot, recipe);
             if (firstSlotAction != null)
             {
                 yield return firstSlotAction;
 
+                // Slotting the first spec can change the recipe, changing the available slots.
                 // Refresh the slots and get the rest of the cards
-                slots = this.Situation.situationWindow.GetOngoingSlots();
+                slots = this.GetSituationState().RecipeSlots;
             }
 
             foreach (var slot in slots.Skip(1))
             {
-                var slotAction = this.CreateSlotActionFromRecipe(slot, recipe);
+                var slotAction = this.GetSlotActionForRecipeSlotSpec(slot, recipe);
                 if (slotAction != null)
                 {
                     yield return slotAction;
@@ -360,7 +385,7 @@ namespace Autoccultist.Brain
             try
             {
                 yield return new OpenSituationAction(this.SituationId);
-                yield return new DumpSituationAction(this.SituationId);
+                yield return new ConcludeSituationAction(this.SituationId);
                 yield return new CloseSituationAction(this.SituationId);
             }
             finally
@@ -370,16 +395,15 @@ namespace Autoccultist.Brain
             }
         }
 
-        private SlotCardAction CreateSlotActionFromRecipe(RecipeSlot slot, IRecipeSolution recipe)
+        private SlotCardAction GetSlotActionForRecipeSlotSpec(ISituationSlot slot, IRecipeSolution recipe)
         {
-            var slotId = slot.GoverningSlotSpecification.Id;
-            var cardChoice = recipe.ResolveSlotCard(slot);
-            if (cardChoice == null)
+            if (!recipe.SlotSolutions.TryGetValue(slot.SpecId, out var cardChoice))
             {
+                NoonUtility.LogWarning($"Error in operation {this.operation.Name}: Slot id {slot.SpecId} has no card choice.");
                 return null;
             }
 
-            return new SlotCardAction(this.SituationId, slotId, cardChoice);
+            return new SlotCardAction(this.SituationId, slot.SpecId, cardChoice);
         }
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
@@ -399,7 +423,7 @@ namespace Autoccultist.Brain
             }
             catch (Exception ex)
             {
-                AutoccultistPlugin.Instance.LogWarn(ex, $"Failed to run operation {this.operation.Name}: {ex.Message}");
+                NoonUtility.LogWarning(ex, $"Failed to run operation {this.operation.Name}: {ex.Message}");
                 this.Abort();
             }
             finally

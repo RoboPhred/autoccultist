@@ -1,7 +1,7 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Describes a class that can determine if a card matches its specifications.

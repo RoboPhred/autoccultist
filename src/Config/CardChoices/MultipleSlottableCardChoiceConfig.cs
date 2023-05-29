@@ -1,8 +1,8 @@
-namespace Autoccultist.Config.CardChoices
+namespace AutoccultistNS.Config.CardChoices
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Defines configuration for a list of card choices where the first valid choice will be chosen.

@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
     using System.Linq;

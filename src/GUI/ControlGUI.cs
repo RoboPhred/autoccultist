@@ -1,9 +1,9 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config;
     using UnityEngine;
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace Autoccultist.GUI
         {
             if (GUILayout.Button("Reload All Configs"))
             {
-                AutoccultistPlugin.Instance.ReloadAll();
+                Autoccultist.Instance.ReloadAll();
             }
 
             if (Library.ParseErrors.Count > 0)

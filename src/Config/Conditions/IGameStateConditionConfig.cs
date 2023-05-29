@@ -1,6 +1,6 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Yaml;
 
     /// <summary>
     /// Defines a config node that checks for a game state condition.

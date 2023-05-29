@@ -1,14 +1,13 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using Assets.Core.Entities;
-    using Assets.Core.Interfaces;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi;
-    using Assets.TabletopUi.Scripts.Infrastructure;
-    using Assets.TabletopUi.Scripts.Interfaces;
+    using SecretHistories.Constants;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Fucine;
+    using SecretHistories.Spheres;
+    using SecretHistories.UI;
     using UnityEngine;
 
     /// <summary>
@@ -31,7 +30,18 @@ namespace Autoccultist
         {
             get
             {
-                return IsRunning && DraggableToken.draggingEnabled && (!IsInMansus || IsMansusInteractable);
+                if (!IsRunning)
+                {
+                    return false;
+                }
+
+                // Mansus sets delays using this, so this might be a good check instead of IsMansusInteractable
+                if (Watchman.Get<LocalNexus>().PlayerInputDisabled())
+                {
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -42,23 +52,7 @@ namespace Autoccultist
         {
             get
             {
-                return TabletopManager.IsInMansus();
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the mansus is ready for interaction.
-        /// </summary>
-        public static bool IsMansusInteractable
-        {
-            get
-            {
-                // We need to wait out mansus animations.  There are two of them.
-                // 1: Mansus screen fade-in (turns off DraggableToken.draggingEnabled while fading)
-                // 2: Mansus token container fade-in (detected by alpha changing)
-                var fader = Reflection.GetPrivateField<CanvasGroupFader>(TabletopManager.mapTokenContainer, "canvasGroupFader");
-                var faderGroup = fader.GetComponent<CanvasGroup>();
-                return IsInMansus && DraggableToken.draggingEnabled && faderGroup.alpha == 1;
+                return Watchman.Get<Numa>().IsOtherworldActive();
             }
         }
 
@@ -72,7 +66,7 @@ namespace Autoccultist
                 var heartGo = GameObject.Find("Heart");
                 if (heartGo == null)
                 {
-                    AutoccultistPlugin.Instance.LogWarn("Could not find Heart.");
+                    NoonUtility.LogWarning("Could not find Heart.");
                     return GameSpeed.Paused;
                 }
 
@@ -80,31 +74,6 @@ namespace Autoccultist
 
                 var speedState = Reflection.GetPrivateField<GameSpeedState>(heartBehavior, "gameSpeedState");
                 return speedState.GetEffectiveGameSpeed();
-            }
-        }
-
-        /// <summary>
-        /// Gets the tabletop manager.
-        /// </summary>
-        public static TabletopManager TabletopManager
-        {
-            get
-            {
-                var tabletopManager = Registry.Get<TabletopManager>();
-                if (tabletopManager == null)
-                {
-                    AutoccultistPlugin.Instance.Fatal("Could not retrieve ITabletopManager");
-                }
-
-                return tabletopManager;
-            }
-        }
-
-        private static TabletopTokenContainer TabletopTokenContainer
-        {
-            get
-            {
-                return TabletopManager._tabletop;
             }
         }
 
@@ -120,6 +89,42 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Gets the situation with the given id.
+        /// </summary>
+        /// <param name="situationId">The id of the situation to get.</param>
+        /// <returns>The situation with the given id, or null if no such situation exists.</returns>
+        public static Situation GetSituation(string situationId)
+        {
+            var situations = Watchman.Get<HornedAxe>().GetRegisteredSituations();
+            return situations.FirstOrDefault(x => x.VerbId == situationId);
+        }
+
+        /// <summary>
+        /// Try to slots the card into the given sphere, if accepted by its spec.
+        /// </summary>
+        /// <param name="cardId">The id of the card to slot.</param>
+        /// <returns>True if successful, or false if the card was not accepted..</returns>
+        public static bool TrySlotCard(Sphere sphere, ElementStack card)
+        {
+            var token = card.Token;
+            if (!sphere.CanAcceptToken(token))
+            {
+                return false;
+            }
+
+            sphere.AcceptToken(token, new Context(Context.ActionSource.DoubleClickSend));
+
+            return true;
+
+            // This is what double click does.
+            // Might want to use this instead, if we can accept the time delay as the card transfers.
+            // Currently, we are set up to assume the card is slotted immediately.  We would need to make the
+            // SlotCardAction await the slotting for this to be of use.
+
+            // this.sphere.GetItineraryFor(elementStack.Token).WithDuration(0.3f).Depart(elementStack, new Context(Context.ActionSource.DoubleClickSend));
+        }
+
+        /// <summary>
         /// Sets the pause state of the game.
         /// </summary>
         /// <returns>A token to unpause the game.</returns>
@@ -128,9 +133,9 @@ namespace Autoccultist
             if (pauseDepth == 0)
             {
                 prePauseSpeed = GameSpeed;
-                if (prePauseSpeed != GameSpeed.Paused)
+                if (IsRunning && prePauseSpeed != GameSpeed.Paused)
                 {
-                    Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
+                    Watchman.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
                     {
                         ControlPriorityLevel = 1,
                         GameSpeed = GameSpeed.Paused,
@@ -145,126 +150,13 @@ namespace Autoccultist
         }
 
         /// <summary>
-        /// Gets a situation by a situation id.
-        /// </summary>
-        /// <param name="situationId">The situation id to retrieve the situation for.</param>
-        /// <returns>The situation for the given situation id, or null.</returns>
-        public static SituationController GetSituation(string situationId)
-        {
-            return Registry.Get<SituationsCatalogue>().GetRegisteredSituations().Find(x => x.situationToken.EntityId == situationId);
-        }
-
-        /// <summary>
-        /// Gets a recipe by recipe id.
-        /// </summary>
-        /// <param name="recipeId">The recipe id of the recipe to get.</param>
-        /// <returns>The recipe matching the recipe id.</returns>
-        public static Recipe GetRecipe(string recipeId)
-        {
-            return Registry.Get<ICompendium>().GetEntityById<Recipe>(recipeId);
-        }
-
-        /// <summary>
-        /// Gets all situations currently existing.
-        /// </summary>
-        /// <returns>A collection of all situations.</returns>
-        public static ICollection<SituationController> GetAllSituations()
-        {
-            return Registry.Get<SituationsCatalogue>().GetRegisteredSituations();
-        }
-
-        /// <summary>
-        /// Gets all cards on the tabletop.
-        /// </summary>
-        /// <returns>A collection of all cards on the tabletop.</returns>
-        public static IReadOnlyCollection<ElementStackToken> GetTabletopCards()
-        {
-            var candidates =
-                from token in TabletopTokenContainer.GetTokens()
-                let card = token as ElementStackToken
-                where card != null && IsCardAccessable(card)
-                select card;
-            return candidates.ToArray();
-        }
-
-        /// <summary>
-        /// Takes a stack of a single card from an existing stack.
-        /// </summary>
-        /// <param name="stack">The stack to obtain a card from.</param>
-        /// <returns>A stack of a single card.</returns>
-        public static ElementStackToken TakeOneCard(ElementStackToken stack)
-        {
-            if (stack.Quantity > 1)
-            {
-                return stack.SplitAllButNCardsToNewStack(stack.Quantity - 1, new Context(Context.ActionSource.PlayerDrag));
-            }
-
-            if (stack.Quantity == 1)
-            {
-                return stack;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Slots a card into the given slot.
-        /// If card is a stack of cards, only one card will be slotted.
-        /// </summary>
-        /// <param name="slot">The slot to place the card into.</param>
-        /// <param name="stack">The card stack to pick a card from.</param>
-        public static void SlotCard(RecipeSlot slot, ElementStackToken stack)
-        {
-            var singleCard = TakeOneCard(stack);
-            if (singleCard == null)
-            {
-                return;
-            }
-
-            slot.AcceptStack(singleCard, new Context(Context.ActionSource.PlayerDrag));
-        }
-
-        /// <summary>
-        /// Choose a card from the mansus.
-        /// </summary>
-        /// <param name="card">The card on the mansus to choose.</param>
-        /// <remarks>Throws <see cref="InvalidOperationException"/> if the mansus is not active.</remarks>
-        public static void ChooseMansusCard(ElementStackToken card)
-        {
-            if (!IsInMansus)
-            {
-                throw new InvalidOperationException("Mansus is not active.");
-            }
-
-            if (!IsMansusInteractable)
-            {
-                throw new InvalidOperationException("Mansus is not interactable.");
-            }
-
-            var mapController = Registry.Get<MapController>();
-            var tokenContainer = mapController ? Reflection.GetPrivateField<MapTokenContainer>(mapController, "_mapTokenContainer") : null;
-            if (mapController == null || tokenContainer == null)
-            {
-                throw new ApplicationException("Failed to get map token controller.");
-            }
-
-            var activeDoor = Reflection.GetPrivateField<DoorSlot>(tokenContainer, "activeSlot");
-            if (activeDoor == null)
-            {
-                throw new InvalidOperationException("Mansus is not active.");
-            }
-
-            mapController.HideMansusMap(activeDoor.transform, card);
-        }
-
-        /// <summary>
         /// Display a notification toast to the user.
         /// </summary>
         /// <param name="title">The title of the toast.</param>
         /// <param name="message">The message of the toast.</param>
         public static void Notify(string title, string message)
         {
-            var notifier = Registry.Get<INotifier>(false);
+            var notifier = Watchman.Get<Notifier>();
             if (notifier == null)
             {
                 return;
@@ -283,16 +175,6 @@ namespace Autoccultist
             IsRunning = false;
         }
 
-        private static bool IsCardAccessable(ElementStackToken card)
-        {
-            if (card.Defunct)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         /// <summary>
         /// A token representing a pause.
         /// </summary>
@@ -305,7 +187,7 @@ namespace Autoccultist
             /// </summary>
             ~PauseToken()
             {
-                AutoccultistPlugin.Instance.LogWarn("Leaked PauseToken");
+                NoonUtility.LogWarning("Leaked PauseToken");
             }
 
             /// <inheritdoc/>
@@ -321,7 +203,7 @@ namespace Autoccultist
                 pauseDepth--;
                 if (pauseDepth == 0 && prePauseSpeed != GameSpeed.Paused)
                 {
-                    Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
+                    Watchman.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
                     {
                         ControlPriorityLevel = 1,
                         GameSpeed = prePauseSpeed,

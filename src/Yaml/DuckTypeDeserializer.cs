@@ -1,4 +1,4 @@
-namespace Autoccultist.Yaml
+namespace AutoccultistNS.Yaml
 {
     using System;
     using System.Collections.Generic;

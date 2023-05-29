@@ -1,5 +1,8 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
+    using AutoccultistNS.GameState;
+    using SecretHistories.Enums;
+
     /// <summary>
     /// An action to start a situation processing cards.
     /// </summary>
@@ -33,11 +36,13 @@ namespace Autoccultist.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
-            situation.AttemptActivateRecipe();
-            if (situation.SituationClock.State == SituationState.Unstarted)
+            situation.TryStart();
+            if (situation.State.Identifier == StateEnum.Unstarted)
             {
                 throw new ActionFailureException(this, "Failed to start situation.");
             }
+
+            GameStateProvider.Invalidate();
         }
     }
 }

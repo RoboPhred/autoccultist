@@ -1,4 +1,4 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using System;
 

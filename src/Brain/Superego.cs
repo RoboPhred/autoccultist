@@ -1,9 +1,9 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.Config;
-    using Autoccultist.GameState;
+    using AutoccultistNS.Config;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Class responsible for running through the motivations.
@@ -91,7 +91,7 @@ namespace Autoccultist.Brain
         {
             if (Motivations.Count == 0)
             {
-                AutoccultistPlugin.Instance.LogTrace("SuperEgo: No more motivations to run.");
+                NoonUtility.LogWarning("SuperEgo: No more motivations to run.");
                 return;
             }
 

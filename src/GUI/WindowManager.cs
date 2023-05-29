@@ -1,4 +1,4 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using UnityEngine;
 

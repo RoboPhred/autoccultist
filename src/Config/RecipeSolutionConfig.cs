@@ -1,10 +1,9 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Assets.CS.TabletopUI;
-    using Autoccultist.Brain;
-    using Autoccultist.Config.CardChoices;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config.CardChoices;
 
     /// <summary>
     /// Configuration for a solution to a situation recipe.
@@ -32,6 +31,22 @@ namespace Autoccultist.Config
         /// </summary>
         public MansusSolutionConfig MansusChoice { get; set; }
 
+        private IReadOnlyDictionary<string, ICardChooser> slotSolutions;
+
+        /// <inheritdoc/>
+        IReadOnlyDictionary<string, ICardChooser> IRecipeSolution.SlotSolutions
+        {
+            get
+            {
+                if (this.slotSolutions == null)
+                {
+                    this.slotSolutions = this.Slots.ToDictionary(x => x.Key, x => x.Value as ICardChooser);
+                }
+
+                return this.slotSolutions;
+            }
+        }
+
         /// <inheritdoc/>
         IMansusSolution IRecipeSolution.MansusChoice => this.MansusChoice;
 
@@ -43,15 +58,5 @@ namespace Autoccultist.Config
             return explicitRequirements.Concat(implicitRequirements).ToArray();
         }
 
-        /// <inheritdoc/>
-        public ICardChooser ResolveSlotCard(RecipeSlot slot)
-        {
-            if (!this.Slots.TryGetValue(slot.GoverningSlotSpecification.Id, out var choice))
-            {
-                return null;
-            }
-
-            return choice;
-        }
     }
 }

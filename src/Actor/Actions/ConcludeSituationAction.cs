@@ -1,16 +1,18 @@
-namespace Autoccultist.Actor.Actions
+using AutoccultistNS.GameState;
+
+namespace AutoccultistNS.Actor.Actions
 {
     /// <summary>
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.
     /// </summary>
-    public class DumpSituationAction : IAutoccultistAction
+    public class ConcludeSituationAction : IAutoccultistAction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DumpSituationAction"/> class.
+        /// Initializes a new instance of the <see cref="ConcludeSituationAction"/> class.
         /// </summary>
         /// <param name="situationId">The situation id of the situation to dump.</param>
-        public DumpSituationAction(string situationId)
+        public ConcludeSituationAction(string situationId)
         {
             this.SituationId = situationId;
         }
@@ -34,15 +36,10 @@ namespace Autoccultist.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
-            switch (situation.SituationClock.State)
-            {
-                case SituationState.Unstarted:
-                    situation.situationWindow.DumpAllStartingCardsToDesktop();
-                    break;
-                case SituationState.Complete:
-                    situation.situationWindow.DumpAllResultingCardsToDesktop();
-                    break;
-            }
+            // This used to just dump the contents, but this Conclude function seems to be used by the UI to accept everything.
+            // Note that this will cause temporary situations to retire, which I think was happening anyway with the previous code.
+            situation.Conclude();
+            GameStateProvider.Invalidate();
         }
     }
 }

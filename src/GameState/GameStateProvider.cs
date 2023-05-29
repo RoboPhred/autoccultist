@@ -1,10 +1,13 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System;
     using System.Linq;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi.Scripts.Infrastructure;
-    using Autoccultist.GameState.Impl;
+    using AutoccultistNS.GameState.Impl;
+    using SecretHistories.Assets.Scripts.Application.UI;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Spheres;
+    using SecretHistories.UI;
 
     /// <summary>
     /// A static class for producing <see cref="IGameState"/> states.
@@ -45,17 +48,22 @@ namespace Autoccultist.GameState
         {
             GameStateObject.CurrentStateVersion++;
 
+            var hornedAxe = Watchman.Get<HornedAxe>();
+
+            var tabletop = hornedAxe.GetSpheres().OfType<TabletopSphere>().First();
             var tabletopCards =
-                from stack in GameAPI.GetTabletopCards()
+                from stack in tabletop.GetElementStacks()
                 from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
                 select cardState;
 
             var situations =
-                from controller in GameAPI.GetAllSituations()
-                let state = new SituationStateImpl(controller)
+                from situation in hornedAxe.GetRegisteredSituations()
+                let state = new SituationStateImpl(situation)
                 select state;
 
-            var mansus = new MansusStateImpl(Registry.Get<MapController>());
+            var numa = Watchman.Get<Numa>();
+            var otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+            var mansus = new MansusStateImpl(otherworld);
 
             return new GameStateImpl(tabletopCards.ToArray(), situations.ToArray(), mansus);
         }

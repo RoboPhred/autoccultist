@@ -1,8 +1,10 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Assets.TabletopUi;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.UI;
 
     /// <summary>
     /// Implements the state of a situation from a situation controller.
@@ -10,28 +12,29 @@ namespace Autoccultist.GameState.Impl
     internal class SituationStateImpl : GameStateObject, ISituationState
     {
         private readonly string situationId;
+        private readonly StateEnum state;
         private readonly bool isOccupied;
         private readonly string currentRecipe;
         private readonly float? recipeTimeRemaining;
+        private readonly IReadOnlyCollection<ISituationSlot> recipeSlots;
         private readonly IReadOnlyCollection<ICardState> storedCards;
-        private readonly IReadOnlyCollection<ICardState> slottedCards;
         private readonly IReadOnlyCollection<ICardState> outputCards;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationStateImpl"/> class.
         /// </summary>
         /// <param name="situation">The situation to represent the state of.</param>
-        public SituationStateImpl(SituationController situation)
+        public SituationStateImpl(Situation situation)
         {
             // Precalculate all state data, as we represent a snapshot and do not want the state to change from under us.
-            this.situationId = situation.GetTokenId();
-            this.isOccupied = situation.SituationClock.State != SituationState.Unstarted;
+            this.situationId = situation.VerbId;
+            this.state = situation.State.Identifier;
+            this.isOccupied = this.state != StateEnum.Unstarted;
 
-            var clock = situation.SituationClock;
-            if (clock.State == SituationState.FreshlyStarted || clock.State == SituationState.Ongoing)
+            if (this.state == StateEnum.Ongoing)
             {
-                this.currentRecipe = clock.RecipeId;
-                this.recipeTimeRemaining = clock.TimeRemaining;
+                this.currentRecipe = situation.RecipeId;
+                this.recipeTimeRemaining = situation.TimeRemaining;
             }
             else
             {
@@ -39,28 +42,37 @@ namespace Autoccultist.GameState.Impl
                 this.recipeTimeRemaining = null;
             }
 
-            var window = situation.situationWindow;
+            var slots =
+                from sphere in situation.GetSpheresByCategory(SphereCategory.Threshold)
+                select new SituationSlotImpl(sphere);
 
             // We can create new ICardState states here, as IGameState only creates states for tabled cards, of which these are not.
             var stored =
-                from stack in window.GetStoredStacks()
+                from sphere in situation.GetSpheresByCategory(SphereCategory.SituationStorage)
+                from stack in sphere.GetElementStacks()
                 from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Stored)
-                select card;
-            var slotted =
-                from stack in window.GetStartingSlots().Concat(window.GetOngoingSlots()).Select(x => x.GetElementStackInSlot())
-                where stack != null
-                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Slotted)
                 select card;
 
             // Consider output stacks to be tabletop, as they are immediately grabbable.
             var output =
-                from stack in situation.situationWindow.GetOutputStacks()
+                from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
+                from stack in spheres.GetElementStacks()
                 from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
                 select card;
 
+            this.recipeSlots = slots.ToArray();
             this.storedCards = stored.ToArray();
-            this.slottedCards = slotted.ToArray();
             this.outputCards = output.ToArray();
+        }
+
+        /// <inheritdoc/>
+        public StateEnum State
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.state;
+            }
         }
 
         /// <inheritdoc/>
@@ -93,6 +105,23 @@ namespace Autoccultist.GameState.Impl
             }
         }
 
+        public string CurrentRecipePortal
+        {
+            get
+            {
+                this.VerifyAccess();
+                var recipe = Watchman.Get<Compendium>().GetEntityById<Recipe>(this.currentRecipe);
+                if (recipe == null)
+                {
+                    return null;
+                }
+
+                // Looks like the game is setting up to support multiple of these.
+                // Should make this system be able to target any one of them.
+                return recipe.PortalEffect;
+            }
+        }
+
         /// <inheritdoc/>
         public float? RecipeTimeRemaining
         {
@@ -103,6 +132,16 @@ namespace Autoccultist.GameState.Impl
             }
         }
 
+        // <inheritdoc/>
+        public IReadOnlyCollection<ISituationSlot> RecipeSlots
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.recipeSlots;
+            }
+        }
+
         /// <inheritdoc/>
         public IReadOnlyCollection<ICardState> StoredCards
         {
@@ -110,16 +149,6 @@ namespace Autoccultist.GameState.Impl
             {
                 this.VerifyAccess();
                 return this.storedCards;
-            }
-        }
-
-        /// <inheritdoc/>
-        public IReadOnlyCollection<ICardState> SlottedCards
-        {
-            get
-            {
-                this.VerifyAccess();
-                return this.slottedCards;
             }
         }
 

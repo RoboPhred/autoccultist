@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -61,7 +61,7 @@ namespace Autoccultist.GameState.Impl
         {
             this.VerifyAccess();
 
-            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards.Concat(s.SlottedCards).Concat(s.OutputCards)));
+            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards)));
             if (this.mansus.IsActive)
             {
                 allCards = allCards.Concat(this.mansus.DeckCards.Values);

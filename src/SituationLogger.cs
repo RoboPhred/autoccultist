@@ -1,10 +1,13 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
-    using Assets.Core;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi;
+    using SecretHistories.Core;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Spheres;
+    using SecretHistories.UI;
 
     /// <summary>
     /// Utility classes for logging the status of situations.
@@ -17,82 +20,73 @@ namespace Autoccultist
         public static void LogSituations()
         {
             LogInfo("Seeking situation tokens...");
-            foreach (var situationController in GameAPI.GetAllSituations())
+            foreach (var situation in Watchman.Get<HornedAxe>().GetRegisteredSituations())
             {
-                LogInfo("We found a situation token - " + situationController.GetTokenId());
-                DumpSituationStatus(situationController);
+                LogInfo("We found a situation token - " + situation.VerbId);
+                DumpSituationStatus(situation);
             }
 
             LogInfo("...Done seeking situation tokens");
         }
 
-        private static void DumpSituationStatus(SituationController controller)
+        private static void DumpSituationStatus(Situation situation)
         {
-            LogInfo("- state: " + controller.SituationClock.State);
-            LogInfo("- recipe id: " + controller.SituationClock.RecipeId);
-            LogInfo("- time remaining: " + controller.SituationClock.TimeRemaining);
+            LogInfo("- state: " + situation.State.Identifier);
+            LogInfo("- recipe id: " + situation.RecipeId);
+            LogInfo("- time remaining: " + situation.TimeRemaining);
 
-            var storedAspects = AspectsToString(controller.GetAspectsInSituation());
+            var storedAspects = AspectsToString(situation.GetAspects(true));
             LogInfo("- stored aspects: " + storedAspects);
 
-            LogInfo("- starting slots:");
-            DumpSlots(controller.situationWindow.GetStartingSlots());
-
-            LogInfo("- ongoing slots:");
-            DumpSlots(controller.situationWindow.GetOngoingSlots());
+            LogInfo("- slots:");
+            DumpSphereSpec(situation.GetSpheresByCategory(SphereCategory.Threshold));
 
             LogInfo("- stored stacks");
-            DumpElements(controller.GetStoredStacks());
+            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.SituationStorage));
 
             LogInfo("- output stacks");
-            DumpElements(controller.GetOutputStacks());
+            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.Output));
         }
 
-        private static void DumpSlots(IList<RecipeSlot> slots)
+        private static void DumpSphereSpec(List<Sphere> spheres)
         {
-            foreach (var slot in slots)
+            foreach (var sphere in spheres)
             {
-                LogInfo("- - " + slot.GoverningSlotSpecification.Id);
-                LogInfo("- - - label: " + slot.GoverningSlotSpecification.Label);
-                LogInfo("- - - description: " + slot.GoverningSlotSpecification.Description);
-                LogInfo("- - - greedy: " + slot.GoverningSlotSpecification.Greedy);
-                LogInfo("- - - consumes: " + slot.GoverningSlotSpecification.Consumes);
+                var spec = sphere.GoverningSphereSpec;
+                LogInfo("- - " + spec.Id);
+                LogInfo("- - - label: " + spec.Label);
+                LogInfo("- - - description: " + spec.Description);
+                LogInfo("- - - greedy: " + spec.Greedy);
+                LogInfo("- - - consumes: " + spec.Consumes);
 
-                var requiredAspects = AspectsToString(slot.GoverningSlotSpecification.Required);
+                var requiredAspects = AspectsToString(spec.Required);
                 LogInfo("- - - required aspects: " + requiredAspects);
 
-                var forbiddenAspects = AspectsToString(slot.GoverningSlotSpecification.Forbidden);
+                var forbiddenAspects = AspectsToString(spec.Forbidden);
                 LogInfo("- - - forbidden aspects: " + forbiddenAspects);
-                LogInfo("- - - primary: " + slot.IsPrimarySlot());
-                LogInfo("- - - greedy: " + slot.IsGreedy);
 
-                var content = slot.GetTokenInSlot();
-                if (content != null)
+                foreach (var content in sphere.Tokens.Select(x => x.Payload).OfType<ElementStack>())
                 {
                     LogInfo("- - - content: " + content.EntityId);
-                    var asStack = content as ElementStackToken;
-                    if (asStack != null)
-                    {
-                        LogInfo("- - - - quantity: " + asStack.Quantity);
-                        LogInfo("- - - - lifetime remaining: " + asStack.LifetimeRemaining);
-                        var stackAspects = AspectsToString(asStack.GetAspects());
-                        LogInfo("- - - - aspects: " + stackAspects);
-                    }
+                    LogInfo("- - - quantity: " + content.Quantity);
+                    LogInfo("- - - lifetime remaining: " + content.GetTimeshadow().LifetimeRemaining);
+                    var stackAspects = AspectsToString(content.GetAspects());
+                    LogInfo("- - - aspects: " + stackAspects);
                 }
             }
         }
 
-        private static void DumpElements(IEnumerable<ElementStackToken> stacks)
+        private static void DumpSphereContent(Sphere sphere)
         {
-            foreach (var stack in stacks)
+            foreach (var stack in sphere.GetTokens().Select(x => x.Payload).OfType<ElementStack>())
             {
                 LogInfo("- - " + stack.EntityId);
                 LogInfo("- - - quantity: " + stack.Quantity);
-                LogInfo("- - - lifetime remaining: " + stack.LifetimeRemaining);
+                LogInfo("- - - lifetime remaining: " + stack.GetTimeshadow().LifetimeRemaining);
             }
         }
 
-        private static string AspectsToString(IAspectsDictionary aspects)
+        private static string AspectsToString(AspectsDictionary aspects)
         {
             var builder = new StringBuilder();
             foreach (var aspect in aspects)
@@ -111,7 +105,7 @@ namespace Autoccultist
 
         private static void LogInfo(string message)
         {
-            AutoccultistPlugin.Instance.LogTrace(message);
+            NoonUtility.Log(message);
         }
     }
 }

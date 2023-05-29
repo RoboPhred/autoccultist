@@ -1,9 +1,10 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi.Scripts.Infrastructure;
+    using SecretHistories.Assets.Scripts.Application.UI;
+    using SecretHistories.Tokens.Payloads;
 
     /// <summary>
     /// Implements <see cref="IMansusState"/>.
@@ -13,11 +14,10 @@ namespace Autoccultist.GameState.Impl
         /// <summary>
         /// Initializes a new instance of the <see cref="MansusStateImpl"/> class.
         /// </summary>
-        /// <param name="mapController">The map controller to load state from.</param>
-        public MansusStateImpl(MapController mapController)
+        /// <param name="otherworld">The map controller to load state from.</param>
+        public MansusStateImpl(Otherworld otherworld)
         {
-            var tokenContainer = mapController ? Reflection.GetPrivateField<MapTokenContainer>(mapController, "_mapTokenContainer") : null;
-            if (mapController == null || tokenContainer == null)
+            if (otherworld == null)
             {
                 this.IsActive = false;
                 this.DeckCards = new Dictionary<string, ICardState>();
@@ -26,7 +26,7 @@ namespace Autoccultist.GameState.Impl
                 return;
             }
 
-            var activeDoor = Reflection.GetPrivateField<DoorSlot>(tokenContainer, "activeSlot");
+            var activeDoor = Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
             if (activeDoor == null)
             {
                 this.IsActive = false;
@@ -36,18 +36,22 @@ namespace Autoccultist.GameState.Impl
                 return;
             }
 
-            this.IsActive = true;
+            throw new NotImplementedException("Mansus state");
 
-            var cards = Reflection.GetPrivateField<ElementStackToken[]>(mapController, "cards");
+            // this.IsActive = true;
 
-            this.FaceUpCard = CardStateImpl.CardStatesFromStack(cards[0], CardLocation.Mansus).First();
+            // var dominion = activeDoor.Dominions
 
-            this.DeckCards = new Dictionary<string, ICardState>
-            {
-                { activeDoor.GetDeckName(0), this.FaceUpCard },
-                { activeDoor.GetDeckName(1), CardStateImpl.CardStatesFromStack(cards[1], CardLocation.Mansus).First() },
-                { activeDoor.GetDeckName(2), CardStateImpl.CardStatesFromStack(cards[2], CardLocation.Mansus).First() },
-            };
+            // var cards = Reflection.GetPrivateField<ElementStackToken[]>(otherworld, "cards");
+
+            // this.FaceUpCard = CardStateImpl.CardStatesFromStack(cards[0], CardLocation.Mansus).First();
+
+            // this.DeckCards = new Dictionary<string, ICardState>
+            // {
+            //     { activeDoor.GetDeckName(0), this.FaceUpCard },
+            //     { activeDoor.GetDeckName(1), CardStateImpl.CardStatesFromStack(cards[1], CardLocation.Mansus).First() },
+            //     { activeDoor.GetDeckName(2), CardStateImpl.CardStatesFromStack(cards[2], CardLocation.Mansus).First() },
+            // };
         }
 
         /// <inheritdoc/>

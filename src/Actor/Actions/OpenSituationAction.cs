@@ -1,4 +1,4 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
     /// <summary>
     /// An action to open a situation window.
@@ -24,16 +24,16 @@ namespace Autoccultist.Actor.Actions
         {
             if (GameAPI.IsInMansus)
             {
-                throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
+                return;
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {
-                throw new ActionFailureException(this, "Situation is not available.");
+                return;
             }
 
-            situation.OpenWindow();
+            situation.OpenAt(situation.Token.Location);
         }
     }
 }

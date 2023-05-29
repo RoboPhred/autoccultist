@@ -1,11 +1,11 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config.Conditions;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config.Conditions;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>

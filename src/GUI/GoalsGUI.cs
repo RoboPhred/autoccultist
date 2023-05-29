@@ -1,10 +1,10 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config;
-    using Autoccultist.GameState;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config;
+    using AutoccultistNS.GameState;
     using UnityEngine;
 
     /// <summary>

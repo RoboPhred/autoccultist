@@ -1,4 +1,4 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
     /// <summary>
     /// An action that closes a situation window.
@@ -33,7 +33,7 @@ namespace Autoccultist.Actor.Actions
                 return;
             }
 
-            situation.CloseWindow();
+            situation.Close();
         }
     }
 }

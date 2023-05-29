@@ -1,10 +1,10 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
     using System.Threading;
-    using Autoccultist.Actor;
-    using Autoccultist.Actor.Actions;
+    using AutoccultistNS.Actor;
+    using AutoccultistNS.Actor.Actions;
 
     /// <summary>
     /// An orchestration that dumps all cards from its situation.
@@ -62,7 +62,7 @@ namespace Autoccultist.Brain
             }
             catch (Exception ex)
             {
-                AutoccultistPlugin.Instance.LogWarn(ex, $"Failed to dump situation {this.SituationId}: {ex.Message}");
+                NoonUtility.LogWarning(ex, $"Failed to dump situation {this.SituationId}: {ex.Message}");
             }
             finally
             {
@@ -73,7 +73,7 @@ namespace Autoccultist.Brain
         private IEnumerable<IAutoccultistAction> DumpSituationCoroutine()
         {
             yield return new OpenSituationAction(this.SituationId);
-            yield return new DumpSituationAction(this.SituationId);
+            yield return new ConcludeSituationAction(this.SituationId);
             yield return new CloseSituationAction(this.SituationId);
         }
     }

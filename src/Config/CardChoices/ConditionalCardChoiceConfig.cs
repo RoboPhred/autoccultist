@@ -1,8 +1,8 @@
-namespace Autoccultist.Config.CardChoices
+namespace AutoccultistNS.Config.CardChoices
 {
     using System.Collections.Generic;
-    using Autoccultist.Config.Conditions;
-    using Autoccultist.GameState;
+    using AutoccultistNS.Config.Conditions;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Selects a card from its choice only if a condition is met.

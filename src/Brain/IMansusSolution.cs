@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     /// <summary>
     /// A solution to choosing a card from the mansus.

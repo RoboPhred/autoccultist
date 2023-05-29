@@ -1,6 +1,6 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Describes a condition matchable against a <see cref="Autoccultist.IGameState"/>.
