@@ -7,10 +7,8 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action to slot a card into a slot of a situation.
     /// </summary>
-    public class SlotCardAction : IAutoccultistAction
+    public class SlotCardAction : ActionBase
     {
-        private bool executed = false;
-
         // TODO: This should take a specific card reservation, not a card matcher.
 
         /// <summary>
@@ -43,14 +41,9 @@ namespace AutoccultistNS.Actor.Actions
         public ICardChooser CardMatcher { get; }
 
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
-            if (this.executed)
-            {
-                throw new ActionFailureException(this, "This action has already been executed.");
-            }
-
-            this.executed = true;
+            this.VerifyNotExecuted();
 
             NoonUtility.LogWarning("Executing slot card action with situation id: " + this.SituationId + " and slot id: " + this.SlotId);
 
@@ -84,6 +77,11 @@ namespace AutoccultistNS.Actor.Actions
 
             GameStateProvider.Invalidate();
             Autoccultist.Instance.LogTrace($"Slotted card {card.ElementId} into situation {this.SituationId} slot {this.SlotId}.");
+        }
+
+        public override string ToString()
+        {
+            return $"SlotCardAction({this.Id}, {this.SituationId}, {this.SlotId})";
         }
     }
 }

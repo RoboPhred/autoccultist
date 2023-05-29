@@ -7,7 +7,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action that closes a situation window.
     /// </summary>
-    public class ChooseMansusCardAction : IAutoccultistAction
+    public class ChooseMansusCardAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChooseMansusCardAction"/> class.
@@ -26,8 +26,10 @@ namespace AutoccultistNS.Actor.Actions
         // FIXME: Clean up all this reflection!  Move stuff into GameAPI or IGameState.
 
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
+            this.VerifyNotExecuted();
+
             if (!GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");

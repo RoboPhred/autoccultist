@@ -251,49 +251,38 @@ namespace AutoccultistNS.Brain
             yield return new OpenSituationAction(this.SituationId);
             yield return new ConcludeSituationAction(this.SituationId);
 
-            Autoccultist.Instance.LogTrace($"Our known slots are {string.Join(", ", this.operation.StartingRecipe.SlotSolutions.Keys)}");
-
             var populatedSlots = new HashSet<string>();
 
             // Get the first card.  Slotting this will usually create additional slots
             var slots = this.GetSituationState().RecipeSlots;
             var firstSlot = slots.First();
             var firstSlotSpecId = firstSlot.SpecId;
-            Autoccultist.Instance.LogTrace($"First slot is {firstSlot.SpecId}.");
 
-            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlot, this.operation.StartingRecipe);
+            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlotSpecId, this.operation.StartingRecipe);
             if (firstSlotAction == null)
             {
-                Autoccultist.Instance.LogTrace($"We did not find a card for {firstSlot.SpecId}.");
                 // First slot of starting situation is required.
-                throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlot.SpecId} has no card choice.");
+                throw new OperationFailedException($"Error in operation {this.operation.Name}: Slot id {firstSlotSpecId} has no card choice.");
             }
 
-            Autoccultist.Instance.LogTrace($"We found a card for first slot {firstSlot.SpecId}.");
-
-            populatedSlots.Add(firstSlot.SpecId);
+            populatedSlots.Add(firstSlotSpecId);
             yield return firstSlotAction;
-
-            Autoccultist.Instance.LogTrace("Continuing with remaining slots.");
 
             // Refresh the slots and get the rest of the cards.
             // We need to fetch the state fresh, as this code continues after the first slot was triggered.
             slots = this.GetSituationState().RecipeSlots;
-            Autoccultist.Instance.LogTrace($"We have {slots.Count} slots: {string.Join(", ", slots.Select(x => x.SpecId))}.");
             foreach (var slot in slots.Where(x => x.SpecId != firstSlotSpecId))
             {
-                Autoccultist.Instance.LogTrace($"Additional slot is {slot.SpecId}.");
-                var slotAction = this.GetSlotActionForRecipeSlotSpec(slot, this.operation.StartingRecipe);
+                var slotSpecId = slot.SpecId;
+                var slotAction = this.GetSlotActionForRecipeSlotSpec(slotSpecId, this.operation.StartingRecipe);
                 if (slotAction != null)
                 {
-                    Autoccultist.Instance.LogTrace($"We found a card for additional slot {slot.SpecId}.");
                     populatedSlots.Add(slot.SpecId);
                     yield return slotAction;
-                    Autoccultist.Instance.LogTrace($"We slotted a card for additional slot {slot.SpecId}.");
                 }
                 else
                 {
-                    Autoccultist.Instance.LogTrace($"We did not find a card for {slot.SpecId}.");
+                    Autoccultist.Instance.LogTrace($"Operation {this.operation.Name} has no starting slot matcher for {slot.SpecId}.");
                 }
             }
 
@@ -301,10 +290,8 @@ namespace AutoccultistNS.Brain
             var missingSlots = this.operation.StartingRecipe.SlotSolutions.Keys.Except(populatedSlots);
             if (missingSlots.Any())
             {
-                Autoccultist.Instance.LogTrace($"We are missing starting recipe slots {string.Join(", ", missingSlots)}.");
+                Autoccultist.Instance.LogTrace($"Operation {this.operation.Name} did not define starting recipe slots for {string.Join(", ", missingSlots)}.");
             }
-
-            Autoccultist.Instance.LogTrace($"Starting situation.");
 
             // Start the situation
             yield return new StartSituationRecipeAction(this.SituationId);
@@ -314,7 +301,6 @@ namespace AutoccultistNS.Brain
 
             // Accept the current recipe and fill its needs
             this.ongoingRecipe = this.GetSituationState().CurrentRecipe;
-            Autoccultist.Instance.LogTrace($"Transitioned to recipe {this.ongoingRecipe}.");
             if (this.operation.OngoingRecipes != null && this.operation.OngoingRecipes.TryGetValue(this.ongoingRecipe, out var ongoingRecipeSolution))
             {
                 foreach (var item in this.ContinueSituationCoroutine(ongoingRecipeSolution, false))
@@ -323,7 +309,6 @@ namespace AutoccultistNS.Brain
                 }
             }
 
-            Autoccultist.Instance.LogTrace($"Closing situation.");
             yield return new CloseSituationAction(this.SituationId);
         }
 
@@ -350,7 +335,7 @@ namespace AutoccultistNS.Brain
             }
 
             // Get the first card.  Slotting this will usually create additional slots
-            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlot, recipe);
+            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlot.SpecId, recipe);
             if (firstSlotAction != null)
             {
                 yield return firstSlotAction;
@@ -362,7 +347,7 @@ namespace AutoccultistNS.Brain
 
             foreach (var slot in slots.Skip(1))
             {
-                var slotAction = this.GetSlotActionForRecipeSlotSpec(slot, recipe);
+                var slotAction = this.GetSlotActionForRecipeSlotSpec(slot.SpecId, recipe);
                 if (slotAction != null)
                 {
                     yield return slotAction;
@@ -395,15 +380,14 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private SlotCardAction GetSlotActionForRecipeSlotSpec(ISituationSlot slot, IRecipeSolution recipe)
+        private SlotCardAction GetSlotActionForRecipeSlotSpec(string specId, IRecipeSolution recipe)
         {
-            if (!recipe.SlotSolutions.TryGetValue(slot.SpecId, out var cardChoice))
+            if (!recipe.SlotSolutions.TryGetValue(specId, out var cardChoice))
             {
-                NoonUtility.LogWarning($"Error in operation {this.operation.Name}: Slot id {slot.SpecId} has no card choice.");
                 return null;
             }
 
-            return new SlotCardAction(this.SituationId, slot.SpecId, cardChoice);
+            return new SlotCardAction(this.SituationId, specId, cardChoice);
         }
 
         private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)

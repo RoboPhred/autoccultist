@@ -6,7 +6,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action to start a situation processing cards.
     /// </summary>
-    public class StartSituationRecipeAction : IAutoccultistAction
+    public class StartSituationRecipeAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StartSituationRecipeAction"/> class.
@@ -23,8 +23,10 @@ namespace AutoccultistNS.Actor.Actions
         public string SituationId { get; }
 
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
+            this.VerifyNotExecuted();
+
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");

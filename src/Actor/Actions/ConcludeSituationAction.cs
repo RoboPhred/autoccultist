@@ -6,7 +6,7 @@ namespace AutoccultistNS.Actor.Actions
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.
     /// </summary>
-    public class ConcludeSituationAction : IAutoccultistAction
+    public class ConcludeSituationAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcludeSituationAction"/> class.
@@ -23,8 +23,10 @@ namespace AutoccultistNS.Actor.Actions
         public string SituationId { get; }
 
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
+            this.VerifyNotExecuted();
+
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");

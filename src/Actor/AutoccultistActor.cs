@@ -74,34 +74,9 @@ namespace AutoccultistNS.Actor
                 return;
             }
 
-            // See if we need to get the next action set.
-            if (currentActionSet == null)
+            if (!EnsureActionSet())
             {
-                currentActionSet = PendingActionSets.DequeueOrDefault();
-                if (currentActionSet == null)
-                {
-                    // No more action sets
-                    OnIdle();
-                    return;
-                }
-
-                // This is a new action set, start execution
-                try
-                {
-                    if (!currentActionSet.PendingActions.MoveNext())
-                    {
-                        // Empty pending action set?  Try again next time.
-                        currentActionSet = null;
-                        return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Error pulling the next action from the enumerator.
-                    currentActionSet.TaskCompletion.TrySetException(ex);
-                    currentActionSet = null;
-                    return;
-                }
+                return;
             }
 
             if (currentActionSet.CancellationToken.IsCancellationRequested)
@@ -113,6 +88,7 @@ namespace AutoccultistNS.Actor
             }
 
             var nextAction = currentActionSet.PendingActions.Current;
+            Autoccultist.Instance.LogTrace($"Actor: Current action number is {nextAction.Id}");
 
             // We now have something to do
             OnActive();
@@ -121,6 +97,7 @@ namespace AutoccultistNS.Actor
             {
                 // Execute the action, clear it out, and update the last update time
                 //  to delay for the next action.
+                Autoccultist.Instance.LogTrace($"Executing action {nextAction.Id}: {nextAction}");
                 nextAction.Execute();
             }
             catch (Exception ex)
@@ -134,14 +111,58 @@ namespace AutoccultistNS.Actor
             // We did the thing.  Set the last updated time so we can delay for the next action.
             lastUpdate = DateTime.Now;
 
-            // Immediately try to advance to the next pending action.
-            // If there are no more pending actions, we need to know to set the completion result.
-            if (!currentActionSet.PendingActions.MoveNext())
+            try
             {
-                // No more actions, we are complete.
-                currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
+                // Immediately try to advance to the next pending action.
+                // If there are no more pending actions, we need to know to set the completion result.
+                if (!currentActionSet.PendingActions.MoveNext())
+                {
+                    // No more actions, we are complete.
+                    currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
+                    currentActionSet = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Failed to do whatever it is it wants to do, the entire action set is now dead.
+                currentActionSet.TaskCompletion.TrySetException(ex);
                 currentActionSet = null;
             }
+        }
+
+        private static bool EnsureActionSet()
+        {
+            // See if we need to get the next action set.
+            if (currentActionSet == null)
+            {
+                currentActionSet = PendingActionSets.DequeueOrDefault();
+                if (currentActionSet == null)
+                {
+                    // No more action sets
+                    OnIdle();
+                    return false;
+                }
+
+                // This is a new action set, start execution
+                try
+                {
+                    if (!currentActionSet.PendingActions.MoveNext())
+                    {
+                        // Empty pending action set?  Try again next time.
+                        currentActionSet = null;
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Error pulling the next action from the enumerator.
+                    currentActionSet.TaskCompletion.TrySetException(ex);
+                    currentActionSet = null;
+                    return false;
+                }
+            }
+
+            return currentActionSet != null;
         }
 
         private static void OnActive()
