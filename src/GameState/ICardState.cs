@@ -38,9 +38,6 @@ namespace AutoccultistNS.GameState
         /// </summary>
         IReadOnlyDictionary<string, int> Aspects { get; }
 
-        // FIXME: Temporary.  We need to have a consumption system which removes the card from the state list.
-        //  as it is, we can keep calling ToElementStack forever and consume all cards of this type without ever touching any other card state
-
         /// <summary>
         /// Gets the element stack of this card.
         /// </summary>

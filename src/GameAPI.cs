@@ -1,12 +1,15 @@
 namespace AutoccultistNS
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using SecretHistories.Assets.Scripts.Application.UI;
     using SecretHistories.Constants;
     using SecretHistories.Entities;
     using SecretHistories.Enums;
     using SecretHistories.Fucine;
     using SecretHistories.Spheres;
+    using SecretHistories.Tokens.Payloads;
     using SecretHistories.UI;
     using UnityEngine;
 
@@ -109,6 +112,19 @@ namespace AutoccultistNS
             var token = card.Token;
             if (!sphere.CanAcceptToken(token))
             {
+                if (!sphere.HasEnoughSpaceForToken(token))
+                {
+                    Autoccultist.Instance.LogWarn($"Rejecting sloting of {card.EntityId} into sphere {sphere.Id} because there is not enough space.");
+                }
+                else if (!sphere.IsValidDestinationForToken(token))
+                {
+                    Autoccultist.Instance.LogWarn($"Rejecting sloting of {card.EntityId} into sphere {sphere.Id} because it is not a valid destination.");
+                }
+                else
+                {
+                    Autoccultist.Instance.LogWarn($"Rejecting sloting of {card.EntityId} into sphere {sphere.Id} for unknown reason.");
+                }
+
                 return false;
             }
 
@@ -122,6 +138,50 @@ namespace AutoccultistNS
             // SlotCardAction await the slotting for this to be of use.
 
             // this.sphere.GetItineraryFor(elementStack.Token).WithDuration(0.3f).Depart(elementStack, new Context(Context.ActionSource.DoubleClickSend));
+        }
+
+        public static IReadOnlyDictionary<string, ElementStack> GetMansusChoices(out string faceUpDeckName)
+        {
+            faceUpDeckName = null;
+
+            var numa = Watchman.Get<Numa>();
+            var compendium = Watchman.Get<Compendium>();
+
+            var otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+            if (otherworld == null)
+            {
+                return null;
+            }
+
+            var activeDoor = Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
+            if (activeDoor == null)
+            {
+                return null;
+            }
+
+            var spheres = activeDoor.GetSpheres();
+            var consequences = activeDoor.GetConsequences();
+
+            var faceUpStack = spheres[0].GetTokens().First().Payload as ElementStack;
+            faceUpDeckName = compendium.GetEntityById<Recipe>(consequences[0].Id).DeckEffects.Keys.First();
+
+            var deckOneStack = spheres[1].GetTokens().First().Payload as ElementStack;
+            var deckOneName = compendium.GetEntityById<Recipe>(consequences[1].Id).DeckEffects.Keys.First();
+
+            var deckTwoStack = spheres[2].GetTokens().First().Payload as ElementStack;
+            var deckTwoName = compendium.GetEntityById<Recipe>(consequences[2].Id).DeckEffects.Keys.First();
+
+            return new Dictionary<string, ElementStack>
+            {
+                { faceUpDeckName, faceUpStack },
+                { deckOneName, deckOneStack },
+                { deckTwoName, deckTwoStack },
+            };
+        }
+
+        public static void ChooseMansusDeck(string deckName)
+        {
+            throw new NotImplementedException("ChooseMansusDeck");
         }
 
         /// <summary>

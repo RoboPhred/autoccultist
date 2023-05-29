@@ -73,7 +73,7 @@ namespace AutoccultistNS.Brain
         private IEnumerable<IAutoccultistAction> DumpSituationCoroutine()
         {
             yield return new OpenSituationAction(this.SituationId);
-            yield return new ConcludeSituationAction(this.SituationId);
+            yield return new EmptySituationAction(this.SituationId);
             yield return new CloseSituationAction(this.SituationId);
         }
     }

@@ -19,7 +19,6 @@ namespace AutoccultistNS.Actor.Actions
         /// <param name="cardMatcher">The card matcher to choose a card to slot.</param>
         public SlotCardAction(string situationId, string slotId, ICardChooser cardMatcher)
         {
-            NoonUtility.LogWarning("Created slot card action with situation id: " + situationId + " and slot id: " + slotId);
             this.SituationId = situationId;
             this.SlotId = slotId;
             this.CardMatcher = cardMatcher;
@@ -45,8 +44,6 @@ namespace AutoccultistNS.Actor.Actions
         {
             this.VerifyNotExecuted();
 
-            NoonUtility.LogWarning("Executing slot card action with situation id: " + this.SituationId + " and slot id: " + this.SlotId);
-
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -70,8 +67,10 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
             }
 
-            if (!GameAPI.TrySlotCard(sphere, card.ToElementStack()))
+            var stack = card.ToElementStack();
+            if (!GameAPI.TrySlotCard(sphere, stack))
             {
+                Autoccultist.Instance.LogWarn($"Card {card.ElementId} in sphere {stack.Token.Sphere.Id} was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
                 throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
             }
 

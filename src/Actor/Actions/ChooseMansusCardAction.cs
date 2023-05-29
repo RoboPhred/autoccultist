@@ -1,6 +1,5 @@
 namespace AutoccultistNS.Actor.Actions
 {
-    using System;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
 
@@ -23,8 +22,6 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public IMansusSolution MansusSolution { get; }
 
-        // FIXME: Clean up all this reflection!  Move stuff into GameAPI or IGameState.
-
         /// <inheritdoc/>
         public override void Execute()
         {
@@ -35,22 +32,22 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");
             }
 
-            throw new NotImplementedException("ChooseMansusCardAction");
+            var gameState = GameStateProvider.Current;
 
-            // if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
-            // {
-            //     // This is the card we want.
-            //     GameAPI.ChooseMansusCard(gameState.Mansus.FaceUpCard.ToElementStack());
-            // }
-            // else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
-            // {
-            //     // This is the card we want.
-            //     GameAPI.ChooseMansusCard(card.ToElementStack());
-            // }
-            // else
-            // {
-            //     throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", gameState.Mansus.DeckCards.Keys)}");
-            // }
+            if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
+            {
+                // This is the card we want.
+                GameAPI.ChooseMansusDeck(gameState.Mansus.FaceUpDeck);
+            }
+            else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
+            {
+                // This is the card we want.
+                GameAPI.ChooseMansusDeck(this.MansusSolution.Deck);
+            }
+            else
+            {
+                throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", gameState.Mansus.DeckCards.Keys)}");
+            }
         }
     }
 }

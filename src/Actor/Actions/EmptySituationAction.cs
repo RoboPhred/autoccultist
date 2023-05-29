@@ -1,18 +1,19 @@
 namespace AutoccultistNS.Actor.Actions
 {
     using AutoccultistNS.GameState;
+    using SecretHistories.Enums;
 
     /// <summary>
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.
     /// </summary>
-    public class ConcludeSituationAction : ActionBase
+    public class EmptySituationAction : ActionBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConcludeSituationAction"/> class.
+        /// Initializes a new instance of the <see cref="EmptySituationAction"/> class.
         /// </summary>
         /// <param name="situationId">The situation id of the situation to dump.</param>
-        public ConcludeSituationAction(string situationId)
+        public EmptySituationAction(string situationId)
         {
             this.SituationId = situationId;
         }
@@ -38,9 +39,19 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
-            // This used to just dump the contents, but this Conclude function seems to be used by the UI to accept everything.
-            // Note that this will cause temporary situations to retire, which I think was happening anyway with the previous code.
-            situation.Conclude();
+            if (situation.State.Identifier == StateEnum.Unstarted)
+            {
+                situation.DumpUnstartedBusiness();
+            }
+            else if (situation.State.Identifier == StateEnum.Complete)
+            {
+                situation.Conclude();
+            }
+            else
+            {
+                throw new ActionFailureException(this, $"Situation {this.SituationId} cannot be emptied becuase it is in state {situation.State.Identifier}.");
+            }
+
             GameStateProvider.Invalidate();
         }
     }

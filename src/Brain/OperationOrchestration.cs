@@ -202,7 +202,7 @@ namespace AutoccultistNS.Brain
                 }
                 else
                 {
-                    NoonUtility.LogWarning($"Unhandled mansus event for recipeId {situation.CurrentRecipe} in operation {this.operation.Name}.");
+                    Autoccultist.Instance.LogWarn($"Unhandled mansus event for recipeId {situation.CurrentRecipe} in operation {this.operation.Name}.");
                 }
             }
 
@@ -224,7 +224,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            NoonUtility.LogWarning($"Continuing operation {this.operation.Name}.  From recipe {this.ongoingRecipe} to {currentRecipe}.");
+            Autoccultist.Instance.LogTrace($"Continuing operation {this.operation.Name}.  From recipe {this.ongoingRecipe} to {currentRecipe}.");
 
             this.ongoingRecipe = currentRecipe;
             this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining ?? 0;
@@ -249,7 +249,7 @@ namespace AutoccultistNS.Brain
             BrainEventSink.OnOperationStarted(this.operation);
 
             yield return new OpenSituationAction(this.SituationId);
-            yield return new ConcludeSituationAction(this.SituationId);
+            yield return new EmptySituationAction(this.SituationId);
 
             var populatedSlots = new HashSet<string>();
 
@@ -269,15 +269,15 @@ namespace AutoccultistNS.Brain
             yield return firstSlotAction;
 
             // Refresh the slots and get the rest of the cards.
-            // We need to fetch the state fresh, as this code continues after the first slot was triggered.
-            slots = this.GetSituationState().RecipeSlots;
-            foreach (var slot in slots.Where(x => x.SpecId != firstSlotSpecId))
+            // We need to capture the value with ToArray, as state will not be valid after we perform an action.
+            // It is safe to assume our situation will mantain the same slots, as the first slot has already been populated.
+            var slotsSpecIds = this.GetSituationState().RecipeSlots.Select(x => x.SpecId).Where(x => x != firstSlotSpecId).ToArray();
+            foreach (var slotSpecId in slotsSpecIds)
             {
-                var slotSpecId = slot.SpecId;
                 var slotAction = this.GetSlotActionForRecipeSlotSpec(slotSpecId, this.operation.StartingRecipe);
                 if (slotAction != null)
                 {
-                    populatedSlots.Add(slot.SpecId);
+                    populatedSlots.Add(slotSpecId);
                     yield return slotAction;
                 }
                 else
@@ -335,25 +335,36 @@ namespace AutoccultistNS.Brain
                 yield return new OpenSituationAction(this.SituationId);
             }
 
+            var populatedSlots = new HashSet<string>();
+
             // Get the first card.  Slotting this will usually create additional slots
             var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlotSpecId, recipe);
             if (firstSlotAction != null)
             {
+                populatedSlots.Add(firstSlotSpecId);
                 yield return firstSlotAction;
-
-                // Slotting the first spec can change the recipe, changing the available slots.
-                // Refresh the slots and get the rest of the cards
-                slots = this.GetSituationState().RecipeSlots;
             }
 
-            foreach (var slot in slots.Where(x => x.SpecId != firstSlotSpecId))
+            // Slotting the first spec can change the recipe, changing the available slots.
+            // Refresh the slots and get the rest of the cards.
+            // We need to get the IDs here, as the slot state references will be stale after our first action.
+            // Capture the value with ToArray as the state will be invalidated when we perform an action.
+            var slotSpecIds = this.GetSituationState().RecipeSlots.Select(x => x.SpecId).Where(x => x != firstSlotSpecId).ToArray();
+            foreach (var slotSpecId in slotSpecIds)
             {
-                var slotSpecId = slot.SpecId;
                 var slotAction = this.GetSlotActionForRecipeSlotSpec(slotSpecId, recipe);
                 if (slotAction != null)
                 {
+                    populatedSlots.Add(slotSpecId);
                     yield return slotAction;
                 }
+            }
+
+            // Check that all required slots were populated.
+            var missingSlots = recipe.SlotSolutions.Keys.Except(populatedSlots);
+            if (missingSlots.Any())
+            {
+                Autoccultist.Instance.LogTrace($"Operation {this.operation.Name} recipe {this.ongoingRecipe} did not define recipe slots for {string.Join(", ", missingSlots)}.");
             }
 
             if (standalone)
@@ -372,7 +383,7 @@ namespace AutoccultistNS.Brain
             try
             {
                 yield return new OpenSituationAction(this.SituationId);
-                yield return new ConcludeSituationAction(this.SituationId);
+                yield return new EmptySituationAction(this.SituationId);
                 yield return new CloseSituationAction(this.SituationId);
             }
             finally
@@ -409,7 +420,7 @@ namespace AutoccultistNS.Brain
             }
             catch (Exception ex)
             {
-                NoonUtility.LogWarning(ex, $"Failed to run operation {this.operation.Name}: {ex.Message}");
+                Autoccultist.Instance.LogWarn(ex, $"Failed to run operation {this.operation.Name}: {ex.Message}");
                 this.Abort();
             }
             finally

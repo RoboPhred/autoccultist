@@ -112,9 +112,6 @@ namespace AutoccultistNS.GameState.Impl
         /// <inheritdoc/>
         public ElementStack ToElementStack()
         {
-            // FIXME: This is temporary, and can result in an existing ICardState being used up.
-            //  We need to implement card consumption in place of this, so that
-            //  consumed cards no longer show up for use in IGameState.TabletopCards
             this.VerifyAccess();
             return this.consumed.Value;
         }
