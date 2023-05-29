@@ -282,7 +282,7 @@ namespace AutoccultistNS.Brain
                 }
                 else
                 {
-                    Autoccultist.Instance.LogTrace($"Operation {this.operation.Name} has no starting slot matcher for {slot.SpecId}.");
+                    Autoccultist.Instance.LogTrace($"Operation {this.operation.Name} has no starting slot matcher for {slotSpecId}.");
                 }
             }
 
@@ -322,6 +322,7 @@ namespace AutoccultistNS.Brain
             }
 
             var firstSlot = slots.First();
+            var firstSlotSpecId = firstSlot.SpecId;
 
             if (firstSlot.Card != null)
             {
@@ -335,7 +336,7 @@ namespace AutoccultistNS.Brain
             }
 
             // Get the first card.  Slotting this will usually create additional slots
-            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlot.SpecId, recipe);
+            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlotSpecId, recipe);
             if (firstSlotAction != null)
             {
                 yield return firstSlotAction;
@@ -345,9 +346,10 @@ namespace AutoccultistNS.Brain
                 slots = this.GetSituationState().RecipeSlots;
             }
 
-            foreach (var slot in slots.Skip(1))
+            foreach (var slot in slots.Where(x => x.SpecId != firstSlotSpecId))
             {
-                var slotAction = this.GetSlotActionForRecipeSlotSpec(slot.SpecId, recipe);
+                var slotSpecId = slot.SpecId;
+                var slotAction = this.GetSlotActionForRecipeSlotSpec(slotSpecId, recipe);
                 if (slotAction != null)
                 {
                     yield return slotAction;
