@@ -113,7 +113,7 @@ namespace AutoccultistNS.Actor
             {
                 // Execute the action, clear it out, and update the last update time
                 //  to delay for the next action.
-                Autoccultist.Instance.LogTrace($"Executing action {nextAction.Id}: {nextAction}");
+                Autoccultist.Instance.LogTrace($"Executing action {nextAction}");
                 nextAction.Execute();
             }
             catch (Exception ex)

@@ -81,7 +81,7 @@ namespace AutoccultistNS.Actor.Actions
 
         public override string ToString()
         {
-            return $"SlotCardAction({this.Id}, {this.SituationId}, {this.SlotId})";
+            return $"SlotCardAction(Id = {this.Id}, SituationId = {this.SituationId}, SlotId = {this.SlotId})";
         }
     }
 }

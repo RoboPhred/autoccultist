@@ -1,7 +1,7 @@
-using AutoccultistNS.GameState;
-
 namespace AutoccultistNS.Actor.Actions
 {
+    using AutoccultistNS.GameState;
+
     /// <summary>
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.

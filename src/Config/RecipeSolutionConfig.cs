@@ -11,6 +11,11 @@ namespace AutoccultistNS.Config
     public class RecipeSolutionConfig : IRecipeSolution
     {
         /// <summary>
+        /// A cached read only dictionary of slot names to card choices.
+        /// </summary>
+        private IReadOnlyDictionary<string, ICardChooser> slotSolutions;
+
+        /// <summary>
         /// Gets or sets a value indicating whether this recipe requires its cards to start the operation.  This only applies to ongoing recipes.
         /// </summary>
         public bool RequireSlotCards { get; set; } = true;
@@ -30,8 +35,6 @@ namespace AutoccultistNS.Config
         /// Gets or sets a solver for a mansus event triggered by this recipe.
         /// </summary>
         public MansusSolutionConfig MansusChoice { get; set; }
-
-        private IReadOnlyDictionary<string, ICardChooser> slotSolutions;
 
         /// <inheritdoc/>
         IReadOnlyDictionary<string, ICardChooser> IRecipeSolution.SlotSolutions
@@ -57,6 +60,5 @@ namespace AutoccultistNS.Config
             var implicitRequirements = this.RequireSlotCards ? this.Slots.Values.Select(x => x) : new ISlottableCardChoiceConfig[0];
             return explicitRequirements.Concat(implicitRequirements).ToArray();
         }
-
     }
 }
