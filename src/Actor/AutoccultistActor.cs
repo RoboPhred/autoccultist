@@ -95,6 +95,7 @@ namespace AutoccultistNS.Actor
                     // No more actions, we are complete.
                     currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
                     currentActionSet = null;
+                    return;
                 }
             }
             catch (Exception ex)
@@ -102,6 +103,7 @@ namespace AutoccultistNS.Actor
                 // Failed to do whatever it is it wants to do, the entire action set is now dead.
                 currentActionSet.TaskCompletion.TrySetException(ex);
                 currentActionSet = null;
+                return;
             }
 
             var nextAction = currentActionSet.PendingActions.Current;

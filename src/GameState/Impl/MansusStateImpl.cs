@@ -15,6 +15,7 @@ namespace AutoccultistNS.GameState.Impl
         /// <param name="otherworld">The map controller to load state from.</param>
         public MansusStateImpl(Otherworld otherworld)
         {
+            // This is silly.  We are in the mansus, but we are not ready yet.
             if (otherworld == null)
             {
                 this.IsActive = false;
@@ -24,11 +25,19 @@ namespace AutoccultistNS.GameState.Impl
                 return;
             }
 
-            var deckStacks = GameAPI.GetMansusChoices(out var faceUpDeckName);
-
             this.IsActive = true;
-            this.FaceUpDeck = faceUpDeckName;
-            this.DeckCards = (IReadOnlyDictionary<string, ICardState>)deckStacks.ToDictionary(x => x.Key, x => CardStateImpl.CardStatesFromStack(x.Value, CardLocation.Mansus).First());
+
+            var deckStacks = GameAPI.GetMansusChoices(out var faceUpDeckName);
+            if (deckStacks != null)
+            {
+                this.FaceUpDeck = faceUpDeckName;
+                this.DeckCards = (IReadOnlyDictionary<string, ICardState>)deckStacks.ToDictionary(x => x.Key, x => (ICardState)CardStateImpl.CardStatesFromStack(x.Value, CardLocation.Mansus).First());
+            }
+            else
+            {
+                this.FaceUpDeck = null;
+                this.DeckCards = null;
+            }
         }
 
         /// <inheritdoc/>

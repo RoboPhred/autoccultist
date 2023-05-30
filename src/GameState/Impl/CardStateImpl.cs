@@ -2,6 +2,7 @@ namespace AutoccultistNS.GameState.Impl
 {
     using System;
     using System.Collections.Generic;
+    using SecretHistories.Spheres;
     using SecretHistories.UI;
 
     /// <summary>
@@ -32,7 +33,14 @@ namespace AutoccultistNS.GameState.Impl
             this.isUnique = sourceStack.Unique;
             this.aspects = new Dictionary<string, int>(sourceStack.GetAspects());
             this.location = location;
-            this.isSlottable = location == CardLocation.Tabletop && !sourceStack.Token.CurrentState.InPlayerDrivenMotion() && !sourceStack.Token.CurrentState.InSystemDrivenMotion() && !sourceStack.Defunct;
+
+            // I have no idea which of these conditions are actually necessary.
+            var enRoute = sourceStack.Token.Sphere is EnRouteSphere;
+            var tokenState = sourceStack.Token.CurrentState;
+
+            // Do we really need to check if its on the tabletop?  We could slot cards sitting around unused inside verbs, but we probably only want to take from table.
+            // Might revisit this if we ever support the technique of slotting a card to pause the timer.
+            this.isSlottable = location == CardLocation.Tabletop && !enRoute && !tokenState.InPlayerDrivenMotion() && !tokenState.InSystemDrivenMotion() && !sourceStack.Defunct;
         }
 
         /// <inheritdoc/>

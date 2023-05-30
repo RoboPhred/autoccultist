@@ -31,9 +31,9 @@ namespace AutoccultistNS.GameState.Impl
             this.state = situation.State.Identifier;
             this.isOccupied = this.state != StateEnum.Unstarted;
 
-            if (this.state == StateEnum.Ongoing)
+            if (this.state == StateEnum.Ongoing || this.state == StateEnum.Complete)
             {
-                this.currentRecipe = situation.RecipeId;
+                this.currentRecipe = situation.CurrentRecipeId;
                 this.recipeTimeRemaining = situation.TimeRemaining;
             }
             else

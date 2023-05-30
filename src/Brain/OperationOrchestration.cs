@@ -191,12 +191,16 @@ namespace AutoccultistNS.Brain
         {
             var situation = this.GetSituationState();
 
+            NoonUtility.LogWarning($"Completing operation {this.operation.Name} with state {situation.State} on recipe {situation.CurrentRecipe} with portal {situation.CurrentRecipePortal} Mansus active {GameStateProvider.Current.Mansus.IsActive}.");
+
             // We currently assume mansus only ever occurs as the last recipe of a situation.
             // FIXME: Engine supports multiple portal / otherworld / mansus types, but we just assume the one.
             if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.IsActive)
             {
+                NoonUtility.LogWarning($"OperationOrchestration trying to handle mansus on recipe {situation.CurrentRecipe}.");
                 if (this.operation.OngoingRecipes.TryGetValue(situation.CurrentRecipe, out var recipeSolution) && recipeSolution.MansusChoice != null)
                 {
+                    NoonUtility.LogWarning("...Mansus choice for recipe found.");
                     this.operationState = OperationState.Mansus;
                     await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice));
                 }

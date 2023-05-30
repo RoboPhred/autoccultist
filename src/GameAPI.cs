@@ -44,6 +44,12 @@ namespace AutoccultistNS
                     return false;
                 }
 
+                // Apparently the above isn't good enough to wait on the mansus, so let's wait for the cards to appear.
+                if (IsInMansus && GetMansusChoices(out var _) == null)
+                {
+                    return false;
+                }
+
                 return true;
             }
         }
@@ -144,44 +150,64 @@ namespace AutoccultistNS
         {
             faceUpDeckName = null;
 
-            var numa = Watchman.Get<Numa>();
-            var compendium = Watchman.Get<Compendium>();
-
-            var otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
-            if (otherworld == null)
+            try
             {
+                var spheres = GetMansusSpheres(out faceUpDeckName, out var _, out var _);
+                var value = new Dictionary<string, ElementStack>();
+                foreach (var sphere in spheres)
+                {
+                    var token = sphere.Value.GetTokens().FirstOrDefault();
+                    if (!token)
+                    {
+                        // Mansus isn't ready.
+                        // This could be because we have not drawn yet, or because the user has made a choice and we are now idle.
+                        return null;
+                    }
+
+                    value.Add(sphere.Key, token.Payload as ElementStack);
+                }
+
+                return spheres.ToDictionary(x => x.Key, x => x.Value.GetTokens().First().Payload as ElementStack);
+            }
+            catch (Exception ex)
+            {
+                NoonUtility.LogWarning($"Exception in GameAPI.GetMansusChoices: {ex.ToString()}");
                 return null;
             }
-
-            var activeDoor = Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
-            if (activeDoor == null)
-            {
-                return null;
-            }
-
-            var spheres = activeDoor.GetSpheres();
-            var consequences = activeDoor.GetConsequences();
-
-            var faceUpStack = spheres[0].GetTokens().First().Payload as ElementStack;
-            faceUpDeckName = compendium.GetEntityById<Recipe>(consequences[0].Id).DeckEffects.Keys.First();
-
-            var deckOneStack = spheres[1].GetTokens().First().Payload as ElementStack;
-            var deckOneName = compendium.GetEntityById<Recipe>(consequences[1].Id).DeckEffects.Keys.First();
-
-            var deckTwoStack = spheres[2].GetTokens().First().Payload as ElementStack;
-            var deckTwoName = compendium.GetEntityById<Recipe>(consequences[2].Id).DeckEffects.Keys.First();
-
-            return new Dictionary<string, ElementStack>
-            {
-                { faceUpDeckName, faceUpStack },
-                { deckOneName, deckOneStack },
-                { deckTwoName, deckTwoStack },
-            };
         }
 
-        public static void ChooseMansusDeck(string deckName)
+        public static bool ChooseMansusDeck(string deckName)
         {
-            throw new NotImplementedException("ChooseMansusDeck");
+            try
+            {
+                var spheres = GetMansusSpheres(out var _, out var otherworld, out var ingress);
+                if (!spheres.TryGetValue(deckName, out var sphere))
+                {
+                    return false;
+                }
+
+                var dominions = Reflection.GetPrivateField<List<OtherworldDominion>>(otherworld, "_dominions");
+
+                var dominion = dominions.FirstOrDefault(x => x.MatchesEgress(ingress.GetEgressId()));
+                if (dominion == null)
+                {
+                    throw new Exception($"Could not find dominion for ingress {ingress.Id} in otherworld {otherworld.Id}");
+                }
+
+                var token = sphere.GetTokens().First();
+
+                if (!dominion.EgressSphere.TryAcceptToken(token, new Context(Context.ActionSource.PlayerDrag)))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                NoonUtility.LogWarning($"Exception in GameAPI.ChooseMansusDeck: {ex.ToString()}");
+                return false;
+            }
         }
 
         /// <summary>
@@ -223,6 +249,68 @@ namespace AutoccultistNS
             }
 
             notifier.ShowNotificationWindow(title, message, false);
+        }
+
+        private static IReadOnlyDictionary<string, Sphere> GetMansusSpheres(out string faceUpDeckName, out Otherworld otherworld, out Ingress ingress)
+        {
+            ingress = null;
+            otherworld = null;
+            faceUpDeckName = null;
+
+            var numa = Watchman.Get<Numa>();
+            var compendium = Watchman.Get<Compendium>();
+
+            otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+            if (otherworld == null)
+            {
+                return null;
+            }
+
+            ingress = Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
+            if (ingress == null)
+            {
+                return null;
+            }
+
+            var spheres = otherworld.GetSpheres();
+
+            var consequences = ingress.GetConsequences();
+
+            var faceUpDeck = compendium.GetEntityById<Recipe>(consequences[0].Id);
+            var deckOne = compendium.GetEntityById<Recipe>(consequences[1].Id);
+            var deckTwo = compendium.GetEntityById<Recipe>(consequences[2].Id);
+
+            if (faceUpDeck == null || faceUpDeck.DeckEffects.Keys.Count == 0)
+            {
+                throw new Exception("FaceUpDeck is null or has no DeckEffects");
+            }
+
+            if (deckOne == null || deckOne.DeckEffects.Keys.Count == 0)
+            {
+                throw new Exception("DeckOne is null or has no DeckEffects");
+            }
+
+            if (deckTwo == null || deckTwo.DeckEffects.Keys.Count == 0)
+            {
+                throw new Exception("DeckTwo is null or has no DeckEffects");
+            }
+
+            faceUpDeckName = faceUpDeck.DeckEffects.Keys.First();
+            var deckOneName = deckOne.DeckEffects.Keys.First();
+            var deckTwoName = deckTwo.DeckEffects.Keys.First();
+
+            // FIXME: This is nasty, but HornexAxe.GetSphereByPath(FromPath, overworld) doesn't find these.
+            // Which is strange, as the error message it gives contains the exact same path as we see from sphere.GetAbsolutePath().Path
+            var faceUpSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[0].ToPath.Path);
+            var deckOneSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[1].ToPath.Path);
+            var deckTwoSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[2].ToPath.Path);
+
+            return new Dictionary<string, Sphere>
+            {
+                { faceUpDeckName, faceUpSphere },
+                { deckOneName, deckOneSphere },
+                { deckTwoName, deckTwoSphere },
+            };
         }
 
         private static void OnGameStarted(object sender, EventArgs e)

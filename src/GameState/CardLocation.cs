@@ -11,6 +11,11 @@ namespace AutoccultistNS.GameState
         Tabletop,
 
         /// <summary>
+        /// The card is going somewhere.
+        /// </summary>
+        EnRoute,
+
+        /// <summary>
         /// The card is in a situation slot.
         /// </summary>
         Slotted,
