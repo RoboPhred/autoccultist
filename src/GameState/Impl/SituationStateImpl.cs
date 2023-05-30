@@ -33,7 +33,11 @@ namespace AutoccultistNS.GameState.Impl
 
             if (this.state == StateEnum.Ongoing || this.state == StateEnum.Complete)
             {
-                this.currentRecipe = situation.CurrentRecipeId;
+                // Do not be confused by Situation.CurrentRecipe, as that shows shows the 'next' recipe for the current slots once the warmup is done.
+                // Effectively, it shows the alt recipe that will be followed.
+                // Our idea of the current recipe is what we are currently working on, not what the next will be.
+                this.currentRecipe = situation.FallbackRecipeId;
+
                 this.recipeTimeRemaining = situation.TimeRemaining;
             }
             else

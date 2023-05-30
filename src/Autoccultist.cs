@@ -183,7 +183,7 @@ public class Autoccultist : MonoBehaviour
 
     private void HandleSceneUnloaded(Scene scene)
     {
-        if (GameAPI.IsRunning && scene.name == "S4Tabletop")
+        if (scene.name == "S4Tabletop")
         {
             // TODO: This was called from HandleSceneLoaded but was called too late on victory, and we crash from not finding any spheres in GameStateProvider.FromCurrentState
             // Moved it to HandleSceneUnloaded... Does this fix the issue?
