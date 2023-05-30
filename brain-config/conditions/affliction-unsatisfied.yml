@@ -1,0 +1,6 @@
+# Affliction is unsatisfied if we do not have a means of curing it (money or vitality).
+allOf:
+  - elementId: affliction
+  - noneOf:
+      - elementId: funds
+      - elementId: vitality
