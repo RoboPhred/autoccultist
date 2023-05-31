@@ -8,6 +8,14 @@ An experimental automaton for playing Cultist Simulator.
 
 The purpose of this mod is to provide a means of making Cultist Simulator play itself. Either though individual ongoing tasks (EG: Obtain, work, and submit a commission, and sell a Spintria if funds are low), or through a higher level list of tasks.
 
+## Compatibility
+
+This mod is NOT compatible with the current release of the game.  It needs to be reworked to support the recent rewrite of the cultist simulator engine.
+
+## Demo
+
+You can watch the bot play and complete a power ascension [here](https://www.youtube.com/watch?v=UKe9wqMd32I)
+
 ## Usage
 
 First, you must configure the behaviors you want. See [configuration](#configuration). You can then hit F10 to open the control panel when in a game.
