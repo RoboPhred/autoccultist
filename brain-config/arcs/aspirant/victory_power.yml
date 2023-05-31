@@ -1,3 +1,11 @@
+# Ideas for More Faster
+# - Stop looking for followers earlier.  We only need a few as sacrifices for the spider door
+#     Teach it to look for followers only when it runs low?
+#     Spider door deck has a fixed number of draws before refresh, so we only need that many followers.
+# - Indoctrinate followers as-needed for spider door sacrifices?
+#     We use talk to delay Crucible decaying, so we will need to juggle that with talk to indoctrinate...
+# - Don't buy things we don't need from oriflamme.
+
 # Note: Getting close to loosing games due to lack of money.  Multi tasking strategy seems to take longer to get out of junior position so it bleeds money.
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
@@ -57,8 +65,6 @@ motivations:
       - !import ../../goals/reason/aquire-skillreasonc.yml
     supportingGoals:
       # We might want to drop attract-followers, as this has a chance of requiring reason.
-      # Or, make a variant that doesn't fill in reason and do that part later.
-      # ...Isn't reason only for patrons?   We don't use them in this arc.
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
