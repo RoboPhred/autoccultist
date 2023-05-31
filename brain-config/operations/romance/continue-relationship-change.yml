@@ -1,0 +1,8 @@
+name: Maintain a relationship based on Change
+situation: rose
+targetOngoing: true
+ongoingRecipes:
+  L_continuerose_change:
+    slots:
+      What?:
+        elementId: passion
