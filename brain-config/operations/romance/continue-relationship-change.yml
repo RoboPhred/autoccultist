@@ -3,7 +3,6 @@ situation: rose
 targetOngoing: true
 ongoingRecipes:
   L_continuerose_change:
-    requireSlotCards: false
     slots:
       What?:
         elementId: passion
