@@ -10,7 +10,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class ParseErrorsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 errorsScrollPosition = default;
 

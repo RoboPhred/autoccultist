@@ -1,10 +1,8 @@
 namespace Autoccultist.GUI
 {
     using System;
-    using System.Linq;
     using Autoccultist.Brain;
     using Autoccultist.Config;
-    using Autoccultist.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -12,7 +10,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class ArcsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 scrollPosition = default;
 
@@ -68,6 +66,11 @@ namespace Autoccultist.GUI
             }
 
             GUILayout.EndScrollView();
+
+            if (GUILayout.Button("Close"))
+            {
+                IsShowing = false;
+            }
         }
     }
 }

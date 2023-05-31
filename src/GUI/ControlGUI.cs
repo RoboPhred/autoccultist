@@ -11,7 +11,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class ControlGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         /// <summary>
         /// Gets or sets a value indicating whether the window is being shown.
