@@ -4,6 +4,6 @@ startingRecipe:
   slots:
     dream:
       elementId: injury
-    medicines:
+    vitality:
       elementId: vitality
       ageBias: oldest
