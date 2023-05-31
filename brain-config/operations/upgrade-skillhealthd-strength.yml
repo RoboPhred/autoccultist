@@ -1,9 +1,13 @@
-name: Upgrade Steely Physique with Forge
+name: Acquire a Matchless Physique
 situation: study
 startingRecipe:
   slots:
     study:
       elementId: skillhealthc
+    specialisation:
+      oneOf:
+        - aspects: { lore: 1, forge: 1 }
+        - aspects: { lore: 1, edge: 1 }
     V1:
       elementId: vitalityplus
     V2:
@@ -12,5 +16,3 @@ startingRecipe:
       elementId: vitalityplus
     V4:
       elementId: vitalityplus
-    V5:
-      aspects: { lore: 1, forge: 2 }
