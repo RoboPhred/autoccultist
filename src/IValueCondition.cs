@@ -1,4 +1,4 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     /// <summary>
     /// An interface describing an object that compares a value to a condition.

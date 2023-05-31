@@ -1,6 +1,6 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Extension methods for impulses.

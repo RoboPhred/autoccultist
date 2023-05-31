@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     /// <summary>
     /// Event sink for various events in the autoccultist brain.
@@ -11,7 +11,7 @@ namespace Autoccultist.Brain
         /// <param name="goal">The started goal.</param>
         public static void OnGoalStarted(IGoal goal)
         {
-            AutoccultistPlugin.Instance.LogInfo($"Starting goal {goal.Name}.");
+            Autoccultist.Instance.LogInfo($"Starting goal {goal.Name}.");
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Autoccultist.Brain
         /// <param name="goal">The completed goal.</param>
         public static void OnGoalCompleted(IGoal goal)
         {
-            AutoccultistPlugin.Instance.LogInfo($"Goal {goal.Name} is now complete.");
+            Autoccultist.Instance.LogInfo($"Goal {goal.Name} is now complete.");
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Autoccultist.Brain
         /// <param name="operation">The started operation.</param>
         public static void OnOperationStarted(IOperation operation)
         {
-            AutoccultistPlugin.Instance.LogTrace("Starting operation " + operation.Name);
+            NoonUtility.LogWarning("Starting operation " + operation.Name);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Autoccultist.Brain
         /// <param name="operation">The completed operation.</param>
         public static void OnOperationCompleted(IOperation operation)
         {
-            AutoccultistPlugin.Instance.LogTrace($"Completing operation {operation.Name}");
+            NoonUtility.LogWarning($"Completing operation {operation.Name}");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Autoccultist.Brain
         /// <param name="operation">The aborted operation.</param>
         public static void OnOperationAborted(IOperation operation)
         {
-            AutoccultistPlugin.Instance.LogTrace($"Aborting operation {operation.Name}");
+            NoonUtility.LogWarning($"Aborting operation {operation.Name}");
         }
     }
 }

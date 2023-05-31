@@ -4,6 +4,6 @@ startingRecipe:
   slots:
     dream:
       elementId: affliction
-    medicine:
+    vitality:
       elementId: vitality
       ageBias: oldest

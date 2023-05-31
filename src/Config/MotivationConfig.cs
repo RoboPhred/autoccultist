@@ -1,8 +1,8 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
-    using Autoccultist.Brain;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>

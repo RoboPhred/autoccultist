@@ -1,6 +1,6 @@
-namespace Autoccultist.Config.CardChoices
+namespace AutoccultistNS.Config.CardChoices
 {
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// A config file for specifying cards that are slottable.

@@ -1,10 +1,10 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Manages goal execution.

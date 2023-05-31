@@ -1,4 +1,4 @@
-namespace Autoccultist.Yaml
+namespace AutoccultistNS.Yaml
 {
     using YamlDotNet.Core;
 

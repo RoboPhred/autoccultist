@@ -1,4 +1,4 @@
-namespace Autoccultist.Actor
+namespace AutoccultistNS.Actor
 {
     /// <summary>
     /// The result of an action sequence.

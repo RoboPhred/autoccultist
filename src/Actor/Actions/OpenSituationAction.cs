@@ -1,9 +1,9 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
     /// <summary>
     /// An action to open a situation window.
     /// </summary>
-    public class OpenSituationAction : IAutoccultistAction
+    public class OpenSituationAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSituationAction"/> class.
@@ -20,20 +20,22 @@ namespace Autoccultist.Actor.Actions
         public string SituationId { get; }
 
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
+            this.VerifyNotExecuted();
+
             if (GameAPI.IsInMansus)
             {
-                throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
+                return;
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {
-                throw new ActionFailureException(this, "Situation is not available.");
+                return;
             }
 
-            situation.OpenWindow();
+            situation.OpenAt(situation.Token.Location);
         }
     }
 }

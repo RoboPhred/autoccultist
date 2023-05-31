@@ -1,12 +1,12 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
-    using Autoccultist.Brain;
-    using Autoccultist.GameState;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// An action that closes a situation window.
     /// </summary>
-    public class ChooseMansusCardAction : IAutoccultistAction
+    public class ChooseMansusCardAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChooseMansusCardAction"/> class.
@@ -22,27 +22,36 @@ namespace Autoccultist.Actor.Actions
         /// </summary>
         public IMansusSolution MansusSolution { get; }
 
-        // FIXME: Clean up all this reflection!  Move stuff into GameAPI or IGameState.
-
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
-            var gameState = GameStateProvider.Current;
+            this.VerifyNotExecuted();
 
-            if (!gameState.Mansus.IsActive)
+            if (!GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");
             }
 
+            if (!GameAPI.IsInteractable)
+            {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Game is not interactable.");
+            }
+
+            var gameState = GameStateProvider.Current;
+
             if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
             {
+                Autoccultist.Instance.LogTrace("Choosing face up card from mansus.");
+
                 // This is the card we want.
-                GameAPI.ChooseMansusCard(gameState.Mansus.FaceUpCard.ToElementStack());
+                GameAPI.ChooseMansusDeck(gameState.Mansus.FaceUpDeck);
             }
             else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
             {
+                Autoccultist.Instance.LogTrace($"Choosing deck {this.MansusSolution.Deck} from mansus.");
+
                 // This is the card we want.
-                GameAPI.ChooseMansusCard(card.ToElementStack());
+                GameAPI.ChooseMansusDeck(this.MansusSolution.Deck);
             }
             else
             {

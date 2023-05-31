@@ -1,9 +1,12 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
+    using AutoccultistNS.GameState;
+    using SecretHistories.Enums;
+
     /// <summary>
     /// An action to start a situation processing cards.
     /// </summary>
-    public class StartSituationRecipeAction : IAutoccultistAction
+    public class StartSituationRecipeAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StartSituationRecipeAction"/> class.
@@ -20,8 +23,10 @@ namespace Autoccultist.Actor.Actions
         public string SituationId { get; }
 
         /// <inheritdoc/>
-        public void Execute()
+        public override void Execute()
         {
+            this.VerifyNotExecuted();
+
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -33,11 +38,13 @@ namespace Autoccultist.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
-            situation.AttemptActivateRecipe();
-            if (situation.SituationClock.State == SituationState.Unstarted)
+            situation.TryStart();
+            if (situation.State.Identifier == StateEnum.Unstarted)
             {
                 throw new ActionFailureException(this, "Failed to start situation.");
             }
+
+            GameStateProvider.Invalidate();
         }
     }
 }

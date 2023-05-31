@@ -1,7 +1,7 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Represents a choice of a card based on various attributes.
@@ -15,7 +15,7 @@ namespace Autoccultist.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
+        public bool CardsMatchSet(IEnumerable<ICardState> cards)
         {
             return this.ChooseCard(cards) != null;
         }

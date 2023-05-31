@@ -1,7 +1,7 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
-    using Autoccultist.Brain;
+    using AutoccultistNS.Brain;
     using UnityEngine;
 
     /// <summary>

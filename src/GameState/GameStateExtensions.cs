@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,6 +8,21 @@ namespace Autoccultist.GameState
     /// </summary>
     public static class GameStateExtensions
     {
+        /// <summary>
+        /// Gets an enumerable of all cards in the game.
+        /// </summary>
+        /// <returns>An enumerable of all cards in the game.</returns>
+        public static IEnumerable<ICardState> GetAllCards(this IGameState state)
+        {
+            var allCards = state.TabletopCards.Concat(state.EnRouteCards).Concat(state.Situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards)));
+            if (state.Mansus.IsActive)
+            {
+                allCards = allCards.Concat(state.Mansus.DeckCards.Values);
+            }
+
+            return allCards;
+        }
+
         /// <summary>
         /// Determines if the given situation is available for use.
         /// </summary>

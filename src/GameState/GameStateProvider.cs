@@ -1,10 +1,13 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System;
     using System.Linq;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi.Scripts.Infrastructure;
-    using Autoccultist.GameState.Impl;
+    using AutoccultistNS.GameState.Impl;
+    using SecretHistories.Assets.Scripts.Application.UI;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Spheres;
+    using SecretHistories.UI;
 
     /// <summary>
     /// A static class for producing <see cref="IGameState"/> states.
@@ -45,19 +48,45 @@ namespace Autoccultist.GameState
         {
             GameStateObject.CurrentStateVersion++;
 
-            var tabletopCards =
-                from stack in GameAPI.GetTabletopCards()
-                from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
-                select cardState;
+            try
+            {
+                var hornedAxe = Watchman.Get<HornedAxe>();
 
-            var situations =
-                from controller in GameAPI.GetAllSituations()
-                let state = new SituationStateImpl(controller)
-                select state;
+                var spheres = hornedAxe.GetSpheres();
 
-            var mansus = new MansusStateImpl(Registry.Get<MapController>());
+                // Things sitting on the tabletop.
+                var tabletop = spheres.OfType<TabletopSphere>().First();
 
-            return new GameStateImpl(tabletopCards.ToArray(), situations.ToArray(), mansus);
+                var tabletopCards =
+                    from stack in tabletop.GetElementStacks()
+                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                    select cardState;
+
+                // Things whizzing around.
+                var enroutes = spheres.OfType<EnRouteSphere>();
+                var enRouteCards =
+                    from enroute in enroutes
+                    from stack in enroute.GetElementStacks()
+                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
+                    select cardState;
+
+                var situations =
+                    from situation in hornedAxe.GetRegisteredSituations()
+                    let state = new SituationStateImpl(situation)
+                    select state;
+
+                var numa = Watchman.Get<Numa>();
+                var otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+                var mansus = new MansusStateImpl(otherworld);
+
+                return new GameStateImpl(tabletopCards.ToArray(), enRouteCards.ToArray(), situations.ToArray(), mansus);
+            }
+            catch (Exception ex)
+            {
+                NoonUtility.LogWarning($"Exception in GameStateProvider.FromCurrentState: {ex.ToString()}");
+                NoonUtility.LogException(ex);
+                throw;
+            }
         }
     }
 }

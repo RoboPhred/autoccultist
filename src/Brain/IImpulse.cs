@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     /// <summary>
     /// Describes an impulse to perform an operation.

@@ -1,8 +1,10 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using AutoccultistNS.GameState;
+    using SecretHistories.Enums;
 
     /// <summary>
     /// A static class responsible for mangaing all situation orchestrations.
@@ -28,6 +30,8 @@ namespace Autoccultist.Brain
         /// </summary>
         public static void Update()
         {
+            var state = GameStateProvider.Current;
+
             foreach (var operation in ExecutingOperationsBySituation.Values.ToArray())
             {
                 operation.Update();
@@ -35,17 +39,15 @@ namespace Autoccultist.Brain
 
             // After we update the existing situation handlers, dump any completed ones if any remain.
             //  This is because some situations operate on their own volition, without an executor associated with them.
-            foreach (var situation in GameAPI.GetAllSituations())
+            foreach (var situation in state.Situations)
             {
-                var situationId = situation.GetTokenId();
-
-                if (ExecutingOperationsBySituation.ContainsKey(situationId))
+                if (ExecutingOperationsBySituation.ContainsKey(situation.SituationId))
                 {
                     // Already orchestrating this
                     continue;
                 }
 
-                if (situation.SituationClock.State != SituationState.Complete)
+                if (situation.State != StateEnum.Complete)
                 {
                     // Situation is ongoing, no need to dump it.
                     continue;
@@ -57,7 +59,7 @@ namespace Autoccultist.Brain
                 such as suspicion-free suspicion
                 */
 
-                DumpSituation(situationId);
+                DumpSituation(situation.SituationId);
             }
         }
 
@@ -81,14 +83,13 @@ namespace Autoccultist.Brain
         /// <returns>True if the situation is idle and available, False otherwise.</returns>
         public static bool IsSituationAvailable(string situationId)
         {
-            var controller = GameAPI.GetSituation(situationId);
-            if (controller == null)
+            var situation = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == situationId);
+            if (situation == null)
             {
-                // Not present on the board.
                 return false;
             }
 
-            if (controller.SituationClock.State != SituationState.Unstarted && controller.SituationClock.State != SituationState.Complete)
+            if (situation.State != StateEnum.Unstarted && situation.State != StateEnum.Complete)
             {
                 // Busy doing something.
                 return false;
@@ -122,7 +123,7 @@ namespace Autoccultist.Brain
                 throw new OperationFailedException($"Cannot dump situation {situationId} because the situation already has an orchestration running.");
             }
 
-            if (GameAPI.IsInMansus)
+            if (GameStateProvider.Current.Mansus.IsActive)
             {
                 return;
             }

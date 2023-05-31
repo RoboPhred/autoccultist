@@ -1,8 +1,8 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
@@ -49,7 +49,7 @@ namespace Autoccultist.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
+        public bool CardsMatchSet(IEnumerable<ICardState> cards)
         {
             var remaining = new HashSet<ICardState>(cards);
             foreach (var chooser in this.CardSet)

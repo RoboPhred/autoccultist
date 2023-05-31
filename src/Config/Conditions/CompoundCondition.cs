@@ -1,10 +1,10 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;

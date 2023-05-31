@@ -1,4 +1,4 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using UnityEngine;
 
@@ -36,9 +36,6 @@ namespace Autoccultist.GUI
         /// <returns>The rect to use for the window.</returns>
         public static Rect GetWindowRect(float width, float height)
         {
-            // FIXME: Since switching to this, random windows refuse to coexist with others.
-            // It might be something to do with windows getting too close together, although I am certain
-            // their rects do not overlap.
             var x = new Rect(Screen.width - consumedWidth - width - 10, 30, width, height);
             consumedWidth += width + 20;
             return x;

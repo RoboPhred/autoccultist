@@ -149,6 +149,20 @@ impulses:
       anyOf:
         - elementId: influenceforgeg
         - aspects: { prisoner: 1 }
+        # Try to avoid notariety game overs from this.
+        #  In practice, this hasn't been a problem since we win so quickly.  However, there have been
+        #  close calls...
+        # Don't attempt this if the notariety will be caught
+        - situation: suspicion
+        - situation: time
+          storedCardsMatch:
+            elementId: seasonsuspicion
+        # Don't do this if there is evidence against us, as a further notariety will be game over.
+        - elementId: evidence
+        - elementId: evidenceb
+        # Dont do this if we already have notoriety on the board, as two suspicion seasons in quick succession
+        # with two notoriety could lead to a game over
+        - elementId: notoriety
     operation:
       name: Get a prisoner
       situation: talk
@@ -167,7 +181,8 @@ impulses:
         # Wait until we are ready
         - elementId: ascensionpowerf
     forbidders:
-      elementId: influenceforgef
+      anyOf:
+        - elementId: influenceforgef
     operation:
       name: Enter the spider door
       situation: dream

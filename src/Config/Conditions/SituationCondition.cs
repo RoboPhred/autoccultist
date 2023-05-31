@@ -1,9 +1,9 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
@@ -125,10 +125,11 @@ namespace Autoccultist.Config.Conditions
                 }
             }
 
+            var slottedCards = situation.GetSlottedCards().ToList();
+
             if (this.SlottedCardsMatch != null)
             {
-                var cards = situation.SlottedCards;
-                if (!this.SlottedCardsMatch.CardsMatchSet(cards))
+                if (!this.SlottedCardsMatch.CardsMatchSet(slottedCards))
                 {
                     return false;
                 }
@@ -136,7 +137,7 @@ namespace Autoccultist.Config.Conditions
 
             if (this.ContainedCardsMatch != null)
             {
-                var cards = situation.StoredCards.Concat(situation.SlottedCards).ToList();
+                var cards = situation.StoredCards.Concat(slottedCards);
                 if (!this.ContainedCardsMatch.CardsMatchSet(cards))
                 {
                     return false;
