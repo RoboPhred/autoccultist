@@ -1,0 +1,22 @@
+name: Grind The Wood for SH Lore to do Ghirbi's Riddle
+priority: goal
+requirements:
+  cardSet:
+    - elementId: waystagbefore_5
+operation: !import ../../operations/mansus/use-wood-secrethistories.yml
+forbidders:
+  anyOf:
+  - cardSet:
+      - elementId: fragmentsecrethistories
+      - elementId: fragmentsecrethistories
+      - elementId: fragmentsecrethistories
+      - elementId: fragmentsecrethistories
+  - cardSet:
+      - elementId: fragmentsecrethistories
+      - elementId: fragmentsecrethistories
+      - elementId: fragmentsecrethistoriesb
+  - cardSet:
+      - elementId: fragmentsecrethistoriesb
+      - elementId: fragmentsecrethistoriesb
+  - cardSet:
+      - elementId: fragmentsecrethistoriesc
