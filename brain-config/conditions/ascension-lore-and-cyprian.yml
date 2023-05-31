@@ -1,9 +1,9 @@
 allOf:
-  - elementId: ascensionsensationf
+  - aspects: { sensationmarks: 5 }
   - aspects:
       romanticinterest: 1
       follower_honoured: 1
       exalted: 1
       grail:
         greaterThanOrEqualTo: 12
-  - elementId: fragmentgraile
+  - aspects: { lore: 1, grail: 10 }

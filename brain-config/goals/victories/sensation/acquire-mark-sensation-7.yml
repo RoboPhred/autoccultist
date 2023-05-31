@@ -163,8 +163,19 @@ impulses:
       # Wait until we are ready to ascend
       !import ../../../conditions/ascension-lore-and-cyprian.yml
     forbidders:
-      elementId: influencegrailc
+      anyOf:
+        - elementId: influencegrailc
+        - situation: work
+          storedCardsMatch:
+            elementId: influencegrailc
     operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
+    
+  - name: Paint to keep the Influence from fading
+    requirements:
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    forbidders:
+      elementId: ascensionsensationf
+    operation: !import ../../../operations/painting/paint-influencegrailc.yml
     
   - name: Keep the hunter out of our hair
     requirements:
@@ -174,8 +185,17 @@ impulses:
           storedCardsMatch:
             elementId: seasonsuspicion
           timeRemaining:
-            lessThan: 5
+            lessThan: 10
         - elementId: evidenceb
+        # If there is no notoriety AND we have a wall of mystique, we can risk detective activity.
+        - anyOf:
+            - elementId: notoriety
+            - noneOf:
+                - cardSet:
+                    - elementId: mystique
+                    - elementId: mystique
+                    - elementId: mystique
+                    - elementId: mystique
     priority: critical
     operation:
       name: Do something rash
@@ -184,6 +204,15 @@ impulses:
         slots:
           talk:
             aspects: { hunter: 1 }
+      ongoingRecipes:
+        talktohunter:
+          requireSlotCards: false
+          slots:
+            Subject:
+              oneOf:
+                - aspects: { follower: 1, edge: 10 }
+                - aspects: { follower: 1, edge: 5 }
+                - aspects: { follower: 1, winter: 10 }
 
   - name: Ascend
     priority: goal
