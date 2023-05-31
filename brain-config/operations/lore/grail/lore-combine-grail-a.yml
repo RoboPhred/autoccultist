@@ -3,11 +3,19 @@ situation: study
 startingRecipe:
   slots:
     study:
-      elementId: fragmentgrail
+      oneOf:
+        - elementId: fragmentgrail
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrail
     with:
-      elementId: fragmentgrail
+      oneOf:
+        - elementId: fragmentgrail
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrail
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:
       solvechallenge:
-        elementId: glimmering
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering

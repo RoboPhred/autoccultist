@@ -1,0 +1,150 @@
+name: Acquire the Stag Door
+requirements:
+  cardSet:
+    - elementId: waywhite
+    - elementId: fragmentforge
+    - elementId: fragmentforge
+    - elementId: fragmentforgeb
+    - elementId: fragmentknock
+    - elementId: fragmentlantern
+    - elementId: fragmentlantern
+    - elementId: fragmentlanternb
+    - elementId: fragmentmoth
+    - elementId: fragmentmoth
+    - elementId: fragmentmothb
+    - elementId: fragmentmothc
+    - elementId: fragmentwinter
+completedWhen:
+  elementId: waystag_after
+impulses:
+  - name: Acquire the Stag Riddle
+    forbidders:
+      anyOf:
+        - elementId: waystagbefore_1
+        - elementId: waystagbefore_2
+        - elementId: waystagbefore_3
+        - elementId: waystagbefore_4
+        - elementId: waystagbefore_5
+        - elementId: waystag_after
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle.yml
+  - name: Answer Ghirbi's riddle on Moth
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+  - name: Answer Ghirbi's riddle on Lantern
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+  - name: Answer Ghirbi's riddle on Grail
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+  - name: Answer Ghirbi's riddle on Knock
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+  - name: Answer Ghirbi's riddle on Secret Histories
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
+
+  # Begin Knock C
+  # Use Moth because it's the most abundant lore, early-game
+  - name: Subvert A Barber's Warning to Knock
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentknockb
+            - elementId: fragmentknockb
+        - elementId: fragmentknockc
+    operation: !import ../../../operations/lore/knock/lore-subvert-moth-knock-a.yml
+  - name: Subvert A Wood-Whisper to Knock
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      elementId: fragmentknockc
+    operation: !import ../../../operations/lore/knock/lore-subvert-moth-knock-b.yml
+  # End Knock C
+
+  # Begin Grail C
+  - name: Ensure we have glimmering
+    priority: maintenance
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      anyOf:
+        - aspects: { sanctuary: 1 }
+        - elementId: glimmering
+          # It takes 60 seconds for the operation to get to a point where it needs this.
+          #  TODO: Should let the operation itself state this requirement.
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: !import ../../../operations/passion/study-passion.yml
+  
+  - name: Combine A Megalesian Incantation
+    requirements:
+      elementId: waystagbefore_3
+    forbidders:
+      anyOf:
+        - elementId: fragmentgrailc
+    operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
+  - name: Combine A Red Secret
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentgrailb
+            - elementId: fragmentgrailb
+        - elementId: fragmentgrailc
+    operation: !import ../../../operations/lore/grail/lore-combine-grail-a.yml
+  # End Grail C
+
+  # Begin Secret Histories C
+  - name: Combine A Furtive Truth
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      elementId: fragmentsecrethistoriesc
+    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+  - name: Combine An Occult Scrap
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistoriesb
+        - elementId: fragmentsecrethistoriesc
+    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+  - name: Mansus-grind for SH lore
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      anyOf:
+        - cardSet:
+          - elementId: fragmentsecrethistoriesb
+          - elementId: fragmentsecrethistoriesb
+        - cardSet:
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistoriesb
+        - cardSet:
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+          - elementId: fragmentsecrethistories
+    operation: !import ../../../operations/mansus/use-wood-secrethistories.yml
+  # End Secret Histories C
+
+  # Begin Lantern C
+  - name: Combine A Watchman's Secret
+    priority: goal
+    requirements:
+      elementId: waystagbefore_2
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentlanternb
+            - elementId: fragmentlanternb
+        - elementId: fragmentlanternc
+    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-a.yml
+  - name: Combine An Iguvine Rite
+    priority: goal
+    requirements:
+      elementId: waystagbefore_2
+    forbidders:
+      anyOf:
+        - elementId: fragmentlanternc
+    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-b.yml
+  # End Lantern C

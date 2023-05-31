@@ -29,7 +29,7 @@ motivations:
       - !import ../../goals/aspirant/study-bequest-passion.yml
   - name: Get a job
     primaryGoals:
-      - !import ../../goals/glover/aquire-job-glover-junior.yml
+      - !import ../../goals/glover/acquire-job-glover-junior.yml
     supportingGoals:
       - !import ../../goals/survive.yml
   - name: Study bequest contents
@@ -60,9 +60,9 @@ motivations:
   # This is bad, as we need spare funds to heal the afflictions we are getting from dread => opium.
   - name: Get a scholarship while finding people to recruit
     primaryGoals:
-      - !import ../../goals/reason/aquire-skillreasona.yml
-      - !import ../../goals/reason/aquire-skillreasonb.yml
-      - !import ../../goals/reason/aquire-skillreasonc.yml
+      - !import ../../goals/reason/acquire-skillreasona.yml
+      - !import ../../goals/reason/acquire-skillreasonb.yml
+      - !import ../../goals/reason/acquire-skillreasonc.yml
     supportingGoals:
       # We might want to drop attract-followers, as this has a chance of requiring reason.
       - !import ../../goals/followers/attract-followers.yml
@@ -70,7 +70,7 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
   - name: Get a promotion while finding people to recruit
     primaryGoals:
-      - !import ../../goals/glover/aquire-job-glover-standard.yml
+      - !import ../../goals/glover/acquire-job-glover-standard.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
@@ -82,8 +82,8 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
   - name: Get swole, find people to recruit
     primaryGoals:
-      - !import ../../goals/health/aquire-skillhealthb.yml
-      - !import ../../goals/health/aquire-skillhealthc.yml
+      - !import ../../goals/health/acquire-skillhealthb.yml
+      - !import ../../goals/health/acquire-skillhealthc.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
@@ -118,26 +118,26 @@ motivations:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/find-auctionhouse.yml
-      - !import ../../goals/auction/aquire-stumm.yml
-      - !import ../../goals/auction/aquire-truecompleteasclepiangreek.yml
+      - !import ../../goals/auction/acquire-stumm.yml
+      - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
   - name: Move into Morlands, aquire a Rarefied Mind
     primaryGoals:
       - !import ../../goals/hq/move-hq-library.yml
-      - !import ../../goals/reason/aquire-skillreasond-illumination.yml
+      - !import ../../goals/reason/acquire-skillreasond-illumination.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Aquire the Wood and White Door
+  - name: Acquire the Wood and White Door
     primaryGoals:
-      - !import ../../goals/mansus/aquire-way-wood.yml
-      - !import ../../goals/mansus/aquire-way-whitedoor.yml
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Aquire the Stag Door, Spider Door, and the Formula Fissive
+  - name: Acquire the Stag Door, Spider Door, and the Formula Fissive
     primaryGoals:
       - !import ../../goals/victories/power/victory-temptation-power-lore-stag-spider.yml
     supportingGoals:
@@ -145,13 +145,13 @@ motivations:
       - !import ../../goals/glover/work-glover.yml
   - name: Achieve the Marks of Power
     primaryGoals:
-      - !import ../../goals/victories/power/aquire-dedication-power.yml
-      - !import ../../goals/victories/power/aquire-ascension-power.yml
+      - !import ../../goals/victories/power/acquire-dedication-power.yml
+      - !import ../../goals/victories/power/acquire-ascension-power.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
-  - name: Aquire the Seventh mark of Power
+  - name: Acquire the Seventh mark of Power
     primaryGoals:
-      - !import ../../goals/victories/power/aquire-mark-power-7.yml
+      - !import ../../goals/victories/power/acquire-mark-power-7.yml
     supportingGoals:
       - !import ../../goals/survive.yml

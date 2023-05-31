@@ -1,0 +1,44 @@
+name: "Subvert all lore: Edge to Winter"
+completedWhen:
+  noneOf:
+    - elementId: fragmentedge
+    - elementId: fragmentedgeb
+    - elementId: fragmentedgec
+# TODO: Add more levels of Edge lore as their operations are added.
+impulses:
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders:
+      !import ../../conditions/can-answer-challenge-knowledge.yml
+    operation: !import ../../operations/reason/study-reason.yml
+
+  - name: Downgrade Winter C
+    requirements:
+      anyOf:
+        - elementId: fragmentedge
+        - elementId: fragmentedgeb
+    forbidders:
+      elementId: fragmentwinterb
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-c.yml
+
+  - name: Downgrade Winter B
+    requirements:
+      elementId: fragmentedge
+    forbidders:
+      elementId: fragmentwinter
+    operation: !import ../../operations/lore/winter/lore-breakdown-winter-b.yml
+
+  - name: Downgrade Edge C
+    operation: !import ../../operations/lore/edge/lore-breakdown-edge-c.yml
+
+  - name: Downgrade Edge B
+    operation: !import ../../operations/lore/edge/lore-breakdown-edge-b.yml
+
+  - name: Subvert Edge to Winter
+    priority: goal
+    requirements:
+      anyOf:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - !import ../../conditions/can-answer-challenge-knowledge.yml
+    operation: !import ../../operations/lore/winter/lore-subvert-edge-winter-a.yml

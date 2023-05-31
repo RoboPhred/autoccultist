@@ -1,0 +1,16 @@
+name: Recruit an acquaintance, by burning Lantern Influence
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationlantern: 1
+    Associate:
+      aspects:
+        acquaintance: 1
+    Trappings:
+      oneOf:
+        - elementId: influencelantern
+        - elementId: influencelanternc
+        - elementId: influencelanterne

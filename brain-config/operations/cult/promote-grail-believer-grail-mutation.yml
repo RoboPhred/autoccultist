@@ -1,0 +1,10 @@
+name: Promote a special Grail believer by invoking Grail
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { society: 1, venerationgrail: 1 }
+    Associate:
+      aspects: { follower: 1, believer: 1, grail: 3 }
+    Ceremony:
+      aspects: { lore: 1, grail: 4}

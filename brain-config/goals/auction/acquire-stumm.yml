@@ -1,0 +1,37 @@
+name: Acquire Stumm
+requirements:
+  elementId: locationauctionhouse
+completedWhen:
+  elementId: ritefollowerconsumeinfluence
+impulses:
+  - name: Purchase items at auction
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+    priority: goal
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+    forbidders:
+      anyOf:
+        - elementId: stumm
+        - elementId: ritefollowerconsumeinfluence
+    operation: !import ../../operations/auction-purchase.yml
+  - name: Watch Stumm
+    operation: !import ../../operations/watch-stumm.yml

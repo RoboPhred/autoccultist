@@ -1,0 +1,13 @@
+name: Recruit an acquaintance, by burning Dread
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationedge: 1
+    Associate:
+      aspects:
+        acquaintance: 1
+    Trappings:
+      elementId: dread

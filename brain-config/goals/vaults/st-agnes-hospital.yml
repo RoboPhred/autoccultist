@@ -1,0 +1,76 @@
+name: Find and explore St. Agnes Hospital
+# Because the Hospital is absolutely garbage as am HQ, it's reasonably safe to say the player won't move in.
+# Nonetheless, there's no perfect way to know whether the vault has been done.
+# We fall back on toolgrailb and hq.hospital, just to be safe.
+completedWhen:
+  anyOf:
+    - elementId: hq.hospital.potential
+    - elementId: hq.hospital
+    - elementId: toolgrailb
+impulses:
+  - name: Collect Secret Histories lore
+    # Just look for vaultcapital4
+    forbidders:
+      anyOf:
+        - elementId: vaultcapital4
+        - elementId: fragmentsecrethistories
+          # Ignore the one being searched, in case it doesn't find anything
+          location: tabletop
+    # forbidders:
+    #   anyOf:
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - aspects: { vaultcapital: 1 }
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - cardSet:
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #         - elementId: fragmentsecrethistories
+    #     - elementId: vaultcapital4
+    operation: !import ../../operations/mansus/use-wood-secrethistories.yml
+  - name: Find Capital vaults
+    forbidders:
+      elementId: vaultcapital4
+    operation:
+      name: Find Capital vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistories
+
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-10.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-10.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-8-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-8-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-3-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-3-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-any.yml

@@ -4,5 +4,7 @@ startingRecipe:
   slots:
     dream:
       elementId: fascination
+      ageBias: youngest
     reminders:
       elementId: fleeting
+      ageBias: oldest

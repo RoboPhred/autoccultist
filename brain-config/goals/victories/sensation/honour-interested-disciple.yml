@@ -1,0 +1,13 @@
+name: Honour an Interested Disciple
+requirements:
+  allOf:
+    - aspects: { disciple: 1, romanticinterest: 1 }
+    - anyOf:
+        - elementId: toolgrailb
+        - elementId: toolgraild
+completedWhen:
+  aspects: { follower: 1, romanticinterest: 1, grail: 7 }
+impulses:
+  - name: Honour an Interested Disciple
+    priority: goal
+    operation: !import ../../../operations/victories/sensation/honour-interested-disciple.yml

@@ -4,3 +4,6 @@ startingRecipe:
   slots:
     dream:
       elementId: fatigue
+      ageBias: youngest
+      lifetimeRemaining:
+        greaterThan: 30

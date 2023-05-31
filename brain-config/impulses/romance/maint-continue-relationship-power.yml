@@ -1,0 +1,15 @@
+name: Continue a relationship based on Power
+priority: maintenance
+forbidders:
+  allOf: # Consider pending ill health if we would take away the last health
+    - anyOf:
+        - !import ../../conditions/illhealth-unsatisfied.yml
+        - !import ../../conditions/illhealth-pending-30secs.yml
+        - situation: rose
+          storedCardsMatch:
+            aspects: { follower_lustpower: 1 }
+        - noneOf:
+            - cardSet:
+                - elementId: health
+                - elementId: health
+operation: !import ../../operations/romance/continue-relationship-power.yml

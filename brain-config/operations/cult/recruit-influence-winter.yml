@@ -1,0 +1,16 @@
+name: Recruit an acquaintance, by burning Winter Influence
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationwinter: 1
+    Associate:
+      aspects:
+        acquaintance: 1
+    Trappings:
+      oneOf:
+        - elementId: influencewinter
+        - elementId: influencewinterc
+        - elementId: influencewintere

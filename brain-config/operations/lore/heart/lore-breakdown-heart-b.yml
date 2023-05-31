@@ -1,0 +1,8 @@
+name: "Break down lore: Words that Walk"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentheartb
+    with:
+      elementId: reason

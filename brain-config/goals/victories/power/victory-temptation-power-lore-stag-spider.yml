@@ -1,4 +1,4 @@
-name: Aquire the Stag Door, Spider Door, and prepare for the Formula Fissive
+name: Acquire the Stag Door, Spider Door, and prepare for the Formula Fissive
 requirements:
   cardSet:
     - elementId: waywhite
@@ -35,7 +35,7 @@ completedWhen:
 # => forged, lanternc, mothc
 # This leaves us with a lanternc for the stag, that can then be used with mothc for a lanternd, which can then be used with forged for forgee
 impulses:
-  - name: Aquire the Stag Riddle
+  - name: Acquire the Stag Riddle
     forbidders:
       anyOf:
         - elementId: waystagbefore_1
@@ -73,10 +73,10 @@ impulses:
         - elementId: wayspider
     operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-d.yml
 
-  - name: Aquire the Spider Door
+  - name: Acquire the Spider Door
     forbidders:
       elementId: wayspider
-    operation: !import ../../../operations/mansus/aquire-way-spiderdoor.yml
+    operation: !import ../../../operations/mansus/acquire-way-spiderdoor.yml
 
   - name: Ensure we have glimmering
     priority: maintenance

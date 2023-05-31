@@ -1,0 +1,16 @@
+name: Promote a Heart believer, while burning Restlessness, by invoking Grail
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { society: 1, venerationgrail: 1 }
+    Associate:
+      oneOf:
+        - elementId: clovette_b
+        - elementId: dorothy_b
+        - elementId: leo_b
+        - aspects: { follower: 1, believer: 1, heart: 2 }
+    Ceremony:
+      aspects: { lore: 1, grail: 6}
+    Trappings:
+      elementId: restlessness

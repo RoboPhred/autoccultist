@@ -1,0 +1,16 @@
+name: Recruit a Grail acquaintance, by invoking Grail
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationgrail: 1
+    Associate:
+      oneOf:
+        - elementId: renira_a
+        - elementId: saliba_a
+    Ceremony:
+      aspects:
+        lore: 1
+        grail: 1

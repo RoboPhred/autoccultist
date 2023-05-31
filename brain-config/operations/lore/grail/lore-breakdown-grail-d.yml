@@ -1,0 +1,8 @@
+name: "Break down lore: Thiatic Invocation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentgraild
+    with:
+      elementId: reason

@@ -3,9 +3,15 @@ situation: study
 startingRecipe:
   slots:
     study:
-      elementId: fragmentheartc
+      oneOf:
+        - elementId: fragmentheartc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheartc
     with:
-      elementId: fragmentgrailc
+      oneOf:
+        - elementId: fragmentgrailc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailc
 ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:

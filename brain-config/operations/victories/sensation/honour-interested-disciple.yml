@@ -1,0 +1,13 @@
+name: Honour an Interested Disciple with a Grail tool
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { disciple: 1, potential: 1, romanticinterest: 1, grail: 6 }
+ongoingRecipes:
+  talktofollower:
+    slots:
+      Subject:
+        oneOf:
+          - elementId: toolgraild
+          - elementId: toolgrailb

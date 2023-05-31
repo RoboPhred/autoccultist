@@ -1,0 +1,10 @@
+name: Acquire the Third Mark of Power
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: ascensionpowerb
+    Know:
+      elementId: waystag_after
+    Power:
+      aspects: { lore: 1, forge: 6 }

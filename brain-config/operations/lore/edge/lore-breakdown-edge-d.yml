@@ -1,0 +1,8 @@
+name: "Break down lore: The Colonel's Names"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentedged
+    with:
+      elementId: reason

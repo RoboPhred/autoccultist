@@ -5,6 +5,7 @@ requirements:
     - elementId: vitality
     - elementId: vitality
     - elementId: vitality
+    - aspects: { healthskill: 4 }
 operation:
   name: Learn lesson from vitality
   situation: study
@@ -28,5 +29,11 @@ forbidders:
   - cardSet:
       - elementId: eruditionplus
       - elementId: erudition
+  - cardSet:
+      - elementId: eruditionplus
+      - elementId: eruditionplus
+  - cardSet:
+      - elementId: glimmeringplus
+      - elementId: glimmeringplus
   - aspects:
       text: 1

@@ -1,0 +1,8 @@
+name: "Break down lore: A Megalesian Incantation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentgrailb
+    with:
+      elementId: reason

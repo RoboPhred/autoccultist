@@ -1,0 +1,11 @@
+name: "Acquire Way: The wood"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: passion
+ongoingRecipes:
+  dreamstartingpassion:
+    slots:
+      Lore:
+        aspects: { lantern: 1, lore: 1 }

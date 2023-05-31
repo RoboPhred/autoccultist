@@ -1,0 +1,21 @@
+name: Explore St. Agnes
+priority: goal
+forbidders:
+  anyOf:
+    - elementId: notoriety
+    - elementId: evidence
+    - elementId: evidenceb
+operation:
+  name: Explore St. Agnes Hospital
+  situation: explore
+  startingRecipe:
+    slots:
+      explore:
+        elementId: vaultcapital4
+      expeditionmember:
+        aspects:
+          follower: 1
+          heart:
+            greaterThanOrEqualTo: 10
+      expeditionfunds:
+        elementId: funds

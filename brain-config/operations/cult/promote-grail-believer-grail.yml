@@ -1,0 +1,13 @@
+name: Promote a Grail believer by invoking Grail
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { society: 1, venerationgrail: 1 }
+    Associate:
+      oneOf:
+        - elementId: renira_b
+        - elementId: saliba_b
+        - aspects: { follower: 1, believer: 1, grail: 2 }
+    Ceremony:
+      aspects: { lore: 1, grail: 6}

@@ -1,0 +1,214 @@
+name: Achieve the Seventh Mark of Sensation
+requirements:
+  anyOf:
+    - elementId: ascensionsensationc
+    - elementId: ascensionsensationd
+    - elementId: ascensionsensatione
+    - elementId: ascensionsensationf
+completedWhen:
+  aspects: { desire: 7 }
+impulses:
+  - name: Work a junior job at Glover & Glover
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-junior.yml
+  - name: Work at Glover & Glover under Alden
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-alden.yml
+  - name: Work at Glover & Glover with diligence
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-diligence.yml
+  - name: Work a senior job at Glover & Glover
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    priority: maintenance
+    operation: !import ../../../operations/glover/work-glover-senior.yml
+  - name: Plead for job at Glover & Glover
+    forbidders:
+      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    priority: maintenance
+    operation: !import ../../../operations/glover/plead-glover.yml
+
+  - name: Get a prisoner
+    requirements:
+      cardSet:
+        # Wait until the lore is ready
+        - elementId: fragmentgraile
+        # Wait until our Cyprian is ready
+        - aspects:
+            romanticinterest: 1
+            follower_honoured: 1
+            exalted: 1
+            grail:
+              greaterThanOrEqualTo: 12
+    forbidders:
+      aspects: { prisoner: 1 }
+    operation:
+      name: Get a prisoner
+      situation: talk
+      startingRecipe:
+        requireSlotCards: false
+        cardRequirements:
+          - aspects: { hq: 1 }
+          - aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+        slots:
+          talk:
+            aspects: { hq: 1 }
+          # Bookshop
+          Cellar:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+          # Mithraeum
+          Chains:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+          # Hospital
+          Cell:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+          # Warehouse
+          Shed:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+          # Townhouse
+          Attic:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+          # Church
+          Vestry:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+          # Temporary HQ
+          Cupboard:
+            aspects:
+              follower: 1
+              romanticinterest:
+                lessThan: 1
+              exalted:
+                lessThan: 1
+              grail:
+                lessThan: 5
+              summoned:
+                lessThan: 1
+
+  - name: Obtain Grail Influence from the Stag Door
+    requirements:
+      # Wait until we are ready to ascend
+      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    forbidders:
+      elementId: influencegrailc
+    operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
+    
+  - name: Keep the hunter out of our hair
+    requirements:
+      allOf:
+        - situation: time
+          recipe: needs
+          storedCardsMatch:
+            elementId: seasonsuspicion
+          timeRemaining:
+            lessThan: 5
+        - elementId: evidenceb
+    priority: critical
+    operation:
+      name: Do something rash
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            aspects: { hunter: 1 }
+
+  - name: Ascend
+    priority: goal
+    operation:
+      name: Ascend
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects:
+              lore: 1
+              grail:
+                greaterThanOrEqualTo: 10
+          Assistant:
+            aspects:
+              follower: 1
+              romanticinterest: 1
+              grail:
+                greaterThanOrEqualTo: 11
+          Offering:
+            aspects:
+              influence: 1
+              grail:
+                greaterThanOrEqualTo: 6
+          Desire:
+            elementId: ascensionsensationf

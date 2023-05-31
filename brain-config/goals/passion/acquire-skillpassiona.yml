@@ -1,0 +1,8 @@
+name: Acquire a Vivid Imagination
+requirements:
+  elementId: passion
+completedWhen:
+  aspects: { passionskill: 1 }
+impulses:
+  - !import ../../impulses/goal-learn-lesson-glimmering.yml
+  - !import ../../impulses/norm-glimmering-from-passion.yml
