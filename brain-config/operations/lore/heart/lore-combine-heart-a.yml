@@ -1,6 +1,12 @@
 name: "Combine lore: A Thunderous Secret"
 situation: study
 startingRecipe:
+  cardRequirements:
+    - oneOf:
+      - aspects: { sanctuary: 1 }
+      - elementId: glimmering
+        lifetimeRemaining:
+          greaterThan: 60
   slots:
     study:
       oneOf:
@@ -12,4 +18,6 @@ ongoingRecipes:
   studyresearch.attemptsolve.challenge.intuition:
     slots:
       solvechallenge:
-        elementId: glimmering
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering
