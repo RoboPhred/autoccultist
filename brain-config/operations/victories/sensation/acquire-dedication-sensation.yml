@@ -1,0 +1,14 @@
+name: Dedicate myself to sensation
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: ascensionsensationa
+ongoingRecipes:
+  dreamascensionsensationa:
+    slots:
+      Musing:
+        aspects:
+          lore: 1
+          grail:
+            greaterThanOrEqualTo: 6

@@ -1,0 +1,18 @@
+name: Exalt a special Grail disciple
+requirements:
+  aspects:
+    society: 1
+    venerationgrail: 1
+completedWhen:
+  aspects:
+    follower: 1
+    exalted: 1
+    grail:
+      greaterThanOrEqualTo: 10
+impulses:
+  - name: Exalt a special Grail Disciple by using a sixth-order influence
+    priority: goal
+    operation: !import ../../operations/cult/exalt-grail-mutations-influence-six.yml
+  - name: Climb the Ascent of Knives
+    priority: maintenance
+    operation: !import ../../operations/mansus/use-stag-ascent-of-knives.yml

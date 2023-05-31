@@ -1,0 +1,14 @@
+name: "Acquire Way: White Door"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: waywood
+ongoingRecipes:
+  dreamusewoodway:
+    slots:
+      Path:
+        oneOf:
+          - aspects: { knock: 4, lore: 1 }
+          - aspects: { lantern: 4, lore: 1 }
+          - aspects: { winter: 4, lore: 1 }

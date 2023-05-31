@@ -12,7 +12,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class GoalsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 scrollPosition = default;
 
@@ -20,16 +20,6 @@ namespace Autoccultist.GUI
         /// Gets or sets a value indicating whether the Goals gui is being shown.
         /// </summary>
         public static bool IsShowing { get; set; }
-
-        /// <summary>
-        /// Gets the width of the window.
-        /// </summary>
-        public static float Width => Mathf.Min(Screen.width, 500);
-
-        /// <summary>
-        /// Gets the height of the window.
-        /// </summary>
-        public static float Height => Mathf.Min(Screen.height, 900);
 
         /// <summary>
         /// Draw the gui.
@@ -41,9 +31,7 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var offsetX = Screen.width - DiagnosticGUI.Width - Width - 10;
-            var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, Width, Height), GoalsWindow, "Autoccultist Goals");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 900), GoalsWindow, "Autoccultist Goals");
         }
 
         private static void GoalsWindow(int id)

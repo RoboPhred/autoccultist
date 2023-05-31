@@ -7,7 +7,7 @@ completedWhen:
 #        - elementId: genericrubbishbook
     - noneOf:
         # locationbookdealer_exhausted can become our hq, which is then lost if we switch hq.  Since we cannot rely on the presense of locationbookdealer_exhausted, we have
-        # to rely on the absense of locationbookdealer
+        # to rely on the absence of locationbookdealer
         - elementId: locationbookdealer
     - noneOf:
         - !import ../conditions/readable-or-translatable-books.yml

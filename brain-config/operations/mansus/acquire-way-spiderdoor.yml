@@ -1,0 +1,23 @@
+name: "Acquire Way: Spider Door"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: waystag_after
+ongoingRecipes:
+  dreamusestagway:
+    slots:
+      Ascent:
+        oneOf:
+          - aspects:
+              lore: 1
+              grail:
+                greaterThanOrEqualTo: 8
+          - aspects:
+              lore: 1
+              lantern:
+                greaterThanOrEqualTo: 8
+          - aspects:
+              lore: 1
+              knock:
+                greaterThanOrEqualTo: 8

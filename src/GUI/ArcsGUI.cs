@@ -1,10 +1,8 @@
 namespace Autoccultist.GUI
 {
     using System;
-    using System.Linq;
     using Autoccultist.Brain;
     using Autoccultist.Config;
-    using Autoccultist.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -12,7 +10,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class ArcsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 scrollPosition = default;
 
@@ -20,16 +18,6 @@ namespace Autoccultist.GUI
         /// Gets or sets a value indicating whether the arcs gui is showing.
         /// </summary>
         public static bool IsShowing { get; set; }
-
-        /// <summary>
-        /// Gets the width of the window.
-        /// </summary>
-        public static float Width => Mathf.Min(Screen.width, 500);
-
-        /// <summary>
-        /// Gets the height of the window.
-        /// </summary>
-        public static float Height => Mathf.Min(Screen.height, 900);
 
         /// <summary>
         /// Draw the GUI.
@@ -41,9 +29,7 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var offsetX = Screen.width - DiagnosticGUI.Width - Width - 10;
-            var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, Width, Height), ArcsWindow, "Autoccultist Arcs");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 900), ArcsWindow, "Autoccultist Arcs");
         }
 
         private static void ArcsWindow(int id)
@@ -58,15 +44,12 @@ namespace Autoccultist.GUI
 
             if (GUILayout.Button("Autodetect", GUILayout.ExpandWidth(false)))
             {
-                var state = GameStateProvider.Current;
-                var arc = Library.Arcs.FirstOrDefault(arc => arc.SelectionHint.IsConditionMet(state));
-                if (arc != null)
-                {
-                    Superego.SetArc(arc);
-                }
+                Superego.AutoselectArc();
             }
 
             GUILayout.EndHorizontal();
+
+            GUILayout.Label("Available Arcs");
 
             foreach (var arc in Library.Arcs)
             {
@@ -78,9 +61,16 @@ namespace Autoccultist.GUI
                 {
                     Superego.SetArc(arc);
                 }
+
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndScrollView();
+
+            if (GUILayout.Button("Close"))
+            {
+                IsShowing = false;
+            }
         }
     }
 }

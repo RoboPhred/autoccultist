@@ -96,7 +96,7 @@ namespace Autoccultist.Brain
                 var situation = GameAPI.GetSituation(this.SituationId);
                 if (situation == null)
                 {
-                    AutoccultistPlugin.Instance.LogWarn($"Cannot start solution - Situation {this.SituationId} not found.");
+                    AutoccultistPlugin.Instance.LogWarn($"Cannot find solution - Situation {this.SituationId} not found.");
                 }
 
                 return situation;
@@ -130,6 +130,7 @@ namespace Autoccultist.Brain
                     this.operationState = OperationState.Starting;
                     this.RunCoroutine(this.StartOperationCoroutine());
                     break;
+                case SituationState.FreshlyStarted:
                 case SituationState.Ongoing:
                     this.operationState = OperationState.Ongoing;
                     if (!this.operation.OngoingRecipes.TryGetValue(this.Situation.SituationClock.RecipeId, out var recipeSolution))

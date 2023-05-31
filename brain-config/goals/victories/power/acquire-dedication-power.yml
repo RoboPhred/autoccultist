@@ -1,0 +1,11 @@
+name: Dedicate myself to Power
+requirements:
+  allOf:
+    - elementId: waystag_after
+    - elementId: ascensionpowera
+completedWhen:
+  aspects: { desire: 2 }
+impulses:
+  - name: Dedicate myself to power
+    priority: goal
+    operation: !import ../../../operations/victories/power/acquire-dedication-power.yml

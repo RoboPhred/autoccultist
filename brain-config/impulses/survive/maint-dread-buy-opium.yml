@@ -6,6 +6,7 @@ requirements:
     - cardSet:
         - elementId: funds
         - elementId: funds
+        - elementId: funds
 operation:
   name: Buy a Tincture of Opium
   situation: dream

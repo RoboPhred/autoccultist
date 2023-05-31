@@ -1,0 +1,10 @@
+name: Achieve Composure
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: fascination
+      ageBias: youngest
+    reminders:
+      elementId: dread
+      ageBias: youngest

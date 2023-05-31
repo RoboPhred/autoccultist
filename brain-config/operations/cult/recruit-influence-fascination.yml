@@ -1,0 +1,13 @@
+name: Recruit an acquaintance, by burning Fascination
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationmoth: 1
+    Associate:
+      aspects:
+        acquaintance: 1
+    Trappings:
+      elementId: fascination

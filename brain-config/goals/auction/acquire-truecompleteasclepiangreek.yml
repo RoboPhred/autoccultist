@@ -1,0 +1,41 @@
+name: Acquire A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
+requirements:
+  allOf:
+    - elementId: locationauctionhouse
+    - elementId: scholargreek
+completedWhen:
+  elementId: ritetoolconsumeinfluence
+impulses:
+  - name: Purchase items at auction
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+    priority: goal
+    requirements:
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+    forbidders:
+      anyOf:
+        - elementId: truecompleteasclepiangreek
+        - elementId: truecompleteasclepian
+    operation: !import ../../operations/auction-purchase.yml
+  - name: Read A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
+    operation: !import ../../operations/books/read-truecompleteasclepian.yml
+  - name: Translate A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
+    operation: !import ../../operations/books/translate-truecompleteasclepian.yml

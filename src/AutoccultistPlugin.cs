@@ -55,15 +55,7 @@ namespace Autoccultist
                 ParseErrorsGUI.IsShowing = true;
             }
 
-            GameEventSource.GameStarted += (_, __) =>
-            {
-                var state = GameStateProvider.Current;
-                var arc = Library.Arcs.FirstOrDefault(arc => arc.SelectionHint.IsConditionMet(state));
-                if (arc != null)
-                {
-                    Superego.SetArc(arc);
-                }
-            };
+            GameEventSource.GameStarted += (_, __) => Superego.AutoselectArc();
 
             GameEventSource.GameEnded += (_, __) =>
             {
@@ -79,10 +71,21 @@ namespace Autoccultist
         /// </summary>
         public void ReloadAll()
         {
+            var previousArcName = Superego.CurrentArc?.Name;
+
+            this.StopAutoccultist();
             this.LogInfo("Reloading all configs");
             Library.LoadAll();
             Superego.Clear();
-            SituationOrchestrator.AbortAll();
+
+            if (GameAPI.IsRunning)
+            {
+                var arc = Library.Arcs.FirstOrDefault(a => a.Name == previousArcName);
+                if (arc != null)
+                {
+                    Superego.SetArc(arc);
+                }
+            }
         }
 
         /// <summary>
@@ -90,15 +93,18 @@ namespace Autoccultist
         /// </summary>
         public void OnGUI()
         {
-            // Allow ParseErrorsGUI to run when the core game is not in play.
-            ParseErrorsGUI.OnGUI();
+            WindowManager.OnPreGUI();
 
             if (!GameAPI.IsRunning)
             {
+                // Allow ParseErrorsGUI to run when the core game is not in play.
+                ParseErrorsGUI.OnGUI();
                 return;
             }
 
-            DiagnosticGUI.OnGUI();
+            ControlGUI.OnGUI();
+            ParseErrorsGUI.OnGUI();
+            DiagnosticsGUI.OnGUI();
             GoalsGUI.OnGUI();
             ArcsGUI.OnGUI();
         }
@@ -188,13 +194,7 @@ namespace Autoccultist
             }
             else if (Input.GetKeyDown(KeyCode.F10))
             {
-                DiagnosticGUI.IsShowing = !DiagnosticGUI.IsShowing;
-            }
-            else if (Input.GetKeyDown(KeyCode.F9))
-            {
-                this.LogInfo("Dumping status");
-                NucleusAccumbens.DumpStatus();
-                SituationOrchestrator.LogStatus();
+                ControlGUI.IsShowing = !ControlGUI.IsShowing;
             }
             else if (Input.GetKeyDown(KeyCode.F8))
             {
@@ -214,6 +214,7 @@ namespace Autoccultist
             MechanicalHeart.Stop();
             Ego.Stop();
             NucleusAccumbens.Reset();
+            SituationOrchestrator.AbortAll();
         }
     }
 }

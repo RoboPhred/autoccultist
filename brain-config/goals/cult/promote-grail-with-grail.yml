@@ -1,0 +1,33 @@
+name: Promote Grail believers, by invoking Grail
+requirements:
+  aspects:
+    society: 1
+    venerationgrail: 1
+completedWhen:
+  noneOf:
+    # Promote until we have no more grail followers who are not promoted
+    - aspects:
+        follower: 1
+        grail:
+          greaterThanOrEqualTo: 1
+        disciple:
+          lessThan: 1
+        exalted:
+          lessThan: 1
+        hireling:
+          lessThan: 1
+        summoned:
+          lessThan: 1
+impulses:
+  - name: Promote a special Grail Believer, while burning Restlessness
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail-mutation-restlessness.yml
+  - name: Promote a Grail Believer, while burning Restlessness
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail-restlessness.yml
+  - name: Promote a special Grail Believer
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail-mutation.yml
+  - name: Promote a Grail Believer, by invoking Grail
+    priority: goal
+    operation: !import ../../operations/cult/promote-grail-believer-grail.yml

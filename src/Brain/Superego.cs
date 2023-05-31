@@ -1,6 +1,9 @@
 namespace Autoccultist.Brain
 {
     using System.Collections.Generic;
+    using System.Linq;
+    using Autoccultist.Config;
+    using Autoccultist.GameState;
 
     /// <summary>
     /// Class responsible for running through the motivations.
@@ -25,6 +28,19 @@ namespace Autoccultist.Brain
         private static Queue<IMotivation> Motivations { get; } = new();
 
         /// <summary>
+        /// Automatically select an arc based on the current game state.
+        /// </summary>
+        public static void AutoselectArc()
+        {
+            var state = GameStateProvider.Current;
+            var arc = Library.Arcs.FirstOrDefault(arc => arc.SelectionHint.IsConditionMet(state));
+            if (arc != null)
+            {
+                SetArc(arc);
+            }
+        }
+
+        /// <summary>
         /// Set the driving arc for the superego.
         /// </summary>
         /// <param name="arc">The arc to drive the superego.</param>
@@ -33,6 +49,11 @@ namespace Autoccultist.Brain
             Clear();
 
             CurrentArc = arc;
+
+            if (arc == null)
+            {
+                return;
+            }
 
             foreach (var motivation in arc.Motivations)
             {

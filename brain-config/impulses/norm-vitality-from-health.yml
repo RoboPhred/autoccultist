@@ -4,4 +4,20 @@ forbidders:
   anyOf:
     - !import ../conditions/illhealth-pending-30secs.yml
     - !import ../conditions/illhealth-unsatisfied.yml
-operation: !import ../operations/study-health.yml
+    - cardSet:
+        - elementId: skillhealtha
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+    - cardSet:
+        - elementId: skillhealthb
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+    - cardSet:
+        - elementId: skillhealthc
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - aspects: { lore: 1, forge: 2 }
+operation: !import ../operations/health/study-health.yml

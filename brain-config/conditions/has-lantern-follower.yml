@@ -1,0 +1,13 @@
+anyOf:
+  - elementId: clifton_a
+  - elementId: clifton_b
+  - elementId: clifton_c
+  - elementId: clifton_d
+  - elementId: cat_a
+  - elementId: cat_b
+  - elementId: cat_c
+  - elementId: cat_d
+  - elementId: slee_a
+  - elementId: slee_b
+  - elementId: slee_c
+  - elementId: slee_d

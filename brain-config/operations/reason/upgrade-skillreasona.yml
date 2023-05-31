@@ -1,0 +1,10 @@
+name: Acquire a Notable Scholarship
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: skillreasona
+    e1:
+      elementId: eruditionplus
+    e2:
+      elementId: eruditionplus

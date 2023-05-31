@@ -1,0 +1,25 @@
+name: "Combine lore: Thiatic Invocation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentgraild
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraild
+    with:
+      oneOf:
+        - elementId: fragmentgraild
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraild
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health

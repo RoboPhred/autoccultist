@@ -1,0 +1,25 @@
+name: "Subvert lore: the Waking Chant to the Thiatic Invocation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentheartc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentheartc
+    with:
+      oneOf:
+        - elementId: fragmentgrailc
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgrailc
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health

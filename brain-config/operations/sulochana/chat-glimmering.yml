@@ -1,0 +1,11 @@
+name: Chat with Sulochana about a Glimmering
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      elementId: sulochana
+ongoingRecipes:
+  sulochanachat:
+    slots:
+      Subject:
+        elementId: glimmering

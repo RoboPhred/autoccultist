@@ -1,0 +1,11 @@
+name: Dedicate myself to Sensation
+requirements:
+  allOf:
+    - elementId: waystag_after
+    - elementId: ascensionsensationa
+completedWhen:
+  aspects: { desire: 2 }
+impulses:
+  - name: Dedicate myself to sensation
+    priority: goal
+    operation: !import ../../../operations/victories/sensation/acquire-dedication-sensation.yml

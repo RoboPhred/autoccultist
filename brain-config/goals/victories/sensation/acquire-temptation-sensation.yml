@@ -1,0 +1,12 @@
+name: Focus myself on Sensation
+requirements:
+  anyOf:
+    - elementId: ascensionenlightenmenta
+    - elementId: ascensionpowera
+    - elementId: ascensionchangea
+completedWhen:
+  aspects: { sensationmarks: 1 }
+impulses:
+  - name: Focus myself on Sensation
+    priority: goal
+    operation: !import ../../../operations/victories/sensation/acquire-temptation-sensation.yml

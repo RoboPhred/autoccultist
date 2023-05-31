@@ -1,0 +1,13 @@
+anyOf:
+  - elementId: laidlaw_a
+  - elementId: laidlaw_b
+  - elementId: laidlaw_c
+  - elementId: laidlaw_d
+  - elementId: tristan_a
+  - elementId: tristan_b
+  - elementId: tristan_c
+  - elementId: tristan_d
+  - elementId: valciane_a
+  - elementId: valciane_b
+  - elementId: valciane_c
+  - elementId: valciane_d

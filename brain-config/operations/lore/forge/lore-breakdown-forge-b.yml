@@ -1,0 +1,8 @@
+name: "Break down lore: An Ardent Orison"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentforgeb
+    with:
+      elementId: reason

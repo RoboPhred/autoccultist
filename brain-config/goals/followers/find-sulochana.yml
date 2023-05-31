@@ -1,0 +1,14 @@
+name: Find Sulochana
+completedWhen:
+  # Sulochana is immortal and cannot die.
+  # However, there is ONE circumstance in which she might leave....
+  anyOf:
+    - elementId: sulochana
+    - elementId: marinette
+    - elementId: apostlegrail.pillar4
+impulses:
+  - name: Speak of esoteric matters
+    # Leave this at normal so that indoctrinating members takes priority.
+    priority: normal
+    # We need passion to find an acquaintance, and reason to find a patron.  Might want to mark these as requirements
+    operation: !import ../../operations/talk-lore.yml

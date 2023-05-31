@@ -8,12 +8,16 @@ startingRecipe:
         - gloverandglover_difficultbossa_gone_job
 ongoingRecipes:
   gloverandglover_difficultbossa_overtime_initial:
+    # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
+    # we don't have reason available.
+    requireSlotCards: false
     slots:
       Attention:
         elementId: reason
   gloverandglover_difficultbossa_overtime:
-    # HACK: These 3 recipes are mutually exclusive.  They all need reason, but we dont want the operation to require 3 reason to start.
-    requireCardsToStart: false
+    # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
+    # we don't have reason available.
+    requireSlotCards: false
     slots:
       Attention:
         elementId: reason

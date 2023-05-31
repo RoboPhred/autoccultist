@@ -1,0 +1,5 @@
+anyOf:
+  - aspects: { library: 1 }
+  - elementId: erudition
+    lifetimeRemaining:
+      greaterThan: 60

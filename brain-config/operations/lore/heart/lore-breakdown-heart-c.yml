@@ -1,0 +1,8 @@
+name: "Break down lore: A Waking Chant"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentheartc
+    with:
+      elementId: reason

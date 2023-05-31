@@ -1,0 +1,37 @@
+name: Recruit away negative Influences
+requirements:
+  allOf:
+    - aspects:
+        society: 1
+    - anyOf:
+        - elementId: fascination
+        - elementId: dread
+        - elementId: restlessness
+        - elementId: influencelantern
+        - elementId: influencelanternc
+        - elementId: influencelanterne
+        - elementId: influencewinter
+        - elementId: influencewinterc
+        - elementId: influencewintere
+        - elementId: influencemoth
+        - elementId: influencemothc
+        - elementId: influencemothe
+impulses:
+  - name: Recruit an acquaintance, by burning Fascination
+    priority: goal
+    operation: !import ../../operations/cult/recruit-influence-fascination.yml
+  - name: Recruit an acquaintance, by burning Dread
+    priority: goal
+    operation: !import ../../operations/cult/recruit-influence-dread.yml
+  - name: Recruit an acquaintance, by burning Restlessness
+    priority: goal
+    operation: !import ../../operations/cult/recruit-influence-restlessness.yml
+  - name: Recruit an acquaintance, by burning Lantern Influence
+    priority: goal
+    operation: !import ../../operations/cult/recruit-influence-lantern.yml
+  - name: Recruit an acquaintance, by burning Winter Influence
+    priority: goal
+    operation: !import ../../operations/cult/recruit-influence-winter.yml
+  - name: Recruit an acquaintance, by burning Moth Influence
+    priority: goal
+    operation: !import ../../operations/cult/recruit-influence-moth.yml

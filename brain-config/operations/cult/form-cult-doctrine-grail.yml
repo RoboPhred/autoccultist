@@ -1,0 +1,19 @@
+name: Establish the Order of the Bloody Cup
+situation: cult
+targetOngoing: true
+ongoingRecipes:
+  cultfoundation:
+    slots:
+      Doctrine:
+        aspects: { grail: 1 }
+  cultfoundation_passion:
+    slots:
+      Passion:
+        elementId: passion
+  cultfoundation_firstrecruit:
+    slots:
+      Recruit:
+        oneOf:
+          - elementId: renira_a
+          - elementId: saliba_a
+          - aspects: { acquaintance: 1 }
