@@ -1,0 +1,17 @@
+name: "Combine lore: Geminate Invocation"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentheartd
+    with:
+      elementId: fragmentheartd
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health

@@ -1,0 +1,13 @@
+name: "Combine lore: Words that Walk"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentheartb
+    with:
+      elementId: fragmentheartb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        elementId: glimmering
