@@ -14,6 +14,19 @@ namespace AutoccultistNS
     /// </summary>
     internal static class SituationLogger
     {
+        public static void LogSpheres()
+        {
+            foreach (var sphere in Watchman.Get<HornedAxe>().GetExteriorSpheres())
+            {
+                LogInfo($"Sphere: {sphere.Id} {sphere.GetAbsolutePath().Path} {sphere.GoverningSphereSpec?.Label}");
+                LogInfo($"- Tokens");
+                foreach (var token in sphere.GetTokens())
+                {
+                    LogInfo($"- - {token.PayloadEntityId} {token.Payload.GetType().Name}");
+                }
+            }
+        }
+
         /// <summary>
         /// Dump information about the situations to the console.
         /// </summary>

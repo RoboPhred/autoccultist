@@ -222,6 +222,11 @@ public class Autoccultist : MonoBehaviour
             this.LogInfo("Dumping situations");
             SituationLogger.LogSituations();
         }
+        else if (Keyboard.current[Key.F7].wasPressedThisFrame)
+        {
+            this.LogInfo("Dumping Spheres");
+            SituationLogger.LogSpheres();
+        }
     }
 
     private void StartAutoccultist()
