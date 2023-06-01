@@ -50,7 +50,7 @@ motivations:
   #     which will slow our money gain to be equal to money loss from time.
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
-      - !import ../../goals/health/aquire-skillhealtha.yml
+      - !import ../../goals/health/acquire-skillhealtha.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml

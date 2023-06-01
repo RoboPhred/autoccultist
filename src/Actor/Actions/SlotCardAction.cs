@@ -68,6 +68,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             var stack = card.ToElementStack();
+
             if (!GameAPI.TrySlotCard(sphere, stack))
             {
                 Autoccultist.Instance.LogWarn($"Card {card.ElementId} in sphere {stack.Token.Sphere.Id} was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");

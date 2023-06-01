@@ -2,6 +2,8 @@ namespace AutoccultistNS.GameState.Impl
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using SecretHistories.Core;
     using SecretHistories.Spheres;
     using SecretHistories.UI;
 
@@ -31,7 +33,15 @@ namespace AutoccultistNS.GameState.Impl
             this.elementId = sourceStack.EntityId;
             this.lifetimeRemaining = sourceStack.LifetimeRemaining;
             this.isUnique = sourceStack.Unique;
-            this.aspects = new Dictionary<string, int>(sourceStack.GetAspects());
+
+            var calcAspects = new AspectsDictionary();
+            // We want the aspects of an individual card, not the sum total of the entire stack
+            // GetAspects() will do this, but then also multiply the result by the stack quantity
+            // Note: The game seems inclined to cache this data.  Is this a performance problem?
+            calcAspects.CombineAspects(sourceStack.Element.Aspects);
+            calcAspects.ApplyMutations(sourceStack.Mutations);
+            this.aspects = calcAspects;
+
             this.location = location;
 
             // I have no idea which of these conditions are actually necessary.

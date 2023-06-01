@@ -121,6 +121,58 @@ namespace AutoccultistNS.Config
             return candidates.FirstOrDefault();
         }
 
+        public override string ToString()
+        {
+            var content = new List<string>();
+
+            if (this.ElementId != null)
+            {
+                content.Add($"elementId: {this.ElementId}");
+            }
+
+            if (this.AllowedElementIds != null && this.AllowedElementIds.Count > 0)
+            {
+                content.Add($"allowedElementIds: {string.Join(", ", this.AllowedElementIds)}");
+            }
+
+            if (this.ForbiddenElementIds != null && this.ForbiddenElementIds.Count > 0)
+            {
+                content.Add($"forbiddenElementIds: {string.Join(", ", this.ForbiddenElementIds)}");
+            }
+
+            if (this.Location.HasValue)
+            {
+                content.Add($"location: {this.Location}");
+            }
+
+            if (this.Aspects != null && this.Aspects.Count > 0)
+            {
+                content.Add($"aspects: {string.Join(", ", this.Aspects.Select(entry => $"{entry.Key}: {entry.Value}"))}");
+            }
+
+            if (this.ForbiddenAspects != null && this.ForbiddenAspects.Count > 0)
+            {
+                content.Add($"forbiddenAspects: {string.Join(", ", this.ForbiddenAspects)}");
+            }
+
+            if (this.Unique.HasValue)
+            {
+                content.Add($"unique: {this.Unique}");
+            }
+
+            if (this.LifetimeRemaining != null)
+            {
+                content.Add($"lifetimeRemaining: {this.LifetimeRemaining}");
+            }
+
+            if (this.AgeBias.HasValue)
+            {
+                content.Add($"ageBias: {this.AgeBias}");
+            }
+
+            return $"CardChooserConfig({string.Join(", ", content)})";
+        }
+
         /// <inheritdoc/>
         void IAfterYamlDeserialization.AfterDeserialized(Mark start, Mark end)
         {

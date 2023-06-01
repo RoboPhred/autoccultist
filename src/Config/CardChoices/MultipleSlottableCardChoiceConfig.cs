@@ -20,5 +20,10 @@ namespace AutoccultistNS.Config.CardChoices
             var arrayOfCards = cards.ToArray();
             return this.OneOf.Select(c => c.ChooseCard(cards)).FirstOrDefault(c => c != null);
         }
+
+        public override string ToString()
+        {
+            return $"MultipleSlottableCardChoiceConfig({string.Join(", ", this.OneOf.Select(x => x.ToString()))})";
+        }
     }
 }

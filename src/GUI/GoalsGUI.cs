@@ -16,6 +16,8 @@ namespace AutoccultistNS.GUI
 
         private static Vector2 scrollPosition = default;
 
+        private static string searchFilter = string.Empty;
+
         /// <summary>
         /// Gets or sets a value indicating whether the Goals gui is being shown.
         /// </summary>
@@ -56,7 +58,8 @@ namespace AutoccultistNS.GUI
 
             GUILayout.Label("Available Goals");
 
-            foreach (var goal in Library.Goals)
+            searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();
+            foreach (var goal in Library.Goals.Where(x => searchFilter == string.Empty || x.Name.ToLower().Contains(searchFilter)))
             {
                 if (goal.IsSatisfied(GameStateProvider.Current) || NucleusAccumbens.CurrentGoals.Contains(goal))
                 {

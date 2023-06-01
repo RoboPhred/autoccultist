@@ -95,10 +95,8 @@ namespace AutoccultistNS
                     return GameSpeed.Paused;
                 }
 
-                var heartBehavior = heartGo.GetComponent<Heart>();
-
-                var speedState = Reflection.GetPrivateField<GameSpeedState>(heartBehavior, "gameSpeedState");
-                return speedState.GetEffectiveGameSpeed();
+                var heart = heartGo.GetComponent<Heart>();
+                return heart.GetEffectiveGameSpeed();
             }
         }
 
