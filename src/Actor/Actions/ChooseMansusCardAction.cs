@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
 
@@ -38,6 +39,11 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             var gameState = GameStateProvider.Current;
+
+            if (gameState.Mansus.State != PortalActiveState.AwaitingSelection)
+            {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Mansus is not awaiting selection.");
+            }
 
             if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
             {

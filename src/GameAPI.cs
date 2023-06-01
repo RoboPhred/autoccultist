@@ -45,9 +45,25 @@ namespace AutoccultistNS
                 }
 
                 // Apparently the above isn't good enough to wait on the mansus, so let's wait for the cards to appear.
-                if (IsInMansus && GetMansusChoices(out var _) == null)
+                if (IsInMansus)
                 {
-                    return false;
+                    try
+                    {
+                        var ingress = GetActiveIngress();
+                        var hasChoices = GetMansusChoices(out var _) != null;
+                        var hasOutput = ingress != null && ingress.GetEgressOutputSphere().GetTokens().Any();
+                        if (!hasChoices && !hasOutput)
+                        {
+                            return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Mansus is borked...
+                        Autoccultist.Instance.LogWarn($"Failed to determine interactivity when in mansus: {ex.ToString()}");
+                        NoonUtility.LogException(ex);
+                        return false;
+                    }
                 }
 
                 return true;
@@ -87,6 +103,22 @@ namespace AutoccultistNS
         }
 
         /// <summary>
+        /// Gets the tabletop sphere.
+        /// </summary>
+        public static Sphere TabletopSphere
+        {
+            get
+            {
+                if (!IsRunning)
+                {
+                    throw new Exception("GameAPI.TabletopSphere: Game is not running.");
+                }
+
+                return Watchman.Get<HornedAxe>().GetSpheres().OfType<TabletopSphere>().Single();
+            }
+        }
+
+        /// <summary>
         /// Initialize the GameAPI.
         /// <para>
         /// Cannot be a static constructor, as this must run early, before GameAPI is naturally used.
@@ -98,14 +130,61 @@ namespace AutoccultistNS
         }
 
         /// <summary>
+        /// Gets all EnRoute spheres.
+        /// </summary>
+        public static IEnumerable<Sphere> GetEnRouteSpheres()
+        {
+            return Watchman.Get<HornedAxe>().GetSpheres().OfType<EnRouteSphere>();
+        }
+
+        /// <summary>
+        /// Gets all situations.
+        /// </summary>
+        public static IEnumerable<Situation> GetSituations()
+        {
+            return Watchman.Get<HornedAxe>().GetRegisteredSituations();
+        }
+
+        /// <summary>
         /// Gets the situation with the given id.
         /// </summary>
         /// <param name="situationId">The id of the situation to get.</param>
         /// <returns>The situation with the given id, or null if no such situation exists.</returns>
         public static Situation GetSituation(string situationId)
         {
-            var situations = Watchman.Get<HornedAxe>().GetRegisteredSituations();
-            return situations.FirstOrDefault(x => x.VerbId == situationId);
+            return GetSituations().FirstOrDefault(x => x.VerbId == situationId);
+        }
+
+        /// <summary>
+        /// Gets the active ingress.
+        /// </summary>
+        /// <returns>The active ingress, or null if there is no active ingress.</returns>
+        public static Ingress GetActiveIngress()
+        {
+            // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
+            // of the visit.
+            var tabletopIngress = TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
+            if (tabletopIngress != null)
+            {
+                return tabletopIngress;
+            }
+
+            // Not on the table... If we have an active otherworld visit, we might have one there.
+            var otherworld = GetActiveOtherworld();
+            if (otherworld != null)
+            {
+                return Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
+            }
+
+            // Note: There is a small period of time between the overworld concluding and the tabletop ingress appearing.
+            return null;
+        }
+
+        public static Otherworld GetActiveOtherworld()
+        {
+            var numa = Watchman.Get<Numa>();
+
+            return Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
         }
 
         /// <summary>
@@ -152,16 +231,22 @@ namespace AutoccultistNS
 
             try
             {
-                var spheres = GetMansusSpheres(out faceUpDeckName, out var _, out var _);
+                var spheres = GetMansusSpheres(out faceUpDeckName);
                 var value = new Dictionary<string, ElementStack>();
                 foreach (var sphere in spheres)
                 {
                     var token = sphere.Value.GetTokens().FirstOrDefault();
-                    if (!token)
+                    if (token == null)
                     {
                         // Mansus isn't ready.
                         // This could be because we have not drawn yet, or because the user has made a choice and we are now idle.
                         return null;
+                    }
+
+                    var elementStack = token.Payload as ElementStack;
+                    if (elementStack == null)
+                    {
+                        throw new Exception($"Could not get ElementStack from token with payload id {token.PayloadId}");
                     }
 
                     value.Add(sphere.Key, token.Payload as ElementStack);
@@ -180,7 +265,15 @@ namespace AutoccultistNS
         {
             try
             {
-                var spheres = GetMansusSpheres(out var _, out var otherworld, out var ingress);
+                var otherworld = GetActiveOtherworld();
+                var ingress = GetActiveIngress();
+
+                if (ingress == null || otherworld == null)
+                {
+                    return false;
+                }
+
+                var spheres = GetMansusSpheres(out var _);
                 if (!spheres.TryGetValue(deckName, out var sphere))
                 {
                     return false;
@@ -196,6 +289,7 @@ namespace AutoccultistNS
 
                 var token = sphere.GetTokens().First();
 
+                // Is this its own special thing?  Can we just try to drag it to ingress.GetEgressSphere()?
                 if (!dominion.EgressSphere.TryAcceptToken(token, new Context(Context.ActionSource.PlayerDrag)))
                 {
                     return false;
@@ -208,6 +302,32 @@ namespace AutoccultistNS
                 NoonUtility.LogWarning($"Exception in GameAPI.ChooseMansusDeck: {ex.ToString()}");
                 return false;
             }
+        }
+
+        public static bool EmptyMansusEgress()
+        {
+            var ingress = GetActiveIngress();
+            if (ingress == null)
+            {
+                Autoccultist.Instance.LogWarn("EmptyMansusEgress: Could not find active ingress.");
+                return false;
+            }
+
+            var output = ingress.GetEgressOutputSphere();
+            if (output == null)
+            {
+                Autoccultist.Instance.LogWarn($"EmptyMansusEgress: Could not find output sphere for ingress {ingress.Id}");
+                return false;
+            }
+
+            if (output.Tokens.Count == 0)
+            {
+                Autoccultist.Instance.LogWarn($"EmptyMansusEgress: No tokens in output sphere {output.Id}");
+                return false;
+            }
+
+            output.EvictAllTokens(new Context(Context.ActionSource.PlayerDumpAll));
+            return true;
         }
 
         /// <summary>
@@ -251,26 +371,19 @@ namespace AutoccultistNS
             notifier.ShowNotificationWindow(title, message, false);
         }
 
-        private static IReadOnlyDictionary<string, Sphere> GetMansusSpheres(out string faceUpDeckName, out Otherworld otherworld, out Ingress ingress)
+        private static IReadOnlyDictionary<string, Sphere> GetMansusSpheres(out string faceUpDeckName)
         {
-            ingress = null;
-            otherworld = null;
+            var ingress = GetActiveIngress();
+            var otherworld = GetActiveOtherworld();
             faceUpDeckName = null;
+
+            if (ingress == null || otherworld == null)
+            {
+                return null;
+            }
 
             var numa = Watchman.Get<Numa>();
             var compendium = Watchman.Get<Compendium>();
-
-            otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
-            if (otherworld == null)
-            {
-                return null;
-            }
-
-            ingress = Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
-            if (ingress == null)
-            {
-                return null;
-            }
 
             var spheres = otherworld.GetSpheres();
 
@@ -282,17 +395,17 @@ namespace AutoccultistNS
 
             if (faceUpDeck == null || faceUpDeck.DeckEffects.Keys.Count == 0)
             {
-                throw new Exception("FaceUpDeck is null or has no DeckEffects");
+                throw new Exception("GetMansusSpheres: FaceUpDeck is null or has no DeckEffects");
             }
 
             if (deckOne == null || deckOne.DeckEffects.Keys.Count == 0)
             {
-                throw new Exception("DeckOne is null or has no DeckEffects");
+                throw new Exception("GetMansusSpheres: DeckOne is null or has no DeckEffects");
             }
 
             if (deckTwo == null || deckTwo.DeckEffects.Keys.Count == 0)
             {
-                throw new Exception("DeckTwo is null or has no DeckEffects");
+                throw new Exception("GetMansusSpheres: DeckTwo is null or has no DeckEffects");
             }
 
             faceUpDeckName = faceUpDeck.DeckEffects.Keys.First();
@@ -304,6 +417,11 @@ namespace AutoccultistNS
             var faceUpSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[0].ToPath.Path);
             var deckOneSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[1].ToPath.Path);
             var deckTwoSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[2].ToPath.Path);
+
+            if (faceUpSphere == null || deckOneSphere == null || deckTwoSphere == null)
+            {
+                throw new Exception("GetMansusSpheres: Could not find all spheres.");
+            }
 
             return new Dictionary<string, Sphere>
             {

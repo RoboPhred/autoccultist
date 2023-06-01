@@ -12,7 +12,7 @@ namespace AutoccultistNS.GameState.Impl
         private readonly ICollection<ICardState> enRouteCards;
         private readonly ICollection<ISituationState> situations;
 
-        private readonly IMansusState mansus;
+        private readonly IPortalState mansus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameStateImpl"/> class.
@@ -21,7 +21,7 @@ namespace AutoccultistNS.GameState.Impl
         /// <param name="enRouteCards">The en route cards in this state.</param>
         /// <param name="situations">The situations in this state.</param>
         /// <param name="mansus">The mansus state.</param>
-        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ICardState> enRouteCards, ICollection<ISituationState> situations, IMansusState mansus)
+        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ICardState> enRouteCards, ICollection<ISituationState> situations, IPortalState mansus)
         {
             this.tabletopCards = tabletopCards;
             this.enRouteCards = enRouteCards;
@@ -60,7 +60,7 @@ namespace AutoccultistNS.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public IMansusState Mansus
+        public IPortalState Mansus
         {
             get
             {

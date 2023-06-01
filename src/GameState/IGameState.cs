@@ -28,6 +28,6 @@ namespace AutoccultistNS.GameState
         /// <summary>
         /// Gets the mansus state.
         /// </summary>
-        IMansusState Mansus { get; }
+        IPortalState Mansus { get; }
     }
 }

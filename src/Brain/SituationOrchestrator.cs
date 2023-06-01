@@ -123,7 +123,7 @@ namespace AutoccultistNS.Brain
                 throw new OperationFailedException($"Cannot dump situation {situationId} because the situation already has an orchestration running.");
             }
 
-            if (GameStateProvider.Current.Mansus.IsActive)
+            if (GameStateProvider.Current.Mansus.State != PortalActiveState.Closed)
             {
                 return;
             }

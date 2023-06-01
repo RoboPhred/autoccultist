@@ -50,36 +50,24 @@ namespace AutoccultistNS.GameState
 
             try
             {
-                var hornedAxe = Watchman.Get<HornedAxe>();
-
-                var spheres = hornedAxe.GetSpheres();
-
-                // Things sitting on the tabletop.
-                var tabletop = spheres.OfType<TabletopSphere>().First();
-
                 var tabletopCards =
-                    from stack in tabletop.GetElementStacks()
+                    from stack in GameAPI.TabletopSphere.GetElementStacks()
                     from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
                     select cardState;
 
                 // Things whizzing around.
-                var enroutes = spheres.OfType<EnRouteSphere>();
                 var enRouteCards =
-                    from enroute in enroutes
+                    from enroute in GameAPI.GetEnRouteSpheres()
                     from stack in enroute.GetElementStacks()
                     from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
                     select cardState;
 
                 var situations =
-                    from situation in hornedAxe.GetRegisteredSituations()
+                    from situation in GameAPI.GetSituations()
                     let state = new SituationStateImpl(situation)
                     select state;
 
-                var numa = Watchman.Get<Numa>();
-                var otherworld = Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
-                var mansus = new MansusStateImpl(otherworld);
-
-                return new GameStateImpl(tabletopCards.ToArray(), enRouteCards.ToArray(), situations.ToArray(), mansus);
+                return new GameStateImpl(tabletopCards.ToArray(), enRouteCards.ToArray(), situations.ToArray(), PortalStateImpl.FromCurrentState());
             }
             catch (Exception ex)
             {

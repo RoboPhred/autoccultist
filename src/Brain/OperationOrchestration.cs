@@ -61,7 +61,12 @@ namespace AutoccultistNS.Brain
             /// <summary>
             /// The operation is choosing a card in the mansus
             /// </summary>
-            Mansus,
+            ChoosingPortalCard,
+
+            /// <summary>
+            /// A mansus card has been chosen and we are waiting to dump the portal result.
+            /// </summary>
+            AwaitingPortalResults,
 
             /// <summary>
             /// The operation has finished and we are waiting for the contents to dump.
@@ -134,35 +139,13 @@ namespace AutoccultistNS.Brain
         {
             var situation = this.GetSituationState();
 
-            if (this.operationState != OperationState.Ongoing)
+            if (this.operationState == OperationState.Ongoing)
             {
-                return;
+                this.UpdateOngoing();
             }
-
-            var clockState = situation.State;
-            if (clockState == StateEnum.Ongoing)
+            else if (this.operationState == OperationState.AwaitingPortalResults)
             {
-                // The situation is running its recipe.
-                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
-                this.completionDebounceTime = null;
-
-                // See if we need to slot new cards.
-                this.ContinueOperation();
-            }
-            else if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
-            {
-                if (this.completionDebounceTime == null)
-                {
-                    // Start the timer for waiting out to see if this is a real completion.
-                    // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
-                    //  so we need to delay to make sure this is a full and final completion.
-                    this.completionDebounceTime = DateTime.Now + CompleteAwaitTime;
-                }
-                else if (this.completionDebounceTime <= DateTime.Now)
-                {
-                    // Enough time has passed that we can consider this operation completed.
-                    this.Complete();
-                }
+                this.UpdateAwaitPortalResults();
             }
         }
 
@@ -191,18 +174,20 @@ namespace AutoccultistNS.Brain
         {
             var situation = this.GetSituationState();
 
-            NoonUtility.LogWarning($"Completing operation {this.operation.Name} with state {situation.State} on recipe {situation.CurrentRecipe} with portal {situation.CurrentRecipePortal} Mansus active {GameStateProvider.Current.Mansus.IsActive}.");
+            Autoccultist.Instance.LogTrace($"Completing operation {this.operation.Name} on recipe {situation.CurrentRecipe}.");
 
             // We currently assume mansus only ever occurs as the last recipe of a situation.
-            // FIXME: Engine supports multiple portal / otherworld / mansus types, but we just assume the one.
-            if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.IsActive)
+            // FIXME: This is quite janky...  We just hope the portal manages to open by the time we notice completion.
+            // Hopefully it opens instantaniously before we get to it.
+            // We dont even know this is our portal, although we can guess by checking to see if our situation has a portal assigned to it.
+            if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.State != PortalActiveState.Closed)
             {
-                NoonUtility.LogWarning($"OperationOrchestration trying to handle mansus on recipe {situation.CurrentRecipe}.");
                 if (this.operation.OngoingRecipes.TryGetValue(situation.CurrentRecipe, out var recipeSolution) && recipeSolution.MansusChoice != null)
                 {
-                    NoonUtility.LogWarning("...Mansus choice for recipe found.");
-                    this.operationState = OperationState.Mansus;
+                    Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
+                    this.operationState = OperationState.ChoosingPortalCard;
                     await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice));
+                    return;
                 }
                 else
                 {
@@ -211,6 +196,48 @@ namespace AutoccultistNS.Brain
             }
 
             this.operationState = OperationState.Completing;
+            await this.AwaitCoroutine(this.CompleteOperationCoroutine());
+        }
+
+        private void UpdateOngoing()
+        {
+            var situation = this.GetSituationState();
+            var clockState = situation.State;
+            if (clockState == StateEnum.Ongoing)
+            {
+                // The situation is running its recipe.
+                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
+                this.completionDebounceTime = null;
+
+                // See if we need to slot new cards.
+                this.ContinueOperation();
+            }
+            else if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
+            {
+                if (this.completionDebounceTime == null)
+                {
+                    // Start the timer for waiting out to see if this is a real completion.
+                    // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
+                    //  so we need to delay to make sure this is a full and final completion.
+                    this.completionDebounceTime = DateTime.Now + CompleteAwaitTime;
+                }
+                else if (this.completionDebounceTime <= DateTime.Now)
+                {
+                    // Enough time has passed that we can consider this operation completed.
+                    this.Complete();
+                }
+            }
+        }
+
+        private async void UpdateAwaitPortalResults()
+        {
+            var state = GameStateProvider.Current;
+
+            if (state.Mansus.State != PortalActiveState.AwaitingCollection)
+            {
+                return;
+            }
+
             await this.AwaitCoroutine(this.CompleteOperationCoroutine());
         }
 
@@ -380,12 +407,14 @@ namespace AutoccultistNS.Brain
         private IEnumerable<IAutoccultistAction> ChooseMansusCoroutine(IMansusSolution solution)
         {
             yield return new ChooseMansusCardAction(solution);
+            this.operationState = OperationState.AwaitingPortalResults;
         }
 
-        private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine()
+        private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine(bool acceptMansus = false)
         {
             try
             {
+                yield return new AcceptMansusResultsAction();
                 yield return new OpenSituationAction(this.SituationId);
                 yield return new EmptySituationAction(this.SituationId);
                 yield return new CloseSituationAction(this.SituationId);
