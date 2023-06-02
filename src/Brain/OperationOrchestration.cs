@@ -281,6 +281,11 @@ namespace AutoccultistNS.Brain
 
             var recipeSolution = this.operation.StartingRecipe;
 
+            if (recipeSolution == null)
+            {
+                throw new OperationFailedException($"Error in operation {this.operation.Name}: No starting recipe defined.");
+            }
+
             var populatedSlots = new HashSet<string>();
 
             // Get the first card.  Slotting this will usually create additional slots
@@ -347,7 +352,8 @@ namespace AutoccultistNS.Brain
 
             yield return new CloseSituationAction(this.SituationId);
 
-            if (followupRecipeSolution.EndOperation)
+
+            if (followupRecipeSolution?.EndOperation == true)
             {
                 this.End();
             }

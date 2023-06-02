@@ -64,7 +64,7 @@ impulses:
                 influence: 1
                 knock:
                   greaterThanOrEqualTo: 5
-    operation: !import ../../../operations/explore/explore-city.yml
+    operation: !import ../../../operations/explore/explore-city-follower.yml
   - name: Explore strange streets by moonlight
     priority: goal
     forbidders:
