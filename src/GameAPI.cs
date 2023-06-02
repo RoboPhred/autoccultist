@@ -18,7 +18,6 @@ namespace AutoccultistNS
     /// </summary>
     public static class GameAPI
     {
-        private static GameSpeed prePauseSpeed = GameSpeed.Normal;
         private static int pauseDepth = 0;
 
         /// <summary>
@@ -336,15 +335,9 @@ namespace AutoccultistNS
         {
             if (pauseDepth == 0)
             {
-                prePauseSpeed = GameSpeed;
-                if (IsRunning && prePauseSpeed != GameSpeed.Paused)
+                if (IsRunning)
                 {
-                    Watchman.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
-                    {
-                        ControlPriorityLevel = 1,
-                        GameSpeed = GameSpeed.Paused,
-                        WithSFX = true,
-                    });
+                    Watchman.Get<LocalNexus>().PauseGame(true);
                 }
             }
 
@@ -465,14 +458,9 @@ namespace AutoccultistNS
                 this.isDisposed = true;
                 GC.SuppressFinalize(this);
                 pauseDepth--;
-                if (pauseDepth == 0 && prePauseSpeed != GameSpeed.Paused)
+                if (pauseDepth == 0)
                 {
-                    Watchman.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
-                    {
-                        ControlPriorityLevel = 1,
-                        GameSpeed = prePauseSpeed,
-                        WithSFX = true,
-                    });
+                    Watchman.Get<LocalNexus>().UnPauseGame(true);
                 }
             }
         }
