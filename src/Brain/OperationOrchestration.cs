@@ -435,7 +435,11 @@ namespace AutoccultistNS.Brain
         {
             try
             {
-                yield return new AcceptMansusResultsAction();
+                if (acceptMansus)
+                {
+                    yield return new AcceptMansusResultsAction();
+                }
+
                 yield return new OpenSituationAction(this.SituationId);
                 yield return new EmptySituationAction(this.SituationId);
                 yield return new CloseSituationAction(this.SituationId);

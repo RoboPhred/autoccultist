@@ -161,6 +161,7 @@ namespace AutoccultistNS.Brain
             var operations =
                 from goal in ActiveGoals
                 from impulse in goal.Impulses
+                where !SituationOrchestrator.CurrentOrchestrations.Keys.Contains(impulse.Operation.Situation)
                 where impulse.CanExecute(state, out _)
                 orderby impulse.Priority descending
                 group impulse.Operation by impulse.Operation.Situation into situationGroup
