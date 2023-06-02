@@ -29,6 +29,19 @@ namespace AutoccultistNS.Config
             Youngest,
         }
 
+        public enum CardAspectWeightSelection
+        {
+            /// <summary>
+            /// The choice should choose the card with the most total aspect weight.
+            /// </summary>
+            Highest,
+
+            /// <summary>
+            /// The choice should choose the card with the least total aspect weight.
+            /// </summary>
+            Lowest,
+        }
+
         /// <summary>
         /// Gets or sets the element id of the card to choose.
         /// If left empty, the element id will not be factored into the card choice.
@@ -46,21 +59,26 @@ namespace AutoccultistNS.Config
         public List<string> AllowedElementIds { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the card must or must not be unique.
+        /// </summary>
+        public bool? Unique { get; set; }
+
+        /// <summary>
         /// Gets or sets a dictionary of aspect names to degrees to filter the cards by.
         /// If set, a matching card must have all of the specified aspects of at least the given degree.
         /// </summary>
         public Dictionary<string, ValueCondition> Aspects { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the card must or must not be unique.
-        /// </summary>
-        public bool? Unique { get; set; }
-
-        /// <summary>
         /// Gets or sets a list of aspects forbidden to be on the chosen card.
         /// Mainly used when specifying matching aspects.
         /// </summary>
         public List<string> ForbiddenAspects { get; set; }
+
+        /// <summary>
+        /// Gets or sets the aspect weight bias by which to choose cards.
+        /// </summary>
+        public CardAspectWeightSelection AspectWeightBias { get; set; }
 
         /// <summary>
         /// Gets or sets a list of elements forbidden from being matched.
@@ -102,19 +120,25 @@ namespace AutoccultistNS.Config
                 select card;
 
             // Sort for age bias.
-            if (this.AgeBias.HasValue)
+            if (this.AgeBias == CardAgeSelection.Oldest)
             {
-                if (this.AgeBias == CardAgeSelection.Oldest)
-                {
-                    candidates = candidates.OrderBy(card => card.LifetimeRemaining);
-                }
-                else if (this.AgeBias == CardAgeSelection.Youngest)
-                {
-                    candidates = candidates.OrderByDescending(card => card.LifetimeRemaining);
-                }
+                candidates = candidates.OrderBy(card => card.LifetimeRemaining);
+            }
+            else if (this.AgeBias == CardAgeSelection.Youngest)
+            {
+                candidates = candidates.OrderByDescending(card => card.LifetimeRemaining);
+            }
+            else if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
+            {
+                candidates = candidates.OrderByDescending(card => this.GetSortWeight(card));
+            }
+            else if (this.AspectWeightBias == CardAspectWeightSelection.Lowest)
+            {
+                candidates = candidates.OrderBy(card => this.GetSortWeight(card));
             }
             else
             {
+                // Don't care about aspects, so optimize for least important card across all aspects.
                 candidates = candidates.OrderBy(card => card.Aspects.GetWeight());
             }
 
@@ -190,6 +214,19 @@ namespace AutoccultistNS.Config
         protected virtual bool AdditionalFilter(ICardState card)
         {
             return true;
+        }
+
+        private double GetSortWeight(ICardState card)
+        {
+            if (this.Aspects == null)
+            {
+                return card.Aspects.GetWeight();
+            }
+            else
+            {
+                var sortAspects = this.Aspects.ToDictionary(entry => entry.Key, entry => card.Aspects[entry.Key]);
+                return sortAspects.GetWeight();
+            }
         }
     }
 }

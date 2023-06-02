@@ -23,4 +23,5 @@
 
 # Lesser priority survival instincts.
 - !import ../impulses/survive/maint-heal-dread-contentment.yml
+- !import ../impulses/survive/maint-affliction-get-vitality.yml
 - !import ../impulses/survive/maint-dread-buy-opium.yml
