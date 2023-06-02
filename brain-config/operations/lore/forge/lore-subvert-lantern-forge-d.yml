@@ -22,4 +22,4 @@ ongoingRecipes:
       solvechallenge:
         oneOf:
           - aspects: { fascination: 1 }
-          - aspects: { skillreasond_illumination: 1 }
+          - elementId: skillreasond_illumination
