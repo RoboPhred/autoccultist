@@ -1,0 +1,12 @@
+name: Reenforce an expedition with a Forge follower
+situation: explore
+targetOngoing: true
+ongoingRecipes:
+  explorevaulttick:
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          forge:
+            greaterThanOrEqualTo: 2

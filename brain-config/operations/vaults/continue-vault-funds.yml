@@ -1,0 +1,8 @@
+name: Fund an exploration
+situation: explore
+targetOngoing: true
+ongoingRecipes:
+  explorevaulttick:
+    slots:
+      Assistance:
+        elementId: funds

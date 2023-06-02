@@ -1,0 +1,11 @@
+# Bail out a failing expedition with emergency funds.
+- !import ../impulses/vaults/generic/goal-vault-funds.yml
+
+- !import ../impulses/vaults/generic/maint-vault-peril-forge.yml
+- !import ../impulses/vaults/generic/maint-vault-guardian-edge.yml
+- !import ../impulses/vaults/generic/maint-vault-guardian-moth.yml
+# Seals can't hurt people, so it makes sense to prepare for the curse before preparing for the seal.
+- !import ../impulses/vaults/generic/maint-vault-curse-heart.yml
+- !import ../impulses/vaults/generic/maint-vault-curse-moth.yml
+- !import ../impulses/vaults/generic/maint-vault-seal-knock.yml
+- !import ../impulses/vaults/generic/maint-vault-funds.yml

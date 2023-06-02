@@ -1,0 +1,11 @@
+name: Reenforce an expedition with a Knock-2 follower
+situation: explore
+targetOngoing: true
+ongoingRecipes:
+  explorevaulttick:
+    slots:
+      Assistance:
+        aspects:
+          follower: 1
+          knock:
+            greaterThanOrEqualTo: 2

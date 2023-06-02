@@ -1,0 +1,38 @@
+name: Reenforce an expedition with a Heart follower
+priority: maintenance
+requirements:
+  allOf:
+    - situation: explore
+      storedCardsMatch:
+        aspects: { curse: 1 }
+forbidders:
+  anyOf:
+    # Curse of Nowhere requires Moth or Lantern, and can't be repelled with Heart.
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: curse_nowhere
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: curse_affliction
+          aspects: { grail: 10 }
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: curse_dread
+          aspects: { lantern: 10 }
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: curse_visions
+          aspects: { winter: 10 }
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          aspects: { heart: 10 }
+operation: !import ../../../operations/vaults/continue-vault-follower-heart.yml
