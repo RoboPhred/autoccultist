@@ -52,8 +52,9 @@ namespace AutoccultistNS.GameState
         /// </summary>
         /// <param name="state">The game state to check.</param>
         /// <param name="choosers">A collection of card matchers to check cards against.</param>
+        /// <param name="unsatisfiedChoice">The card matcher that could not be satisfied, or null if all matchers were satisfied.</param>
         /// <returns>True if all card matchers can satisfy their matches, or False otherwise.</returns>
-        public static bool CardsCanBeSatisfied(this IGameState state, IEnumerable<ICardChooser> choosers)
+        public static bool CardsCanBeSatisfied(this IGameState state, IEnumerable<ICardChooser> choosers, out ICardChooser unsatisfiedChoice)
         {
             var remainingCards = new HashSet<ICardState>(state.TabletopCards);
             foreach (var chooser in choosers)
@@ -62,12 +63,14 @@ namespace AutoccultistNS.GameState
                 var choice = chooser.ChooseCard(remainingCards);
                 if (choice == null)
                 {
+                    unsatisfiedChoice = chooser;
                     return false;
                 }
 
                 remainingCards.Remove(choice);
             }
 
+            unsatisfiedChoice = null;
             return true;
         }
     }

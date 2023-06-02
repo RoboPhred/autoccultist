@@ -21,14 +21,21 @@ namespace AutoccultistNS.Config
         /// </summary>
         public bool MatchIfCardsMissing { get; set; } = false;
 
-        bool IGameStateCondition.IsConditionMet(IGameState state)
+        bool IGameStateCondition.IsConditionMet(IGameState state, out ConditionFailure conditionFailureDescription)
         {
-            if (!this.MatchIfCardsMissing && !state.CardsCanBeSatisfied(this.GetRequiredCards()))
+            if (!this.MatchIfCardsMissing && !state.CardsCanBeSatisfied(this.GetRequiredCards(), out var unsatisfiedChoice))
             {
+                conditionFailureDescription = new CardChoiceNotSatisfiedFailure(unsatisfiedChoice);
                 return false;
             }
 
-            return this.Condition == null ? true : this.Condition.IsConditionMet(state);
+            if (this.Condition != null)
+            {
+                return this.Condition.IsConditionMet(state, out conditionFailureDescription);
+            }
+
+            conditionFailureDescription = null;
+            return true;
         }
     }
 }

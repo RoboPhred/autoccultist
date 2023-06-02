@@ -85,9 +85,21 @@ namespace AutoccultistNS.Brain
                 {
                     sb.AppendFormat("- - {0}\n", impulse.Name);
                     sb.AppendFormat("- - - Priority: {0}\n", impulse.Priority);
-                    sb.AppendFormat("- - - Requirements met: {0}\n", impulse.Requirements?.IsConditionMet(state) != false);
+
+                    ConditionFailure reqFailure = null;
+                    sb.AppendFormat("- - - Requirements met: {0}\n", impulse.Requirements?.IsConditionMet(state, out reqFailure) != false);
+                    if (reqFailure != null)
+                    {
+                        sb.AppendFormat("- - - - {0}\n", reqFailure);
+                    }
+
                     sb.AppendFormat("- - - Forbidders in place: {0}\n", impulse.Forbidders?.IsConditionMet(state) == true);
-                    sb.AppendFormat("- - - Operation ready: {0}\n", impulse.Operation.IsConditionMet(state));
+
+                    sb.AppendFormat("- - - Operation ready: {0}\n", impulse.Operation.IsConditionMet(state, out var opFailure));
+                    if (opFailure != null)
+                    {
+                        sb.AppendFormat("- - - - {0}\n", opFailure);
+                    }
                 }
             }
 

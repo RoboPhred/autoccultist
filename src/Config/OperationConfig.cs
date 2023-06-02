@@ -92,16 +92,18 @@ namespace AutoccultistNS.Config
             }
         }
 
-        bool IGameStateCondition.IsConditionMet(IGameState state)
+        bool IGameStateCondition.IsConditionMet(IGameState state, out ConditionFailure failureDescription)
         {
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {
+                failureDescription = new SituationConditionFailure(this.Situation, "Situation not found.");
                 return false;
             }
 
             if (this.TargetOngoing != situation.IsOccupied)
             {
+                failureDescription = new SituationConditionFailure(this.Situation, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
                 return false;
             }
 
@@ -124,8 +126,9 @@ namespace AutoccultistNS.Config
                         select choice);
                 }
 
-                if (!state.CardsCanBeSatisfied(requiredCards.ToArray()))
+                if (!state.CardsCanBeSatisfied(requiredCards.ToArray(), out var unsatisfiedChoice))
                 {
+                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
                     return false;
                 }
             }
@@ -141,12 +144,14 @@ namespace AutoccultistNS.Config
                     recipeSolution = this.GetOngoingRecipeSolution(situation);
                 }
 
-                if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards()))
+                if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards(), out var unsatisfiedChoice))
                 {
+                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
                     return false;
                 }
             }
 
+            failureDescription = null;
             return true;
         }
     }

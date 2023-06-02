@@ -24,6 +24,7 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets the condition on which to prevent this impulse from activating, if any.
         /// </summary>
+        // TODO: We can't describe a negative failure.  Bundle this into anyOf(requirements, noneOf(forbidders)))
         IGameStateCondition Forbidders { get; }
 
         /// <summary>
