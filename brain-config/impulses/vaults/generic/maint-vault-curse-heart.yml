@@ -9,30 +9,29 @@ forbidders:
   anyOf:
     # Curse of Nowhere requires Moth or Lantern, and can't be repelled with Heart.
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: curse_nowhere
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: curse_nowhere
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: curse_affliction
-          aspects: { grail: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: curse_affliction
+          containsAspects: { grail: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: curse_dread
-          aspects: { lantern: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: curse_dread
+          containsAspects: { lantern: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: curse_visions
-          aspects: { winter: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: curse_visions
+          containsAspects: { winter: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          aspects: { heart: 10 }
+        - situation: explore
+          containsAspects: { heart: 10 }
 operation: !import ../../../operations/vaults/continue-vault-follower-heart.yml

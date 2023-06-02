@@ -9,48 +9,47 @@ forbidders:
   anyOf:
     # Soucouyants require Moth or Lantern, and can't be beaten with Edge.
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_soucouyants
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_soucouyants
     # Long requires Moth or Grail, and can't be beaten with Edge.
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_long
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_long
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          aspects: { edge: 10 }
+        - situation: explore
+          containsAspects: { edge: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_dead
-          aspects: { winter: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_dead
+          containsAspects: { winter: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_watchers
-          aspects: { grail: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_watchers
+          containsAspects: { grail: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_watchers
-          aspects: { moth: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_watchers
+          containsAspects: { moth: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_monks
-          aspects: { moth: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_monks
+          containsAspects: { moth: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_serpent
-          aspects: { knock: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_serpent
+          containsAspects: { knock: 10 }
 operation: !import ../../../operations/vaults/continue-vault-follower-edge.yml

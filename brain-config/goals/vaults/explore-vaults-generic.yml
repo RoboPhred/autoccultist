@@ -2,6 +2,6 @@ name: Explore vaults
 completedWhen:
   noneOf:
     - aspects: { vault: 1 }
-impulses:
+impulseSets:
   - !import ../../impulse-sets/explore-vaults.yml
   - !import ../../impulse-sets/maintain-vault-exploration.yml

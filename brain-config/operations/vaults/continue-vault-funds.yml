@@ -1,12 +1,9 @@
 name: Fund an exploration
 situation: explore
 targetOngoing: true
-ongoingRecipes:
-  explorevaulttick:
+startCondition: currentRecipeSatisfied
+conditionalOngoingRecipes:
+  - endOperation: true
     slots:
       Assistance:
         elementId: funds
-conditionalOngoingRecipes:
-  slots:
-    Assistance:
-      elementId: funds
