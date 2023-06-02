@@ -23,7 +23,4 @@ forbidders:
       - situation: explore
         storedCardsMatch:
           aspects: { knock: 10 }
-operations:
-  - !import ../../../operations/vaults/continue-vault-follower-knock-10.yml
-  - !import ../../../operations/vaults/continue-vault-follower-knock-5.yml
-  - !import ../../../operations/vaults/continue-vault-follower-knock-2.yml
+operation: !import ../../../operations/vaults/continue-vault-follower-knock.yml
