@@ -2,7 +2,6 @@ namespace AutoccultistNS.GameState.Impl
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using SecretHistories.Core;
     using SecretHistories.Spheres;
     using SecretHistories.UI;
@@ -39,6 +38,8 @@ namespace AutoccultistNS.GameState.Impl
             // GetAspects() will do this, but then also multiply the result by the stack quantity
             // Note: The game seems inclined to cache this data.  Is this a performance problem?
             calcAspects.CombineAspects(sourceStack.Element.Aspects);
+            // Note: As far as I can tell, it is expected that any stack that has mutations will have a quantity of 1.
+            // Mutated cards don't stack.
             calcAspects.ApplyMutations(sourceStack.Mutations);
             this.aspects = calcAspects;
 
