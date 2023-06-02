@@ -85,6 +85,11 @@ namespace AutoccultistNS.Brain
                 {
                     sb.AppendFormat("- - {0}\n", impulse.Name);
                     sb.AppendFormat("- - - Priority: {0}\n", impulse.Priority);
+                    sb.AppendFormat("- - - Master CanExecute: {0}\n", impulse.CanExecute(state, out var impulseFailure));
+                    if (impulseFailure != null)
+                    {
+                        sb.AppendFormat("- - - - {0}\n", impulseFailure);
+                    }
 
                     ConditionFailure reqFailure = null;
                     sb.AppendFormat("- - - Requirements met: {0}\n", impulse.Requirements?.IsConditionMet(state, out reqFailure) != false);
@@ -156,7 +161,7 @@ namespace AutoccultistNS.Brain
             var operations =
                 from goal in ActiveGoals
                 from impulse in goal.Impulses
-                where impulse.CanExecute(state)
+                where impulse.CanExecute(state, out _)
                 orderby impulse.Priority descending
                 group impulse.Operation by impulse.Operation.Situation into situationGroup
                 select situationGroup.FirstOrDefault();

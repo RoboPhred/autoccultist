@@ -29,7 +29,7 @@ namespace AutoccultistNS.Brain
         /// <param name="operation">The started operation.</param>
         public static void OnOperationStarted(IOperation operation)
         {
-            NoonUtility.LogWarning("Starting operation " + operation.Name);
+            Autoccultist.Instance.LogTrace("Starting operation " + operation.Name);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace AutoccultistNS.Brain
         /// <param name="operation">The completed operation.</param>
         public static void OnOperationCompleted(IOperation operation)
         {
-            NoonUtility.LogWarning($"Completing operation {operation.Name}");
+            Autoccultist.Instance.LogTrace($"Completing operation {operation.Name}");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace AutoccultistNS.Brain
         /// <param name="operation">The aborted operation.</param>
         public static void OnOperationAborted(IOperation operation)
         {
-            NoonUtility.LogWarning($"Aborting operation {operation.Name}");
+            Autoccultist.Instance.LogTrace($"Aborting operation {operation.Name}");
         }
     }
 }

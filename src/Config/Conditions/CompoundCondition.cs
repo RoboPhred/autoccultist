@@ -62,7 +62,7 @@ namespace AutoccultistNS.Config.Conditions
             var recordedFailures = new List<ConditionFailure>();
             foreach (var condition in this.Requirements)
             {
-                var matched = !condition.IsConditionMet(state, out failureDescription);
+                var matched = condition.IsConditionMet(state, out failureDescription);
                 switch (this.Mode)
                 {
                     case ConditionMode.AllOf:

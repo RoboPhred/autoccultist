@@ -72,10 +72,6 @@ namespace AutoccultistNS.Config
         // IReadOnlyDictionary is not marked with out params...
         IReadOnlyDictionary<string, IRecipeSolution> IOperation.OngoingRecipes => this.OngoingRecipes.ToDictionary(entry => entry.Key, entry => entry.Value as IRecipeSolution);
 
-        string IOperation.Name => throw new System.NotImplementedException();
-
-        string IOperation.Situation => throw new System.NotImplementedException();
-
         IReadOnlyList<IConditionalRecipeSolution> IOperation.ConditionalOngoingRecipes => this.ConditionalOngoingRecipes.ToList().AsReadOnly();
 
         /// <inheritdoc/>

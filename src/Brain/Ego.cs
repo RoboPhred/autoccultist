@@ -78,6 +78,10 @@ namespace AutoccultistNS.Brain
                 {
                     NucleusAccumbens.AddGoal(goal);
                 }
+                else
+                {
+                    Autoccultist.Instance.LogTrace($"Ego: Primary goal \"{goal.Name}\" of motivation \"{CurrentMotivation.Name}\" is already satisfied.");
+                }
             }
 
             foreach (var goal in CurrentMotivation.SupportingGoals)
@@ -116,7 +120,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            NoonUtility.LogWarning($"Ego: All primary goals of motivation \"{CurrentMotivation.Name}\" are now complete.");
+            Autoccultist.Instance.LogTrace($"Ego: All primary goals of motivation \"{CurrentMotivation.Name}\" are now complete.");
             TryStopMotivation();
             var completedMotivation = CurrentMotivation;
             CurrentMotivation = null;

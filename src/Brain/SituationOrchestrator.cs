@@ -105,15 +105,24 @@ namespace AutoccultistNS.Brain
         /// <param name="operation">The operation to execute.</param>
         public static void ExecuteOperation(IOperation operation)
         {
-            if (ExecutingOperationsBySituation.ContainsKey(operation.Situation))
+            try
             {
-                return;
-            }
+                if (ExecutingOperationsBySituation.ContainsKey(operation.Situation))
+                {
+                    Autoccultist.Instance.LogWarn($"Cannot execute operation {operation.Name} because the situation {operation.Situation} already has an orchestration running.");
+                    return;
+                }
 
-            var orchestration = new OperationOrchestration(operation);
-            ExecutingOperationsBySituation[operation.Situation] = orchestration;
-            orchestration.Completed += OnOrchestrationCompleted;
-            orchestration.Start();
+                var orchestration = new OperationOrchestration(operation);
+                ExecutingOperationsBySituation[operation.Situation] = orchestration;
+                orchestration.Completed += OnOrchestrationCompleted;
+                orchestration.Start();
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.Instance.LogWarn($"Error executing operation {operation.Name}: {ex.Message}");
+                NoonUtility.LogException(ex);
+            }
         }
 
         private static void DumpSituation(string situationId)

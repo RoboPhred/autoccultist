@@ -91,9 +91,18 @@ namespace AutoccultistNS
                 return;
             }
 
-            NucleusAccumbens.Update();
-            AutoccultistActor.Update();
-            SituationOrchestrator.Update();
+            try
+            {
+                NucleusAccumbens.Update();
+                AutoccultistActor.Update();
+                SituationOrchestrator.Update();
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.Instance.LogWarn($"Error in Mechanical Heart: {ex.Message}");
+                NoonUtility.LogException(ex);
+                MechanicalHeart.Stop();
+            }
         }
     }
 }
