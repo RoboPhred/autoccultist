@@ -1,5 +1,5 @@
 # Bail out a failing expedition with emergency funds.
-- !import ../impulses/vaults/generic/goal-vault-funds.yml
+- !import ../impulses/vaults/generic/maint-vault-funds-none.yml
 
 - !import ../impulses/vaults/generic/maint-vault-peril-forge.yml
 - !import ../impulses/vaults/generic/maint-vault-guardian-edge.yml

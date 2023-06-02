@@ -10,3 +10,11 @@ ongoingRecipes:
           follower: 1
           heart:
             greaterThanOrEqualTo: 2
+conditionalOngoingRecipes:
+  slots:
+    Assistance:
+      aspectWeightBias: highest
+      aspects:
+        follower: 1
+        heart:
+          greaterThanOrEqualTo: 2

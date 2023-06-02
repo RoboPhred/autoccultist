@@ -6,3 +6,7 @@ ongoingRecipes:
     slots:
       Assistance:
         elementId: funds
+conditionalOngoingRecipes:
+  slots:
+    Assistance:
+      elementId: funds
