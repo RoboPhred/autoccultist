@@ -118,7 +118,8 @@ namespace AutoccultistNS.Brain
                     break;
                 case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
-                    if (!this.operation.OngoingRecipes.TryGetValue(situation.CurrentRecipe, out var recipeSolution))
+                    var recipeSolution = this.operation.GetOngoingRecipeSolution(situation);
+                    if (recipeSolution == null)
                     {
                         // Operation does not know this recipe.
                         return;
@@ -155,8 +156,7 @@ namespace AutoccultistNS.Brain
             // TODO: We might want to clean up, dump the contents and close the window.
             // Doing so is tricky if we want to use the actor though, as it means the abort action is asynchronous.
             this.cancelCurrentTask?.Cancel();
-            BrainEventSink.OnOperationAborted(this.operation);
-            this.End();
+            this.End(true);
         }
 
         private ISituationState GetSituationState()
@@ -182,7 +182,8 @@ namespace AutoccultistNS.Brain
             // We dont even know this is our portal, although we can guess by checking to see if our situation has a portal assigned to it.
             if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.State != PortalActiveState.Closed)
             {
-                if (this.operation.OngoingRecipes.TryGetValue(situation.CurrentRecipe, out var recipeSolution) && recipeSolution.MansusChoice != null)
+                var recipeSolution = this.operation.GetOngoingRecipeSolution(situation);
+                if (recipeSolution != null && recipeSolution.MansusChoice != null)
                 {
                     Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
                     this.operationState = OperationState.ChoosingPortalCard;
@@ -260,13 +261,9 @@ namespace AutoccultistNS.Brain
             this.ongoingRecipe = currentRecipe;
             this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining ?? 0;
 
-            if (this.operation.OngoingRecipes == null)
-            {
-                // No recipes to continue
-                return;
-            }
+            var recipeSolution = this.operation.GetOngoingRecipeSolution(situation);
 
-            if (!this.operation.OngoingRecipes.TryGetValue(currentRecipe, out var recipeSolution))
+            if (recipeSolution == null)
             {
                 // Operation does not know this recipe.
                 return;
@@ -282,6 +279,8 @@ namespace AutoccultistNS.Brain
             yield return new OpenSituationAction(this.SituationId);
             yield return new EmptySituationAction(this.SituationId);
 
+            var recipeSolution = this.operation.StartingRecipe;
+
             var populatedSlots = new HashSet<string>();
 
             // Get the first card.  Slotting this will usually create additional slots
@@ -289,7 +288,7 @@ namespace AutoccultistNS.Brain
             var firstSlot = slots.First();
             var firstSlotSpecId = firstSlot.SpecId;
 
-            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlotSpecId, this.operation.StartingRecipe);
+            var firstSlotAction = this.GetSlotActionForRecipeSlotSpec(firstSlotSpecId, recipeSolution);
             if (firstSlotAction == null)
             {
                 // First slot of starting situation is required.
@@ -305,7 +304,7 @@ namespace AutoccultistNS.Brain
             var slotsSpecIds = this.GetSituationState().RecipeSlots.Select(x => x.SpecId).Where(x => x != firstSlotSpecId).ToArray();
             foreach (var slotSpecId in slotsSpecIds)
             {
-                var slotAction = this.GetSlotActionForRecipeSlotSpec(slotSpecId, this.operation.StartingRecipe);
+                var slotAction = this.GetSlotActionForRecipeSlotSpec(slotSpecId, recipeSolution);
                 if (slotAction != null)
                 {
                     populatedSlots.Add(slotSpecId);
@@ -318,7 +317,7 @@ namespace AutoccultistNS.Brain
             }
 
             // Check that all required slots were populated.
-            var missingSlots = this.operation.StartingRecipe.SlotSolutions.Keys.Except(populatedSlots);
+            var missingSlots = recipeSolution.SlotSolutions.Keys.Except(populatedSlots);
             if (missingSlots.Any())
             {
                 Autoccultist.Instance.LogTrace($"Operation {this.operation.Name} did not define starting recipe slots for {string.Join(", ", missingSlots)}.");
@@ -327,20 +326,31 @@ namespace AutoccultistNS.Brain
             // Start the situation
             yield return new StartSituationRecipeAction(this.SituationId);
 
+            if (recipeSolution.EndOperation)
+            {
+                yield return new CloseSituationAction(this.SituationId);
+                this.End();
+            }
+
             // Mark us as ongoing now that we started the recipe.
             this.operationState = OperationState.Ongoing;
 
             // Accept the current recipe and fill its needs
-            this.ongoingRecipe = this.GetSituationState().CurrentRecipe;
-            if (this.operation.OngoingRecipes != null && this.operation.OngoingRecipes.TryGetValue(this.ongoingRecipe, out var ongoingRecipeSolution))
+            var followupRecipeSolution = this.operation.GetOngoingRecipeSolution(this.GetSituationState());
+            if (followupRecipeSolution != null)
             {
-                foreach (var item in this.ContinueSituationCoroutine(ongoingRecipeSolution, false))
+                foreach (var item in this.ContinueSituationCoroutine(followupRecipeSolution, false))
                 {
                     yield return item;
                 }
             }
 
             yield return new CloseSituationAction(this.SituationId);
+
+            if (followupRecipeSolution.EndOperation)
+            {
+                this.End();
+            }
         }
 
         private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(IRecipeSolution recipe, bool standalone = true)
@@ -402,6 +412,11 @@ namespace AutoccultistNS.Brain
             {
                 yield return new CloseSituationAction(this.SituationId);
             }
+
+            if (recipe.EndOperation)
+            {
+                this.End();
+            }
         }
 
         private IEnumerable<IAutoccultistAction> ChooseMansusCoroutine(IMansusSolution solution)
@@ -421,7 +436,6 @@ namespace AutoccultistNS.Brain
             }
             finally
             {
-                BrainEventSink.OnOperationCompleted(this.operation);
                 this.End();
             }
         }
@@ -462,8 +476,17 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private void End()
+        private void End(bool aborted = false)
         {
+            if (aborted)
+            {
+                BrainEventSink.OnOperationAborted(this.operation);
+            }
+            else
+            {
+                BrainEventSink.OnOperationCompleted(this.operation);
+            }
+
             this.operationState = OperationState.Finished;
             this.Completed?.Invoke(this, EventArgs.Empty);
         }

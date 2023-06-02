@@ -18,6 +18,12 @@ namespace AutoccultistNS.Brain
         IMansusSolution MansusChoice { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this recipe solution should end the operation after this recipe solution execitues.
+        /// This will release the situation from this operation, and allow other targetOngoing operations to target it.
+        /// </summary>
+        bool EndOperation { get; }
+
+        /// <summary>
         /// Gets a collection of card choices that must all be satisfied for this recipe solution to start.
         /// </summary>
         /// <returns>A collection of card choices that must be satisified to start this recipe solution.</returns>

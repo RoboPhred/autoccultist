@@ -27,5 +27,10 @@ namespace AutoccultistNS.Brain
         /// Gets a dictionary of recipe ids to recipe solutions for each ongoing recipe the situation may encounter.
         /// </summary>
         IReadOnlyDictionary<string, IRecipeSolution> OngoingRecipes { get; }
+
+        /// <summary>
+        /// Gets a list of conditional recipes to use for ongoing operations.
+        /// </summary>
+        IReadOnlyList<IConditionalRecipeSolution> ConditionalOngoingRecipes { get; }
     }
 }

@@ -36,6 +36,12 @@ namespace AutoccultistNS.Config
         /// </summary>
         public MansusSolutionConfig MansusChoice { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this recipe should end the operation.
+        /// This leaves the situation open for other operations to target it.
+        /// </summary>
+        public bool EndOperation { get; set; } = false;
+
         /// <inheritdoc/>
         IReadOnlyDictionary<string, ICardChooser> IRecipeSolution.SlotSolutions
         {
