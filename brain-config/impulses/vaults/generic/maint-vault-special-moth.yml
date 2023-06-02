@@ -1,0 +1,38 @@
+name: Reenforce an expedition with a Moth follower
+priority: maintenance
+requirements:
+  anyOf:
+    - situation: explore
+      storedCardsMatch:
+        elementId: guardian_soucouyants
+    - situation: explore
+      storedCardsMatch:
+        elementId: guardian_long
+    - situation: explore
+      storedCardsMatch:
+        elementId: curse_nowhere
+forbidders:
+  anyOf:
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: guardian_long
+          aspects: { grail: 10 }
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: curse_nowhere
+          aspects: { lantern: 10 }
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          cardSet:
+            - elementId: guardian_soucouyants
+          aspects: { lantern: 10 }
+    - allOf:
+      - situation: explore
+        storedCardsMatch:
+          aspects: { moth: 10 }
+operation: !import ../../../operations/vaults/continue-vault-follower-moth.yml
