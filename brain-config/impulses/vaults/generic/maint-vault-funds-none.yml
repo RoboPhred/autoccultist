@@ -1,5 +1,5 @@
 name: Rescue a failing expedition with Funds
-priority: goal
+priority: maintenance
 requirements:
   anyOf:
     - situation: explore
