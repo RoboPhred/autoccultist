@@ -13,14 +13,16 @@ operation:
       explore:
         elementId: vaultcapital4
       expeditionmember:
+        aspectWeightBias: highest
         aspects:
           follower: 1
-          lantern:
-            greaterThanOrEqualTo: 3
+          heart:
+            greaterThanOrEqualTo: 2
       expeditionmember2:
+        aspectWeightBias: highest
         aspects:
           follower: 1
-          lantern:
+          heart:
             greaterThanOrEqualTo: 2
       expeditionfunds:
         elementId: funds

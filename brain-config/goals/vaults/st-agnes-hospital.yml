@@ -65,12 +65,7 @@ impulses:
   - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-10.yml
   - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5-5.yml
   - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5-5.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-8-2.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-8-2.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-3-2.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-3-2.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-2.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-2.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern.yml
+  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-lantern.yml
   - !import ../../impulses/vaults/st-agnes/st-agnes-explore-any.yml
