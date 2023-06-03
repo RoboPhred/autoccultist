@@ -1,0 +1,132 @@
+# Ideas for More Faster
+# - Stop looking for followers earlier.  We only need a few as sacrifices for the spider door
+#     Teach it to look for followers only when it runs low?
+#     Spider door deck has a fixed number of draws before refresh, so we only need that many followers.
+# - Indoctrinate followers as-needed for spider door sacrifices?
+#     We use talk to delay Crucible decaying, so we will need to juggle that with talk to indoctrinate...
+# - Don't buy things we don't need from oriflamme.
+
+# Note: Getting close to loosing games due to lack of money.  Multi tasking strategy seems to take longer to get out of junior position so it bleeds money.
+# As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
+# Should look into rushing high passion and using painting.
+name: Aspirant Power Ascension
+selectionHint:
+  anyOf:
+    - elementId: introjob
+    - elementId: bequestintro
+    - elementId: ascensionpowera
+    - elementId: ascensionpowerb
+    - elementId: ascensionpowerc
+    - elementId: ascensionpowerd
+    - elementId: ascensionpowere
+    - elementId: ascensionpowerf
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - !import ../../goals/aspirant/begin-intro.yml
+  - name: Get a stronger physique while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillhealtha.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+  - name: Get a little passionate while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillpassiona.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+  - name: Get a scholarship while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/reason/acquire-skillreasona.yml
+      - !import ../../goals/reason/acquire-skillreasonb.yml
+      - !import ../../goals/reason/acquire-skillreasonc.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+  # Here we activate Time and begin the Ascension in earnest
+  - name: Activate power temptation
+    primaryGoals:
+      - !import ../../goals/aspirant/study-bequest-passion.yml
+  - name: Study bequest contents
+    primaryGoals:
+      - !import ../../goals/aspirant/discover-bookdealer.yml
+      - !import ../../goals/aspirant/find-collaborator.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Establish the Unflinching Order
+    primaryGoals:
+      - !import ../../goals/cult/form-cult-doctrine-forge.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Get swole, find people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillhealthb.yml
+      - !import ../../goals/health/acquire-skillhealthc.yml
+      # Although we don't need the extra health, the additional level of healthskill means we do health work even faster, meaning more money.
+      - !import ../../goals/health/acquire-skillhealthd-power.yml
+    supportingGoals:
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Finish up Morlands, find rites from auction
+    primaryGoals:
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/auction/acquire-stumm.yml
+      - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
+    supportingGoals:
+      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Establish Society of St. Hydra
+    primaryGoals:
+      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Move into Morlands, acquire a Rarefied Mind
+    primaryGoals:
+      - !import ../../goals/hq/move-hq-library.yml
+      - !import ../../goals/reason/acquire-skillreasond-illumination.yml
+    supportingGoals:
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Acquire the Wood and White Door
+    primaryGoals:
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
+    supportingGoals:
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Acquire the Stag Door, Spider Door, and the Formula Fissive
+    primaryGoals:
+      - !import ../../goals/victories/power/victory-temptation-power-lore-stag-spider.yml
+    supportingGoals:
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Achieve the Marks of Power
+    primaryGoals:
+      - !import ../../goals/victories/power/acquire-dedication-power.yml
+      - !import ../../goals/victories/power/acquire-ascension-power.yml
+    supportingGoals:
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Acquire the Seventh mark of Power
+    primaryGoals:
+      - !import ../../goals/victories/power/acquire-mark-power-7-labor.yml
+    supportingGoals:
+      # Do not include work on this list, as acquire-mark-power-7-labor has its own rules for when work is performed.
+      - !import ../../goals/survive.yml
