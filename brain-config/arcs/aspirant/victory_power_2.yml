@@ -43,7 +43,7 @@ motivations:
       - !import ../../goals/work-labor.yml
   - name: Get a little passionate while finding people to recruit
     primaryGoals:
-      - !import ../../goals/health/acquire-skillpassiona.yml
+      - !import ../../goals/passion/acquire-skillpassiona.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
