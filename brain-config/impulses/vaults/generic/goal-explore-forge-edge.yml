@@ -9,6 +9,7 @@ operation:
   name: Explore a Vault
   situation: explore
   startingRecipe:
+    endOperation: true
     slots:
       explore:
         aspects: { vault: 1 }
