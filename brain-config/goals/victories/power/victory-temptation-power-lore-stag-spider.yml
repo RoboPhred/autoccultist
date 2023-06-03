@@ -33,7 +33,7 @@ completedWhen:
 # => forged, lanternb, mothb, mothc
 # mothb + lanternb = lanternc
 # => forged, lanternc, mothc
-# This leaves us with a lanternc for the stag, that can then be used with mothc for a lanternd, which can then be used with forged for forgee
+# This leaves us with a lanternc and mothc for the stag, which can then be combined for a lanternd, which can then be used with forged for forgee
 impulses:
   - name: Acquire the Stag Riddle
     forbidders:
@@ -56,7 +56,7 @@ impulses:
   - name: Answer Ghirbi's riddle on Secret Histories
     operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
 
-  # After we aquire the stag door, it is safe to consume our lanternc
+  # After we acquire the stag door, it is safe to consume our lanternc
   # mothc + lanternc = lanternd
   - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
     priority: goal
