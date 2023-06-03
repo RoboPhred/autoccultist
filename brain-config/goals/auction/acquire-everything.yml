@@ -1,4 +1,4 @@
-name: Acquire Stumm
+name: Acquire everything from Oriflamme
 requirements:
   elementId: locationauctionhouse
 completedWhen:
@@ -8,24 +8,22 @@ impulses:
     requirements:
       cardSet:
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
     priority: goal
-    requirements:
-      cardSet:
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
     operation: !import ../../operations/auction-purchase.yml

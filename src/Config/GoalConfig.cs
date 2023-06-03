@@ -72,7 +72,7 @@ namespace AutoccultistNS.Config
                 return false;
             }
 
-            if (this.Requirements?.IsConditionMet(state) == false)
+            if (this.Requirements != null && this.Requirements.IsConditionMet(state) == false)
             {
                 return false;
             }

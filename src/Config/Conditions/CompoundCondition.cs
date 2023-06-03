@@ -85,7 +85,7 @@ namespace AutoccultistNS.Config.Conditions
                     case ConditionMode.NoneOf:
                         if (matched)
                         {
-                            return matched;
+                            return new GameStateConditionFailure(condition, matched);
                         }
 
                         break;

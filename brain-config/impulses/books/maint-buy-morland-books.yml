@@ -3,12 +3,21 @@ priority: maintenance
 requirements:
   cardSet:
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
     - elementId: funds
+      location: tabletop
 operation: !import ../../operations/buy-book-from-morland.yml

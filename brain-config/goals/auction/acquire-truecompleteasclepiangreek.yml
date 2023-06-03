@@ -7,29 +7,27 @@ completedWhen:
   elementId: ritetoolconsumeinfluence
 impulses:
   - name: Purchase items at auction
-    requirements:
-      cardSet:
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
-        - elementId: funds
     priority: goal
     requirements:
       cardSet:
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
     forbidders:
       anyOf:
         - elementId: truecompleteasclepiangreek

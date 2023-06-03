@@ -5,4 +5,5 @@ allOf:
   # We can't immediately cure it
   - noneOf:
       - elementId: funds
+        location: tabletop
       - elementId: vitality
