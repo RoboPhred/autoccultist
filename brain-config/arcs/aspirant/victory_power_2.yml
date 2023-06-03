@@ -57,6 +57,13 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
+  - name: Establish Society of St. Hydra
+    primaryGoals:
+      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
   - name: Get swole, find people to recruit
     primaryGoals:
       - !import ../../goals/health/acquire-skillhealthc-with-work.yml
@@ -77,13 +84,6 @@ motivations:
     supportingGoals:
       - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
       - !import ../../goals/cult/recruit-away-influences.yml
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
-  - name: Establish Society of St. Hydra
-    primaryGoals:
-      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
-    supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
