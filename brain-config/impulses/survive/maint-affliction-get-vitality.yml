@@ -1,0 +1,10 @@
+name: Get a vitality to combat an affliction
+priority: maintenance
+requirements:
+  allOf:
+    - noneOf:
+        - elementId: vitality
+    - anyOf:
+        - situation: illhealth
+        - elementId: affliction
+operation: !import ../../operations/health/study-health.yml

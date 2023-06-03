@@ -9,7 +9,7 @@
 # Note: Getting close to loosing games due to lack of money.  Multi tasking strategy seems to take longer to get out of junior position so it bleeds money.
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
-name: Aspirant Power Ascension
+name: Aspirant Power Ascension (MK2)
 selectionHint:
   anyOf:
     - elementId: introjob
@@ -31,7 +31,7 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
   - name: Get a little passionate while finding people to recruit
     primaryGoals:
-      - !import ../../goals/health/acquire-skillpassiona.yml
+      - !import ../../goals/passion/acquire-skillpassiona.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
   - name: Get a scholarship while finding people to recruit
