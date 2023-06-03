@@ -14,7 +14,6 @@ namespace AutoccultistNS.GUI
     {
         private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
-        private static Vector2 scrollPositionCurrentGoals = default;
         private static Vector2 scrollPositionNewGoals = default;
         private static Vector2 scrollPositionSatisfiedGoals = default;
 
@@ -40,26 +39,6 @@ namespace AutoccultistNS.GUI
 
         private static void GoalsWindow(int id)
         {
-            GUILayout.Label("Current Goals");
-
-            scrollPositionCurrentGoals = GUILayout.BeginScrollView(scrollPositionCurrentGoals);
-
-            foreach (var goal in NucleusAccumbens.CurrentGoals)
-            {
-                GUILayout.BeginHorizontal();
-
-                if (GUILayout.Button("Cancel", GUILayout.Width(75)))
-                {
-                    NucleusAccumbens.RemoveGoal(goal);
-                }
-
-                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
-
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.EndScrollView();
-
             GUILayout.Label("Available Goals");
 
             searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();

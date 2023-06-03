@@ -143,7 +143,13 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         public void Update()
         {
-            var situation = this.GetSituationState();
+            if (!GameStateProvider.Current.Situations.Any(x => x.SituationId == this.SituationId))
+            {
+                // Situation was removed, abort.
+                Autoccultist.Instance.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
+                this.Abort();
+                return;
+            }
 
             if (this.operationState == OperationState.Ongoing)
             {
@@ -162,9 +168,11 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         public void Abort()
         {
-            // TODO: We might want to clean up, dump the contents and close the window.
-            // Doing so is tricky if we want to use the actor though, as it means the abort action is asynchronous.
-            this.cancelCurrentTask?.Cancel();
+            if (this.cancelCurrentTask != null)
+            {
+                this.cancelCurrentTask.Cancel();
+            }
+
             this.End(true);
         }
 
@@ -173,7 +181,7 @@ namespace AutoccultistNS.Brain
             var situation = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.SituationId);
             if (situation == null)
             {
-                throw new Exception($"Tried to run an operation orchistration for situation {this.SituationId}, but no situation was found.");
+                throw new ApplicationException($"Tried to run an operation orchistration for situation {this.SituationId}, but no situation was found.");
             }
 
             return situation;
