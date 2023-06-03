@@ -54,6 +54,14 @@ motivations:
       - !import ../../goals/reason/acquire-skillreasonb.yml
       - !import ../../goals/reason/acquire-skillreasonc.yml
     supportingGoals:
+      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Establish Society of St. Hydra
+    primaryGoals:
+      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
+    supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
@@ -63,6 +71,8 @@ motivations:
       # Although we don't need the extra health, the additional level of healthskill means we do health work even faster, meaning more money.
       - !import ../../goals/health/acquire-skillhealthd-power-with-work.yml
     supportingGoals:
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
@@ -75,15 +85,7 @@ motivations:
       - !import ../../goals/auction/acquire-stumm.yml
       - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
-      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
       - !import ../../goals/cult/recruit-away-influences.yml
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
-  - name: Establish Society of St. Hydra
-    primaryGoals:
-      - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
-    supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
