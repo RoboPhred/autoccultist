@@ -1,0 +1,34 @@
+name: Paint Away Restlessness, with Skill
+situation: work
+startingRecipe:
+  requireSlotCards: false
+  cardRequirements:
+    - aspects: { passionskill: 2 }
+    - elementId: passion
+  slots:
+    work:
+      aspects: { passionskill: 2 }
+    painting1:
+      elementId: passion
+    painting2:
+      oneOf:
+        - elementId: passion
+        - elementId: mystique
+    painting3:
+      oneOf:
+        - elementId: notoriety
+        - elementId: mystique
+        - elementId: passion
+    painting4:
+      oneOf:
+        - elementId: notoriety
+        - elementId: mystique
+ongoingRecipes:
+  paintwithskill:
+    slots:
+      Inspiration:
+        elementId: restlessness
+  paintaddpigment:
+    slots:
+      Paints:
+        elementId: funds
