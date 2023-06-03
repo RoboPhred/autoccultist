@@ -123,7 +123,7 @@ namespace AutoccultistNS.Brain
                     break;
                 case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
-                    var recipeSolution = this.operation.GetOngoingRecipeSolution(situation);
+                    var recipeSolution = this.operation.GetCurrentRecipeSolution(situation);
                     if (recipeSolution == null)
                     {
                         // Operation does not know this recipe.
@@ -199,7 +199,7 @@ namespace AutoccultistNS.Brain
             // We dont even know this is our portal, although we can guess by checking to see if our situation has a portal assigned to it.
             if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.State != PortalActiveState.Closed)
             {
-                var recipeSolution = this.operation.GetOngoingRecipeSolution(situation);
+                var recipeSolution = this.operation.GetCurrentRecipeSolution(situation);
                 if (recipeSolution != null && recipeSolution.MansusChoice != null)
                 {
                     Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
@@ -264,7 +264,7 @@ namespace AutoccultistNS.Brain
             this.End();
         }
 
-        private async void UpdateAwaitPortalResults()
+        private void UpdateAwaitPortalResults()
         {
             var state = GameStateProvider.Current;
 
@@ -273,7 +273,13 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            await this.AwaitCoroutine(this.CompleteOperationCoroutine());
+            // Wait until our previous coroutine finishes.
+            if (this.cancelCurrentTask != null)
+            {
+                return;
+            }
+
+            this.RunCoroutine(this.CompleteOperationCoroutine());
         }
 
         private void ContinueOperation()
@@ -295,7 +301,7 @@ namespace AutoccultistNS.Brain
             this.ongoingRecipe = currentRecipe;
             this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining ?? 0;
 
-            var recipeSolution = this.operation.GetOngoingRecipeSolution(situation);
+            var recipeSolution = this.operation.GetCurrentRecipeSolution(situation);
 
             if (recipeSolution == null)
             {
@@ -376,7 +382,7 @@ namespace AutoccultistNS.Brain
             this.operationState = OperationState.Ongoing;
 
             // Accept the current recipe and fill its needs
-            var followupRecipeSolution = this.operation.GetOngoingRecipeSolution(this.GetSituationState());
+            var followupRecipeSolution = this.operation.GetCurrentRecipeSolution(this.GetSituationState());
             if (followupRecipeSolution != null)
             {
                 foreach (var item in this.ContinueSituationCoroutine(followupRecipeSolution, false))

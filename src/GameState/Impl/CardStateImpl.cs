@@ -41,6 +41,8 @@ namespace AutoccultistNS.GameState.Impl
             // Note: As far as I can tell, it is expected that any stack that has mutations will have a quantity of 1.
             // Mutated cards don't stack.
             calcAspects.ApplyMutations(sourceStack.Mutations);
+            // This is included in the GetAspects() logic (with its default includeSelf true), and we relied on it in the past.
+            calcAspects[this.elementId] = 1;
             this.aspects = calcAspects;
 
             this.location = location;

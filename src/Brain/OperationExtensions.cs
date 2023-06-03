@@ -13,14 +13,19 @@ namespace AutoccultistNS.Brain
         /// <param name="situationState">The current state of the situation.</param>
         /// <param name="gameState">The current game state.  If none is specified, the current game state will be used.</param>
         /// <returns>The recipe solution to use for the current ongoing recipe of this operation.</returns>
-        public static IRecipeSolution GetOngoingRecipeSolution(this IOperation operation, ISituationState situationState, IGameState gameState = null)
+        public static IRecipeSolution GetCurrentRecipeSolution(this IOperation operation, ISituationState situationState, IGameState gameState = null)
         {
             if (gameState == null)
             {
                 gameState = GameStateProvider.Current;
             }
 
-            if (situationState.State != StateEnum.Ongoing)
+            if (situationState.State == StateEnum.Unstarted)
+            {
+                return operation.StartingRecipe;
+            }
+
+            if (situationState.CurrentRecipe == null)
             {
                 return null;
             }

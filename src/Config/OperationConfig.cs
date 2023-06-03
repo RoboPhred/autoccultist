@@ -134,7 +134,7 @@ namespace AutoccultistNS.Config
                 }
                 else
                 {
-                    recipeSolution = this.GetOngoingRecipeSolution(situation);
+                    recipeSolution = this.GetCurrentRecipeSolution(situation);
                 }
 
                 if (recipeSolution == null)
