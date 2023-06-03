@@ -1,8 +1,9 @@
 namespace AutoccultistNS
 {
-    public class SituationConditionFailure : ConditionFailure
+    public class SituationConditionFailure : ConditionResult
     {
         public SituationConditionFailure(string situation, string addendum)
+        : base(false)
         {
             this.Situation = situation;
             this.Reason = addendum;

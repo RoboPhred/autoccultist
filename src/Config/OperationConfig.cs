@@ -88,19 +88,17 @@ namespace AutoccultistNS.Config
             }
         }
 
-        bool IGameStateCondition.IsConditionMet(IGameState state, out ConditionFailure failureDescription)
+        ConditionResult IGameStateCondition.IsConditionMet(IGameState state)
         {
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {
-                failureDescription = new SituationConditionFailure(this.Situation, "Situation not found.");
-                return false;
+                return new SituationConditionFailure(this.Situation, "Situation not found.");
             }
 
             if (this.TargetOngoing != situation.IsOccupied)
             {
-                failureDescription = new SituationConditionFailure(this.Situation, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
-                return false;
+                return new SituationConditionFailure(this.Situation, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
             }
 
             if (this.StartCondition == OperationStartCondition.AllRecipesSatisified)
@@ -124,8 +122,7 @@ namespace AutoccultistNS.Config
 
                 if (!state.CardsCanBeSatisfied(requiredCards.ToArray(), out var unsatisfiedChoice))
                 {
-                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
-                    return false;
+                    return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
                 }
             }
             else if (this.StartCondition == OperationStartCondition.CurrentRecipeSatisfied)
@@ -142,13 +139,11 @@ namespace AutoccultistNS.Config
 
                 if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards(), out var unsatisfiedChoice))
                 {
-                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
-                    return false;
+                    return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
                 }
             }
 
-            failureDescription = null;
-            return true;
+            return ConditionResult.Success;
         }
     }
 }

@@ -3,14 +3,15 @@ namespace AutoccultistNS
     using System.Collections.Generic;
     using System.Linq;
 
-    public class CompoundConditionFailure : ConditionFailure
+    public class CompoundConditionFailure : ConditionResult
     {
-        public CompoundConditionFailure(IReadOnlyCollection<ConditionFailure> failures)
+        public CompoundConditionFailure(IReadOnlyCollection<ConditionResult> failures)
+        : base(false)
         {
             this.Failures = failures;
         }
 
-        public IReadOnlyCollection<ConditionFailure> Failures { get; private set; }
+        public IReadOnlyCollection<ConditionResult> Failures { get; private set; }
 
         public override string ToString()
         {

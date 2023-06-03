@@ -28,13 +28,13 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
+        public ConditionResult IsConditionMet(IGameState state)
         {
-            return this.CardsMatchSet(state.GetAllCards(), out failureDescription);
+            return this.CardsMatchSet(state.GetAllCards());
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IEnumerable<ICardState> cards, out ConditionFailure failureDescription)
+        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards)
         {
             var remaining = new HashSet<ICardState>(cards);
             foreach (var chooser in this.CardSet)
@@ -45,15 +45,13 @@ namespace AutoccultistNS.Config.Conditions
                 var choice = chooser.ChooseCard(remaining);
                 if (choice == null)
                 {
-                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(chooser), $"when looking for a set of {this.CardSet.Count} cards");
-                    return false;
+                    return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(chooser), $"when looking for a set of {this.CardSet.Count} cards");
                 }
 
                 remaining.Remove(choice);
             }
 
-            failureDescription = null;
-            return true;
+            return ConditionResult.Success;
         }
     }
 }

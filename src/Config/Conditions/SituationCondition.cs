@@ -90,49 +90,44 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
+        public ConditionResult IsConditionMet(IGameState state)
         {
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {
                 if (this.State == SituationStateConfig.Missing)
                 {
-                    failureDescription = null;
-                    return true;
+                    return ConditionResult.Success;
                 }
 
-                failureDescription = new SituationConditionFailure(this.Situation, "is not missing");
-                return false;
+                return new SituationConditionFailure(this.Situation, "is not missing");
             }
 
             if (this.Recipe != null && situation.CurrentRecipe != this.Recipe)
             {
-                failureDescription = new SituationConditionFailure(this.Situation, $"is not performing recipe {this.Recipe}");
-                return false;
+                return new SituationConditionFailure(this.Situation, $"is not performing recipe {this.Recipe}");
             }
 
             if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0)))
             {
-                failureDescription = new SituationConditionFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
-                return false;
+                return new SituationConditionFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
             }
 
             if (this.State == SituationStateConfig.Idle || this.State == SituationStateConfig.Ongoing)
             {
                 if (situation.IsOccupied != (this.State == SituationStateConfig.Ongoing))
                 {
-                    failureDescription = new SituationConditionFailure(this.Situation, $"is {(situation.IsOccupied ? "not " : string.Empty)}ongoing");
-                    return false;
+                    return new SituationConditionFailure(this.Situation, $"is {(situation.IsOccupied ? "not " : string.Empty)}ongoing");
                 }
             }
 
             if (this.StoredCardsMatch != null)
             {
                 var cards = situation.StoredCards;
-                if (!this.StoredCardsMatch.CardsMatchSet(cards, out failureDescription))
+                var matchResult = this.StoredCardsMatch.CardsMatchSet(cards);
+                if (!matchResult)
                 {
-                    failureDescription = new AddendedConditionFailure(failureDescription, $"when looking at stored cards for situation {this.Situation}");
-                    return false;
+                    return new AddendedConditionFailure(matchResult, $"when looking at stored cards for situation {this.Situation}");
                 }
             }
 
@@ -140,20 +135,20 @@ namespace AutoccultistNS.Config.Conditions
 
             if (this.SlottedCardsMatch != null)
             {
-                if (!this.SlottedCardsMatch.CardsMatchSet(slottedCards, out failureDescription))
+                var matchResult = this.SlottedCardsMatch.CardsMatchSet(slottedCards);
+                if (!matchResult)
                 {
-                    failureDescription = new AddendedConditionFailure(failureDescription, $"when looking at slotted cards for situation {this.Situation}");
-                    return false;
+                    return new AddendedConditionFailure(matchResult, $"when looking at slotted cards for situation {this.Situation}");
                 }
             }
 
             if (this.ContainedCardsMatch != null)
             {
                 var cards = situation.StoredCards.Concat(slottedCards);
-                if (!this.ContainedCardsMatch.CardsMatchSet(cards, out failureDescription))
+                var matchResult = this.ContainedCardsMatch.CardsMatchSet(cards);
+                if (!matchResult)
                 {
-                    failureDescription = new AddendedConditionFailure(failureDescription, $"when looking at all cards for situation {this.Situation}");
-                    return false;
+                    return new AddendedConditionFailure(matchResult, $"when looking at all cards for situation {this.Situation}");
                 }
             }
 
@@ -167,13 +162,11 @@ namespace AutoccultistNS.Config.Conditions
                 if (!aspects.HasAspects(containedAspects))
                 {
                     // TODO: ConditionFailure for HasAspects / IValueCondition
-                    failureDescription = new SituationConditionFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");
-                    return false;
+                    return new SituationConditionFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");
                 }
             }
 
-            failureDescription = null;
-            return true;
+            return ConditionResult.Success;
         }
     }
 }

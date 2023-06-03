@@ -150,11 +150,14 @@ namespace AutoccultistNS.GUI
                 }
 
                 GUILayout.BeginHorizontal();
+
                 GUILayout.Label($"{prefix} {goal.Name}");
+
                 if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
                 {
                     NucleusAccumbens.RemoveGoal(goal);
                 }
+
                 GUILayout.EndHorizontal();
             }
 

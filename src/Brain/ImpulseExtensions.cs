@@ -12,31 +12,36 @@ namespace AutoccultistNS.Brain
         /// </summary>
         /// <param name="impulse">The impulse to check.</param>
         /// <param name="state">The game state to check conditions against.</param>
-        /// <param name="failureReason">The reason why the impulse cannot execute, if any.</param>
         /// <returns>True if this impulse can execute right away, or False if it cannot.</returns>
-        public static bool CanExecute(this IImpulse impulse, IGameState state, out ConditionFailure failureReason)
+        public static ConditionResult CanExecute(this IImpulse impulse, IGameState state)
         {
             // Optionally check required cards for starting the impulse
-            if (impulse.Requirements != null && impulse.Requirements.IsConditionMet(state, out failureReason) == false)
+            if (impulse.Requirements != null)
             {
-                failureReason = new AddendedConditionFailure(failureReason, "Requirements not met.");
-                return false;
+                var result = impulse.Requirements.IsConditionMet(state);
+                if (!result)
+                {
+                    return new AddendedConditionFailure(result, "Requirements not met.");
+                }
             }
 
             // Sometimes, we want to stop an impulse if other cards are present.
-            if (impulse.Forbidders != null && impulse.Forbidders.IsConditionMet(state, out failureReason) == true)
+            if (impulse.Forbidders != null)
             {
-                failureReason = new GeneralConditionFailure("Forbidders are present (and cannot show a negative reason).");
-                return false;
+                var result = impulse.Forbidders.IsConditionMet(state);
+                if (result)
+                {
+                    return new GeneralConditionFailure("Forbidders are present (and cannot show a negative reason).");
+                }
             }
 
-            if (!impulse.Operation.IsConditionMet(state, out failureReason))
+            var operationReady = impulse.Operation.IsConditionMet(state);
+            if (!operationReady)
             {
-                failureReason = new AddendedConditionFailure(failureReason, "Operation not ready.");
-                return false;
+                return new AddendedConditionFailure(operationReady, "Operation not ready.");
             }
 
-            return true;
+            return ConditionResult.Success;
         }
     }
 }

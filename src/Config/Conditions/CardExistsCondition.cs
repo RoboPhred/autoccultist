@@ -9,30 +9,26 @@ namespace AutoccultistNS.Config.Conditions
     public class CardExistsCondition : CardChooserConfig, ICardConditionConfig
     {
         /// <inheritdoc/>
-        public virtual bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
+        public virtual ConditionResult IsConditionMet(IGameState state)
         {
             if (this.ChooseCard(state.GetAllCards()) == null)
             {
-                failureDescription = new CardChoiceNotSatisfiedFailure(this);
-                return false;
+                return new CardChoiceNotSatisfiedFailure(this);
             }
 
-            failureDescription = null;
-            return true;
+            return ConditionResult.Success;
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IEnumerable<ICardState> cards, out ConditionFailure failureDescription)
+        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards)
         {
             var card = this.ChooseCard(cards);
             if (card == null)
             {
-                failureDescription = new CardChoiceNotSatisfiedFailure(this);
-                return false;
+                return new CardChoiceNotSatisfiedFailure(this);
             }
 
-            failureDescription = null;
-            return true;
+            return ConditionResult.Success;
         }
     }
 }

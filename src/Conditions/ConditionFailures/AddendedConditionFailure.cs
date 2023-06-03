@@ -1,14 +1,15 @@
 namespace AutoccultistNS
 {
-    public class AddendedConditionFailure : ConditionFailure
+    public class AddendedConditionFailure : ConditionResult
     {
-        public AddendedConditionFailure(ConditionFailure failure, string addendum)
+        public AddendedConditionFailure(ConditionResult failure, string addendum)
+            : base(false)
         {
             this.Failure = failure;
             this.Addendum = addendum;
         }
 
-        public ConditionFailure Failure { get; private set; }
+        public ConditionResult Failure { get; private set; }
 
         public string Addendum { get; private set; }
 

@@ -57,18 +57,18 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
+        public ConditionResult IsConditionMet(IGameState state)
         {
-            var recordedFailures = new List<ConditionFailure>();
+            var recordedFailures = new List<ConditionResult>();
             foreach (var condition in this.Requirements)
             {
-                var matched = condition.IsConditionMet(state, out failureDescription);
+                var matched = condition.IsConditionMet(state);
                 switch (this.Mode)
                 {
                     case ConditionMode.AllOf:
                         if (!matched)
                         {
-                            return false;
+                            return matched;
                         }
 
                         break;
@@ -76,16 +76,16 @@ namespace AutoccultistNS.Config.Conditions
                     case ConditionMode.AnyOf:
                         if (matched)
                         {
-                            return true;
+                            return ConditionResult.Success;
                         }
 
-                        recordedFailures.Add(failureDescription);
+                        recordedFailures.Add(matched);
                         break;
 
                     case ConditionMode.NoneOf:
                         if (matched)
                         {
-                            return false;
+                            return matched;
                         }
 
                         break;
@@ -94,12 +94,10 @@ namespace AutoccultistNS.Config.Conditions
 
             if (this.Mode == ConditionMode.AnyOf)
             {
-                failureDescription = new CompoundConditionFailure(recordedFailures);
-                return false;
+                return new CompoundConditionFailure(recordedFailures);
             }
 
-            failureDescription = null;
-            return true;
+            return ConditionResult.Success;
         }
 
         /// <inheritdoc/>

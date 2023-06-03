@@ -87,7 +87,13 @@ namespace AutoccultistNS.Config
         /// <returns>True if the goal is completed, False otherwise.</returns>
         public bool IsSatisfied(IGameState state)
         {
-            return this.CompletedWhen?.IsConditionMet(state) == true;
+            if (this.CompletedWhen == null)
+            {
+                // Never completes
+                return false;
+            }
+
+            return this.CompletedWhen.IsConditionMet(state);
         }
 
         /// <inheritdoc/>

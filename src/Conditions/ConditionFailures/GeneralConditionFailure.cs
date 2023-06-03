@@ -1,8 +1,9 @@
 namespace AutoccultistNS
 {
-    public class GeneralConditionFailure : ConditionFailure
+    public class GeneralConditionFailure : ConditionResult
     {
         public GeneralConditionFailure(string reason)
+        : base(false)
         {
             this.Reason = reason;
         }
