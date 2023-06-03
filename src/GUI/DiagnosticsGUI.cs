@@ -40,6 +40,11 @@ namespace AutoccultistNS.GUI
                 content = NucleusAccumbens.DumpStatus();
             }
 
+            if (GUILayout.Button("Dump Situations"))
+            {
+                content = SituationLogger.DumpSituations();
+            }
+
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 
             if (content != null)

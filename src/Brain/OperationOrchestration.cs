@@ -352,7 +352,6 @@ namespace AutoccultistNS.Brain
 
             yield return new CloseSituationAction(this.SituationId);
 
-
             if (followupRecipeSolution?.EndOperation == true)
             {
                 this.End();

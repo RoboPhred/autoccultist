@@ -193,39 +193,16 @@ public class Autoccultist : MonoBehaviour
 
     private void HandleHotkeys()
     {
-        if (Keyboard.current[Key.F11].wasPressedThisFrame)
-        {
-            if (MechanicalHeart.IsRunning)
-            {
-                this.LogInfo("Stopping Autoccultist");
-                this.StopAutoccultist();
-            }
-            else
-            {
-                if (Keyboard.current[Key.LeftShift].wasPressedThisFrame)
-                {
-                    this.ReloadAll();
-                }
-                else
-                {
-                    this.LogInfo("Starting Autoccultist");
-                    this.StartAutoccultist();
-                }
-            }
-        }
-        else if (Keyboard.current[Key.F10].wasPressedThisFrame)
+        if (Keyboard.current[Key.F10].wasPressedThisFrame)
         {
             ControlGUI.IsShowing = !ControlGUI.IsShowing;
-        }
-        else if (Keyboard.current[Key.F8].wasPressedThisFrame)
-        {
-            this.LogInfo("Dumping situations");
-            SituationLogger.LogSituations();
-        }
-        else if (Keyboard.current[Key.F7].wasPressedThisFrame)
-        {
-            this.LogInfo("Dumping Spheres");
-            SituationLogger.LogSpheres();
+            if (!ControlGUI.IsShowing)
+            {
+                ArcsGUI.IsShowing = false;
+                DiagnosticsGUI.IsShowing = false;
+                GoalsGUI.IsShowing = false;
+                ParseErrorsGUI.IsShowing = false;
+            }
         }
     }
 

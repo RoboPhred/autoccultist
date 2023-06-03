@@ -14,88 +14,76 @@ namespace AutoccultistNS
     /// </summary>
     internal static class SituationLogger
     {
-        public static void LogSpheres()
-        {
-            foreach (var sphere in Watchman.Get<HornedAxe>().GetExteriorSpheres())
-            {
-                LogInfo($"Sphere: {sphere.Id} {sphere.GetAbsolutePath().Path} {sphere.GoverningSphereSpec?.Label}");
-                LogInfo($"- Tokens");
-                foreach (var token in sphere.GetTokens())
-                {
-                    LogInfo($"- - {token.PayloadEntityId} {token.Payload.GetType().Name}");
-                }
-            }
-        }
-
         /// <summary>
         /// Dump information about the situations to the console.
         /// </summary>
-        public static void LogSituations()
+        public static string DumpSituations()
         {
-            LogInfo("Seeking situation tokens...");
+            var sb = new StringBuilder();
+
             foreach (var situation in Watchman.Get<HornedAxe>().GetRegisteredSituations())
             {
-                LogInfo("We found a situation token - " + situation.VerbId);
-                DumpSituationStatus(situation);
+                sb.AppendLine("We found a situation token - " + situation.VerbId);
+                DumpSituationStatus(situation, sb);
             }
 
-            LogInfo("...Done seeking situation tokens");
+            return sb.ToString();
         }
 
-        private static void DumpSituationStatus(Situation situation)
+        private static void DumpSituationStatus(Situation situation, StringBuilder sb)
         {
-            LogInfo("- state: " + situation.State.Identifier);
-            LogInfo("- recipe id: " + situation.RecipeId);
-            LogInfo("- time remaining: " + situation.TimeRemaining);
+            sb.AppendLine("- state: " + situation.State.Identifier);
+            sb.AppendLine("- recipe id: " + situation.RecipeId);
+            sb.AppendLine("- time remaining: " + situation.TimeRemaining);
 
             var storedAspects = AspectsToString(situation.GetAspects(true));
-            LogInfo("- stored aspects: " + storedAspects);
+            sb.AppendLine("- stored aspects: " + storedAspects);
 
-            LogInfo("- slots:");
-            DumpSphereSpec(situation.GetSpheresByCategory(SphereCategory.Threshold));
+            sb.AppendLine("- slots:");
+            DumpSphereSpec(situation.GetSpheresByCategory(SphereCategory.Threshold), sb);
 
-            LogInfo("- stored stacks");
-            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.SituationStorage));
+            sb.AppendLine("- stored stacks");
+            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.SituationStorage), sb);
 
-            LogInfo("- output stacks");
-            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.Output));
+            sb.AppendLine("- output stacks");
+            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.Output), sb);
         }
 
-        private static void DumpSphereSpec(List<Sphere> spheres)
+        private static void DumpSphereSpec(List<Sphere> spheres, StringBuilder sb)
         {
             foreach (var sphere in spheres)
             {
                 var spec = sphere.GoverningSphereSpec;
-                LogInfo("- - " + spec.Id);
-                LogInfo("- - - label: " + spec.Label);
-                LogInfo("- - - description: " + spec.Description);
-                LogInfo("- - - greedy: " + spec.Greedy);
-                LogInfo("- - - consumes: " + spec.Consumes);
+                sb.AppendLine("- - " + spec.Id);
+                sb.AppendLine("- - - label: " + spec.Label);
+                sb.AppendLine("- - - description: " + spec.Description);
+                sb.AppendLine("- - - greedy: " + spec.Greedy);
+                sb.AppendLine("- - - consumes: " + spec.Consumes);
 
                 var requiredAspects = AspectsToString(spec.Required);
-                LogInfo("- - - required aspects: " + requiredAspects);
+                sb.AppendLine("- - - required aspects: " + requiredAspects);
 
                 var forbiddenAspects = AspectsToString(spec.Forbidden);
-                LogInfo("- - - forbidden aspects: " + forbiddenAspects);
+                sb.AppendLine("- - - forbidden aspects: " + forbiddenAspects);
 
                 foreach (var content in sphere.Tokens.Select(x => x.Payload).OfType<ElementStack>())
                 {
-                    LogInfo("- - - content: " + content.EntityId);
-                    LogInfo("- - - quantity: " + content.Quantity);
-                    LogInfo("- - - lifetime remaining: " + content.GetTimeshadow().LifetimeRemaining);
+                    sb.AppendLine("- - - content: " + content.EntityId);
+                    sb.AppendLine("- - - quantity: " + content.Quantity);
+                    sb.AppendLine("- - - lifetime remaining: " + content.GetTimeshadow().LifetimeRemaining);
                     var stackAspects = AspectsToString(content.GetAspects());
-                    LogInfo("- - - aspects: " + stackAspects);
+                    sb.AppendLine("- - - aspects: " + stackAspects);
                 }
             }
         }
 
-        private static void DumpSphereContent(Sphere sphere)
+        private static void DumpSphereContent(Sphere sphere, StringBuilder sb)
         {
             foreach (var stack in sphere.GetTokens().Select(x => x.Payload).OfType<ElementStack>())
             {
-                LogInfo("- - " + stack.EntityId);
-                LogInfo("- - - quantity: " + stack.Quantity);
-                LogInfo("- - - lifetime remaining: " + stack.GetTimeshadow().LifetimeRemaining);
+                sb.AppendLine("- - " + stack.EntityId);
+                sb.AppendLine("- - - quantity: " + stack.Quantity);
+                sb.AppendLine("- - - lifetime remaining: " + stack.GetTimeshadow().LifetimeRemaining);
             }
         }
 
@@ -114,11 +102,6 @@ namespace AutoccultistNS
             }
 
             return str.Substring(0, str.Length - 2);
-        }
-
-        private static void LogInfo(string message)
-        {
-            NoonUtility.Log(message);
         }
     }
 }

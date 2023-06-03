@@ -47,6 +47,12 @@ namespace AutoccultistNS.GUI
                 }
             }
 
+            if (!GameAPI.IsRunning)
+            {
+                GUILayout.Label("Game is not running.");
+                return;
+            }
+
             GUILayout.BeginHorizontal();
             var mechHeart = GUILayout.Toggle(MechanicalHeart.IsRunning, "Mechanical Heart");
             if (mechHeart != MechanicalHeart.IsRunning)
@@ -77,7 +83,14 @@ namespace AutoccultistNS.GUI
                 ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
             }
 
+            if (GUILayout.Button("Reset SuperEgo"))
+            {
+                Superego.Clear();
+            }
+
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
 
             var taskRunner = GUILayout.Toggle(Ego.IsRunning, "Ego");
             if (taskRunner != Ego.IsRunning)
@@ -91,6 +104,8 @@ namespace AutoccultistNS.GUI
                     Ego.Stop();
                 }
             }
+
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
 

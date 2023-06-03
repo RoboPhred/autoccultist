@@ -34,6 +34,11 @@ namespace AutoccultistNS.GUI
 
         private static void ParseErrorsWindow(int id)
         {
+            if (GUILayout.Button("Reload All Configs"))
+            {
+                Autoccultist.Instance.ReloadAll();
+            }
+
             errorsScrollPosition = GUILayout.BeginScrollView(errorsScrollPosition);
 
             foreach (var ex in Library.ParseErrors)
