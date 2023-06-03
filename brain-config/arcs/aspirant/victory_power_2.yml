@@ -37,7 +37,7 @@ motivations:
       - !import ../../goals/work-labor.yml
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
-      - !import ../../goals/health/acquire-skillhealtha.yml
+      - !import ../../goals/health/acquire-skillhealtha-with-work.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
@@ -58,10 +58,10 @@ motivations:
       - !import ../../goals/work-labor.yml
   - name: Get swole, find people to recruit
     primaryGoals:
-      - !import ../../goals/health/acquire-skillhealthb.yml
-      - !import ../../goals/health/acquire-skillhealthc.yml
+      - !import ../../goals/health/acquire-skillhealthb-with-work.yml
+      - !import ../../goals/health/acquire-skillhealthc-with-work.yml
       # Although we don't need the extra health, the additional level of healthskill means we do health work even faster, meaning more money.
-      - !import ../../goals/health/acquire-skillhealthd-power.yml
+      - !import ../../goals/health/acquire-skillhealthd-power-with-work.yml
     supportingGoals:
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/followers/attract-followers.yml
