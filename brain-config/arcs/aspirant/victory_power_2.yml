@@ -52,12 +52,6 @@ motivations:
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
-  - name: Establish the Unflinching Order
-    primaryGoals:
-      - !import ../../goals/cult/form-cult-doctrine-forge.yml
-    supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
   - name: Get swole, find people to recruit
     primaryGoals:
       - !import ../../goals/health/acquire-skillhealthb.yml
