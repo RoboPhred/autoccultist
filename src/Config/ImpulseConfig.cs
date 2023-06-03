@@ -3,6 +3,7 @@ namespace AutoccultistNS.Config
     using System.Collections.Generic;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
+    using AutoccultistNS.GameState;
     using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
@@ -12,6 +13,13 @@ namespace AutoccultistNS.Config
     /// </summary>
     public class ImpulseConfig : IConfigObject, IImpulse, IAfterYamlDeserialization
     {
+        private readonly ImpulseConfigCondition impulseCondition;
+
+        public ImpulseConfig()
+        {
+            this.impulseCondition = new ImpulseConfigCondition(this);
+        }
+
         /// <summary>
         /// Gets or sets the impulse that this impulse inherits from.
         /// </summary>
@@ -50,33 +58,7 @@ namespace AutoccultistNS.Config
         TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
         /// <inheritdoc/>
-        IGameStateCondition IImpulse.Requirements
-        {
-            get
-            {
-                var requirements = this.Requirements ?? this.Extends?.Requirements;
-                var forbidders = this.Forbidders ?? this.Extends?.Forbidders;
-
-                if (forbidders == null)
-                {
-                    return requirements;
-                }
-
-                return new CompoundCondition()
-                {
-                    Mode = CompoundCondition.ConditionMode.AllOf,
-                    Requirements = new List<IGameStateConditionConfig>
-                    {
-                        requirements,
-                        new CompoundCondition()
-                        {
-                            Mode = CompoundCondition.ConditionMode.NoneOf,
-                            Requirements = new List<IGameStateConditionConfig> { forbidders },
-                        },
-                    },
-                };
-            }
-        }
+        IGameStateCondition IImpulse.Requirements => this.impulseCondition;
 
         /// <inheritdoc/>
         IOperation IImpulse.Operation => this.Operation ?? this.Extends?.Operation;
@@ -92,6 +74,42 @@ namespace AutoccultistNS.Config
             if (this.Operation == null && this.Extends?.Operation == null)
             {
                 throw new InvalidConfigException($"Impulse {this.Name} must have an operation.");
+            }
+        }
+
+        private class ImpulseConfigCondition : IGameStateCondition
+        {
+            private readonly ImpulseConfig impulse;
+
+            public ImpulseConfigCondition(ImpulseConfig impulse)
+            {
+                this.impulse = impulse;
+            }
+
+            ConditionResult IGameStateCondition.IsConditionMet(IGameState state)
+            {
+                var requirements = this.impulse.Requirements ?? this.impulse.Extends?.Requirements;
+                var forbidders = this.impulse.Forbidders ?? this.impulse.Extends?.Forbidders;
+
+                if (requirements != null)
+                {
+                    var reqsMet = requirements.IsConditionMet(state);
+                    if (!reqsMet)
+                    {
+                        return new AddendedConditionFailure(reqsMet, "Impulse requirements not met.");
+                    }
+                }
+
+                if (forbidders != null)
+                {
+                    var forbidsMet = forbidders.IsConditionMet(state);
+                    if (forbidsMet)
+                    {
+                        return new AddendedConditionFailure(new GameStateConditionFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
+                    }
+                }
+
+                return ConditionResult.Success;
             }
         }
     }

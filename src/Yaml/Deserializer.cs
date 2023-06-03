@@ -57,11 +57,14 @@ namespace AutoccultistNS.Yaml
         /// <returns>The deserialized object.</returns>
         public static T Deserialize<T>(string filePath, bool cache = true)
         {
-            return DeserializeFromParser(filePath, parser =>
-            {
-                var deserializer = BuildDeserializer();
-                return deserializer.Deserialize<T>(parser);
-            }, cache);
+            return DeserializeFromParser(
+                filePath,
+                parser =>
+                {
+                    var deserializer = BuildDeserializer();
+                    return deserializer.Deserialize<T>(parser);
+                },
+                cache);
         }
 
         /// <summary>
@@ -73,11 +76,14 @@ namespace AutoccultistNS.Yaml
         /// <returns>The deserialized object.</returns>
         public static object Deserialize(string filePath, Type type, bool cache = true)
         {
-            return DeserializeFromParser(filePath, parser =>
-            {
-                var deserializer = BuildDeserializer();
-                return deserializer.Deserialize(parser, type);
-            }, cache);
+            return DeserializeFromParser(
+                filePath,
+                parser =>
+                {
+                    var deserializer = BuildDeserializer();
+                    return deserializer.Deserialize(parser, type);
+                },
+                cache);
         }
 
         /// <summary>
