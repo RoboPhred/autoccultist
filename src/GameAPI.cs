@@ -337,7 +337,7 @@ namespace AutoccultistNS
             {
                 if (IsRunning)
                 {
-                    Watchman.Get<LocalNexus>().PauseGame(true);
+                    Watchman.Get<LocalNexus>().ForcePauseGame(true);
                 }
             }
 
@@ -460,7 +460,7 @@ namespace AutoccultistNS
                 pauseDepth--;
                 if (pauseDepth == 0)
                 {
-                    Watchman.Get<LocalNexus>().UnPauseGame(true);
+                    Watchman.Get<LocalNexus>().UnForcePauseGame(true);
                 }
             }
         }

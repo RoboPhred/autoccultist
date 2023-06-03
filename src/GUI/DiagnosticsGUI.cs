@@ -30,7 +30,7 @@ namespace AutoccultistNS.GUI
                 return;
             }
 
-            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 500), DiagnosticsWindow, "Autoccultist Diagnostics");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 1000), DiagnosticsWindow, "Autoccultist Diagnostics");
         }
 
         private static void DiagnosticsWindow(int id)
@@ -53,6 +53,14 @@ namespace AutoccultistNS.GUI
             }
 
             GUILayout.EndScrollView();
+
+            if (GUILayout.Button("Copy to clipboard") && !string.IsNullOrEmpty(content))
+            {
+                var textEditor = new TextEditor { text = content };
+
+                textEditor.SelectAll();
+                textEditor.Copy();
+            }
 
             if (GUILayout.Button("Close"))
             {
