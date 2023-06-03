@@ -1,11 +1,21 @@
-- extends property of impulses should also be able to take a filename and auto-load that from the impulses folder
-- impulseSets property of goals should also be able to take a filename and auto-load that from the impulse-sets folder
-- Deal with fascination. situation `visions`, counter card with aspect `fascination` using dream with `fleeting`, or let restlessness fester into dread
-- Rethink requirements on goals. When doing goals linearly, it doesn't make much sense.
-  - Can also get us stuck with no goals at all. Should we have a fallback goal?
-  - This should be resolved with tasking, where goals can be looped / linear / parallel
-- Make situation auto-dump optional (config in brain.yml?) - Consider cards in completed situations to be 'on table' / available in IGameState
-- `firstMatch` ICardChooser that takes several card choosers and picks the first chooser to match. Use this so that skillhealth and skillpassion upgrade ops can be agnostic to what particular card is being upgraded.
+### Improve arcs
+
+Rather than being a linear list of things to do, it should be a map of motivations.
+Each motification can take dependencies on other motiviations
+This will allow the bot to do more things at the same time and not block itself from continuing if
+one of multiple primary goals completes early
+
+### Do we even need imperatives?
+
+Imperatives are an ancient ancestor design decision. operations are far smarter than imperatives
+and their ability to introspect into the target situation makes them more flexible.
+In theory, we could remove imperatives entirely (while keeping shims around for the configs)
+
+Problems with this:
+We will still need a way to reuse the bulk content of operations, so that we can make multiple versions
+We will both want to replace or add to the base operation's conditions
+This also means we need to turn the startingCondition prop of an operation into a IGameStateCondition
+in addition to its current 'smart condition' enums
 
 ### Card consumption
 

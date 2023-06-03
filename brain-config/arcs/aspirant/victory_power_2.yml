@@ -24,23 +24,6 @@ motivations:
   - name: Begin the game
     primaryGoals:
       - !import ../../goals/aspirant/begin-intro.yml
-  - name: Get a stronger physique while finding people to recruit
-    primaryGoals:
-      - !import ../../goals/health/acquire-skillhealtha.yml
-    supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
-  - name: Get a little passionate while finding people to recruit
-    primaryGoals:
-      - !import ../../goals/passion/acquire-skillpassiona.yml
-    supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
-  - name: Get a scholarship while finding people to recruit
-    primaryGoals:
-      - !import ../../goals/reason/acquire-skillreasona.yml
-      - !import ../../goals/reason/acquire-skillreasonb.yml
-      - !import ../../goals/reason/acquire-skillreasonc.yml
-    supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
   # Here we activate Time and begin the Ascension in earnest
   - name: Activate power temptation
     primaryGoals:
@@ -50,6 +33,27 @@ motivations:
       - !import ../../goals/aspirant/discover-bookdealer.yml
       - !import ../../goals/aspirant/find-collaborator.yml
     supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Get a stronger physique while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillhealtha.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Get a little passionate while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillpassiona.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/work-labor.yml
+  - name: Get a scholarship while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/reason/acquire-skillreasona.yml
+      - !import ../../goals/reason/acquire-skillreasonb.yml
+      - !import ../../goals/reason/acquire-skillreasonc.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/work-labor.yml
   - name: Get swole, find people to recruit
