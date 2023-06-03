@@ -25,16 +25,6 @@ namespace AutoccultistNS.Brain
                 }
             }
 
-            // Sometimes, we want to stop an impulse if other cards are present.
-            if (impulse.Forbidders != null)
-            {
-                var result = impulse.Forbidders.IsConditionMet(state);
-                if (result)
-                {
-                    return new GeneralConditionFailure("Forbidders are present (and cannot show a negative reason).");
-                }
-            }
-
             var operationReady = impulse.Operation.IsConditionMet(state);
             if (!operationReady)
             {

@@ -100,15 +100,14 @@ public class Autoccultist : MonoBehaviour
     {
         WindowManager.OnPreGUI();
 
+        ControlGUI.OnGUI();
+        ParseErrorsGUI.OnGUI();
+
         if (!GameAPI.IsRunning)
         {
-            // Allow ParseErrorsGUI to run when the core game is not in play.
-            ParseErrorsGUI.OnGUI();
             return;
         }
 
-        ControlGUI.OnGUI();
-        ParseErrorsGUI.OnGUI();
         DiagnosticsGUI.OnGUI();
         GoalsGUI.OnGUI();
         ArcsGUI.OnGUI();

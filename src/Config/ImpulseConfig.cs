@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Config
 {
+    using System.Collections.Generic;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.Yaml;
@@ -49,10 +50,33 @@ namespace AutoccultistNS.Config
         TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
         /// <inheritdoc/>
-        IGameStateCondition IImpulse.Requirements => this.Requirements ?? this.Extends?.Requirements;
+        IGameStateCondition IImpulse.Requirements
+        {
+            get
+            {
+                var requirements = this.Requirements ?? this.Extends?.Requirements;
+                var forbidders = this.Forbidders ?? this.Extends?.Forbidders;
 
-        /// <inheritdoc/>
-        IGameStateCondition IImpulse.Forbidders => this.Forbidders ?? this.Extends?.Forbidders;
+                if (forbidders == null)
+                {
+                    return requirements;
+                }
+
+                return new CompoundCondition()
+                {
+                    Mode = CompoundCondition.ConditionMode.AllOf,
+                    Requirements = new List<IGameStateConditionConfig>
+                    {
+                        requirements,
+                        new CompoundCondition()
+                        {
+                            Mode = CompoundCondition.ConditionMode.NoneOf,
+                            Requirements = new List<IGameStateConditionConfig> { forbidders },
+                        },
+                    },
+                };
+            }
+        }
 
         /// <inheritdoc/>
         IOperation IImpulse.Operation => this.Operation ?? this.Extends?.Operation;

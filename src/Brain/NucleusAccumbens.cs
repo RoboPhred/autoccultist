@@ -93,8 +93,6 @@ namespace AutoccultistNS.Brain
                         sb.AppendFormat("- - - - {0}\n", reqMatch);
                     }
 
-                    sb.AppendFormat("- - - Forbidders in place: {0}\n", impulse.Forbidders?.IsConditionMet(state) == true);
-
                     var opMatch = impulse.Operation.IsConditionMet(state);
                     sb.AppendFormat("- - - Operation ready: {0}\n", opMatch.IsConditionMet);
                     if (!opMatch)
