@@ -62,9 +62,10 @@ namespace AutoccultistNS.GUI
 
             GUILayout.Label("Available Goals");
 
+            searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();
+
             scrollPositionNewGoals = GUILayout.BeginScrollView(scrollPositionNewGoals);
 
-            searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();
             foreach (var goal in Library.Goals.Where(x => searchFilter == string.Empty || x.Name.ToLower().Contains(searchFilter)))
             {
                 if (goal.IsSatisfied(GameStateProvider.Current) || NucleusAccumbens.CurrentGoals.Contains(goal))

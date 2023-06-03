@@ -59,6 +59,11 @@ namespace AutoccultistNS.Brain
             Ongoing,
 
             /// <summary>
+            /// The operation is waiting for the current recipe to complete before detatching.
+            /// </summary>
+            Orphaning,
+
+            /// <summary>
             /// The operation is choosing a card in the mansus
             /// </summary>
             ChoosingPortalCard,
@@ -144,6 +149,10 @@ namespace AutoccultistNS.Brain
             {
                 this.UpdateOngoing();
             }
+            else if (this.operationState == OperationState.Orphaning)
+            {
+                this.UpdateOrphaning();
+            }
             else if (this.operationState == OperationState.AwaitingPortalResults)
             {
                 this.UpdateAwaitPortalResults();
@@ -224,10 +233,27 @@ namespace AutoccultistNS.Brain
                 }
                 else if (this.completionDebounceTime <= DateTime.Now)
                 {
-                    // Enough time has passed that we can consider this operation completed.
+                    // Enough time has passed that we can consider the operation completed.
                     this.Complete();
                 }
             }
+        }
+
+        private void UpdateOrphaning()
+        {
+            var situation = this.GetSituationState();
+            var currentRecipe = situation.CurrentRecipe;
+
+            // We need to check the time remaining, because a recipe can repeat.
+            if (this.ongoingRecipe == currentRecipe && situation.RecipeTimeRemaining <= this.ongoingRecipeTimeRemaining)
+            {
+                // Recipe has not changed.
+                this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining.Value;
+                return;
+            }
+
+            // Recipe changed.
+            this.End();
         }
 
         private async void UpdateAwaitPortalResults()
@@ -334,7 +360,8 @@ namespace AutoccultistNS.Brain
             if (recipeSolution.EndOperation)
             {
                 yield return new CloseSituationAction(this.SituationId);
-                this.End();
+                this.operationState = OperationState.Orphaning;
+                yield break;
             }
 
             // Mark us as ongoing now that we started the recipe.
@@ -354,7 +381,7 @@ namespace AutoccultistNS.Brain
 
             if (followupRecipeSolution?.EndOperation == true)
             {
-                this.End();
+                this.operationState = OperationState.Orphaning;
             }
         }
 
@@ -367,14 +394,13 @@ namespace AutoccultistNS.Brain
                 yield break;
             }
 
+            if (this.GetSituationState().RecipeSlots.Any(x => x.Card != null))
+            {
+                throw new OperationFailedException($"Error in operation {this.operation.Name}: Cannot continue operation as cards are already slotted.");
+            }
+
             var firstSlot = slots.First();
             var firstSlotSpecId = firstSlot.SpecId;
-
-            if (firstSlot.Card != null)
-            {
-                // Something is already slotted in, we already handled this.
-                yield break;
-            }
 
             if (standalone)
             {
@@ -420,7 +446,7 @@ namespace AutoccultistNS.Brain
 
             if (recipe.EndOperation)
             {
-                this.End();
+                this.operationState = OperationState.Orphaning;
             }
         }
 
@@ -466,6 +492,11 @@ namespace AutoccultistNS.Brain
 
         private async Task AwaitCoroutine(IEnumerable<IAutoccultistAction> coroutine)
         {
+            if (this.cancelCurrentTask != null)
+            {
+                throw new ApplicationException("Tried to start a new operation coroutine while one is already ongoing.");
+            }
+
             // Note: PerformActions gives us a Task that crawls along on the main thread.
             //  Because of this, Waiting this task will create a deadlock.
             // Async functions are fine, as they are broken up into state machines with Continue

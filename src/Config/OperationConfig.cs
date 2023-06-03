@@ -137,6 +137,11 @@ namespace AutoccultistNS.Config
                     recipeSolution = this.GetOngoingRecipeSolution(situation);
                 }
 
+                if (recipeSolution == null)
+                {
+                    return new SituationConditionFailure(this.Situation, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
+                }
+
                 if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards(), out var unsatisfiedChoice))
                 {
                     return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring current recipe can start");

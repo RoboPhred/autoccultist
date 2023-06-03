@@ -15,6 +15,11 @@ namespace AutoccultistNS.Brain
         /// <returns>The recipe solution to use for the current ongoing recipe of this operation.</returns>
         public static IRecipeSolution GetOngoingRecipeSolution(this IOperation operation, ISituationState situationState, IGameState gameState = null)
         {
+            if (gameState == null)
+            {
+                gameState = GameStateProvider.Current;
+            }
+
             if (situationState.State != StateEnum.Ongoing)
             {
                 return null;

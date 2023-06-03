@@ -224,7 +224,7 @@ namespace AutoccultistNS.Config
             }
             else
             {
-                var sortAspects = this.Aspects.ToDictionary(entry => entry.Key, entry => card.Aspects[entry.Key]);
+                var sortAspects = this.Aspects.ToDictionary(entry => entry.Key, entry => card.Aspects.ValueOrDefault(entry.Key));
                 return sortAspects.GetWeight();
             }
         }
