@@ -27,7 +27,7 @@ namespace AutoccultistNS.Yaml
             // Things get gnarly here, as we might be parsing an !import tag.
             if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
-                value = Deserializer.WithFileParser(filePath, importParser =>
+                value = Deserializer.DeserializeFromParser(filePath, importParser =>
                 {
                     // Expecting a basic, non fragment single document file.
                     importParser.Consume<StreamStart>();

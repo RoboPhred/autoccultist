@@ -6,6 +6,7 @@ using AutoccultistNS.Brain;
 using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
+using AutoccultistNS.Yaml;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -80,8 +81,9 @@ public class Autoccultist : MonoBehaviour
 
         this.StopAutoccultist();
         this.LogInfo("Reloading all configs");
+
+        Deserializer.ClearCache();
         Library.LoadAll();
-        Superego.Clear();
 
         if (GameAPI.IsRunning)
         {
@@ -216,6 +218,7 @@ public class Autoccultist : MonoBehaviour
         MechanicalHeart.Stop();
         Ego.Stop();
         NucleusAccumbens.Reset();
+        Superego.Clear();
         SituationOrchestrator.AbortAll();
     }
 }
