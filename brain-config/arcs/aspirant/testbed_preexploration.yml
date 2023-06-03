@@ -1,5 +1,5 @@
-# This arc is intended to collect everything in the game that can be collected
-name: Complete the early game, buy out Morland and Oriflamme
+# This arc advances the game as much as possible without starting a cult or exploring any locations.
+name: Complete early game [no cult]
 selectionHint:
   anyOf:
     - elementId: introjob
@@ -62,21 +62,7 @@ motivations:
   - name: Prepare for Oriflamme
     primaryGoals:
       - !import ../../goals/find-auctionhouse.yml
-      - name: Sell our rubbish book
-        completedWhen:
-          noneOf:
-            - elementId: genericrubbishbook
-        impulses:
-          - name: Sell our rubbish book
-            operation:
-              name: Sell our rubbish book
-              situation: explore
-              startingRecipe:
-                slots:
-                  explore:
-                    elementId: locationauctionhouse
-                  Sell:
-                    elementId: genericrubbishbook
+      - !import ../../goals/auction/sell-rubbish.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -85,6 +71,11 @@ motivations:
       - !import ../../goals/auction/acquire-everything.yml
       - !import ../../goals/mansus/acquire-way-wood.yml
       - !import ../../goals/mansus/acquire-way-whitedoor.yml
+      - name: Watch Stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        impulses:
+          - operation: !import ../../operations/watch-stumm.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
