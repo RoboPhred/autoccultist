@@ -1,3 +1,11 @@
+# Ideas for More Faster
+# - Stop looking for followers earlier.  We only need a few as sacrifices for the spider door
+#     Teach it to look for followers only when it runs low?
+#     Spider door deck has a fixed number of draws before refresh, so we only need that many followers.
+# - Indoctrinate followers as-needed for spider door sacrifices?
+#     We use talk to delay Crucible decaying, so we will need to juggle that with talk to indoctrinate...
+# - Don't buy things we don't need from oriflamme.
+
 # Note: Getting close to loosing games due to lack of money.  Multi tasking strategy seems to take longer to get out of junior position so it bleeds money.
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
@@ -31,12 +39,32 @@ motivations:
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
+  # We keep dying to sickness because we don't have the money to buy medicine.
+  # This is because we keep getting restlessness, which decays to dread.  We then heal
+  # dread with opium, which can cause sickness.
+  # Some things we can do to solve this:
+  # - [Done] Get our physique up earlier, giving us more health to spare.
+  # - [Done] Teach the bot to study health to get vitalities when money is low.
+  # - Only use opium when we hit 2 dread (or 1 dread and restlessness)
+  # - Work a while at glover to build up more funds.  This is iffy as we will trigger into overtime requirements
+  #     which will slow our money gain to be equal to money loss from time.
+  - name: Get a stronger physique while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillhealtha.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  # Right about now, we will start getting overtime requirements from alden.
+  # Overtime means the time taken to get paid reaches parity with the funds drain of the time verb.
+  # This is bad, as we need spare funds to heal the afflictions we are getting from dread => opium.
   - name: Get a scholarship while finding people to recruit
     primaryGoals:
       - !import ../../goals/reason/acquire-skillreasona.yml
       - !import ../../goals/reason/acquire-skillreasonb.yml
       - !import ../../goals/reason/acquire-skillreasonc.yml
     supportingGoals:
+      # We might want to drop attract-followers, as this has a chance of requiring reason.
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
@@ -46,13 +74,6 @@ motivations:
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-  - name: Get a stronger physique while finding people to recruit
-    primaryGoals:
-      - !import ../../goals/health/acquire-skillhealtha.yml
-    supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
   - name: Establish the Unflinching Order
     primaryGoals:
       - !import ../../goals/cult/form-cult-doctrine-forge.yml

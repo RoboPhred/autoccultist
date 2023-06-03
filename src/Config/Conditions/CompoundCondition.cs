@@ -1,10 +1,10 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -57,19 +57,49 @@ namespace Autoccultist.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
+        public bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
         {
-            switch (this.Mode)
+            var recordedFailures = new List<ConditionFailure>();
+            foreach (var condition in this.Requirements)
             {
-                case ConditionMode.AllOf:
-                    return this.Requirements.All(condition => condition.IsConditionMet(state));
-                case ConditionMode.AnyOf:
-                    return this.Requirements.Any(condition => condition.IsConditionMet(state));
-                case ConditionMode.NoneOf:
-                    return !this.Requirements.Any(condition => condition.IsConditionMet(state));
-                default:
-                    throw new NotSupportedException($"Condition mode {this.Mode} is not implemented.");
+                var matched = condition.IsConditionMet(state, out failureDescription);
+                switch (this.Mode)
+                {
+                    case ConditionMode.AllOf:
+                        if (!matched)
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    case ConditionMode.AnyOf:
+                        if (matched)
+                        {
+                            return true;
+                        }
+
+                        recordedFailures.Add(failureDescription);
+                        break;
+
+                    case ConditionMode.NoneOf:
+                        if (matched)
+                        {
+                            return false;
+                        }
+
+                        break;
+                }
             }
+
+            if (this.Mode == ConditionMode.AnyOf)
+            {
+                failureDescription = new CompoundConditionFailure(recordedFailures);
+                return false;
+            }
+
+            failureDescription = null;
+            return true;
         }
 
         /// <inheritdoc/>

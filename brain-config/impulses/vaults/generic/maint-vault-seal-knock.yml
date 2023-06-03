@@ -3,24 +3,22 @@ priority: maintenance
 requirements:
   allOf:
     - situation: explore
-      storedCardsMatch:
-        aspects: { seal: 1 }
+      containsAspects: { seal: 1 }
 forbidders:
   anyOf:
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: seal_wardeddoor
-          aspects: { forge: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: seal_wardeddoor
+          containsAspects: { forge: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: seal_hiddendoor
-          aspects: { lantern: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: seal_hiddendoor
+          containsAspects: { lantern: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          aspects: { knock: 10 }
+        - situation: explore
+          containsAspects: { knock: 10 }
 operation: !import ../../../operations/vaults/continue-vault-follower-knock.yml

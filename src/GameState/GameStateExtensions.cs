@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,6 +8,26 @@ namespace Autoccultist.GameState
     /// </summary>
     public static class GameStateExtensions
     {
+        /// <summary>
+        /// Gets an enumerable of all cards in the game.
+        /// </summary>
+        /// <returns>An enumerable of all cards in the game.</returns>
+        public static IEnumerable<ICardState> GetAllCards(this IGameState state)
+        {
+            var allCards = state.TabletopCards.Concat(state.EnRouteCards).Concat(state.Situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards)));
+            switch (state.Mansus.State)
+            {
+                case PortalActiveState.AwaitingCollection:
+                    allCards = allCards.Concat(new[] { state.Mansus.OutputCard });
+                    break;
+                case PortalActiveState.AwaitingSelection:
+                    allCards = allCards.Concat(state.Mansus.DeckCards.Values);
+                    break;
+            }
+
+            return allCards;
+        }
+
         /// <summary>
         /// Determines if the given situation is available for use.
         /// </summary>
@@ -32,8 +52,9 @@ namespace Autoccultist.GameState
         /// </summary>
         /// <param name="state">The game state to check.</param>
         /// <param name="choosers">A collection of card matchers to check cards against.</param>
+        /// <param name="unsatisfiedChoice">The card matcher that could not be satisfied, or null if all matchers were satisfied.</param>
         /// <returns>True if all card matchers can satisfy their matches, or False otherwise.</returns>
-        public static bool CardsCanBeSatisfied(this IGameState state, IEnumerable<ICardChooser> choosers)
+        public static bool CardsCanBeSatisfied(this IGameState state, IEnumerable<ICardChooser> choosers, out ICardChooser unsatisfiedChoice)
         {
             var remainingCards = new HashSet<ICardState>(state.TabletopCards);
             foreach (var chooser in choosers)
@@ -42,12 +63,14 @@ namespace Autoccultist.GameState
                 var choice = chooser.ChooseCard(remainingCards);
                 if (choice == null)
                 {
+                    unsatisfiedChoice = chooser;
                     return false;
                 }
 
                 remainingCards.Remove(choice);
             }
 
+            unsatisfiedChoice = null;
             return true;
         }
     }

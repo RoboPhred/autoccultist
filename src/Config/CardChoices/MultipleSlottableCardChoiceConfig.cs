@@ -1,8 +1,8 @@
-namespace Autoccultist.Config.CardChoices
+namespace AutoccultistNS.Config.CardChoices
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Defines configuration for a list of card choices where the first valid choice will be chosen.
@@ -19,6 +19,11 @@ namespace Autoccultist.Config.CardChoices
         {
             var arrayOfCards = cards.ToArray();
             return this.OneOf.Select(c => c.ChooseCard(cards)).FirstOrDefault(c => c != null);
+        }
+
+        public override string ToString()
+        {
+            return $"MultipleSlottableCardChoiceConfig({string.Join(", ", this.OneOf.Select(x => x.ToString()))})";
         }
     }
 }

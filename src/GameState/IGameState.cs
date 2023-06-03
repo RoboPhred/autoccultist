@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
 
@@ -7,11 +7,19 @@ namespace Autoccultist.GameState
     /// </summary>
     public interface IGameState
     {
+        // TODO: IReadOnlyCollection
         /// <summary>
         /// Gets a collection of cards on the tabletop.
         /// </summary>
         ICollection<ICardState> TabletopCards { get; }
 
+        // TODO: IReadOnlyCollection
+        /// <summary>
+        /// Gets a collection of cards that are currently en route to somewhere.
+        /// </summary>
+        ICollection<ICardState> EnRouteCards { get; }
+
+        // TODO: IReadOnlyCollection
         /// <summary>
         /// Gets a collection of situations currently present in the game.
         /// </summary>
@@ -20,12 +28,6 @@ namespace Autoccultist.GameState
         /// <summary>
         /// Gets the mansus state.
         /// </summary>
-        IMansusState Mansus { get; }
-
-        /// <summary>
-        /// Gets an enumerable of all cards in the game.
-        /// </summary>
-        /// <returns>An enumerable of all cards in the game.</returns>
-        IEnumerable<ICardState> GetAllCards();
+        IPortalState Mansus { get; }
     }
 }

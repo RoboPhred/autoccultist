@@ -8,37 +8,36 @@ requirements:
 forbidders:
   anyOf:
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          aspects: { forge: 10 }
+        - situation: explore
+          containsAspects: { forge: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: peril_desert
-          aspects: { grail: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_desert
+          containsAspects: { grail: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: peril_forest
-          aspects: { moth: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_forest
+          containsAspects: { moth: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: peril_mountains
-          aspects: { winter: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_mountains
+          containsAspects: { winter: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: peril_sea
-          aspects: { heart: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_sea
+          containsAspects: { heart: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: peril_treacherousground
-          aspects: { lantern: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_treacherousground
+          containsAspects: { lantern: 10 }
 operation: !import ../../../operations/vaults/continue-vault-follower-forge.yml

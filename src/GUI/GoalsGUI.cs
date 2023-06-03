@@ -1,10 +1,10 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config;
-    using Autoccultist.GameState;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config;
+    using AutoccultistNS.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -15,6 +15,8 @@ namespace Autoccultist.GUI
         private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 scrollPosition = default;
+
+        private static string searchFilter = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Goals gui is being shown.
@@ -56,7 +58,8 @@ namespace Autoccultist.GUI
 
             GUILayout.Label("Available Goals");
 
-            foreach (var goal in Library.Goals)
+            searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();
+            foreach (var goal in Library.Goals.Where(x => searchFilter == string.Empty || x.Name.ToLower().Contains(searchFilter)))
             {
                 if (goal.IsSatisfied(GameStateProvider.Current) || NucleusAccumbens.CurrentGoals.Contains(goal))
                 {

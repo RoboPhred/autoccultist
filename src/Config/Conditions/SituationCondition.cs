@@ -1,9 +1,9 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
@@ -90,21 +90,30 @@ namespace Autoccultist.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
+        public bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
         {
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {
-                return this.State == SituationStateConfig.Missing;
+                if (this.State == SituationStateConfig.Missing)
+                {
+                    failureDescription = null;
+                    return true;
+                }
+
+                failureDescription = new SituationConditionFailure(this.Situation, "is not missing");
+                return false;
             }
 
             if (this.Recipe != null && situation.CurrentRecipe != this.Recipe)
             {
+                failureDescription = new SituationConditionFailure(this.Situation, $"is not performing recipe {this.Recipe}");
                 return false;
             }
 
             if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0)))
             {
+                failureDescription = new SituationConditionFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
                 return false;
             }
 
@@ -112,6 +121,7 @@ namespace Autoccultist.Config.Conditions
             {
                 if (situation.IsOccupied != (this.State == SituationStateConfig.Ongoing))
                 {
+                    failureDescription = new SituationConditionFailure(this.Situation, $"is {(situation.IsOccupied ? "not " : string.Empty)}ongoing");
                     return false;
                 }
             }
@@ -119,26 +129,30 @@ namespace Autoccultist.Config.Conditions
             if (this.StoredCardsMatch != null)
             {
                 var cards = situation.StoredCards;
-                if (!this.StoredCardsMatch.CardsMatchSet(cards))
+                if (!this.StoredCardsMatch.CardsMatchSet(cards, out failureDescription))
                 {
+                    failureDescription = new AddendedConditionFailure(failureDescription, $"when looking at stored cards for situation {this.Situation}");
                     return false;
                 }
             }
 
+            var slottedCards = situation.GetSlottedCards().ToList();
+
             if (this.SlottedCardsMatch != null)
             {
-                var cards = situation.SlottedCards;
-                if (!this.SlottedCardsMatch.CardsMatchSet(cards))
+                if (!this.SlottedCardsMatch.CardsMatchSet(slottedCards, out failureDescription))
                 {
+                    failureDescription = new AddendedConditionFailure(failureDescription, $"when looking at slotted cards for situation {this.Situation}");
                     return false;
                 }
             }
 
             if (this.ContainedCardsMatch != null)
             {
-                var cards = situation.StoredCards.Concat(situation.SlottedCards).ToList();
-                if (!this.ContainedCardsMatch.CardsMatchSet(cards))
+                var cards = situation.StoredCards.Concat(slottedCards);
+                if (!this.ContainedCardsMatch.CardsMatchSet(cards, out failureDescription))
                 {
+                    failureDescription = new AddendedConditionFailure(failureDescription, $"when looking at all cards for situation {this.Situation}");
                     return false;
                 }
             }
@@ -152,10 +166,13 @@ namespace Autoccultist.Config.Conditions
 
                 if (!aspects.HasAspects(containedAspects))
                 {
+                    // TODO: ConditionFailure for HasAspects / IValueCondition
+                    failureDescription = new SituationConditionFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");
                     return false;
                 }
             }
 
+            failureDescription = null;
             return true;
         }
     }

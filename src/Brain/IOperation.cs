@@ -1,7 +1,6 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
 
     /// <summary>
     /// A set of instructions to operate a situation from start to completion.
@@ -27,5 +26,10 @@ namespace Autoccultist.Brain
         /// Gets a dictionary of recipe ids to recipe solutions for each ongoing recipe the situation may encounter.
         /// </summary>
         IReadOnlyDictionary<string, IRecipeSolution> OngoingRecipes { get; }
+
+        /// <summary>
+        /// Gets a list of conditional recipes to use for ongoing operations.
+        /// </summary>
+        IReadOnlyList<IConditionalRecipeSolution> ConditionalOngoingRecipes { get; }
     }
 }

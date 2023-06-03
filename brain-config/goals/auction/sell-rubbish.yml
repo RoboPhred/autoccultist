@@ -1,0 +1,17 @@
+name: Sell our rubbish
+requirements:
+  elementId: genericrubbishbook
+completedWhen:
+  noneOf:
+    - elementId: genericrubbishbook
+impulses:
+  - name: Sell our rubbish book
+    operation:
+      name: Sell our rubbish book
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: locationauctionhouse
+          Sell:
+            elementId: genericrubbishbook

@@ -1,8 +1,8 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
     using System.IO;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Yaml;
 
     /// <summary>
     /// Library of various config assets.
@@ -50,7 +50,7 @@ namespace Autoccultist.Config
         {
             get
             {
-                return Path.Combine(AutoccultistPlugin.AssemblyDirectory, "goals");
+                return Path.Combine(Autoccultist.AssemblyDirectory, "goals");
             }
         }
 
@@ -58,7 +58,7 @@ namespace Autoccultist.Config
         {
             get
             {
-                return Path.Combine(AutoccultistPlugin.AssemblyDirectory, "arcs");
+                return Path.Combine(Autoccultist.AssemblyDirectory, "arcs");
             }
         }
 

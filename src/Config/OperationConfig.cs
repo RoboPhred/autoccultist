@@ -1,11 +1,10 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config.CardChoices;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
@@ -13,6 +12,24 @@ namespace Autoccultist.Config
     /// </summary>
     public class OperationConfig : INamedConfigObject, IGameStateCondition, IOperation, IAfterYamlDeserialization
     {
+        /// <summary>
+        /// Defines options for when to consider this operation startable.
+        /// </summary>
+        public enum OperationStartCondition
+        {
+            /// <summary>
+            /// The operation can only start if both the starting and ongoing recipe solutions can be satisfied.
+            /// Note: conditionalOngoingRecipes are not included in this check.
+            /// This is the default option.
+            /// </summary>
+            AllRecipesSatisified,
+
+            /// <summary>
+            /// The operation can start if either the starting recipe (if the situation is idle) or a matched ongoing recipe can be satisfied.
+            /// Note: conditionalOngoingRecipes will be checked if no ongoingRecipe matches the current recipe.
+            CurrentRecipeSatisfied,
+        }
+
         /// <inheritdoc/>
         public string Name { get; set; }
 
@@ -20,6 +37,13 @@ namespace Autoccultist.Config
         /// Gets or sets the situation id to target for this operation.
         /// </summary>
         public string Situation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the condition for when this operation should start.
+        /// </summary>
+        // TODO: We confuse 'condition' here with IGameStateCondition.
+        // ...Maybe we should overload this in the parser and allow either.
+        public OperationStartCondition StartCondition { get; set; } = OperationStartCondition.AllRecipesSatisified;
 
         /// <summary>
         /// Gets or sets a value indicating whether this operation should target an ongoign situation.
@@ -36,6 +60,11 @@ namespace Autoccultist.Config
         /// </summary>
         public Dictionary<string, RecipeSolutionConfig> OngoingRecipes { get; set; } = new Dictionary<string, RecipeSolutionConfig>();
 
+        /// <summary>
+        /// Gets or sets a list of conditional recipes to use for ongoing operations.
+        /// </summary>
+        public List<ConditionalRecipeSolutionConfig> ConditionalOngoingRecipes { get; set; } = new List<ConditionalRecipeSolutionConfig>();
+
         /// <inheritdoc/>
         IRecipeSolution IOperation.StartingRecipe => this.StartingRecipe;
 
@@ -43,46 +72,7 @@ namespace Autoccultist.Config
         // IReadOnlyDictionary is not marked with out params...
         IReadOnlyDictionary<string, IRecipeSolution> IOperation.OngoingRecipes => this.OngoingRecipes.ToDictionary(entry => entry.Key, entry => entry.Value as IRecipeSolution);
 
-        /// <summary>
-        /// Determines if this operation is able to execute given the supplied game state.
-        /// </summary>
-        /// <param name="state">The game state to match conditions against.</param>
-        /// <returns>True if this operation is able to execute at this moment, or False otherwise.</returns>
-        public bool IsConditionMet(IGameState state)
-        {
-            var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
-            if (situation == null)
-            {
-                return false;
-            }
-
-            if (this.TargetOngoing != situation.IsOccupied)
-            {
-                return false;
-            }
-
-            // We currently take advantage of only ever having RecipeSolutionConfigs and rely on knowledge of
-            //  their optional cards.  This may be problematic if we ever get other types of recipe solutions.
-            IEnumerable<ICardChooser> requiredCards = new ICardChooser[0];
-
-            if (this.StartingRecipe != null)
-            {
-                requiredCards = requiredCards.Concat(this.StartingRecipe.GetRequiredCards());
-            }
-
-            if (this.OngoingRecipes != null)
-            {
-                requiredCards = requiredCards.Concat(
-                    from ongoing in this.OngoingRecipes.Values
-                    from choice in ongoing.GetRequiredCards()
-                    select choice);
-            }
-
-            // TODO: Optional card slots.
-            // Do not require optional cards to be satisfied.
-            // requiredCards = requiredCards.Where(x => !x.Optional);
-            return state.CardsCanBeSatisfied(requiredCards.ToArray());
-        }
+        IReadOnlyList<IConditionalRecipeSolution> IOperation.ConditionalOngoingRecipes => this.ConditionalOngoingRecipes.ToList().AsReadOnly();
 
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
@@ -96,6 +86,69 @@ namespace Autoccultist.Config
             {
                 throw new InvalidConfigException($"Operation {this.Name} must have a situation.");
             }
+        }
+
+        bool IGameStateCondition.IsConditionMet(IGameState state, out ConditionFailure failureDescription)
+        {
+            var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
+            if (situation == null)
+            {
+                failureDescription = new SituationConditionFailure(this.Situation, "Situation not found.");
+                return false;
+            }
+
+            if (this.TargetOngoing != situation.IsOccupied)
+            {
+                failureDescription = new SituationConditionFailure(this.Situation, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
+                return false;
+            }
+
+            if (this.StartCondition == OperationStartCondition.AllRecipesSatisified)
+            {
+                // We currently take advantage of only ever having RecipeSolutionConfigs and rely on knowledge of
+                //  their optional cards.  This may be problematic if we ever get other types of recipe solutions.
+                IEnumerable<ICardChooser> requiredCards = new ICardChooser[0];
+
+                if (!this.TargetOngoing && this.StartingRecipe != null)
+                {
+                    requiredCards = requiredCards.Concat(this.StartingRecipe.GetRequiredCards());
+                }
+
+                if (this.OngoingRecipes != null)
+                {
+                    requiredCards = requiredCards.Concat(
+                        from ongoing in this.OngoingRecipes.Values
+                        from choice in ongoing.GetRequiredCards()
+                        select choice);
+                }
+
+                if (!state.CardsCanBeSatisfied(requiredCards.ToArray(), out var unsatisfiedChoice))
+                {
+                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
+                    return false;
+                }
+            }
+            else if (this.StartCondition == OperationStartCondition.CurrentRecipeSatisfied)
+            {
+                IRecipeSolution recipeSolution;
+                if (situation.State == SecretHistories.Enums.StateEnum.Unstarted)
+                {
+                    recipeSolution = this.StartingRecipe;
+                }
+                else
+                {
+                    recipeSolution = this.GetOngoingRecipeSolution(situation);
+                }
+
+                if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards(), out var unsatisfiedChoice))
+                {
+                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
+                    return false;
+                }
+            }
+
+            failureDescription = null;
+            return true;
         }
     }
 }

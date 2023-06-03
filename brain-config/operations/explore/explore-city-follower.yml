@@ -1,4 +1,4 @@
-name: Explore the city
+name: Explore the city with a follower
 situation: explore
 startingRecipe:
   slots:

@@ -1,4 +1,4 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     /// <summary>
     /// Defines a configuration node with a human friendly display name.

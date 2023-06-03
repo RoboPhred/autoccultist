@@ -1,7 +1,7 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Represents a choice of a card based on various attributes.
@@ -9,15 +9,30 @@ namespace Autoccultist.Config.Conditions
     public class CardExistsCondition : CardChooserConfig, ICardConditionConfig
     {
         /// <inheritdoc/>
-        public virtual bool IsConditionMet(IGameState state)
+        public virtual bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
         {
-            return this.ChooseCard(state.GetAllCards()) != null;
+            if (this.ChooseCard(state.GetAllCards()) == null)
+            {
+                failureDescription = new CardChoiceNotSatisfiedFailure(this);
+                return false;
+            }
+
+            failureDescription = null;
+            return true;
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
+        public bool CardsMatchSet(IEnumerable<ICardState> cards, out ConditionFailure failureDescription)
         {
-            return this.ChooseCard(cards) != null;
+            var card = this.ChooseCard(cards);
+            if (card == null)
+            {
+                failureDescription = new CardChoiceNotSatisfiedFailure(this);
+                return false;
+            }
+
+            failureDescription = null;
+            return true;
         }
     }
 }

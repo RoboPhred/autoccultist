@@ -1,8 +1,8 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System;
-    using Autoccultist.Actor;
-    using Autoccultist.Brain;
+    using AutoccultistNS.Actor;
+    using AutoccultistNS.Brain;
 
     /// <summary>
     /// Update manager for all Autoccultist mechanisms.
@@ -29,17 +29,17 @@ namespace Autoccultist
             // Don't run if the game isn't running.
             if (!GameAPI.IsRunning)
             {
-                AutoccultistPlugin.Instance.LogTrace("Ignoring Mechanical Heart start: game not running.");
+                NoonUtility.LogWarning("Ignoring Mechanical Heart start: game not running.");
                 return;
             }
 
             if (IsRunning)
             {
-                AutoccultistPlugin.Instance.LogTrace("Ignoring Mechanical Heart start: already running.");
+                NoonUtility.LogWarning("Ignoring Mechanical Heart start: already running.");
                 return;
             }
 
-            AutoccultistPlugin.Instance.LogTrace("Starting Mechanical Heart.");
+            NoonUtility.LogWarning("Starting Mechanical Heart.");
 
             IsRunning = true;
         }
@@ -54,7 +54,7 @@ namespace Autoccultist
                 return;
             }
 
-            AutoccultistPlugin.Instance.LogTrace("Stopping Mechanical Heart.");
+            NoonUtility.LogWarning("Stopping Mechanical Heart.");
 
             IsRunning = false;
         }
@@ -91,9 +91,18 @@ namespace Autoccultist
                 return;
             }
 
-            NucleusAccumbens.Update();
-            AutoccultistActor.Update();
-            SituationOrchestrator.Update();
+            try
+            {
+                NucleusAccumbens.Update();
+                AutoccultistActor.Update();
+                SituationOrchestrator.Update();
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.Instance.LogWarn($"Error in Mechanical Heart: {ex.Message}");
+                NoonUtility.LogException(ex);
+                MechanicalHeart.Stop();
+            }
         }
     }
 }

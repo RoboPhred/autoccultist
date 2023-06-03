@@ -1,4 +1,4 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System.Collections.Generic;
 

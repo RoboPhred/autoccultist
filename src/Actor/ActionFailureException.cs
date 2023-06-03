@@ -1,4 +1,4 @@
-namespace Autoccultist.Actor
+namespace AutoccultistNS.Actor
 {
     using System;
 

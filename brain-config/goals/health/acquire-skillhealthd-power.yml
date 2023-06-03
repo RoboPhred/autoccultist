@@ -16,4 +16,4 @@ impulses:
   - !import ../../impulses/norm-vitality-from-health.yml
   - name: Upgrade Steely Physique with Forge
     priority: goal
-    operation: !import ../../operations/health/upgrade-skillhealthc-forge.yml
+    operation: !import ../../operations/health/upgrade-skillhealthc-strength.yml

@@ -1,6 +1,7 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Identifies a class that orchestrates the behavior of a situation.
@@ -25,11 +26,13 @@ namespace Autoccultist.Brain
         /// <summary>
         /// Allow the orchestration to perform its on-update tasks.
         /// </summary>
+        /// <param name="gameState">The current game state.</param>
         void Update();
 
         /// <summary>
         /// Abort the orchestration.
         /// </summary>
+        /// <param name="gameState">The current game state.</param>
         void Abort();
     }
 }

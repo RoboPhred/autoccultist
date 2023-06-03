@@ -1,8 +1,9 @@
 name: Reenforce an expedition with a Lantern follower
 situation: explore
 targetOngoing: true
-ongoingRecipes:
-  explorevaulttick:
+startCondition: currentRecipeSatisfied
+conditionalOngoingRecipes:
+  - endOperation: true
     slots:
       Assistance:
         aspectWeightBias: highest
@@ -10,11 +11,3 @@ ongoingRecipes:
           follower: 1
           lantern:
             greaterThanOrEqualTo: 2
-conditionalOngoingRecipes:
-  slots:
-    Assistance:
-      aspectWeightBias: highest
-      aspects:
-        follower: 1
-        lantern:
-          greaterThanOrEqualTo: 2

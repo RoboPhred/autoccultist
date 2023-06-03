@@ -1,7 +1,8 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System;
-    using Autoccultist.Yaml;
+    using System.Collections.Generic;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -71,6 +72,27 @@ namespace Autoccultist.Config.Conditions
             }
 
             return true;
+        }
+
+        public override string ToString()
+        {
+            var content = new List<string>();
+            if (this.GreaterThan.HasValue)
+            {
+                content.Add($"> {this.GreaterThan.Value}");
+            }
+
+            if (this.GreaterThanOrEqualTo.HasValue)
+            {
+                content.Add($">= {this.GreaterThanOrEqualTo.Value}");
+            }
+
+            if (this.LessThan.HasValue)
+            {
+                content.Add($"< {this.LessThan.Value}");
+            }
+
+            return $"ValueCondition({string.Join(", ", content)})";
         }
 
         /// <inheritdoc/>

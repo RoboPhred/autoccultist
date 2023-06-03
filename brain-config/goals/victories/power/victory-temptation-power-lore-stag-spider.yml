@@ -53,6 +53,8 @@ impulses:
     operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
   - name: Answer Ghirbi's riddle on Knock
     operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+  - name: Answer Ghirbi's riddle on Secret Histories
+    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
 
   # After we aquire the stag door, it is safe to consume our lanternc
   # mothc + lanternc = lanternd

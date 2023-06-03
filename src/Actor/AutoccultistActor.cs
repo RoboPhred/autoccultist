@@ -1,4 +1,4 @@
-namespace Autoccultist.Actor
+namespace AutoccultistNS.Actor
 {
     using System;
     using System.Collections.Generic;
@@ -74,40 +74,34 @@ namespace Autoccultist.Actor
                 return;
             }
 
-            // See if we need to get the next action set.
-            if (currentActionSet == null)
+            if (!EnsureActionSet())
             {
-                currentActionSet = PendingActionSets.DequeueOrDefault();
-                if (currentActionSet == null)
-                {
-                    // No more action sets
-                    OnIdle();
-                    return;
-                }
-
-                // This is a new action set, start execution
-                try
-                {
-                    if (!currentActionSet.PendingActions.MoveNext())
-                    {
-                        // Empty pending action set?  Try again next time.
-                        currentActionSet = null;
-                        return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Error pulling the next action from the enumerator.
-                    currentActionSet.TaskCompletion.TrySetException(ex);
-                    currentActionSet = null;
-                    return;
-                }
+                return;
             }
 
             if (currentActionSet.CancellationToken.IsCancellationRequested)
             {
                 // Task got cancelled.
                 currentActionSet.TaskCompletion.TrySetCanceled();
+                currentActionSet = null;
+                return;
+            }
+
+            try
+            {
+                // Advance to the next pending action.
+                if (!currentActionSet.PendingActions.MoveNext())
+                {
+                    // No more actions, we are complete.
+                    currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
+                    currentActionSet = null;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Failed to do whatever it is it wants to do, the entire action set is now dead.
+                currentActionSet.TaskCompletion.TrySetException(ex);
                 currentActionSet = null;
                 return;
             }
@@ -121,6 +115,7 @@ namespace Autoccultist.Actor
             {
                 // Execute the action, clear it out, and update the last update time
                 //  to delay for the next action.
+                Autoccultist.Instance.LogTrace($"Executing action {nextAction}");
                 nextAction.Execute();
             }
             catch (Exception ex)
@@ -134,14 +129,28 @@ namespace Autoccultist.Actor
             // We did the thing.  Set the last updated time so we can delay for the next action.
             lastUpdate = DateTime.Now;
 
-            // Immediately try to advance to the next pending action.
-            // If there are no more pending actions, we need to know to set the completion result.
-            if (!currentActionSet.PendingActions.MoveNext())
+            // Note: This might have been the last action in the action set.
+            // Originally, we advanced the iterator here, so we could detect that and immediately mark it as complete.
+            // However, if we did have another action, that action would be formed and queued based on out of date state information.
+            // Instead, we now call MoveNext when we want to execute something, which means we have an up to date action but also means
+            // completion of action sets is delayed by one actor tick.
+        }
+
+        private static bool EnsureActionSet()
+        {
+            // See if we need to get the next action set.
+            if (currentActionSet == null)
             {
-                // No more actions, we are complete.
-                currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
-                currentActionSet = null;
+                currentActionSet = PendingActionSets.DequeueOrDefault();
+                if (currentActionSet == null)
+                {
+                    // No more action sets
+                    OnIdle();
+                    return false;
+                }
             }
+
+            return currentActionSet != null;
         }
 
         private static void OnActive()

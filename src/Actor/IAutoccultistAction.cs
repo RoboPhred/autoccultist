@@ -1,4 +1,4 @@
-namespace Autoccultist.Actor
+namespace AutoccultistNS.Actor
 {
     /// <summary>
     /// An action that can be executed by the Actor.

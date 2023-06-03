@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     /// <summary>
     /// Defines locations a card may be in.
@@ -9,6 +9,11 @@ namespace Autoccultist.GameState
         /// The card is in the tabletop.
         /// </summary>
         Tabletop,
+
+        /// <summary>
+        /// The card is going somewhere.
+        /// </summary>
+        EnRoute,
 
         /// <summary>
         /// The card is in a situation slot.

@@ -3,17 +3,13 @@ priority: maintenance
 requirements:
   anyOf:
     - situation: explore
-      storedCardsMatch:
-        aspects: { peril: 1 }
+      containsAspects: { peril: 1 }
     - situation: explore
-      storedCardsMatch:
-        aspects: { guardian: 1 }
+      containsAspects: { guardian: 1 }
     - situation: explore
-      storedCardsMatch:
-        aspects: { seal: 1 }
+      containsAspects: { seal: 1 }
     - situation: explore
-      storedCardsMatch:
-        aspects: { curse: 1 }
+      containsAspects: { curse: 1 }
 forbidders:
   anyOf:
     - situation: explore
@@ -24,33 +20,33 @@ forbidders:
           - elementId: funds
           - elementId: funds
     - situation: explore
+      containsAspects:
+        peril:
+          lessThanOrEqualTo: 0
       storedCardsMatch:
-        aspects:
-          peril:
-            lessThanOrEqualTo: 0
         cardSet:
           - elementId: funds
           - elementId: funds
           - elementId: funds
     - situation: explore
+      containsAspects:
+        guardian:
+          lessThanOrEqualTo: 0
+        peril:
+          lessThanOrEqualTo: 0
       storedCardsMatch:
-        aspects:
-          guardian:
-            lessThanOrEqualTo: 0
-          peril:
-            lessThanOrEqualTo: 0
         cardSet:
           - elementId: funds
           - elementId: funds
     - situation: explore
+      containsAspects:
+        guardian:
+          lessThanOrEqualTo: 0
+        peril:
+          lessThanOrEqualTo: 0
+        seal:
+          lessThanOrEqualTo: 0
       storedCardsMatch:
-        aspects:
-          guardian:
-            lessThanOrEqualTo: 0
-          peril:
-            lessThanOrEqualTo: 0
-          seal:
-            lessThanOrEqualTo: 0
         cardSet:
           - elementId: funds
 operation: !import ../../../operations/vaults/continue-vault-funds.yml

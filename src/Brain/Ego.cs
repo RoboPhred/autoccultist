@@ -1,8 +1,8 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Linq;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Tracks execution of a single motivation.
@@ -78,6 +78,10 @@ namespace Autoccultist.Brain
                 {
                     NucleusAccumbens.AddGoal(goal);
                 }
+                else
+                {
+                    Autoccultist.Instance.LogTrace($"Ego: Primary goal \"{goal.Name}\" of motivation \"{CurrentMotivation.Name}\" is already satisfied.");
+                }
             }
 
             foreach (var goal in CurrentMotivation.SupportingGoals)
@@ -116,7 +120,7 @@ namespace Autoccultist.Brain
                 return;
             }
 
-            AutoccultistPlugin.Instance.LogTrace($"Ego: All primary goals of motivation \"{CurrentMotivation.Name}\" are now complete.");
+            Autoccultist.Instance.LogTrace($"Ego: All primary goals of motivation \"{CurrentMotivation.Name}\" are now complete.");
             TryStopMotivation();
             var completedMotivation = CurrentMotivation;
             CurrentMotivation = null;

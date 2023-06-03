@@ -11,19 +11,18 @@ requirements:
 forbidders:
   anyOf:
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_long
-          aspects: { grail: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_long
+          containsAspects: { grail: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: guardian_soucouyants
-          aspects: { lantern: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: guardian_soucouyants
+          containsAspects: { lantern: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          aspects: { moth: 10 }
+        - situation: explore
+          containsAspects: { moth: 10 }
 operation: !import ../../../operations/vaults/continue-vault-follower-moth.yml

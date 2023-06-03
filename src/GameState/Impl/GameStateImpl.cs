@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,19 +9,22 @@ namespace Autoccultist.GameState.Impl
     internal class GameStateImpl : GameStateObject, IGameState
     {
         private readonly ICollection<ICardState> tabletopCards;
+        private readonly ICollection<ICardState> enRouteCards;
         private readonly ICollection<ISituationState> situations;
 
-        private readonly IMansusState mansus;
+        private readonly IPortalState mansus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameStateImpl"/> class.
         /// </summary>
         /// <param name="tabletopCards">The tabletop cards in this state.</param>
+        /// <param name="enRouteCards">The en route cards in this state.</param>
         /// <param name="situations">The situations in this state.</param>
         /// <param name="mansus">The mansus state.</param>
-        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ISituationState> situations, IMansusState mansus)
+        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ICardState> enRouteCards, ICollection<ISituationState> situations, IPortalState mansus)
         {
             this.tabletopCards = tabletopCards;
+            this.enRouteCards = enRouteCards;
             this.situations = situations;
             this.mansus = mansus;
         }
@@ -37,6 +40,16 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
+        public ICollection<ICardState> EnRouteCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.enRouteCards;
+            }
+        }
+
+        /// <inheritdoc/>
         public ICollection<ISituationState> Situations
         {
             get
@@ -47,27 +60,13 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public IMansusState Mansus
+        public IPortalState Mansus
         {
             get
             {
                 this.VerifyAccess();
                 return this.mansus;
             }
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<ICardState> GetAllCards()
-        {
-            this.VerifyAccess();
-
-            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards.Concat(s.SlottedCards).Concat(s.OutputCards)));
-            if (this.mansus.IsActive)
-            {
-                allCards = allCards.Concat(this.mansus.DeckCards.Values);
-            }
-
-            return allCards;
         }
     }
 }

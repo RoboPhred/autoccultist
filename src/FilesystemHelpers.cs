@@ -1,4 +1,4 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System;
     using System.IO;

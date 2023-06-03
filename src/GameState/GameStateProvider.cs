@@ -1,10 +1,13 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System;
     using System.Linq;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi.Scripts.Infrastructure;
-    using Autoccultist.GameState.Impl;
+    using AutoccultistNS.GameState.Impl;
+    using SecretHistories.Assets.Scripts.Application.UI;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Spheres;
+    using SecretHistories.UI;
 
     /// <summary>
     /// A static class for producing <see cref="IGameState"/> states.
@@ -45,19 +48,33 @@ namespace Autoccultist.GameState
         {
             GameStateObject.CurrentStateVersion++;
 
-            var tabletopCards =
-                from stack in GameAPI.GetTabletopCards()
-                from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
-                select cardState;
+            try
+            {
+                var tabletopCards =
+                    from stack in GameAPI.TabletopSphere.GetElementStacks()
+                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                    select cardState;
 
-            var situations =
-                from controller in GameAPI.GetAllSituations()
-                let state = new SituationStateImpl(controller)
-                select state;
+                // Things whizzing around.
+                var enRouteCards =
+                    from enroute in GameAPI.GetEnRouteSpheres()
+                    from stack in enroute.GetElementStacks()
+                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
+                    select cardState;
 
-            var mansus = new MansusStateImpl(Registry.Get<MapController>());
+                var situations =
+                    from situation in GameAPI.GetSituations()
+                    let state = new SituationStateImpl(situation)
+                    select state;
 
-            return new GameStateImpl(tabletopCards.ToArray(), situations.ToArray(), mansus);
+                return new GameStateImpl(tabletopCards.ToArray(), enRouteCards.ToArray(), situations.ToArray(), PortalStateImpl.FromCurrentState());
+            }
+            catch (Exception ex)
+            {
+                NoonUtility.LogWarning($"Exception in GameStateProvider.FromCurrentState: {ex.ToString()}");
+                NoonUtility.LogException(ex);
+                throw;
+            }
         }
     }
 }

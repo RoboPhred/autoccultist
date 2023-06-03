@@ -1,10 +1,10 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Manages goal execution.
@@ -85,9 +85,26 @@ namespace Autoccultist.Brain
                 {
                     sb.AppendFormat("- - {0}\n", impulse.Name);
                     sb.AppendFormat("- - - Priority: {0}\n", impulse.Priority);
-                    sb.AppendFormat("- - - Requirements met: {0}\n", impulse.Requirements?.IsConditionMet(state) != false);
+                    sb.AppendFormat("- - - Master CanExecute: {0}\n", impulse.CanExecute(state, out var impulseFailure));
+                    if (impulseFailure != null)
+                    {
+                        sb.AppendFormat("- - - - {0}\n", impulseFailure);
+                    }
+
+                    ConditionFailure reqFailure = null;
+                    sb.AppendFormat("- - - Requirements met: {0}\n", impulse.Requirements?.IsConditionMet(state, out reqFailure) != false);
+                    if (reqFailure != null)
+                    {
+                        sb.AppendFormat("- - - - {0}\n", reqFailure);
+                    }
+
                     sb.AppendFormat("- - - Forbidders in place: {0}\n", impulse.Forbidders?.IsConditionMet(state) == true);
-                    sb.AppendFormat("- - - Operation ready: {0}\n", impulse.Operation.IsConditionMet(state));
+
+                    sb.AppendFormat("- - - Operation ready: {0}\n", impulse.Operation.IsConditionMet(state, out var opFailure));
+                    if (opFailure != null)
+                    {
+                        sb.AppendFormat("- - - - {0}\n", opFailure);
+                    }
                 }
             }
 
@@ -144,7 +161,8 @@ namespace Autoccultist.Brain
             var operations =
                 from goal in ActiveGoals
                 from impulse in goal.Impulses
-                where impulse.CanExecute(state)
+                where !SituationOrchestrator.CurrentOrchestrations.Keys.Contains(impulse.Operation.Situation)
+                where impulse.CanExecute(state, out _)
                 orderby impulse.Priority descending
                 group impulse.Operation by impulse.Operation.Situation into situationGroup
                 select situationGroup.FirstOrDefault();

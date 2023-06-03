@@ -1,9 +1,9 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config;
     using UnityEngine;
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace Autoccultist.GUI
         {
             if (GUILayout.Button("Reload All Configs"))
             {
-                AutoccultistPlugin.Instance.ReloadAll();
+                Autoccultist.Instance.ReloadAll();
             }
 
             if (Library.ParseErrors.Count > 0)
@@ -45,6 +45,12 @@ namespace Autoccultist.GUI
                 {
                     ParseErrorsGUI.IsShowing = !ParseErrorsGUI.IsShowing;
                 }
+            }
+
+            if (!GameAPI.IsRunning)
+            {
+                GUILayout.Label("Game is not running.");
+                return;
             }
 
             GUILayout.BeginHorizontal();
@@ -77,7 +83,14 @@ namespace Autoccultist.GUI
                 ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
             }
 
+            if (GUILayout.Button("Reset SuperEgo"))
+            {
+                Superego.Clear();
+            }
+
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
 
             var taskRunner = GUILayout.Toggle(Ego.IsRunning, "Ego");
             if (taskRunner != Ego.IsRunning)
@@ -91,6 +104,8 @@ namespace Autoccultist.GUI
                     Ego.Stop();
                 }
             }
+
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
 

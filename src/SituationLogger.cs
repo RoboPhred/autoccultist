@@ -1,10 +1,13 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
-    using Assets.Core;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi;
+    using SecretHistories.Core;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Spheres;
+    using SecretHistories.UI;
 
     /// <summary>
     /// Utility classes for logging the status of situations.
@@ -14,85 +17,77 @@ namespace Autoccultist
         /// <summary>
         /// Dump information about the situations to the console.
         /// </summary>
-        public static void LogSituations()
+        public static string DumpSituations()
         {
-            LogInfo("Seeking situation tokens...");
-            foreach (var situationController in GameAPI.GetAllSituations())
+            var sb = new StringBuilder();
+
+            foreach (var situation in Watchman.Get<HornedAxe>().GetRegisteredSituations())
             {
-                LogInfo("We found a situation token - " + situationController.GetTokenId());
-                DumpSituationStatus(situationController);
+                sb.AppendLine("We found a situation token - " + situation.VerbId);
+                DumpSituationStatus(situation, sb);
             }
 
-            LogInfo("...Done seeking situation tokens");
+            return sb.ToString();
         }
 
-        private static void DumpSituationStatus(SituationController controller)
+        private static void DumpSituationStatus(Situation situation, StringBuilder sb)
         {
-            LogInfo("- state: " + controller.SituationClock.State);
-            LogInfo("- recipe id: " + controller.SituationClock.RecipeId);
-            LogInfo("- time remaining: " + controller.SituationClock.TimeRemaining);
+            sb.AppendLine("- state: " + situation.State.Identifier);
+            sb.AppendLine("- recipe id: " + situation.RecipeId);
+            sb.AppendLine("- time remaining: " + situation.TimeRemaining);
 
-            var storedAspects = AspectsToString(controller.GetAspectsInSituation());
-            LogInfo("- stored aspects: " + storedAspects);
+            var storedAspects = AspectsToString(situation.GetAspects(true));
+            sb.AppendLine("- stored aspects: " + storedAspects);
 
-            LogInfo("- starting slots:");
-            DumpSlots(controller.situationWindow.GetStartingSlots());
+            sb.AppendLine("- slots:");
+            DumpSphereSpec(situation.GetSpheresByCategory(SphereCategory.Threshold), sb);
 
-            LogInfo("- ongoing slots:");
-            DumpSlots(controller.situationWindow.GetOngoingSlots());
+            sb.AppendLine("- stored stacks");
+            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.SituationStorage), sb);
 
-            LogInfo("- stored stacks");
-            DumpElements(controller.GetStoredStacks());
-
-            LogInfo("- output stacks");
-            DumpElements(controller.GetOutputStacks());
+            sb.AppendLine("- output stacks");
+            DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.Output), sb);
         }
 
-        private static void DumpSlots(IList<RecipeSlot> slots)
+        private static void DumpSphereSpec(List<Sphere> spheres, StringBuilder sb)
         {
-            foreach (var slot in slots)
+            foreach (var sphere in spheres)
             {
-                LogInfo("- - " + slot.GoverningSlotSpecification.Id);
-                LogInfo("- - - label: " + slot.GoverningSlotSpecification.Label);
-                LogInfo("- - - description: " + slot.GoverningSlotSpecification.Description);
-                LogInfo("- - - greedy: " + slot.GoverningSlotSpecification.Greedy);
-                LogInfo("- - - consumes: " + slot.GoverningSlotSpecification.Consumes);
+                var spec = sphere.GoverningSphereSpec;
+                sb.AppendLine("- - " + spec.Id);
+                sb.AppendLine("- - - label: " + spec.Label);
+                sb.AppendLine("- - - description: " + spec.Description);
+                sb.AppendLine("- - - greedy: " + spec.Greedy);
+                sb.AppendLine("- - - consumes: " + spec.Consumes);
 
-                var requiredAspects = AspectsToString(slot.GoverningSlotSpecification.Required);
-                LogInfo("- - - required aspects: " + requiredAspects);
+                var requiredAspects = AspectsToString(spec.Required);
+                sb.AppendLine("- - - required aspects: " + requiredAspects);
 
-                var forbiddenAspects = AspectsToString(slot.GoverningSlotSpecification.Forbidden);
-                LogInfo("- - - forbidden aspects: " + forbiddenAspects);
-                LogInfo("- - - primary: " + slot.IsPrimarySlot());
-                LogInfo("- - - greedy: " + slot.IsGreedy);
+                var forbiddenAspects = AspectsToString(spec.Forbidden);
+                sb.AppendLine("- - - forbidden aspects: " + forbiddenAspects);
 
-                var content = slot.GetTokenInSlot();
-                if (content != null)
+                foreach (var content in sphere.Tokens.Select(x => x.Payload).OfType<ElementStack>())
                 {
-                    LogInfo("- - - content: " + content.EntityId);
-                    var asStack = content as ElementStackToken;
-                    if (asStack != null)
-                    {
-                        LogInfo("- - - - quantity: " + asStack.Quantity);
-                        LogInfo("- - - - lifetime remaining: " + asStack.LifetimeRemaining);
-                        var stackAspects = AspectsToString(asStack.GetAspects());
-                        LogInfo("- - - - aspects: " + stackAspects);
-                    }
+                    sb.AppendLine("- - - content: " + content.EntityId);
+                    sb.AppendLine("- - - quantity: " + content.Quantity);
+                    sb.AppendLine("- - - lifetime remaining: " + content.GetTimeshadow().LifetimeRemaining);
+                    var stackAspects = AspectsToString(content.GetAspects());
+                    sb.AppendLine("- - - aspects: " + stackAspects);
                 }
             }
         }
 
-        private static void DumpElements(IEnumerable<ElementStackToken> stacks)
+        private static void DumpSphereContent(Sphere sphere, StringBuilder sb)
         {
-            foreach (var stack in stacks)
+            foreach (var stack in sphere.GetTokens().Select(x => x.Payload).OfType<ElementStack>())
             {
-                LogInfo("- - " + stack.EntityId);
-                LogInfo("- - - quantity: " + stack.Quantity);
-                LogInfo("- - - lifetime remaining: " + stack.LifetimeRemaining);
+                sb.AppendLine("- - " + stack.EntityId);
+                sb.AppendLine("- - - quantity: " + stack.Quantity);
+                sb.AppendLine("- - - lifetime remaining: " + stack.GetTimeshadow().LifetimeRemaining);
             }
         }
 
-        private static string AspectsToString(IAspectsDictionary aspects)
+        private static string AspectsToString(AspectsDictionary aspects)
         {
             var builder = new StringBuilder();
             foreach (var aspect in aspects)
@@ -107,11 +102,6 @@ namespace Autoccultist
             }
 
             return str.Substring(0, str.Length - 2);
-        }
-
-        private static void LogInfo(string message)
-        {
-            AutoccultistPlugin.Instance.LogTrace(message);
         }
     }
 }

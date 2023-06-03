@@ -1,8 +1,8 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
@@ -28,28 +28,13 @@ namespace Autoccultist.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
+        public bool IsConditionMet(IGameState state, out ConditionFailure failureDescription)
         {
-            var remaining = new HashSet<ICardState>(state.GetAllCards());
-            foreach (var chooser in this.CardSet)
-            {
-                // TODO: Each chooser individually chooses a card, so its possible for a chooser
-                // to have multiple choices, but choose the one that is the only viable card for another chooser.
-                // We should get all candidates for all choosers and try to satisfy them all.
-                var choice = chooser.ChooseCard(remaining);
-                if (choice == null)
-                {
-                    return false;
-                }
-
-                remaining.Remove(choice);
-            }
-
-            return true;
+            return this.CardsMatchSet(state.GetAllCards(), out failureDescription);
         }
 
         /// <inheritdoc/>
-        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
+        public bool CardsMatchSet(IEnumerable<ICardState> cards, out ConditionFailure failureDescription)
         {
             var remaining = new HashSet<ICardState>(cards);
             foreach (var chooser in this.CardSet)
@@ -60,12 +45,14 @@ namespace Autoccultist.Config.Conditions
                 var choice = chooser.ChooseCard(remaining);
                 if (choice == null)
                 {
+                    failureDescription = new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(chooser), $"when looking for a set of {this.CardSet.Count} cards");
                     return false;
                 }
 
                 remaining.Remove(choice);
             }
 
+            failureDescription = null;
             return true;
         }
     }

@@ -1,4 +1,4 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
     /// <summary>
     /// A base class for implementing game state objects.

@@ -1,8 +1,8 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
-    using Autoccultist.Config;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Config;
+    using AutoccultistNS.Yaml;
     using UnityEngine;
 
     /// <summary>
@@ -34,11 +34,16 @@ namespace Autoccultist.GUI
 
         private static void ParseErrorsWindow(int id)
         {
+            if (GUILayout.Button("Reload All Configs"))
+            {
+                Autoccultist.Instance.ReloadAll();
+            }
+
             errorsScrollPosition = GUILayout.BeginScrollView(errorsScrollPosition);
 
             foreach (var ex in Library.ParseErrors)
             {
-                GUILayout.Label($"{FilesystemHelpers.GetRelativePath(ex.FilePath, AutoccultistPlugin.AssemblyDirectory)}:{ex.Start.Line}");
+                GUILayout.Label($"{FilesystemHelpers.GetRelativePath(ex.FilePath, Autoccultist.AssemblyDirectory)}:{ex.Start.Line}");
                 GUILayout.Label(ex.GetInnermostMessage());
                 if (GUILayout.Button("Copy to clipboard"))
                 {

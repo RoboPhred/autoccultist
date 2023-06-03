@@ -1,7 +1,7 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
-    using Autoccultist.Brain;
+    using AutoccultistNS.Brain;
     using UnityEngine;
 
     /// <summary>
@@ -38,6 +38,11 @@ namespace Autoccultist.GUI
             if (GUILayout.Button("Dump Nucleus Accumbens"))
             {
                 content = NucleusAccumbens.DumpStatus();
+            }
+
+            if (GUILayout.Button("Dump Situations"))
+            {
+                content = SituationLogger.DumpSituations();
             }
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);

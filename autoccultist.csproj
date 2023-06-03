@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <LangVersion>preview</LangVersion>
-    <RootNamespace>Autoccultist</RootNamespace>
-        <CodeAnalysisRuleSet>./StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
+    <RootNamespace>AutoccultistNS</RootNamespace>
+    <CodeAnalysisRuleSet>./StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -16,32 +16,35 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>.\externals\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Noon.Core.Enums">
-      <HintPath>.\externals\Noon.Core.Enums.dll</HintPath>
+    <Reference Include="SecretHistories.Constants">
+      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>.\externals\BepInEx.dll</HintPath>
+    <Reference Include="SecretHistories.Enums">
+      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
     </Reference>
-        <Reference Include="0Harmony">
-      <HintPath>.\externals\0Harmony.dll</HintPath>
+    <Reference Include="SecretHistories.Interfaces">
+      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>.\externals\UnityEngine.dll</HintPath>
+    <Reference Include="SecretHistories.Main">
+      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>.\externals\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>.\externals\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>.\externals\IMGUIModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>.\externals\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>.\externals\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>.\externals\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>.\externals\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>.\externals\Unity.InputSystem.dll</HintPath>
     </Reference>
   </ItemGroup>
 

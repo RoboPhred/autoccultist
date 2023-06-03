@@ -1,0 +1,85 @@
+# This arc advances the game as much as possible without starting a cult or exploring any locations.
+name: Complete early game [no cult]
+selectionHint:
+  anyOf:
+    - elementId: introjob
+    - elementId: bequestintro
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - !import ../../goals/aspirant/begin-intro.yml
+  - name: Get a job
+    primaryGoals:
+      - !import ../../goals/glover/acquire-job-glover-junior.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+  - name: Study bequest contents
+    primaryGoals:
+      - !import ../../goals/aspirant/study-bequest-passion.yml
+      - !import ../../goals/aspirant/discover-bookdealer.yml
+      - !import ../../goals/aspirant/find-collaborator.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Get a stronger physique while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillhealtha.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Get a scholarship while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/reason/acquire-skillreasona.yml
+      - !import ../../goals/reason/acquire-skillreasonb.yml
+      - !import ../../goals/reason/acquire-skillreasonc.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Get a promotion while finding people to recruit
+    primaryGoals:
+      - !import ../../goals/glover/acquire-job-glover-standard.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+  - name: Get swole, find people to recruit
+    primaryGoals:
+      - !import ../../goals/health/acquire-skillhealthb.yml
+      - !import ../../goals/health/acquire-skillhealthc.yml
+    supportingGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Finish finding people to recruit, buy and read books
+    primaryGoals:
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/consume-bookdealer.yml
+      - !import ../../goals/consume-books-lore-waitmorland.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Prepare for Oriflamme
+    primaryGoals:
+      - !import ../../goals/find-auctionhouse.yml
+      - !import ../../goals/auction/sell-rubbish.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Buy out Oriflamme, Acquire the Wood and White Door
+    primaryGoals:
+      - !import ../../goals/auction/acquire-everything.yml
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
+      - name: Watch Stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        impulses:
+          - operation: !import ../../operations/watch-stumm.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+  - name: Perpetual survival
+    primaryGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml

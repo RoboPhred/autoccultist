@@ -8,13 +8,12 @@ requirements:
 forbidders:
   anyOf:
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          cardSet:
-            - elementId: curse_nowhere
-          aspects: { lantern: 10 }
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: curse_nowhere
+          containsAspects: { lantern: 10 }
     - allOf:
-      - situation: explore
-        storedCardsMatch:
-          aspects: { moth: 10 }
+        - situation: explore
+          containsAspects: { moth: 10 }
 operation: !import ../../../operations/vaults/continue-vault-follower-moth.yml

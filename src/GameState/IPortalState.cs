@@ -1,16 +1,21 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
 
     /// <summary>
     /// Gets the game state of the mansus.
     /// </summary>
-    public interface IMansusState
+    public interface IPortalState
     {
         /// <summary>
-        /// Gets a value indicating whether the mansus is active.
+        /// Gets the state of the portal.
         /// </summary>
-        bool IsActive { get; }
+        PortalActiveState State { get; }
+
+        /// <summary>
+        /// Gets the id of the portal, or null if none is open.
+        /// </summary>
+        string PortalId { get; }
 
         /// <summary>
         /// Gets a dictionary mapping deck names to their current card.
@@ -26,5 +31,10 @@ namespace Autoccultist.GameState
         /// Gets the face up card.
         /// </summary>
         ICardState FaceUpCard { get; }
+
+        /// <summary>
+        /// Gets the card sitting in the mansus output sphere.
+        /// </summary>
+        ICardState OutputCard { get; }
     }
 }

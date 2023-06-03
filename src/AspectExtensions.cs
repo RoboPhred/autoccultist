@@ -1,5 +1,6 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -13,9 +14,9 @@ namespace Autoccultist
         /// </summary>
         /// <param name="aspects">The dictionary of aspects.</param>
         /// <returns>The total weight of all aspect degrees.</returns>
-        public static int GetWeight(this IReadOnlyDictionary<string, int> aspects)
+        public static double GetWeight(this IReadOnlyDictionary<string, int> aspects)
         {
-            return aspects.Values.Sum();
+            return Math.Sqrt(aspects.Values.Select(x => x * x).Sum());
         }
 
         /// <summary>
