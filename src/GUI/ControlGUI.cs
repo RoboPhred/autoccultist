@@ -149,7 +149,13 @@ namespace AutoccultistNS.GUI
                     prefix = "[Supporting]";
                 }
 
+                GUILayout.BeginHorizontal();
                 GUILayout.Label($"{prefix} {goal.Name}");
+                if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
+                {
+                    NucleusAccumbens.RemoveGoal(goal);
+                }
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.Label("Current Orchestrations:");
