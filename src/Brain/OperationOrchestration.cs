@@ -17,6 +17,7 @@ namespace AutoccultistNS.Brain
     {
         private readonly IOperation operation;
 
+        private string currentCoroutine;
         private CancellationTokenSource cancelCurrentTask;
 
         private OperationState operationState = OperationState.Unstarted;
@@ -119,7 +120,7 @@ namespace AutoccultistNS.Brain
                 case StateEnum.Unstarted:
                 case StateEnum.RequiringExecution:
                     this.operationState = OperationState.Starting;
-                    this.RunCoroutine(this.StartOperationCoroutine());
+                    this.RunCoroutine(this.StartOperationCoroutine(), nameof(this.StartOperationCoroutine));
                     break;
                 case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
@@ -130,7 +131,7 @@ namespace AutoccultistNS.Brain
                         return;
                     }
 
-                    this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution));
+                    this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution), nameof(this.ContinueSituationCoroutine));
                     break;
                 default:
                     // This happened to a the cult activity that should have been ongoing...  Got stuck on an unstarted state.
@@ -148,6 +149,12 @@ namespace AutoccultistNS.Brain
                 // Situation was removed, abort.
                 Autoccultist.Instance.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
                 this.Abort();
+                return;
+            }
+
+            if (this.currentCoroutine != null)
+            {
+                // We are waiting on a coroutine to finish.
                 return;
             }
 
@@ -187,7 +194,7 @@ namespace AutoccultistNS.Brain
             return situation;
         }
 
-        private async void Complete()
+        private void Complete()
         {
             var situation = this.GetSituationState();
 
@@ -204,7 +211,7 @@ namespace AutoccultistNS.Brain
                 {
                     Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
                     this.operationState = OperationState.ChoosingPortalCard;
-                    await this.AwaitCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice));
+                    this.RunCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice), nameof(this.ChooseMansusCoroutine));
                     return;
                 }
                 else
@@ -214,7 +221,7 @@ namespace AutoccultistNS.Brain
             }
 
             this.operationState = OperationState.Completing;
-            await this.AwaitCoroutine(this.CompleteOperationCoroutine());
+            this.RunCoroutine(this.CompleteOperationCoroutine(), nameof(this.CompleteOperationCoroutine));
         }
 
         private void UpdateOngoing()
@@ -273,13 +280,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            // Wait until our previous coroutine finishes.
-            if (this.cancelCurrentTask != null)
-            {
-                return;
-            }
-
-            this.RunCoroutine(this.CompleteOperationCoroutine());
+            this.RunCoroutine(this.CompleteOperationCoroutine(true), nameof(CompleteOperationCoroutine));
         }
 
         private void ContinueOperation()
@@ -309,7 +310,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution));
+            this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution), nameof(this.ContinueSituationCoroutine));
         }
 
         private IEnumerable<IAutoccultistAction> StartOperationCoroutine()
@@ -370,6 +371,13 @@ namespace AutoccultistNS.Brain
 
             // Start the situation
             yield return new StartSituationRecipeAction(this.SituationId);
+
+            this.ongoingRecipe = this.GetSituationState().CurrentRecipe;
+            if (this.ongoingRecipe == null)
+            {
+                throw new OperationFailedException($"Error in operation {this.operation.Name}: Situation {this.SituationId} did not start with a recipe.");
+            }
+            this.ongoingRecipeTimeRemaining = this.GetSituationState().RecipeTimeRemaining ?? 0;
 
             if (recipeSolution.EndOperation)
             {
@@ -499,23 +507,21 @@ namespace AutoccultistNS.Brain
             return new SlotCardAction(this.SituationId, specId, cardChoice);
         }
 
-        private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine)
+        private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine, string coroutineName)
         {
-            await this.AwaitCoroutine(coroutine);
+            await this.AwaitCoroutine(coroutine, coroutineName);
         }
 
-        private async Task AwaitCoroutine(IEnumerable<IAutoccultistAction> coroutine)
+        private async Task AwaitCoroutine(IEnumerable<IAutoccultistAction> coroutine, string coroutineName)
         {
-            if (this.cancelCurrentTask != null)
+            if (this.currentCoroutine != null)
             {
-                throw new ApplicationException("Tried to start a new operation coroutine while one is already ongoing.");
+                throw new ApplicationException($"Operation {this.operation.Name} tried to start a new coroutine {coroutineName} while coroutine {this.currentCoroutine} is already ongoing.");
             }
 
-            // Note: PerformActions gives us a Task that crawls along on the main thread.
-            //  Because of this, Waiting this task will create a deadlock.
-            // Async functions are fine, as they are broken up into state machines with Continue
             try
             {
+                this.currentCoroutine = coroutineName;
                 this.cancelCurrentTask = new CancellationTokenSource();
                 await AutoccultistActor.PerformActions(coroutine, this.cancelCurrentTask.Token);
             }
@@ -527,6 +533,7 @@ namespace AutoccultistNS.Brain
             finally
             {
                 this.cancelCurrentTask = null;
+                this.currentCoroutine = null;
             }
         }
 
