@@ -15,32 +15,7 @@ forbidders:
         - noneOf:
             - elementId: health
         # Do not forbid if we have enough spare cash that it doesn't matter
-        # Morland impulse wants 9 funds to buy.  So we will set our cap at 12
-        - cardSet:
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
-            - elementId: funds
-              location: tabletop
+        - !import ../../conditions/has-slushfund-major.yml
     - anyOf:
         # Forbid if we are generating a vitality
         - situation: study

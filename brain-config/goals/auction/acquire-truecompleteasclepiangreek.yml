@@ -8,26 +8,7 @@ completedWhen:
 impulses:
   - name: Purchase items at auction
     priority: goal
-    requirements:
-      cardSet:
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
+    requirements: !import ../../conditions/has-slushfund-minor.yml
     forbidders:
       anyOf:
         - elementId: truecompleteasclepiangreek

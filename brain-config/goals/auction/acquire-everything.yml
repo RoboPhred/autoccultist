@@ -5,25 +5,6 @@ completedWhen:
   elementId: genericrubbishbook
 impulses:
   - name: Purchase items at auction
-    requirements:
-      cardSet:
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
-        - elementId: funds
-          location: tabletop
+    requirements: !import ../../conditions/has-slushfund-minor.yml
     priority: goal
     operation: !import ../../operations/auction-purchase.yml

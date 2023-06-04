@@ -1,17 +1,22 @@
 name: Sell our rubbish
 requirements:
-  elementId: genericrubbishbook
+  anyOf:
+    - elementId: genericrubbishbook
+    - elementId: jumble
 completedWhen:
   noneOf:
     - elementId: genericrubbishbook
+    - elementId: jumble
 impulses:
-  - name: Sell our rubbish book
+  - name: Sell our rubbish
     operation:
-      name: Sell our rubbish book
+      name: Sell our rubbish
       situation: explore
       startingRecipe:
         slots:
           explore:
             elementId: locationauctionhouse
           Sell:
-            elementId: genericrubbishbook
+            oneOf:
+              - elementId: genericrubbishbook
+              - elementId: jumble
