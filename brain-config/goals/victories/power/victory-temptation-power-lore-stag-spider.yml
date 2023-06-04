@@ -11,7 +11,10 @@ requirements:
     - elementId: fragmentlantern
     - elementId: fragmentlanternb
     - elementId: fragmentheart
+    - elementId: fragmentmoth
+    - elementId: fragmentmoth
     - elementId: fragmentmothb
+    - elementId: fragmentwinter
     - elementId: fragmentwinter
 completedWhen:
   allOf:
@@ -171,15 +174,21 @@ impulses:
   - name: Subvert A Mansus Glimpse to A Shaping Chant
     priority: goal
     forbidders:
-      cardSet:
-        # Stop at 3
-        - elementId: fragmentforgec
-        - elementId: fragmentforgec
-        - elementId: fragmentforgec
+      anyOf:
+        - cardSet:
+          # Stop at 3
+          - elementId: fragmentforgec
+          - elementId: fragmentforgec
+          - elementId: fragmentforgec
+        - cardSet:
+          - elementId: fragmentforgec
+          - elementId: fragmentforged
     operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-b.yml
   # forgec + forgec = forged
   - name: Combine A Shaping Chant for Callidate Invocation
     priority: goal
+    forbidders:
+      elementId: fragmentforged
     operation: !import ../../../operations/lore/forge/lore-combine-forge-c.yml
   # mothb + lanternb = lanternc
   - name: Subvert A Wood-Whisper to An Unmerciful Mantra
