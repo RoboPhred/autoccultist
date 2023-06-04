@@ -59,7 +59,7 @@ impulses:
   - name: Answer Ghirbi's riddle on Secret Histories
     operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
 
-  # After we acquire the stag door, it is safe to consume our lanternc
+  # After we acquire the stag door, it is safe to consume our mothc and lanternc
   # mothc + lanternc = lanternd
   - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
     priority: goal
@@ -130,6 +130,7 @@ impulses:
     forbidders:
       elementId: fragmentgrailc
     operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
+
   - name: Combine A Red Secret
     requirements:
       elementId: waystagbefore_3
@@ -149,6 +150,7 @@ impulses:
     forbidders:
       elementId: fragmentsecrethistoriesc
     operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+
   - name: Combine An Occult Scrap
     requirements:
       elementId: waystagbefore_5

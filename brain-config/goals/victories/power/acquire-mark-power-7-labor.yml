@@ -6,10 +6,14 @@ completedWhen:
 impulses:
   - name: Labor for Funds
     forbidders:
-      # Stop working when we are waiting for the influence, as the work might take longer than the influence takes to expire
+      # Don't occupy the Work Verb when we're ready to ascend.
       allOf:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
+        - aspects:
+            influence: 1
+            forge:
+              greaterThanOrEqualTo: 15
     priority: maintenance
     operation: !import ../../../operations/work-skillhealth.yml
 
@@ -17,9 +21,13 @@ impulses:
     priority: goal
     forbidders:
       anyOf:
-        # Dont search if we already have king crucible
+        # Dont search if we already have king crucible, or the relevant Knock Influence
         - elementId: spirit_forgee_edge
         - elementId: pre.spirit_forgee_edge
+        - aspects:
+            influence: 1
+            knock:
+              greaterThanOrEqualTo: 5
     operation: !import ../../../operations/mansus/use-stag-normal.yml
   
   
@@ -136,15 +144,15 @@ impulses:
       anyOf:
         - elementId: influenceforgeg
         - aspects: { prisoner: 1 }
-        # Try to avoid notariety game overs from this.
+        # Try to avoid notoriety game overs from this.
         #  In practice, this hasn't been a problem since we win so quickly.  However, there have been
         #  close calls...
-        # Don't attempt this if the notariety will be caught
+        # Don't attempt this if the notoriety will be caught
         - situation: suspicion
         - situation: time
           storedCardsMatch:
             elementId: seasonsuspicion
-        # Don't do this if there is evidence against us, as a further notariety will be game over.
+        # Don't do this if there is evidence against us, as a further notoriety will be game over.
         - elementId: evidence
         - elementId: evidenceb
         # Dont do this if we already have notoriety on the board, as two suspicion seasons in quick succession
@@ -169,7 +177,10 @@ impulses:
         - elementId: ascensionpowerf
     forbidders:
       anyOf:
-        - elementId: influenceforgef
+        - aspects:
+            influence: 1
+            forge:
+              greaterThanOrEqualTo: 15
     operation:
       name: Enter the spider door
       situation: dream
