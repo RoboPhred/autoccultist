@@ -88,9 +88,6 @@ motivations:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      # While we aren't doing anything with talk, try to make some extra money
-      # FIXME: This gives us random ingredients, spintra, and junk.  Need to make this goal sell those things.
-      - !import ../../goals/funds/talk-thugforgeedge-cult.yml
       - !import ../../goals/funds/work-labor.yml
   - name: Move into Morlands, acquire a Rarefied Mind
     primaryGoals:

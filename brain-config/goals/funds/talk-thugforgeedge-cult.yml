@@ -5,6 +5,13 @@ requirements:
     - aspects: { society: 1 }
 impulses:
   - name: Find a bombmaker
+    requirements:
+      # Need money to make money
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
     forbidders:
       elementId: thugforgeedge
     priority: maintenance
@@ -22,6 +29,22 @@ impulses:
           slots:
             Subject:
               aspects: { society: 1 }
+  - name: Rehire a bombmaker
+    requirements:
+      elementId: thugforgeedge
+      lifetimeRemaining:
+        lessThan: 15
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: thugforgeedge
+      ongoingRecipes:
+        talktofollower:
+          slots:
+            Subject:
+              elementId: funds
   - name: Sell proceeds of bombmaking
     priority: maintenance
     operation:

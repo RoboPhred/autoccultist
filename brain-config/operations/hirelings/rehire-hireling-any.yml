@@ -1,0 +1,8 @@
+name: Rehire any hireling
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      elementId: { hireling: 1 }
+    Subject:
+      elementId: funds
