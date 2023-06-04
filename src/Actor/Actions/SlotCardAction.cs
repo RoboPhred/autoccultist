@@ -69,6 +69,10 @@ namespace AutoccultistNS.Actor.Actions
 
             var stack = card.ToElementStack();
 
+            // The game sets the home location when we pick up a card or it starts to move, not when we drop it!
+            // Without this, the card will jump back to the position it was before the player moved it.
+            stack.Token.RequestHomeLocationFromCurrentSphere();
+
             if (!GameAPI.TrySlotCard(sphere, stack))
             {
                 Autoccultist.Instance.LogWarn($"Card {card.ElementId} in sphere {stack.Token.Sphere.Id} was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
