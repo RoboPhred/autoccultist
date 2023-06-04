@@ -10,6 +10,7 @@ impulses:
       allOf:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
+        - elementId: influenceforgeg
     priority: maintenance
     operation: !import ../../../operations/work-skillhealth.yml
 
@@ -21,55 +22,54 @@ impulses:
         - elementId: spirit_forgee_edge
         - elementId: pre.spirit_forgee_edge
     operation: !import ../../../operations/mansus/use-stag-normal.yml
-  
-  
-#  - name: Explore the city for strange streets
-#    forbidders:
-#      anyOf:
-#        # Don't search if we have the target of our search
-#        - elementId: locationstreetstrange
-#        # Dont search if we already have king crucible
-#        - elementId: spirit_forgee_edge
-#        - elementId: pre.spirit_forgee_edge
-#        # Dont bother searching if we have two saved up.
-#        # Note: Increased to 2 because we might loose one while working.
-#        - cardSet:
-#            - aspects:
-#                influence: 1
-#                knock:
-#                  greaterThanOrEqualTo: 5
-#            - aspects:
-#                influence: 1
-#                knock:
-#                  greaterThanOrEqualTo: 5
-#    operation: !import ../../../operations/explore/explore-city-follower.yml
-#
-#  - name: Explore strange streets by moonlight
-#    priority: goal
-#    forbidders:
-#      anyOf:
-#        # Careful to not let fascination build up too much
-#        - cardSet:
-#            - elementId: fascination
-#            - elementId: fascination
-#        - situation: visions
-#          storedCardsMatch:
-#            elementId: fascination
-#        # Dont search if we already have king crucible
-#        - elementId: spirit_forgee_edge
-#        - elementId: pre.spirit_forgee_edge
-#        # Dont bother searching if we have two saved up.
-#        # Note: Increased to 2 because we might loose one while working.
-#        - cardSet:
-#            - aspects:
-#                influence: 1
-#                knock:
-#                  greaterThanOrEqualTo: 5
-#            - aspects:
-#                influence: 1
-#                knock:
-#                  greaterThanOrEqualTo: 5
-#    operation: !import ../../../operations/explore/explore-locationstreetsstrange.yml
+
+  #  - name: Explore the city for strange streets
+  #    forbidders:
+  #      anyOf:
+  #        # Don't search if we have the target of our search
+  #        - elementId: locationstreetstrange
+  #        # Dont search if we already have king crucible
+  #        - elementId: spirit_forgee_edge
+  #        - elementId: pre.spirit_forgee_edge
+  #        # Dont bother searching if we have two saved up.
+  #        # Note: Increased to 2 because we might loose one while working.
+  #        - cardSet:
+  #            - aspects:
+  #                influence: 1
+  #                knock:
+  #                  greaterThanOrEqualTo: 5
+  #            - aspects:
+  #                influence: 1
+  #                knock:
+  #                  greaterThanOrEqualTo: 5
+  #    operation: !import ../../../operations/explore/explore-city-follower.yml
+  #
+  #  - name: Explore strange streets by moonlight
+  #    priority: goal
+  #    forbidders:
+  #      anyOf:
+  #        # Careful to not let fascination build up too much
+  #        - cardSet:
+  #            - elementId: fascination
+  #            - elementId: fascination
+  #        - situation: visions
+  #          storedCardsMatch:
+  #            elementId: fascination
+  #        # Dont search if we already have king crucible
+  #        - elementId: spirit_forgee_edge
+  #        - elementId: pre.spirit_forgee_edge
+  #        # Dont bother searching if we have two saved up.
+  #        # Note: Increased to 2 because we might loose one while working.
+  #        - cardSet:
+  #            - aspects:
+  #                influence: 1
+  #                knock:
+  #                  greaterThanOrEqualTo: 5
+  #            - aspects:
+  #                influence: 1
+  #                knock:
+  #                  greaterThanOrEqualTo: 5
+  #    operation: !import ../../../operations/explore/explore-locationstreetsstrange.yml
 
   - name: Summon King Crucible
     priority: goal
