@@ -1,0 +1,20 @@
+name: Produce funds with the bombmaker
+impulses:
+  - name: Find a bombmaker
+    forbidders:
+      elementId: thugforgeedge
+    priority: maintenance
+    operation: !import ../../operations/explore/explore-city-criminal-bombmaker.yml
+  - name: Send bombmaker on cult business
+    priority: maintenance
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: thugforgeedge
+      ongoingRecipes:
+        talktofollower:
+          slots:
+            Subject:
+              aspects: { society: 1 }

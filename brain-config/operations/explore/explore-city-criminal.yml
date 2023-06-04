@@ -1,4 +1,4 @@
-name: Explore the city
+name: Explore the city to find a criminal
 situation: explore
 startingRecipe:
   slots:

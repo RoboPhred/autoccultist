@@ -1,0 +1,5 @@
+name: Work with physical labor
+impulseSets:
+  - !import ../../impulse-sets/procure-funds-labor.yml
+impulses:
+  - !import ../../impulses/maint-refresh-health.yml

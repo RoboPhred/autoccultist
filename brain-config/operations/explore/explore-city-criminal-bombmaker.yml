@@ -1,0 +1,14 @@
+name: Explore the city to find a bomb maker
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      aspects: { follower: 1 }
+conditionalOngoingRecipes:
+  - condition:
+      situation: explore
+      recipe: explorechoosepaycriminal
+      containsAspects: { thugforgeedge: 1 }
+    slots:
+      Payment:
+        elementId: funds

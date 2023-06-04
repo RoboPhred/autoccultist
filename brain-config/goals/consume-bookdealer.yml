@@ -7,4 +7,4 @@ completedWhen:
     # Since we can't rely on a card indicating we have completed morlands, we have to rely on the absense of the card.
     - elementId: locationbookdealer
 impulses:
-  - !import ../impulses/books/maint-buy-morland-books.yml
+  - !import ../impulses/books/buy-morland-books.yml

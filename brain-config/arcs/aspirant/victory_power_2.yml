@@ -34,20 +34,20 @@ motivations:
       - !import ../../goals/aspirant/find-collaborator.yml
     supportingGoals:
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
       - !import ../../goals/health/acquire-skillhealtha-with-work.yml
       - !import ../../goals/health/acquire-skillhealthb-with-work.yml
     supportingGoals:
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Get a little passionate while finding people to recruit
     primaryGoals:
       - !import ../../goals/passion/acquire-skillpassiona.yml
     supportingGoals:
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Get a scholarship while finding people to recruit
     primaryGoals:
       - !import ../../goals/reason/acquire-skillreasona.yml
@@ -57,14 +57,14 @@ motivations:
       - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Establish Society of St. Hydra
     primaryGoals:
       - !import ../../goals/cult/form-cult-doctrine-secrethistories.yml
     supportingGoals:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Get swole, find people to recruit
     primaryGoals:
       - !import ../../goals/health/acquire-skillhealthc-with-work.yml
@@ -76,7 +76,7 @@ motivations:
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Finish up Morlands, find rites from auction
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
@@ -88,7 +88,8 @@ motivations:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/talk-bombmaker.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Move into Morlands, acquire a Rarefied Mind
     primaryGoals:
       - !import ../../goals/hq/move-hq-library.yml
@@ -97,7 +98,7 @@ motivations:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import ../../goals/mansus/acquire-way-wood.yml
@@ -106,7 +107,7 @@ motivations:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Acquire the Stag Door, Spider Door, and the Formula Fissive
     primaryGoals:
       - !import ../../goals/victories/power/victory-temptation-power-lore-stag-spider.yml
@@ -114,7 +115,7 @@ motivations:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Achieve the Marks of Power
     primaryGoals:
       - !import ../../goals/victories/power/acquire-dedication-power.yml
@@ -123,7 +124,7 @@ motivations:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
   - name: Acquire the Seventh mark of Power
     primaryGoals:
       - !import ../../goals/victories/power/acquire-mark-power-7-labor.yml

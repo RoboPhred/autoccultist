@@ -85,7 +85,7 @@ motivations:
       - !import ../../goals/glover/glover-remove-boss-seduction.yml
       - !import ../../goals/victories/sensation/acquire-dedication-sensation.yml
     supportingGoals:
-      - !import ../../goals/work-labor.yml
+      - !import ../../goals/funds/work-labor.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/find-cabaret.yml
