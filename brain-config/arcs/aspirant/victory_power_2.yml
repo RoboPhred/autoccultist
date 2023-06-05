@@ -82,8 +82,18 @@ motivations:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
       - !import ../../goals/find-auctionhouse.yml
-      - !import ../../goals/auction/acquire-stumm.yml
-      - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
+      - !import ../../goals/auction/acquire-stumm-only.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/followers/attract-followers.yml
+      - !import ../../goals/funds/work-labor.yml
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
+  - name: Acquire the Wood and White Door
+    primaryGoals:
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
     supportingGoals:
       - !import ../../goals/cult/recruit-away-influences.yml
       - !import ../../goals/followers/attract-followers.yml
@@ -98,15 +108,8 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/funds/work-labor.yml
-  - name: Acquire the Wood and White Door
-    primaryGoals:
-      - !import ../../goals/mansus/acquire-way-wood.yml
-      - !import ../../goals/mansus/acquire-way-whitedoor.yml
-    supportingGoals:
-      - !import ../../goals/cult/recruit-away-influences.yml
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/funds/work-labor.yml
+      - !import ../../goals/victories/power/acquire-dedication-power.yml
+      - !import ../../goals/victories/power/acquire-ascension-power.yml
   - name: Acquire the Stag Door, Spider Door, and the Formula Fissive
     primaryGoals:
       - !import ../../goals/victories/power/victory-temptation-power-lore-stag-spider.yml
@@ -115,6 +118,8 @@ motivations:
       - !import ../../goals/followers/attract-followers.yml
       - !import ../../goals/survive.yml
       - !import ../../goals/funds/work-labor.yml
+      - !import ../../goals/victories/power/acquire-dedication-power.yml
+      - !import ../../goals/victories/power/acquire-ascension-power.yml
   - name: Achieve the Marks of Power
     primaryGoals:
       - !import ../../goals/victories/power/acquire-dedication-power.yml
