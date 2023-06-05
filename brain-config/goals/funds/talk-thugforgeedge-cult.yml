@@ -16,6 +16,7 @@ impulses:
       elementId: thugforgeedge
     priority: maintenance
     operation: !import ../../operations/explore/explore-city-criminal-bombmaker.yml
+
   - name: Send bombmaker on cult business
     priority: maintenance
     operation:
@@ -29,6 +30,7 @@ impulses:
           slots:
             Subject:
               aspects: { society: 1 }
+
   - name: Rehire a bombmaker
     requirements:
       elementId: thugforgeedge
@@ -45,6 +47,7 @@ impulses:
           slots:
             Subject:
               elementId: funds
+
   - name: Sell proceeds of bombmaking
     priority: maintenance
     operation:
