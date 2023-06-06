@@ -34,13 +34,16 @@ namespace AutoccultistNS.GameState.Impl
             this.isUnique = sourceStack.Unique;
 
             var calcAspects = new AspectsDictionary();
+
             // We want the aspects of an individual card, not the sum total of the entire stack
             // GetAspects() will do this, but then also multiply the result by the stack quantity
             // Note: The game seems inclined to cache this data.  Is this a performance problem?
             calcAspects.CombineAspects(sourceStack.Element.Aspects);
+
             // Note: As far as I can tell, it is expected that any stack that has mutations will have a quantity of 1.
             // Mutated cards don't stack.
             calcAspects.ApplyMutations(sourceStack.Mutations);
+
             // This is included in the GetAspects() logic (with its default includeSelf true), and we relied on it in the past.
             calcAspects[this.elementId] = 1;
             this.aspects = calcAspects;

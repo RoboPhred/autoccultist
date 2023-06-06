@@ -31,9 +31,11 @@ namespace AutoccultistNS.GameState.Impl
             this.state = situation.State.Identifier;
             this.isOccupied = this.state != StateEnum.Unstarted;
 
-            // Do not be confused by Situation.CurrentRecipe, as that shows shows the 'next' recipe for the current slots once the warmup is done.
-            // Effectively, it shows the alt recipe that will be followed.
-            // Our idea of the current recipe is what we are currently working on, not what the next will be.
+            /*
+            Do not be confused by Situation.CurrentRecipe, as that shows shows the 'next' recipe for the current slots once the warmup is done.
+            Effectively, it shows the alt recipe that will be followed.
+            Our idea of the current recipe is what we are currently working on, not what the next will be.
+            */
 
             if (this.state == StateEnum.Ongoing)
             {
