@@ -63,6 +63,11 @@ namespace AutoccultistNS.Actor
                     this.onError(ex);
                 }
             }
+
+            public override string ToString()
+            {
+                return this.action.ToString();
+            }
         }
 
         /// <summary>
