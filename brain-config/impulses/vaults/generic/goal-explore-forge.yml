@@ -7,9 +7,8 @@ forbidders:
     - elementId: evidenceb
 operation:
   name: Explore a Vault
-  situation: explore
+  extends: !import ../../../operations/vaults/continue-vault-any.yml
   startingRecipe:
-    endOperation: true
     slots:
       explore:
         aspects: { vault: 1 }
