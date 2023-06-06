@@ -11,8 +11,8 @@ namespace AutoccultistNS
 
         public bool IsConditionMet { get; }
 
-        public override string ToString() => this.IsConditionMet ? "Success" : "Failure";
-
         public static implicit operator bool(ConditionResult result) => result.IsConditionMet;
+
+        public override string ToString() => this.IsConditionMet ? "Success" : "Failure";
     }
 }
