@@ -24,59 +24,18 @@ impulses:
         # Dont search if we already have king crucible, or the relevant Knock Influence
         - elementId: spirit_forgee_edge
         - elementId: pre.spirit_forgee_edge
+        - elementId: spirit_forgee_edge.defunct
+          lifetimeRemaining: 30
         - aspects:
             influence: 1
             knock:
               greaterThanOrEqualTo: 5
+        # We can't start spider door grinding, so don't bother summong crucible
+        # This is so we don't have him decay while we are waiting for the suspicion to decay
+        # In theory the bot should be frame perfect at sustaining crucible, but in practice
+        # gaps of time slip by between game frames and decay he does.
+        - !import ../../../conditions/has-suspicion.yml
     operation: !import ../../../operations/mansus/use-stag-normal.yml
-
-  #  - name: Explore the city for strange streets
-  #    forbidders:
-  #      anyOf:
-  #        # Don't search if we have the target of our search
-  #        - elementId: locationstreetstrange
-  #        # Dont search if we already have king crucible
-  #        - elementId: spirit_forgee_edge
-  #        - elementId: pre.spirit_forgee_edge
-  #        # Dont bother searching if we have two saved up.
-  #        # Note: Increased to 2 because we might loose one while working.
-  #        - cardSet:
-  #            - aspects:
-  #                influence: 1
-  #                knock:
-  #                  greaterThanOrEqualTo: 5
-  #            - aspects:
-  #                influence: 1
-  #                knock:
-  #                  greaterThanOrEqualTo: 5
-  #    operation: !import ../../../operations/explore/explore-city-follower.yml
-  #
-  #  - name: Explore strange streets by moonlight
-  #    priority: goal
-  #    forbidders:
-  #      anyOf:
-  #        # Careful to not let fascination build up too much
-  #        - cardSet:
-  #            - elementId: fascination
-  #            - elementId: fascination
-  #        - situation: visions
-  #          storedCardsMatch:
-  #            elementId: fascination
-  #        # Dont search if we already have king crucible
-  #        - elementId: spirit_forgee_edge
-  #        - elementId: pre.spirit_forgee_edge
-  #        # Dont bother searching if we have two saved up.
-  #        # Note: Increased to 2 because we might loose one while working.
-  #        - cardSet:
-  #            - aspects:
-  #                influence: 1
-  #                knock:
-  #                  greaterThanOrEqualTo: 5
-  #            - aspects:
-  #                influence: 1
-  #                knock:
-  #                  greaterThanOrEqualTo: 5
-  #    operation: !import ../../../operations/explore/explore-locationstreetsstrange.yml
 
   - name: Summon King Crucible
     priority: goal
@@ -125,10 +84,11 @@ impulses:
     # Keep the king around until we need him
     priority: maintenance
     forbidders:
-      allOf:
-        # Dont keep crucible occupied if we are ready to ascend.
-        - elementId: ascensionpowerf
-        - elementId: influenceforgeg
+      anyOf:
+        - allOf:
+            # Dont keep crucible occupied if we are ready to ascend.
+            - elementId: ascensionpowerf
+            - elementId: influenceforgeg
         # Don't prolong his death if we are unlikely to have the time to use him properly
         - elementId: spirit_forgee_edge
           lifetimeRemaining:
