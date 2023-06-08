@@ -25,6 +25,8 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Failed to empty the mansus.");
             }
 
+            GameAPI.UserUnpause();
+
             GameStateProvider.Invalidate();
         }
     }

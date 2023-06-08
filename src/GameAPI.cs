@@ -328,6 +328,14 @@ namespace AutoccultistNS
         }
 
         /// <summary>
+        /// Marks the user speed level as being unpaused.
+        /// </summary>
+        public static void UserUnpause()
+        {
+            Watchman.Get<LocalNexus>().UnPauseGame(true);
+        }
+
+        /// <summary>
         /// Sets the pause state of the game.
         /// </summary>
         /// <returns>A token to unpause the game.</returns>
