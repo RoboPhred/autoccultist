@@ -35,13 +35,6 @@ namespace AutoccultistNS.Config
         public IGameStateConditionConfig CompletedWhen { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of bundles of impulses to also include in this goal.
-        /// <para>
-        /// These impulses will be lower priority than the goal's normal impulses, unless overriden with an impulse's <see cref="ImpulseConfig.Priority"/> property.
-        /// </summary>
-        public List<List<ImpulseConfig>> ImpulseSets { get; set; } = new List<List<ImpulseConfig>>();
-
-        /// <summary>
         /// Gets or sets a list of impulses this goal provides.
         /// <para>
         /// Each impulse provides an operation and conditions under which the operation will be performed.
@@ -58,7 +51,7 @@ namespace AutoccultistNS.Config
         IGameStateCondition IGoal.CompletedWhen => this.CompletedWhen;
 
         /// <inheritdoc/>
-        IReadOnlyList<IImpulse> IGoal.Impulses => this.Impulses.SelectMany(x => x).Concat(this.ImpulseSets.SelectMany(set => set)).ToArray();
+        IReadOnlyList<IImpulse> IGoal.Impulses => this.Impulses.SelectMany(x => x).ToArray();
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.

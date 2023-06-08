@@ -46,7 +46,7 @@ namespace AutoccultistNS.Yaml
 
                     // So this is a sequence, deserialize it into a OneOrMany.
                     // We can safely return this to have it cached, as what else is going to be parsing this?
-                    var innerValue = DeserializeOneOrMany(importParser, expectedType, subjectType, nestedObjectDeserializer);
+                    var innerValue = this.DeserializeOneOrMany(importParser, expectedType, subjectType, nestedObjectDeserializer);
                     importParser.Consume<DocumentEnd>();
                     importParser.Consume<StreamEnd>();
 
@@ -65,7 +65,7 @@ namespace AutoccultistNS.Yaml
             }
             else
             {
-                value = DeserializeOneOrMany(reader, expectedType, subjectType, nestedObjectDeserializer);
+                value = this.DeserializeOneOrMany(reader, expectedType, subjectType, nestedObjectDeserializer);
                 return true;
             }
         }
@@ -96,7 +96,7 @@ namespace AutoccultistNS.Yaml
                 items = array;
             }
 
-            var result = Activator.CreateInstance(expectedType, new[] { items }); ;
+            var result = Activator.CreateInstance(expectedType, new[] { items });
             Autoccultist.Instance.LogWarn($"OneOrMany DeserializeOneOrMany complete with {result.GetType().FullName}");
 
             return result;

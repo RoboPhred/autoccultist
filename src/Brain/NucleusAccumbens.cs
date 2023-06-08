@@ -86,7 +86,7 @@ namespace AutoccultistNS.Brain
                     sb.AppendFormat("- - {0}\n", impulse.Name);
                     sb.AppendFormat("- - - Priority: {0}\n", impulse.Priority);
 
-                    var reqMatch = impulse.Requirements?.IsConditionMet(state);
+                    var reqMatch = impulse?.IsConditionMet(state);
                     sb.AppendFormat("- - - Requirements met: {0}\n", reqMatch.IsConditionMet);
                     if (!reqMatch)
                     {

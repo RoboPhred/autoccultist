@@ -1,6 +1,5 @@
 namespace AutoccultistNS.Config
 {
-    using System.Collections.Generic;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.GameState;
@@ -58,9 +57,6 @@ namespace AutoccultistNS.Config
         TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
         /// <inheritdoc/>
-        IGameStateCondition IImpulse.Requirements => this.impulseCondition;
-
-        /// <inheritdoc/>
         IOperation IImpulse.Operation => this.Operation ?? this.Extends?.Operation;
 
         /// <inheritdoc/>
@@ -77,6 +73,11 @@ namespace AutoccultistNS.Config
             }
         }
 
+        public ConditionResult IsConditionMet(IGameState state)
+        {
+            return this.impulseCondition.IsConditionMet(state);
+        }
+
         private class ImpulseConfigCondition : IGameStateCondition
         {
             private readonly ImpulseConfig impulse;
@@ -86,7 +87,7 @@ namespace AutoccultistNS.Config
                 this.impulse = impulse;
             }
 
-            ConditionResult IGameStateCondition.IsConditionMet(IGameState state)
+            public ConditionResult IsConditionMet(IGameState state)
             {
                 var requirements = this.impulse.Requirements ?? this.impulse.Extends?.Requirements;
                 var forbidders = this.impulse.Forbidders ?? this.impulse.Extends?.Forbidders;

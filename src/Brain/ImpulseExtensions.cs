@@ -15,14 +15,10 @@ namespace AutoccultistNS.Brain
         /// <returns>True if this impulse can execute right away, or False if it cannot.</returns>
         public static ConditionResult CanExecute(this IImpulse impulse, IGameState state)
         {
-            // Optionally check required cards for starting the impulse
-            if (impulse.Requirements != null)
+            var impulseReady = impulse.IsConditionMet(state);
+            if (!impulseReady)
             {
-                var result = impulse.Requirements.IsConditionMet(state);
-                if (!result)
-                {
-                    return new AddendedConditionFailure(result, "Requirements not met.");
-                }
+                return new AddendedConditionFailure(impulseReady, "Requirements not met.");
             }
 
             var operationReady = impulse.Operation.IsConditionMet(state);
