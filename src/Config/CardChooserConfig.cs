@@ -97,27 +97,18 @@ namespace AutoccultistNS.Config
         public ValueCondition LifetimeRemaining { get; set; }
 
         /// <summary>
+        /// Gets or sets a list of additional card choosers to filter this chooser by.
+        /// </summary>
+        public List<CardChooserConfig> From { get; set; }
+
+        /// <summary>
         /// Choose a card from the given card states based on this filter's rules.
         /// </summary>
         /// <param name="cards">The cards to choose from.</param>
         /// <returns>The chosen card, or <c>null</c> if none were chosen.</returns>
         public ICardState ChooseCard(IEnumerable<ICardState> cards)
         {
-            // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
-            var aspectsAsCondition = this.Aspects?.ToDictionary(entry => entry.Key, entry => entry.Value as IValueCondition);
-
-            var candidates =
-                from card in cards
-                where this.ElementId == null || card.ElementId == this.ElementId
-                where this.Location == null || card.Location == this.Location
-                where this.LifetimeRemaining?.IsConditionMet(card.LifetimeRemaining) != false
-                where this.AllowedElementIds?.Contains(card.ElementId) != false
-                where this.ForbiddenElementIds?.Contains(card.ElementId) != true
-                where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
-                where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
-                where !this.Unique.HasValue || card.IsUnique == this.Unique.Value
-                where this.AdditionalFilter(card)
-                select card;
+            var candidates = this.FilterCards(cards);
 
             // Sort for age bias.
             if (this.AgeBias == CardAgeSelection.Oldest)
@@ -204,6 +195,30 @@ namespace AutoccultistNS.Config
             {
                 throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");
             }
+        }
+
+        protected virtual IEnumerable<ICardState> FilterCards(IEnumerable<ICardState> cards)
+        {
+            if (this.From != null && this.From.Count > 0)
+            {
+                cards = new HashSet<ICardState>(this.From.Select(x => x.ChooseCard(cards)));
+            }
+
+            // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
+            var aspectsAsCondition = this.Aspects?.ToDictionary(entry => entry.Key, entry => entry.Value as IValueCondition);
+
+            return
+                from card in cards
+                where this.ElementId == null || card.ElementId == this.ElementId
+                where this.Location == null || card.Location == this.Location
+                where this.LifetimeRemaining?.IsConditionMet(card.LifetimeRemaining) != false
+                where this.AllowedElementIds?.Contains(card.ElementId) != false
+                where this.ForbiddenElementIds?.Contains(card.ElementId) != true
+                where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
+                where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
+                where !this.Unique.HasValue || card.IsUnique == this.Unique.Value
+                where this.AdditionalFilter(card)
+                select card;
         }
 
         /// <summary>

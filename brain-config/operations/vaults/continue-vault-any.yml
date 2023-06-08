@@ -58,6 +58,52 @@ conditionalOngoingRecipes:
     slots:
       Assistance:
         elementId: funds
+  # Peril => Forge
+  - condition:
+      allOf:
+        - situation: explore
+          storedCardsMatch:
+            aspects: { peril: 1 }
+        - noneOf:
+            - allOf:
+                - situation: explore
+                  containsAspects: { forge: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_desert
+                  containsAspects: { grail: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_forest
+                  containsAspects: { moth: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_mountains
+                  containsAspects: { winter: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_sea
+                  containsAspects: { heart: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_treacherousg
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          forge:
+            greaterThanOrEqualTo: 2
   # Guardian => Edge
   - condition:
       allOf:
@@ -117,52 +163,7 @@ conditionalOngoingRecipes:
           follower: 1
           edge:
             greaterThanOrEqualTo: 2
-  # Peril => Forge
-  - condition:
-      allOf:
-        - situation: explore
-          storedCardsMatch:
-            aspects: { peril: 1 }
-        - noneOf:
-            - allOf:
-                - situation: explore
-                  containsAspects: { forge: 10 }
-            - allOf:
-                - situation: explore
-                  storedCardsMatch:
-                    cardSet:
-                      - elementId: peril_desert
-                  containsAspects: { grail: 10 }
-            - allOf:
-                - situation: explore
-                  storedCardsMatch:
-                    cardSet:
-                      - elementId: peril_forest
-                  containsAspects: { moth: 10 }
-            - allOf:
-                - situation: explore
-                  storedCardsMatch:
-                    cardSet:
-                      - elementId: peril_mountains
-                  containsAspects: { winter: 10 }
-            - allOf:
-                - situation: explore
-                  storedCardsMatch:
-                    cardSet:
-                      - elementId: peril_sea
-                  containsAspects: { heart: 10 }
-            - allOf:
-                - situation: explore
-                  storedCardsMatch:
-                    cardSet:
-                      - elementId: peril_treacherousg
-    slots:
-      Assistance:
-        aspectWeightBias: highest
-        aspects:
-          follower: 1
-          forge:
-            greaterThanOrEqualTo: 2
+
   # Curse => Heart
   - condition:
       allOf:
