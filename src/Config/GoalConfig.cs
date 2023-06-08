@@ -46,7 +46,7 @@ namespace AutoccultistNS.Config
         /// <para>
         /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        public List<ImpulseConfig> Impulses { get; set; } = new List<ImpulseConfig>();
+        public List<OneOrMany<ImpulseConfig>> Impulses { get; set; } = new List<OneOrMany<ImpulseConfig>>();
 
         /// <inheritdoc/>
         string IGoal.Name => this.Name;
@@ -58,7 +58,7 @@ namespace AutoccultistNS.Config
         IGameStateCondition IGoal.CompletedWhen => this.CompletedWhen;
 
         /// <inheritdoc/>
-        IReadOnlyList<IImpulse> IGoal.Impulses => this.Impulses.Concat(this.ImpulseSets.SelectMany(set => set)).ToArray();
+        IReadOnlyList<IImpulse> IGoal.Impulses => this.Impulses.SelectMany(x => x).Concat(this.ImpulseSets.SelectMany(set => set)).ToArray();
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.

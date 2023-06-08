@@ -25,6 +25,7 @@ namespace AutoccultistNS.Yaml
             }
 
             // Things get gnarly here, as we might be parsing an !import tag.
+            // FIXME: No reason this should be here if we had a proper parser order, but reordering them any other way causes baffling parsing errors.
             if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
                 value = Deserializer.DeserializeFromParser(filePath, importParser =>

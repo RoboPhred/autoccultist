@@ -135,10 +135,13 @@ namespace AutoccultistNS.Yaml
         {
             return new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
+                    // FIXME: This is an absolute mess. Things rely on this exact order.  OneOrMany and DuckType must reach out and reimplement ImportSerializer logic, but reversing the order
+                    // causes baffling and incomprehensable errors about unnamed types not implementing IConvertable
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new OneOrManyDeserializer(), s => s.OnTop())
                     .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
-                    .WithNodeDeserializer(objectDeserializer => new NodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
+                    .WithNodeDeserializer(objectDeserializer => new WrappedObjectNodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
                     .Build();
         }
     }

@@ -6,17 +6,18 @@ namespace AutoccultistNS.Yaml
     using YamlDotNet.Serialization;
 
     /// <summary>
-    /// Wraps a <see cref="INodeDeserializer"/> with our own modifications.
+    /// Wraps a <see cref="WrappedObjectNodeDeserializer"/> with our own modifications.
+    /// This allows parsed objects to handle post-deserialization logic that is aware of its file and location.
     /// </summary>
-    public class NodeDeserializer : INodeDeserializer
+    public class WrappedObjectNodeDeserializer : INodeDeserializer
     {
         private readonly INodeDeserializer nodeDeserializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NodeDeserializer"/> class.
+        /// Initializes a new instance of the <see cref="WrappedObjectNodeDeserializer"/> class.
         /// </summary>
         /// <param name="nodeDeserializer">The ancestor deserializer to use.</param>
-        public NodeDeserializer(INodeDeserializer nodeDeserializer)
+        public WrappedObjectNodeDeserializer(INodeDeserializer nodeDeserializer)
         {
             this.nodeDeserializer = nodeDeserializer;
         }
@@ -30,6 +31,7 @@ namespace AutoccultistNS.Yaml
                 start = parsingEvent?.Start;
             }
 
+            Autoccultist.Instance.LogWarn($"Deserializing a {expectedType.FullName}, our next node is {reader.Current?.GetType().FullName}");
             if (this.nodeDeserializer.Deserialize(reader, expectedType, nestedObjectDeserializer, out value))
             {
                 if (value is IAfterYamlDeserialization afterDeserialized)
