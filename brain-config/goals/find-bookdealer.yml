@@ -1,0 +1,8 @@
+name: Find Miss Morland's
+completedWhen:
+  elementId: locationbookdealer
+impulses:
+  - name: Explore the city with a follower
+    operation: !import ../operations/explore/explore-city-follower.yml
+  - name: Explore the city with health
+    operation: !import ../operations/explore/explore-city-health.yml
