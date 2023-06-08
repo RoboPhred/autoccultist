@@ -155,7 +155,7 @@ namespace AutoccultistNS.Brain
             var operations =
                 from goal in ActiveGoals
                 from impulse in goal.Impulses
-                where !SituationOrchestrator.CurrentOrchestrations.Keys.Contains(impulse.Operation.Situation)
+                where IsSituationAvailable(impulse.Operation.Situation)
                 where impulse.CanExecute(state)
                 orderby impulse.Priority descending
                 group impulse.Operation by impulse.Operation.Situation into situationGroup
@@ -165,6 +165,36 @@ namespace AutoccultistNS.Brain
             {
                 SituationOrchestrator.ExecuteOperation(operation);
             }
+        }
+
+        private static bool IsSituationAvailable(string situationId)
+        {
+            if (!SituationOrchestrator.CurrentOrchestrations.Keys.Contains(situationId))
+            {
+                return false;
+            }
+
+            var situationState = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == situationId);
+            if (situationState == null)
+            {
+                // Situation doesnt exist.
+                return false;
+            }
+
+            if (situationState.State == SecretHistories.Enums.StateEnum.Unstarted)
+            {
+                // We can take over unstarted situations.
+                return true;
+            }
+
+            if (situationState.State == SecretHistories.Enums.StateEnum.Ongoing)
+            {
+                // Only take over ongoing situations if they are empty.
+                return situationState.RecipeSlots.All(x => x.Card == null);
+            }
+
+            // Don't know what the situation is doing, leave it alone.
+            return false;
         }
     }
 }
