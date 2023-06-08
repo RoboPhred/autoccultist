@@ -3,10 +3,9 @@ requirements:
   elementId: health
 completedWhen:
   aspects: { healthskill: 1 }
-impulseSets:
-  - !import ../../impulse-sets/procure-vitality.yml
 impulses:
   - name: Skilled physical work
     priority: goal
     operation: !import ../../operations/work-skillhealth.yml
   - !import ../../impulses/goal-learn-lesson-vitality.yml
+  - !import ../../impulse-sets/procure-vitality.yml

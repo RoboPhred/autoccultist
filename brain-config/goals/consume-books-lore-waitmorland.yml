@@ -4,15 +4,14 @@ completedWhen:
   allOf:
     - cardSet:
         - elementId: genericrubbishbook
-#        - elementId: genericrubbishbook
+    #        - elementId: genericrubbishbook
     - noneOf:
         # locationbookdealer_exhausted can become our hq, which is then lost if we switch hq.  Since we cannot rely on the presense of locationbookdealer_exhausted, we have
         # to rely on the absence of locationbookdealer
         - elementId: locationbookdealer
     - noneOf:
         - !import ../conditions/readable-or-translatable-books.yml
-impulseSets:
-  - !import ../impulse-sets/learn-languages.yml
-  - !import ../impulse-sets/translate-books.yml
 impulses:
   - !import ../impulses/books/maint-read-lore.yml
+  - !import ../impulse-sets/learn-languages.yml
+  - !import ../impulse-sets/translate-books.yml

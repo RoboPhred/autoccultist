@@ -5,7 +5,7 @@ requirements:
     - elementId: legacybytjobmatured
     - elementId: legacydiarylastcharacter
 completedWhen:
-    situation: talk
+  situation: talk
 
 impulses:
   - name: Work the intro job
@@ -37,7 +37,7 @@ impulses:
 
   # Just until we've finished the intro and we have all the cards we need to really begin.
   - name: Work like a plebe
-    priority: maint
+    priority: maintenance
     operation:
       situation: work
       startingRecipe:

@@ -3,8 +3,6 @@ requirements:
   aspects: { healthskill: 1 }
 completedWhen:
   aspects: { healthskill: 2 }
-impulseSets:
-  - !import ../../impulse-sets/procure-vitality.yml
 impulses:
   - name: Skilled physical work
     priority: goal
@@ -24,3 +22,4 @@ impulses:
   - name: Upgrade Stronger Physique to Hardened Physique
     priority: goal
     operation: !import ../../operations/health/upgrade-skillhealtha.yml
+  - !import ../../impulse-sets/procure-vitality.yml

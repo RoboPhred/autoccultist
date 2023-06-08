@@ -3,8 +3,6 @@ requirements:
   aspects: { healthskill: 3 }
 completedWhen:
   aspects: { healthskill: 4 }
-impulseSets:
-  - !import ../../impulse-sets/procure-vitality.yml
 impulses:
   - name: Skilled physical work
     priority: goal
@@ -29,3 +27,4 @@ impulses:
   - name: Upgrade Steely Physique with Forge
     priority: goal
     operation: !import ../../operations/health/upgrade-skillhealthc-strength.yml
+  - !import ../../impulse-sets/procure-vitality.yml
