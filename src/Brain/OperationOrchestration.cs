@@ -280,7 +280,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            this.RunCoroutine(this.CompleteOperationCoroutine(true), nameof(CompleteOperationCoroutine));
+            this.RunCoroutine(this.CompleteOperationCoroutine(true), nameof(this.CompleteOperationCoroutine));
         }
 
         private void ContinueOperation()
@@ -377,6 +377,7 @@ namespace AutoccultistNS.Brain
             {
                 throw new OperationFailedException($"Error in operation {this.operation.Name}: Situation {this.SituationId} did not start with a recipe.");
             }
+
             this.ongoingRecipeTimeRemaining = this.GetSituationState().RecipeTimeRemaining ?? 0;
 
             if (recipeSolution.EndOperation)
@@ -523,7 +524,7 @@ namespace AutoccultistNS.Brain
             {
                 this.currentCoroutine = coroutineName;
                 this.cancelCurrentTask = new CancellationTokenSource();
-                await AutoccultistActor.PerformActions(coroutine, this.cancelCurrentTask.Token);
+                await AutoccultistActor.PerformActions(new RecoverableActionEnumerable(coroutine, this.OnErrorCoroutine), this.cancelCurrentTask.Token);
             }
             catch (Exception ex)
             {
@@ -535,6 +536,23 @@ namespace AutoccultistNS.Brain
                 this.cancelCurrentTask = null;
                 this.currentCoroutine = null;
             }
+        }
+
+        private IEnumerable<IAutoccultistAction> OnErrorCoroutine(Exception ex, RecoverableActionEnumerable.ActionErrorSource source)
+        {
+            Autoccultist.Instance.LogWarn($"Operation {this.operation.Name} failed in {source}: {ex.Message}");
+            Autoccultist.Instance.LogWarn(ex.StackTrace);
+
+            var state = this.GetSituationState().State;
+            if (state == StateEnum.Unstarted || state == StateEnum.RequiringExecution || state == StateEnum.Complete)
+            {
+                yield return new OpenSituationAction(this.SituationId);
+                yield return new EmptySituationAction(this.SituationId);
+                yield return new CloseSituationAction(this.SituationId);
+            }
+
+            // This will kill our cancellation token, which is fine as this is the last step of the enumerator.
+            this.Abort();
         }
 
         private void End(bool aborted = false)
