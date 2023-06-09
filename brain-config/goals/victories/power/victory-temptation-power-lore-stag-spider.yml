@@ -195,13 +195,13 @@ impulses:
     forbidders:
       anyOf:
         - cardSet:
-          # Stop at 3
-          - elementId: fragmentforgec
-          - elementId: fragmentforgec
-          - elementId: fragmentforgec
+            # Stop at 3
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
         - cardSet:
-          - elementId: fragmentforgec
-          - elementId: fragmentforged
+            - elementId: fragmentforgec
+            - elementId: fragmentforged
     operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-b.yml
   # forgec + forgec = forged
   - name: Combine A Shaping Chant for Callidate Invocation

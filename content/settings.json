@@ -1,0 +1,31 @@
+{
+  "settings": [
+    {
+      "id": "autoccultist_actor_delay",
+      "tabid": "UI_AUTOMATION",
+      "hint": "UI_AUTOMATION_ACTOR_DELAY",
+      "minvalue": 0.1,
+      "maxvalue": 5,
+      "datatype": "Single",
+      "defaultvalue": 0.25,
+      "valuelabels": {
+        "0.1": "UI_AUTOMATION_TENTH",
+        "0.25": "UI_AUTOMATION_TWENTYFITH",
+        "0.5": "UI_AUTOMATION_HALF",
+        "1": "UI_AUTOMATION_ONE"
+      }
+    },
+    {
+      "id": "autoccultist_actor_sort",
+      "tabid": "UI_AUTOMATION",
+      "minvalue": 0,
+      "maxvalue": 1,
+      "datatype": "Int32",
+      "defaultvalue": 0,
+      "valuelabels": {
+        "0": "UI_OFF",
+        "1": "UI_ON"
+      }
+    }
+  ]
+}
