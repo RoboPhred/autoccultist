@@ -1,4 +1,8 @@
 name: Change Premises to Library
+requirements:
+  cardSet:
+    - elementId: locationbookdealer_exhausted
+    - aspects: { hq: 1 }
 completedWhen:
   elementId: hq.bookshop
 impulses:

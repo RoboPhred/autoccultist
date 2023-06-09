@@ -1,4 +1,11 @@
 name: "Acquire Way: The White Door"
+requirements:
+  allOf:
+    - elementId: waywood
+    - anyOf:
+        - aspects: { lore: 1, lantern: 4 }
+        - aspects: { lore: 1, winter: 4 }
+        - aspects: { lore: 1, knock: 4 }
 completedWhen:
   elementId: waywhite
 impulses:

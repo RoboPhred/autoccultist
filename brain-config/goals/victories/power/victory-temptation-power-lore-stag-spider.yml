@@ -2,6 +2,7 @@ name: Acquire the Stag Door, Spider Door, and prepare for the Formula Fissive
 requirements:
   cardSet:
     - elementId: waywhite
+    - aspects: { desire: 1 }
     - elementId: fragmentforge
     - elementId: fragmentforge
     - elementId: fragmentforgeb
@@ -101,10 +102,22 @@ impulses:
     forbidders:
       anyOf:
         - cardSet:
+            - elementId: fragmentknockb
+            - elementId: fragmentwinterb
+        - cardSet:
             - elementId: fragmentknock
             - elementId: fragmentknock
         - elementId: fragmentknockc
     operation: !import ../../../operations/lore/knock/lore-subvert-heart-knock-a.yml
+  # knock + knock = knockb
+  - name: Combine A Locksmith's Secret
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - elementId: fragmentknockc
+        - elementId: fragmentknockb
+    operation: !import ../../../operations/lore/knock/lore-combine-knock-a.yml
   # winter + winter = winterb
   - name: Combine A Sexton's Secret
     requirements:
@@ -171,10 +184,14 @@ impulses:
   # forge + forge = forgeb
   - name: Combine A Smith's Secret for An Ardent Orison
     priority: goal
+    requirements:
+      elementId: waystag_after
     operation: !import ../../../operations/lore/forge/lore-combine-forge-a.yml
   # forgeb + lanternb = forgec
   - name: Subvert A Mansus Glimpse to A Shaping Chant
     priority: goal
+    requirements:
+      elementId: waystag_after
     forbidders:
       anyOf:
         - cardSet:
@@ -189,6 +206,8 @@ impulses:
   # forgec + forgec = forged
   - name: Combine A Shaping Chant for Callidate Invocation
     priority: goal
+    requirements:
+      elementId: waystag_after
     forbidders:
       elementId: fragmentforged
     operation: !import ../../../operations/lore/forge/lore-combine-forge-c.yml
