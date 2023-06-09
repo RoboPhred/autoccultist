@@ -543,8 +543,8 @@ namespace AutoccultistNS.Brain
             Autoccultist.Instance.LogWarn($"Operation {this.operation.Name} failed in {source}: {ex.Message}");
             Autoccultist.Instance.LogWarn(ex.StackTrace);
 
-            var state = this.GetSituationState().State;
-            if (state == StateEnum.Unstarted || state == StateEnum.RequiringExecution || state == StateEnum.Complete)
+            var situation = this.GetSituationState();
+            if (situation.State == StateEnum.Unstarted || situation.State == StateEnum.RequiringExecution || situation.State == StateEnum.Complete)
             {
                 yield return new OpenSituationAction(this.SituationId);
                 yield return new EmptySituationAction(this.SituationId);

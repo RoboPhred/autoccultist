@@ -7,6 +7,8 @@ using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
 using AutoccultistNS.Yaml;
+using SecretHistories.Fucine;
+using SecretHistories.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -52,6 +54,8 @@ public class Autoccultist : MonoBehaviour
 
         SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(this.HandleSceneLoaded);
         SceneManager.sceneUnloaded += new UnityAction<Scene>(this.HandleSceneUnloaded);
+
+        AutoccultistSettings.Initialize();
 
         GameAPI.Initialize();
 

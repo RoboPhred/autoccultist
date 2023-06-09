@@ -193,7 +193,6 @@ namespace AutoccultistNS.Yaml
             // Here for the yaml parser.
             // We don't really need this, as we are careful not to cache these when the rest of the parser might want singles.
             // Still, it is nice to have.
-
             if (conversionType.IsAssignableFrom(typeof(T)))
             {
                 if (this.Count > 1)

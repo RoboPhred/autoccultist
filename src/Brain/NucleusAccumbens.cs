@@ -169,7 +169,7 @@ namespace AutoccultistNS.Brain
 
         private static bool IsSituationAvailable(string situationId)
         {
-            if (!SituationOrchestrator.CurrentOrchestrations.Keys.Contains(situationId))
+            if (SituationOrchestrator.CurrentOrchestrations.Keys.Contains(situationId))
             {
                 return false;
             }

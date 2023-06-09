@@ -19,10 +19,14 @@ namespace AutoccultistNS.Actor
         private static DateTime lastUpdate = DateTime.Now;
         private static PendingActionSet currentActionSet;
 
+        private static bool isBusy = false;
+
         /// <summary>
         /// Gets or sets the delay between each action.
         /// </summary>
         public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.25);
+
+        public static bool SortTableOnIdle { get; set; } = true;
 
         /// <summary>
         /// Perform the actions from the enumerable.
@@ -155,6 +159,7 @@ namespace AutoccultistNS.Actor
 
         private static void OnActive()
         {
+            isBusy = true;
             if (pauseToken == null)
             {
                 pauseToken = GameAPI.Pause();
@@ -165,6 +170,13 @@ namespace AutoccultistNS.Actor
         {
             pauseToken?.Dispose();
             pauseToken = null;
+
+            if (isBusy && SortTableOnIdle)
+            {
+                GameAPI.SortTable();
+            }
+
+            isBusy = false;
         }
 
         private class PendingActionSet

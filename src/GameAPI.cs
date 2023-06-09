@@ -9,6 +9,7 @@ namespace AutoccultistNS
     using SecretHistories.Enums;
     using SecretHistories.Fucine;
     using SecretHistories.Spheres;
+    using SecretHistories.Spheres.Choreographers;
     using SecretHistories.Tokens.Payloads;
     using SecretHistories.UI;
     using UnityEngine;
@@ -182,6 +183,11 @@ namespace AutoccultistNS
             var numa = Watchman.Get<Numa>();
 
             return Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+        }
+
+        public static void SortTable()
+        {
+            (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
         }
 
         /// <summary>
