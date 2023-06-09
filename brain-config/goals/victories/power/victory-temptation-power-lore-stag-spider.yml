@@ -116,8 +116,21 @@ impulses:
     forbidders:
       anyOf:
         - elementId: fragmentknockc
-        - elementId: fragmentknockb
+        - cardSet:
+            - elementId: fragmentknockb
+            - elementId: fragmentknockb
     operation: !import ../../../operations/lore/knock/lore-combine-knock-a.yml
+  # knockb + knockb = knockc
+  - name: Combine An Iguvine Rite
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentknockb
+            - elementId: fragmentknockb
+        - elementId: fragmentknockc
+    operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
   # winter + winter = winterb
   - name: Combine A Sexton's Secret
     requirements:
@@ -128,7 +141,7 @@ impulses:
         - elementId: fragmentknockc
     operation: !import ../../../operations/lore/winter/lore-combine-winter-a.yml
   # winterb + knockb = knockc
-  - name: Subvert A Wood Whisper to A Consent of Wounds
+  - name: Subvert A White Ceremony to A Consent of Wounds
     requirements:
       elementId: waystagbefore_4
     forbidders:
