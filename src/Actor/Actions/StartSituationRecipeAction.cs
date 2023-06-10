@@ -22,11 +22,14 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"StartSituationRecipeAction(SituationId = ${this.SituationId})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -45,6 +48,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             GameStateProvider.Invalidate();
+            return ActionResult.Completed;
         }
     }
 }

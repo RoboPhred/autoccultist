@@ -16,10 +16,8 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        public override void Execute()
+        protected override ActionResult OnExecute()
         {
-            this.VerifyNotExecuted();
-
             if (!GameAPI.EmptyMansusEgress())
             {
                 throw new ActionFailureException(this, "Failed to empty the mansus.");
@@ -28,6 +26,8 @@ namespace AutoccultistNS.Actor.Actions
             GameAPI.UserUnpause();
 
             GameStateProvider.Invalidate();
+
+            return ActionResult.Completed;
         }
     }
 }

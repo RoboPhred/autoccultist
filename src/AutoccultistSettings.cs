@@ -1,6 +1,5 @@
 namespace AutoccultistNS
 {
-    using System;
     using AutoccultistNS.Actor;
     using SecretHistories.Entities;
     using SecretHistories.Fucine;
@@ -8,7 +7,7 @@ namespace AutoccultistNS
 
     public static class AutoccultistSettings
     {
-        private static readonly string SettingActorDelay = "autoccultist_actor_delay";
+        // private static readonly string SettingActorDelay = "autoccultist_actor_delay";
         private static readonly string SettingActorSort = "autoccultist_actor_sort";
 
         private static SortSettingReceiver sortSettingReceiver;

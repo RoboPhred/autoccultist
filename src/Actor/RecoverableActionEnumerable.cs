@@ -52,15 +52,16 @@ namespace AutoccultistNS.Actor
                 this.onError = onError;
             }
 
-            public void Execute()
+            public ActionResult Execute()
             {
                 try
                 {
-                    this.action.Execute();
+                    return this.action.Execute();
                 }
                 catch (Exception ex)
                 {
                     this.onError(ex);
+                    return ActionResult.NoOp;
                 }
             }
 

@@ -19,23 +19,27 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"CloseSituationAction(SituationId = {this.SituationId})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (GameAPI.IsInMansus)
             {
-                return;
+                return ActionResult.NoOp;
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
-            if (situation == null)
+            if (situation == null || !situation.IsOpen)
             {
-                return;
+                return ActionResult.NoOp;
             }
 
             situation.Close();
+            return ActionResult.Completed;
         }
     }
 }

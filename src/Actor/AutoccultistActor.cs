@@ -34,12 +34,12 @@ namespace AutoccultistNS.Actor
         /// <param name="actions">An enumerable of actions to execute.</param>
         /// <param name="cancellationToken">An optional CancellationToken used to cancel the action execution.</param>
         /// <returns>A task that will complete when all actions complete, or fail with an exception describing the action failure.</returns>
-        public static Task<ActorResult> PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
+        public static Task PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
         {
             var pendingAction = new PendingActionSet
             {
                 PendingActions = actions.GetEnumerator(),
-                TaskCompletion = new TaskCompletionSource<ActorResult>(),
+                TaskCompletion = new TaskCompletionSource<bool>(),
                 CancellationToken = cancellationToken ?? CancellationToken.None,
             };
             PendingActionSets.Enqueue(pendingAction);
@@ -97,7 +97,7 @@ namespace AutoccultistNS.Actor
                 if (!currentActionSet.PendingActions.MoveNext())
                 {
                     // No more actions, we are complete.
-                    currentActionSet.TaskCompletion.TrySetResult(ActorResult.Success);
+                    currentActionSet.TaskCompletion.TrySetResult(true);
                     currentActionSet = null;
                     return;
                 }
@@ -115,12 +115,13 @@ namespace AutoccultistNS.Actor
             // We now have something to do
             OnActive();
 
+            ActionResult actionResult;
             try
             {
                 // Execute the action, clear it out, and update the last update time
                 //  to delay for the next action.
                 Autoccultist.Instance.LogTrace($"Executing action {nextAction}");
-                nextAction.Execute();
+                actionResult = nextAction.Execute();
             }
             catch (Exception ex)
             {
@@ -130,8 +131,13 @@ namespace AutoccultistNS.Actor
                 return;
             }
 
-            // We did the thing.  Set the last updated time so we can delay for the next action.
-            lastUpdate = DateTime.Now;
+            // If we didn't do anything, let our next action occur immediately.
+            // ...actually, it will occur next frame, but that is good enough for now.
+            if (actionResult == ActionResult.Completed)
+            {
+                // We did the thing.  Set the last updated time so we can delay for the next action.
+                lastUpdate = DateTime.Now;
+            }
 
             // Note: This might have been the last action in the action set.
             // Originally, we advanced the iterator here, so we could detect that and immediately mark it as complete.
@@ -189,7 +195,7 @@ namespace AutoccultistNS.Actor
             /// <summary>
             /// Gets or sets the task completion source to report back when the actions are completed.
             /// </summary>
-            public TaskCompletionSource<ActorResult> TaskCompletion { get; set; }
+            public TaskCompletionSource<bool> TaskCompletion { get; set; }
 
             /// <summary>
             /// Gets or sets the cancellation token that can cancel this action set.

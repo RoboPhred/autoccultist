@@ -39,11 +39,14 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public ICardChooser CardMatcher { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"SlotCardAction(SituationId = {this.SituationId}, SlotId = {this.SlotId})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -75,17 +78,11 @@ namespace AutoccultistNS.Actor.Actions
 
             if (!GameAPI.TrySlotCard(sphere, stack))
             {
-                Autoccultist.Instance.LogWarn($"Card {card.ElementId} in sphere {stack.Token.Sphere.Id} was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
                 throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
             }
 
             GameStateProvider.Invalidate();
-            Autoccultist.Instance.LogTrace($"Slotted card {card.ElementId} into situation {this.SituationId} slot {this.SlotId}.");
-        }
-
-        public override string ToString()
-        {
-            return $"SlotCardAction(Id = {this.Id}, SituationId = {this.SituationId}, SlotId = {this.SlotId})";
+            return ActionResult.Completed;
         }
     }
 }

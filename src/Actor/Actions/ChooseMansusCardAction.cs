@@ -1,6 +1,5 @@
 namespace AutoccultistNS.Actor.Actions
 {
-    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
 
@@ -23,11 +22,14 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public IMansusSolution MansusSolution { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"ChooseMansusCardAction(MansusSolution = {this.MansusSolution})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (!GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");
@@ -63,6 +65,8 @@ namespace AutoccultistNS.Actor.Actions
             {
                 throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", gameState.Mansus.DeckCards.Keys)}");
             }
+
+            return ActionResult.Completed;
         }
     }
 }

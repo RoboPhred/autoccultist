@@ -8,6 +8,7 @@ namespace AutoccultistNS.Actor
         /// <summary>
         /// Execute the action.
         /// </summary>
-        void Execute();
+        /// <returns>The result of the action.</returns>
+        ActionResult Execute();
     }
 }

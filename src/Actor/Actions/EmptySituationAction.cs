@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System.Linq;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
 
@@ -23,11 +24,14 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"EmptySituationAction(SituationId = {this.SituationId})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -41,10 +45,20 @@ namespace AutoccultistNS.Actor.Actions
 
             if (situation.State.Identifier == StateEnum.Unstarted)
             {
+                if (!situation.GetSpheresByCategory(SphereCategory.Threshold).SelectMany(s => s.GetTokens()).Any())
+                {
+                    return ActionResult.NoOp;
+                }
+
                 situation.DumpUnstartedBusiness();
             }
             else if (situation.State.Identifier == StateEnum.Complete)
             {
+                if (!situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).Any())
+                {
+                    return ActionResult.NoOp;
+                }
+
                 situation.Conclude();
             }
             else
@@ -53,6 +67,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             GameStateProvider.Invalidate();
+            return ActionResult.Completed;
         }
     }
 }
