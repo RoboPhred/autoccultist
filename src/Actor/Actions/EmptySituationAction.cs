@@ -54,11 +54,6 @@ namespace AutoccultistNS.Actor.Actions
             }
             else if (situation.State.Identifier == StateEnum.Complete)
             {
-                if (!situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).Any())
-                {
-                    return ActionResult.NoOp;
-                }
-
                 situation.Conclude();
             }
             else
