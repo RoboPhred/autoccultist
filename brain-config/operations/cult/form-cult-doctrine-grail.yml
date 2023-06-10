@@ -5,7 +5,7 @@ ongoingRecipes:
   cultfoundation:
     slots:
       Doctrine:
-        aspects: { grail: 1 }
+        aspects: { lore: 1, grail: 1 }
   cultfoundation_passion:
     slots:
       Passion:

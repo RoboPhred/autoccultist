@@ -5,7 +5,7 @@ ongoingRecipes:
   cultfoundation:
     slots:
       Doctrine:
-        aspects: { forge: 1 }
+        aspects: { lore: 1, forge: 1 }
   cultfoundation_health:
     slots:
       Health:
