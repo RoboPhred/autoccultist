@@ -4,6 +4,8 @@ completedWhen:
     # Stop if we have a Grail follower, but its possible for followers to die, so we also need to check if the deck is exhausted.
     - anyOf:
         - !import ../../conditions/has-grail-follower.yml
+        - elementId: renira_a
+        - elementId: saliba_a
         - elementId: mistakenidentity
 impulses:
   - name: Speak of esoteric matters
