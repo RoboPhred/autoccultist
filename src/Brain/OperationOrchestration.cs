@@ -131,7 +131,7 @@ namespace AutoccultistNS.Brain
                         return;
                     }
 
-                    this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution), nameof(this.ContinueSituationCoroutine));
+                    this.ContinueOperation();
                     break;
                 default:
                     // This happened to a the cult activity that should have been ongoing...  Got stuck on an unstarted state.
@@ -296,8 +296,6 @@ namespace AutoccultistNS.Brain
                 this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining.Value;
                 return;
             }
-
-            Autoccultist.Instance.LogTrace($"Continuing operation {this.operation.Name}.  From recipe {this.ongoingRecipe} to {currentRecipe}.");
 
             this.ongoingRecipe = currentRecipe;
             this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining ?? 0;
