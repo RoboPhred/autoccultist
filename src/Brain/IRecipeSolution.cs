@@ -10,7 +10,7 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets a dictionary of slot names to card choices.
         /// </summary>
-        IReadOnlyDictionary<string, ICardChooser> SlotSolutions { get; }
+        IReadOnlyDictionary<string, ISlotCardChooser> SlotSolutions { get; }
 
         /// <summary>
         /// Gets the solution for the mansus choice of this recipe, if any.

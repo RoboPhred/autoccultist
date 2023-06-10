@@ -17,7 +17,7 @@ namespace AutoccultistNS.Actor.Actions
         /// <param name="situationId">The situation id of the situation to slot the card into.</param>
         /// <param name="slotId">The slot id of the slot in the situation to slot the card into.</param>
         /// <param name="cardMatcher">The card matcher to choose a card to slot.</param>
-        public SlotCardAction(string situationId, string slotId, ICardChooser cardMatcher)
+        public SlotCardAction(string situationId, string slotId, ISlotCardChooser cardMatcher)
         {
             this.SituationId = situationId;
             this.SlotId = slotId;
@@ -37,7 +37,7 @@ namespace AutoccultistNS.Actor.Actions
         /// <summary>
         /// Gets the card matcher that will get the card to slot.
         /// </summary>
-        public ICardChooser CardMatcher { get; }
+        public ISlotCardChooser CardMatcher { get; }
 
         public override string ToString()
         {
@@ -58,16 +58,21 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
+            var card = CardManager.ChooseCard(this.CardMatcher);
+            if (card == null)
+            {
+                if (this.CardMatcher.Optional)
+                {
+                    return ActionResult.NoOp;
+                }
+
+                throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
+            }
+
             var sphere = situation.GetSpheresByCategory(SphereCategory.Threshold).FirstOrDefault(x => x.GoverningSphereSpec.Id == this.SlotId);
             if (sphere == null)
             {
                 throw new ActionFailureException(this, $"Situation {this.SituationId} has no matching slot {this.SlotId}.");
-            }
-
-            var card = CardManager.ChooseCard(this.CardMatcher);
-            if (card == null)
-            {
-                throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
             }
 
             var stack = card.ToElementStack();

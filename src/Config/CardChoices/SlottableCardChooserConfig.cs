@@ -8,6 +8,9 @@ namespace AutoccultistNS.Config.CardChoices
     public class SlottableCardChooserConfig : CardChooserConfig, ISlottableCardChoiceConfig
     {
         /// <inheritdoc/>
+        public bool Optional { get; set; }
+
+        /// <inheritdoc/>
         protected override bool AdditionalFilter(ICardState card)
         {
             // Note: We are now treating cards in verbs that have not consumed them yet to still be slottale.

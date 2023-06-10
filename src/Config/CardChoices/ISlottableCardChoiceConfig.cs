@@ -7,7 +7,7 @@ namespace AutoccultistNS.Config.CardChoices
     /// </summary>
     [DuckTypeCandidate(typeof(SlottableCardChooserConfig))]
     [DuckTypeCandidate(typeof(MultipleSlottableCardChoiceConfig))]
-    public interface ISlottableCardChoiceConfig : ICardChooser
+    public interface ISlottableCardChoiceConfig : ISlotCardChooser
     {
     }
 }

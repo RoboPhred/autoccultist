@@ -13,16 +13,16 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// A cached read only dictionary of slot names to card choices.
         /// </summary>
-        private IReadOnlyDictionary<string, ICardChooser> slotSolutions;
+        private IReadOnlyDictionary<string, ISlotCardChooser> slotSolutions;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this recipe requires its cards to start the operation.  This only applies to ongoing recipes.
+        /// Gets or sets a value indicating whether this recipe requires its cards to start the operation.
         /// </summary>
         public bool RequireSlotCards { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets the required cards to start this operation.
-        /// If not specified, the required cards will be assumed from the slots.
+        /// Gets or sets the required cards to start this recipe.
+        /// These cards will be required in addition to any slot card requirements, if RequireSlotCards is set.
         /// </summary>
         public List<ISlottableCardChoiceConfig> CardRequirements { get; set; }
 
@@ -43,13 +43,13 @@ namespace AutoccultistNS.Config
         public bool EndOperation { get; set; } = false;
 
         /// <inheritdoc/>
-        IReadOnlyDictionary<string, ICardChooser> IRecipeSolution.SlotSolutions
+        IReadOnlyDictionary<string, ISlotCardChooser> IRecipeSolution.SlotSolutions
         {
             get
             {
                 if (this.slotSolutions == null)
                 {
-                    this.slotSolutions = this.Slots.ToDictionary(x => x.Key, x => x.Value as ICardChooser);
+                    this.slotSolutions = this.Slots.ToDictionary(x => x.Key, x => x.Value as ISlotCardChooser);
                 }
 
                 return this.slotSolutions;
@@ -64,7 +64,7 @@ namespace AutoccultistNS.Config
         {
             var explicitRequirements = (IEnumerable<ISlottableCardChoiceConfig>)this.CardRequirements ?? new ISlottableCardChoiceConfig[0];
             var implicitRequirements = this.RequireSlotCards ? this.Slots.Values.Select(x => x) : new ISlottableCardChoiceConfig[0];
-            return explicitRequirements.Concat(implicitRequirements).ToArray();
+            return explicitRequirements.Concat(implicitRequirements).Where(x => !x.Optional).ToArray();
         }
     }
 }

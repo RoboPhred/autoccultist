@@ -9,6 +9,9 @@ namespace AutoccultistNS.Config.CardChoices
     /// </summary>
     public class MultipleSlottableCardChoiceConfig : ISlottableCardChoiceConfig, IConfigObject
     {
+        /// <inheritdoc/>
+        public bool Optional { get; set; }
+
         /// <summary>
         /// Gets or sets a list of slottable card choices to choose from.
         /// </summary>
