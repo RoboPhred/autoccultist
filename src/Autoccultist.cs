@@ -56,8 +56,11 @@ public class Autoccultist : MonoBehaviour
         SceneManager.sceneUnloaded += new UnityAction<Scene>(this.HandleSceneUnloaded);
 
         AutoccultistSettings.Initialize();
-
         GameAPI.Initialize();
+
+        // The order is important for these initializers, so they take subscriptions to MechanicalHeart.OnBeat in the right order.
+        NucleusAccumbens.Initialize();
+        SituationOrchestrator.Initialize();
 
         this.ReloadAll();
         if (Library.ParseErrors.Count > 0)

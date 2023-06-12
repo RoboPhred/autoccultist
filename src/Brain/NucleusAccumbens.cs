@@ -31,6 +31,11 @@ namespace AutoccultistNS.Brain
             }
         }
 
+        public static void Initialize()
+        {
+            MechanicalHeart.OnBeat += OnBeat;
+        }
+
         /// <summary>
         /// Add a goal to the active goals.
         /// </summary>
@@ -56,16 +61,6 @@ namespace AutoccultistNS.Brain
         public static void Reset()
         {
             ActiveGoals.Clear();
-        }
-
-        /// <summary>
-        /// Update and execute goals.
-        /// </summary>
-        public static void Update()
-        {
-            var state = GameStateProvider.Current;
-            TryCompleteGoals(state);
-            TryStartImpulses(state);
         }
 
         /// <summary>
@@ -103,6 +98,16 @@ namespace AutoccultistNS.Brain
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Update and execute goals.
+        /// </summary>
+        private static void OnBeat(object sender, EventArgs e)
+        {
+            var state = GameStateProvider.Current;
+            TryCompleteGoals(state);
+            TryStartImpulses(state);
         }
 
         private static void TryCompleteGoals(IGameState state)

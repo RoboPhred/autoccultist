@@ -25,10 +25,15 @@ namespace AutoccultistNS.Brain
             }
         }
 
+        public static void Initialize()
+        {
+            MechanicalHeart.OnBeat += OnBeat;
+        }
+
         /// <summary>
         /// Run all updates for the situation orchestrator.
         /// </summary>
-        public static void Update()
+        private static void OnBeat(object sender, EventArgs e)
         {
             var state = GameStateProvider.Current;
 
