@@ -1,6 +1,7 @@
 namespace AutoccultistNS.Brain
 {
     using System.Collections.Generic;
+    using SecretHistories.Infrastructure.Persistence;
 
     /// <summary>
     /// Provides a path for the AI to follow in the form of a list of motivations to complete.
@@ -21,5 +22,15 @@ namespace AutoccultistNS.Brain
         /// Gets the list of motivations for this playthrough.
         /// </summary>
         IReadOnlyList<IMotivation> Motivations { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether a new game can be started from this arc.
+        /// </summary>
+        bool SupportsNewGame { get; }
+
+        /// <summary>
+        /// Gets a game persistence provider to start a new instance of this arc.
+        /// </summary>
+        GamePersistenceProvider GetNewGameProvider();
     }
 }

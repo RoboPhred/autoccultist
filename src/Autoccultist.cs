@@ -7,7 +7,8 @@ using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
 using AutoccultistNS.Yaml;
-using SecretHistories.Fucine;
+using SecretHistories.Infrastructure.Persistence;
+using SecretHistories.Services;
 using SecretHistories.UI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,6 +20,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Autoccultist : MonoBehaviour
 {
+    private IArc loadArcOnGameStart;
+
     /// <summary>
     /// Gets the instance of the plugin.
     /// </summary>
@@ -68,7 +71,20 @@ public class Autoccultist : MonoBehaviour
             ParseErrorsGUI.IsShowing = true;
         }
 
-        GameEventSource.GameStarted += (_, __) => Superego.AutoselectArc();
+        GameEventSource.GameStarted += (_, __) =>
+        {
+            if (this.loadArcOnGameStart != null)
+            {
+                LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
+                Superego.SetArc(this.loadArcOnGameStart);
+                this.loadArcOnGameStart = null;
+                this.StartAutoccultist();
+            }
+            else
+            {
+                Superego.AutoselectArc();
+            }
+        };
 
         GameEventSource.GameEnded += (_, __) =>
         {
@@ -111,6 +127,7 @@ public class Autoccultist : MonoBehaviour
 
         ControlGUI.OnGUI();
         ParseErrorsGUI.OnGUI();
+        NewGameGUI.OnGUI();
 
         if (!GameAPI.IsRunning)
         {
@@ -130,6 +147,33 @@ public class Autoccultist : MonoBehaviour
         GameStateProvider.Invalidate();
         MechanicalHeart.Update();
         this.HandleHotkeys();
+    }
+
+    public void StartNewGame(IArc arc)
+    {
+        if (arc == null)
+        {
+            this.LogWarn("Cannot StartNewGame with null arc");
+            return;
+        }
+
+        if (!arc.SupportsNewGame)
+        {
+            this.LogWarn($"Cannot start a new game based on arc {arc.Name}: This arc does not support new games.");
+            return;
+        }
+
+        var provider = arc.GetNewGameProvider();
+        if (provider != null)
+        {
+            this.LogTrace($"Starting a new game with arc {arc.Name}");
+            this.loadArcOnGameStart = arc;
+            Watchman.Get<StageHand>().LoadGameOnTabletop(provider);
+        }
+        else
+        {
+            this.LogWarn($"Cannot start a new game based on arc {arc.Name}: No provider was found.");
+        }
     }
 
     /// <summary>
@@ -169,16 +213,19 @@ public class Autoccultist : MonoBehaviour
         NoonUtility.LogWarning($"{message}\n{ex.Message}\n{ex.StackTrace}");
     }
 
-    /// <summary>
-    /// Log and handle a fatal event.
-    /// This will also stop the brain from running.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    public void Fatal(string message)
+    public void StartAutoccultist()
     {
-        NoonUtility.LogWarning(message);
-        GameAPI.Notify("Autoccultist Fatal", message);
-        this.StopAutoccultist();
+        Ego.Start();
+        MechanicalHeart.Start();
+    }
+
+    public void StopAutoccultist()
+    {
+        MechanicalHeart.Stop();
+        Ego.Stop();
+        NucleusAccumbens.Reset();
+        Superego.Clear();
+        SituationOrchestrator.AbortAll();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -212,20 +259,5 @@ public class Autoccultist : MonoBehaviour
                 ParseErrorsGUI.IsShowing = false;
             }
         }
-    }
-
-    private void StartAutoccultist()
-    {
-        Ego.Start();
-        MechanicalHeart.Start();
-    }
-
-    private void StopAutoccultist()
-    {
-        MechanicalHeart.Stop();
-        Ego.Stop();
-        NucleusAccumbens.Reset();
-        Superego.Clear();
-        SituationOrchestrator.AbortAll();
     }
 }

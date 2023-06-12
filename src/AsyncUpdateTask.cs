@@ -19,7 +19,7 @@ namespace AutoccultistNS
 
         ~AsyncUpdateTask()
         {
-            Dispose();
+            this.Dispose();
         }
 
         public Task AwaitCompletion()
