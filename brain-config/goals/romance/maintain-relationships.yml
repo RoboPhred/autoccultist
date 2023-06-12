@@ -1,6 +1,6 @@
 name: Maintain relationships
 impulses:
-  - !import ../../impulses/romance/maint-continue-relationship-sensation.yml
-  - !import ../../impulses/romance/maint-continue-relationship-power.yml
-  - !import ../../impulses/romance/maint-continue-relationship-enlightenment.yml
-  - !import ../../impulses/romance/maint-continue-relationship-change.yml
+  - !import /impulses/romance/maint-continue-relationship-sensation.yml
+  - !import /impulses/romance/maint-continue-relationship-power.yml
+  - !import /impulses/romance/maint-continue-relationship-enlightenment.yml
+  - !import /impulses/romance/maint-continue-relationship-change.yml

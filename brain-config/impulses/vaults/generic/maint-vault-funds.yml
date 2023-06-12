@@ -49,4 +49,4 @@ forbidders:
       storedCardsMatch:
         cardSet:
           - elementId: funds
-operation: !import ../../../operations/vaults/continue-vault-funds.yml
+operation: !import /operations/vaults/continue-vault-funds.yml

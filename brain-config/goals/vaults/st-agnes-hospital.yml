@@ -49,7 +49,7 @@ impulses:
     #         - elementId: fragmentsecrethistories
     #         - elementId: fragmentsecrethistories
     #     - elementId: vaultcapital4
-    operation: !import ../../operations/mansus/use-wood-secrethistories.yml
+    operation: !import /operations/mansus/use-wood-secrethistories.yml
   - name: Find Capital vaults
     forbidders:
       elementId: vaultcapital4
@@ -61,11 +61,11 @@ impulses:
           explore:
             elementId: fragmentsecrethistories
 
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-10.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-10.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-5-5.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern-5-5.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-lantern.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-heart-lantern.yml
-  - !import ../../impulses/vaults/st-agnes/st-agnes-explore-any.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-heart-10.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-lantern-10.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-heart-5-5.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-lantern-5-5.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-heart.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-lantern.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-heart-lantern.yml
+  - !import /impulses/vaults/st-agnes/st-agnes-explore-any.yml

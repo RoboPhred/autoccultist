@@ -11,33 +11,33 @@ impulses:
   - name: Work a junior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+      !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-junior.yml
+    operation: !import /operations/glover/work-glover-junior.yml
   - name: Work at Glover & Glover under Alden
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+      !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-alden.yml
+    operation: !import /operations/glover/work-glover-alden.yml
   - name: Work at Glover & Glover with diligence
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+      !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-diligence.yml
+    operation: !import /operations/glover/work-glover-diligence.yml
   - name: Work a senior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+      !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-senior.yml
+    operation: !import /operations/glover/work-glover-senior.yml
   - name: Plead for job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+      !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import ../../../operations/glover/plead-glover.yml
+    operation: !import /operations/glover/plead-glover.yml
 
   - name: Get a prisoner
     requirements:
@@ -161,22 +161,21 @@ impulses:
   - name: Obtain Grail Influence from the Stag Door
     requirements:
       # Wait until we are ready to ascend
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+      !import /conditions/ascension-lore-and-cyprian.yml
     forbidders:
       anyOf:
         - elementId: influencegrailc
         - situation: work
           storedCardsMatch:
             elementId: influencegrailc
-    operation: !import ../../../operations/mansus/use-stag-ascent-of-knives.yml
-    
+    operation: !import /operations/mansus/use-stag-ascent-of-knives.yml
+
   - name: Paint to keep the Influence from fading
-    requirements:
-      !import ../../../conditions/ascension-lore-and-cyprian.yml
+    requirements: !import /conditions/ascension-lore-and-cyprian.yml
     forbidders:
       elementId: ascensionsensationf
-    operation: !import ../../../operations/painting/paint-influencegrailc.yml
-    
+    operation: !import /operations/painting/paint-influencegrailc.yml
+
   - name: Keep the hunter out of our hair
     requirements:
       allOf:

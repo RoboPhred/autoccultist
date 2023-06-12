@@ -7,7 +7,7 @@ forbidders:
     - elementId: evidenceb
 operation:
   name: Explore a Vault
-  extends: !import ../../../operations/vaults/continue-vault-any.yml
+  extends: !import /operations/vaults/continue-vault-any.yml
   startingRecipe:
     slots:
       explore:

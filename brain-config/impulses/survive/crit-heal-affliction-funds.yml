@@ -15,7 +15,7 @@ forbidders:
         - noneOf:
             - elementId: health
         # Do not forbid if we have enough spare cash that it doesn't matter
-        - !import ../../conditions/has-slushfund-major.yml
+        - !import /conditions/has-slushfund-major.yml
     - anyOf:
         # Forbid if we are generating a vitality
         - situation: study
@@ -26,4 +26,4 @@ forbidders:
         # Forbid if study is idle (leave it to crit-affliction-emergency-vitality)
         - situation: study
           state: idle
-operation: !import ../../operations/heal-affliction-with-funds.yml
+operation: !import /operations/heal-affliction-with-funds.yml

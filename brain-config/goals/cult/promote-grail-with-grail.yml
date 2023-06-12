@@ -21,13 +21,13 @@ completedWhen:
 impulses:
   - name: Promote a special Grail Believer, while burning Restlessness
     priority: goal
-    operation: !import ../../operations/cult/promote-grail-believer-grail-mutation-restlessness.yml
+    operation: !import /operations/cult/promote-grail-believer-grail-mutation-restlessness.yml
   - name: Promote a Grail Believer, while burning Restlessness
     priority: goal
-    operation: !import ../../operations/cult/promote-grail-believer-grail-restlessness.yml
+    operation: !import /operations/cult/promote-grail-believer-grail-restlessness.yml
   - name: Promote a special Grail Believer
     priority: goal
-    operation: !import ../../operations/cult/promote-grail-believer-grail-mutation.yml
+    operation: !import /operations/cult/promote-grail-believer-grail-mutation.yml
   - name: Promote a Grail Believer, by invoking Grail
     priority: goal
-    operation: !import ../../operations/cult/promote-grail-believer-grail.yml
+    operation: !import /operations/cult/promote-grail-believer-grail.yml

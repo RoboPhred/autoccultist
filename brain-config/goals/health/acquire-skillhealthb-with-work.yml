@@ -11,9 +11,9 @@ impulses:
       cardSet:
         - elementId: vitalityplus
         - elementId: vitalityplus
-    operation: !import ../../operations/work-skillhealth.yml
+    operation: !import /operations/work-skillhealth.yml
   - name: "Learn Lesson: Vitality"
-    extends: !import ../../impulses/goal-learn-lesson-vitality.yml
+    extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:
       # Do not monopolize study when we have vitality lessons to study
       cardSet:
@@ -21,5 +21,5 @@ impulses:
         - elementId: vitalityplus
   - name: Upgrade Stronger Physique to Hardened Physique
     priority: goal
-    operation: !import ../../operations/health/upgrade-skillhealtha.yml
-  - !import ../../impulse-sets/procure-vitality.yml
+    operation: !import /operations/health/upgrade-skillhealtha.yml
+  - !import /impulse-sets/procure-vitality.yml

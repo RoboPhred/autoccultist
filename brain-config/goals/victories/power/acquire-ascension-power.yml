@@ -9,4 +9,4 @@ impulses:
       aspects:
         powermarks:
           greaterThan: 2
-    operation: !import ../../../operations/victories/power/acquire-ascension-power.yml
+    operation: !import /operations/victories/power/acquire-ascension-power.yml

@@ -19,4 +19,4 @@ completedWhen:
 impulses:
   - name: Find clerical work
     priority: goal
-    operation: !import ../../operations/glover/find-clerical-work.yml
+    operation: !import /operations/glover/find-clerical-work.yml

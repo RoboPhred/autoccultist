@@ -9,4 +9,4 @@ completedWhen:
 impulses:
   - name: Focus myself on Sensation
     priority: goal
-    operation: !import ../../../operations/victories/sensation/acquire-temptation-sensation.yml
+    operation: !import /operations/victories/sensation/acquire-temptation-sensation.yml

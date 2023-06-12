@@ -10,4 +10,4 @@ completedWhen:
   elementId: waywood
 impulses:
   - name: "Acquire Way: The wood"
-    operation: !import ../../operations/mansus/acquire-way-wood.yml
+    operation: !import /operations/mansus/acquire-way-wood.yml

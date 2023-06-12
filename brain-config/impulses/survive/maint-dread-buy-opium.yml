@@ -2,7 +2,7 @@ name: Counter dread with Opium
 priority: maintenance
 requirements:
   allOf:
-    - !import ../../conditions/dread-unsatisfied.yml
+    - !import /conditions/dread-unsatisfied.yml
     - cardSet:
         - elementId: funds
           location: tabletop

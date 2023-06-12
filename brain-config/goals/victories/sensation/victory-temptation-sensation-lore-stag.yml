@@ -28,15 +28,15 @@ impulses:
         - elementId: waystagbefore_4
         - elementId: waystagbefore_5
         - elementId: waystag_after
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle.yml
   - name: Answer Ghirbi's riddle on Moth
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-1.yml
   - name: Answer Ghirbi's riddle on Lantern
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-2.yml
   - name: Answer Ghirbi's riddle on Grail
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-3.yml
   - name: Answer Ghirbi's riddle on Knock
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-4.yml
 
   - name: Ensure we have glimmering
     priority: maintenance
@@ -47,7 +47,7 @@ impulses:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/passion/study-passion.yml
+    operation: !import /operations/passion/study-passion.yml
 
   # Begin Knock C
   - name: Subvert Sexton's Secret to Knock
@@ -59,7 +59,7 @@ impulses:
             - elementId: fragmentknockb
             - elementId: fragmentknockb
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-a.yml
+    operation: !import /operations/lore/knock/lore-subvert-winter-knock-a.yml
   - name: Break down Operation of Declining Sun
     requirements:
       elementId: waystagbefore_4
@@ -69,13 +69,13 @@ impulses:
             - elementId: fragmentwinterb
             - elementId: fragmentwinterb
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/winter/lore-breakdown-winter-c.yml
+    operation: !import /operations/lore/winter/lore-breakdown-winter-c.yml
   - name: Subvert A White Ceremony to Knock
     requirements:
       elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-b.yml
+    operation: !import /operations/lore/knock/lore-subvert-winter-knock-b.yml
   # End Knock C
 
   # Begin Grail C
@@ -83,7 +83,7 @@ impulses:
   - name: Combine A Megalesian Incantation
     forbidders:
       elementId: fragmentgrailc
-    operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-b.yml
   - name: Combine A Red Secret
     forbidders:
       anyOf:
@@ -91,7 +91,7 @@ impulses:
             - elementId: fragmentgrailb
             - elementId: fragmentgrailb
         - elementId: fragmentgrailc
-    operation: !import ../../../operations/lore/grail/lore-combine-grail-a.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-a.yml
   # End Grail C
 
   # Begin Secret Histories C
@@ -100,7 +100,7 @@ impulses:
       elementId: waystagbefore_5
     forbidders:
       elementId: fragmentsecrethistoriesc
-    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
   - name: Combine An Occult Scrap
     requirements:
       elementId: waystagbefore_5
@@ -110,7 +110,7 @@ impulses:
             - elementId: fragmentsecrethistoriesb
             - elementId: fragmentsecrethistoriesb
         - elementId: fragmentsecrethistoriesc
-    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
   # End Secret Histories C
 
   # Begin Lantern C
@@ -124,7 +124,7 @@ impulses:
             - elementId: fragmentlanternb
             - elementId: fragmentlanternb
         - elementId: fragmentlanternc
-    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-a.yml
+    operation: !import /operations/lore/lantern/lore-combine-lantern-a.yml
   - name: Combine An Iguvine Rite
     priority: goal
     requirements:
@@ -132,7 +132,7 @@ impulses:
     forbidders:
       anyOf:
         - elementId: fragmentlanternc
-    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-b.yml
+    operation: !import /operations/lore/lantern/lore-combine-lantern-b.yml
   # End Lantern C
 
   # heartc + grailc = graild
@@ -140,4 +140,4 @@ impulses:
     priority: goal
     forbidders:
       elementId: waystagbefore_3
-    operation: !import ../../../operations/lore/grail/lore-subvert-heart-grail-c.yml
+    operation: !import /operations/lore/grail/lore-subvert-heart-grail-c.yml

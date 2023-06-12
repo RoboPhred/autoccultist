@@ -12,7 +12,7 @@ completedWhen:
 impulses:
   - name: Exalt a special Grail Disciple by using a sixth-order influence
     priority: goal
-    operation: !import ../../operations/cult/exalt-grail-mutations-influence-six.yml
+    operation: !import /operations/cult/exalt-grail-mutations-influence-six.yml
   - name: Climb the Ascent of Knives
     priority: maintenance
-    operation: !import ../../operations/mansus/use-stag-ascent-of-knives.yml
+    operation: !import /operations/mansus/use-stag-ascent-of-knives.yml

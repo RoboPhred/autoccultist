@@ -7,4 +7,4 @@ requirements:
     - anyOf:
         - situation: illhealth
         - elementId: affliction
-operation: !import ../../operations/health/study-health.yml
+operation: !import /operations/health/study-health.yml

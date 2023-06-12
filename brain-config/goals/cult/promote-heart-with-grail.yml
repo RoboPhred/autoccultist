@@ -12,7 +12,7 @@ completedWhen:
 impulses:
   - name: Promote a Heart Believer, while burning Restlessness
     priority: goal
-    operation: !import ../../operations/cult/promote-heart-believer-grail-restlessness.yml
+    operation: !import /operations/cult/promote-heart-believer-grail-restlessness.yml
   - name: Promote a Heart Believer, by invoking Grail
     priority: goal
-    operation: !import ../../operations/cult/promote-heart-believer-grail.yml
+    operation: !import /operations/cult/promote-heart-believer-grail.yml

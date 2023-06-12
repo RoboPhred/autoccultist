@@ -15,7 +15,7 @@ impulses:
             forge:
               greaterThanOrEqualTo: 15
     priority: maintenance
-    operation: !import ../../../operations/work-skillhealth.yml
+    operation: !import /operations/work-skillhealth.yml
 
   - name: Mansus-Grind for Knock Influence
     priority: goal
@@ -34,8 +34,8 @@ impulses:
         # This is so we don't have him decay while we are waiting for the suspicion to decay
         # In theory the bot should be frame perfect at sustaining crucible, but in practice
         # gaps of time slip by between game frames and decay he does.
-        - !import ../../../conditions/has-evidence.yml
-    operation: !import ../../../operations/mansus/use-stag-normal.yml
+        - !import /conditions/has-evidence.yml
+    operation: !import /operations/mansus/use-stag-normal.yml
 
   - name: Summon King Crucible
     priority: goal
@@ -49,7 +49,7 @@ impulses:
         # This is so we don't have him decay while we are waiting for the suspicion to decay
         # In theory the bot should be frame perfect at sustaining crucible, but in practice
         # gaps of time slip by between game frames and decay he does.
-        - !import ../../../conditions/has-evidence.yml
+        - !import /conditions/has-evidence.yml
     operation:
       name: Summon King Crucible
       situation: work
@@ -115,7 +115,7 @@ impulses:
         # Try to avoid notoriety game overs from this.
         #  In practice, this hasn't been a problem since we win so quickly.  However, there have been
         #  close calls...
-        - !import ../../../conditions/has-suspicion.yml
+        - !import /conditions/has-suspicion.yml
     operation:
       name: Get a prisoner
       situation: talk

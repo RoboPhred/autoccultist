@@ -8,20 +8,20 @@
 #   Pleasant: Contentment, Fleeting
 # (These memories have 300-second decay times and take 10 seconds to unpack, making them rather useful.)
 
-- !import ../impulses/survive/crit-heal-affliction-vitality.yml
-- !import ../impulses/survive/crit-heal-affliction-funds.yml
-- !import ../impulses/survive/crit-heal-injury-vitality.yml
-- !import ../impulses/survive/crit-heal-injury-funds.yml
-- !import ../impulses/survive/crit-heal-hunger.yml
-- !import ../impulses/survive/crit-dispose-fascination-dread.yml
-- !import ../impulses/survive/crit-heal-dread-contentment.yml
-- !import ../impulses/survive/crit-despair-buy-opium.yml
-- !import ../impulses/survive/crit-dread-buy-opium.yml
-- !import ../impulses/survive/crit-dispose-fascination-reminders.yml
-- !import ../impulses/survive/crit-visions-get-dread.yml
-- !import ../impulses/survive/crit-affliction-emergency-vitality.yml
+- !import /impulses/survive/crit-heal-affliction-vitality.yml
+- !import /impulses/survive/crit-heal-affliction-funds.yml
+- !import /impulses/survive/crit-heal-injury-vitality.yml
+- !import /impulses/survive/crit-heal-injury-funds.yml
+- !import /impulses/survive/crit-heal-hunger.yml
+- !import /impulses/survive/crit-dispose-fascination-dread.yml
+- !import /impulses/survive/crit-heal-dread-contentment.yml
+- !import /impulses/survive/crit-despair-buy-opium.yml
+- !import /impulses/survive/crit-dread-buy-opium.yml
+- !import /impulses/survive/crit-dispose-fascination-reminders.yml
+- !import /impulses/survive/crit-visions-get-dread.yml
+- !import /impulses/survive/crit-affliction-emergency-vitality.yml
 
 # Lesser priority survival instincts.
-- !import ../impulses/survive/maint-heal-dread-contentment.yml
-- !import ../impulses/survive/maint-affliction-get-vitality.yml
-- !import ../impulses/survive/maint-dread-buy-opium.yml
+- !import /impulses/survive/maint-heal-dread-contentment.yml
+- !import /impulses/survive/maint-affliction-get-vitality.yml
+- !import /impulses/survive/maint-dread-buy-opium.yml

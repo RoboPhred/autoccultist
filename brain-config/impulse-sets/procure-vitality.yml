@@ -1,11 +1,11 @@
 - name: Skilled physical work
   priority: goal
-  operation: !import ../operations/work-skillhealth.yml
+  operation: !import /operations/work-skillhealth.yml
 
-- !import ../impulses/goal-learn-lesson-vitality.yml
+- !import /impulses/goal-learn-lesson-vitality.yml
 
-- !import ../impulses/norm-vitality-from-health.yml
+- !import /impulses/norm-vitality-from-health.yml
 
 - name: Unskilled physical work
   priority: maintenance
-  operation: !import ../operations/work-health.yml
+  operation: !import /operations/work-health.yml

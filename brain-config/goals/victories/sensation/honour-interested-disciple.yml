@@ -10,4 +10,4 @@ completedWhen:
 impulses:
   - name: Honour an Interested Disciple
     priority: goal
-    operation: !import ../../../operations/victories/sensation/honour-interested-disciple.yml
+    operation: !import /operations/victories/sensation/honour-interested-disciple.yml

@@ -14,8 +14,8 @@ impulses:
         - elementId: vitalityplus
         - elementId: vitalityplus
         - aspects: { lore: 1, forge: 2 }
-    operation: !import ../../operations/work-skillhealth.yml
-  - extends: !import ../../impulses/goal-learn-lesson-vitality.yml
+    operation: !import /operations/work-skillhealth.yml
+  - extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:
       # Stop using our skill card when we have enough lessons
       cardSet:
@@ -26,5 +26,5 @@ impulses:
         - aspects: { lore: 1, forge: 2 }
   - name: Upgrade Steely Physique with Forge
     priority: goal
-    operation: !import ../../operations/health/upgrade-skillhealthc-strength.yml
-  - !import ../../impulse-sets/procure-vitality.yml
+    operation: !import /operations/health/upgrade-skillhealthc-strength.yml
+  - !import /impulse-sets/procure-vitality.yml

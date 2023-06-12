@@ -12,8 +12,8 @@ impulses:
         - elementId: vitalityplus
         - elementId: vitalityplus
         - elementId: vitalityplus
-    operation: !import ../../operations/work-skillhealth.yml
-  - extends: !import ../../impulses/goal-learn-lesson-vitality.yml
+    operation: !import /operations/work-skillhealth.yml
+  - extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:
       # Stop using our skill card when we have enough lessons
       cardSet:
@@ -22,5 +22,5 @@ impulses:
         - elementId: vitalityplus
   - name: Upgrade Hardened Physique to Steely Physique
     priority: goal
-    operation: !import ../../operations/health/upgrade-skillhealthb.yml
-  - !import ../../impulse-sets/procure-vitality.yml
+    operation: !import /operations/health/upgrade-skillhealthb.yml
+  - !import /impulse-sets/procure-vitality.yml

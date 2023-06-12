@@ -14,23 +14,23 @@ requirements:
 impulses:
   - name: Work diligently at junior job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-junior-dilligent.yml
+    operation: !import /operations/glover/work-glover-junior-dilligent.yml
     requirements:
       cardSet:
         - elementId: reason
         - elementId: reason
   - name: Work a junior job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-junior.yml
+    operation: !import /operations/glover/work-glover-junior.yml
   - name: Work at Glover & Glover under Alden
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-alden.yml
+    operation: !import /operations/glover/work-glover-alden.yml
   - name: Work at Glover & Glover with dilligence
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-diligence.yml
+    operation: !import /operations/glover/work-glover-diligence.yml
   - name: Work a senior job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-senior.yml
+    operation: !import /operations/glover/work-glover-senior.yml
   # Sometimes, we might not have reason available.  If this is the case, we
   # still need to show up to work to keep our job.
   - name: Work at Glover & Glover under Alden without reason
@@ -39,7 +39,7 @@ impulses:
       elementId: gloverandglover_difficultbossa_job
       lifetimeRemaining:
         lessThan: 5
-    operation: !import ../../operations/glover/work-glover-alden-noreason.yml
+    operation: !import /operations/glover/work-glover-alden-noreason.yml
   - name: Plead for job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/plead-glover.yml
+    operation: !import /operations/glover/plead-glover.yml

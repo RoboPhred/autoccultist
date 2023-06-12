@@ -23,4 +23,4 @@ impulses:
       elementId: gloverandglover_difficultbossa_job
       lifetimeRemaining:
         lessThan: 5
-    operation: !import ../../operations/glover/seduce-alden.yml
+    operation: !import /operations/glover/seduce-alden.yml
