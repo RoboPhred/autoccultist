@@ -10,6 +10,7 @@
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
 name: Aspirant Power Ascension
+legacy: aspirant
 selectionHint:
   anyOf:
     - elementId: introjob
@@ -23,22 +24,22 @@ selectionHint:
 motivations:
   - name: Begin the game
     primaryGoals:
-      - !import ../../goals/aspirant/begin-intro.yml
+      - !import /goals/aspirant/begin-intro.yml
   - name: Activate power temptation
     primaryGoals:
-      - !import ../../goals/aspirant/study-bequest-passion.yml
+      - !import /goals/aspirant/study-bequest-passion.yml
   - name: Get a job
     primaryGoals:
-      - !import ../../goals/glover/acquire-job-glover-junior.yml
+      - !import /goals/glover/acquire-job-glover-junior.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
+      - !import /goals/survive.yml
   - name: Study bequest contents
     primaryGoals:
-      - !import ../../goals/aspirant/discover-bookdealer.yml
-      - !import ../../goals/aspirant/find-collaborator.yml
+      - !import /goals/aspirant/discover-bookdealer.yml
+      - !import /goals/aspirant/find-collaborator.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   # We keep dying to sickness because we don't have the money to buy medicine.
   # This is because we keep getting restlessness, which decays to dread.  We then heal
   # dread with opium, which can cause sickness.
@@ -50,108 +51,108 @@ motivations:
   #     which will slow our money gain to be equal to money loss from time.
   - name: Get a stronger physique while finding people to recruit
     primaryGoals:
-      - !import ../../goals/health/acquire-skillhealtha.yml
+      - !import /goals/health/acquire-skillhealtha.yml
     supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/followers/attract-followers.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   # Right about now, we will start getting overtime requirements from alden.
   # Overtime means the time taken to get paid reaches parity with the funds drain of the time verb.
   # This is bad, as we need spare funds to heal the afflictions we are getting from dread => opium.
   - name: Get a scholarship while finding people to recruit
     primaryGoals:
-      - !import ../../goals/reason/acquire-skillreasona.yml
-      - !import ../../goals/reason/acquire-skillreasonb.yml
-      - !import ../../goals/reason/acquire-skillreasonc.yml
+      - !import /goals/reason/acquire-skillreasona.yml
+      - !import /goals/reason/acquire-skillreasonb.yml
+      - !import /goals/reason/acquire-skillreasonc.yml
     supportingGoals:
       # We might want to drop attract-followers, as this has a chance of requiring reason.
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/followers/attract-followers.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Get a promotion while finding people to recruit
     primaryGoals:
-      - !import ../../goals/glover/acquire-job-glover-standard.yml
+      - !import /goals/glover/acquire-job-glover-standard.yml
     supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
+      - !import /goals/followers/attract-followers.yml
+      - !import /goals/survive.yml
   - name: Establish the Unflinching Order
     primaryGoals:
-      - !import ../../goals/cult/form-cult-doctrine-forge.yml
+      - !import /goals/cult/form-cult-doctrine-forge.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Get swole, find people to recruit
     primaryGoals:
-      - !import ../../goals/health/acquire-skillhealthb.yml
-      - !import ../../goals/health/acquire-skillhealthc.yml
+      - !import /goals/health/acquire-skillhealthb.yml
+      - !import /goals/health/acquire-skillhealthc.yml
     supportingGoals:
-      - !import ../../goals/followers/attract-followers.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/followers/attract-followers.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Finish finding people to recruit, buy and read books
     primaryGoals:
-      - !import ../../goals/followers/attract-followers.yml
+      - !import /goals/followers/attract-followers.yml
     supportingGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Recruit everyone, buy and read books
     primaryGoals:
-      - !import ../../goals/cult/recruit-lore-forge.yml
+      - !import /goals/cult/recruit-lore-forge.yml
     supportingGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Dispose of Alden, buy and read books
     primaryGoals:
-      - !import ../../goals/glover/glover-remove-boss-seduction.yml
+      - !import /goals/glover/glover-remove-boss-seduction.yml
     supportingGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
       # Switch to labor while the glover card is being used.
-      - !import ../../goals/funds/work-labor.yml
-      - !import ../../goals/survive.yml
+      - !import /goals/funds/work-labor.yml
+      - !import /goals/survive.yml
   - name: Finish up Morlands, find rites from auction
     primaryGoals:
-      - !import ../../goals/consume-bookdealer.yml
-      - !import ../../goals/consume-books-lore-waitmorland.yml
-      - !import ../../goals/find-auctionhouse.yml
-      - !import ../../goals/auction/acquire-stumm.yml
-      - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
+      - !import /goals/find-auctionhouse.yml
+      - !import /goals/auction/acquire-stumm.yml
+      - !import /goals/auction/acquire-truecompleteasclepiangreek.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Move into Morlands, aquire a Rarefied Mind
     primaryGoals:
-      - !import ../../goals/hq/move-hq-library.yml
-      - !import ../../goals/reason/acquire-skillreasond-illumination.yml
+      - !import /goals/hq/move-hq-library.yml
+      - !import /goals/reason/acquire-skillreasond-illumination.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
-      - !import ../../goals/mansus/acquire-way-wood.yml
-      - !import ../../goals/mansus/acquire-way-whitedoor.yml
+      - !import /goals/mansus/acquire-way-wood.yml
+      - !import /goals/mansus/acquire-way-whitedoor.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Acquire the Stag Door, Spider Door, and the Formula Fissive
     primaryGoals:
-      - !import ../../goals/victories/power/victory-temptation-power-lore-stag-spider.yml
+      - !import /goals/victories/power/victory-temptation-power-lore-stag-spider.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Achieve the Marks of Power
     primaryGoals:
-      - !import ../../goals/victories/power/acquire-dedication-power.yml
-      - !import ../../goals/victories/power/acquire-ascension-power.yml
+      - !import /goals/victories/power/acquire-dedication-power.yml
+      - !import /goals/victories/power/acquire-ascension-power.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
-      - !import ../../goals/glover/work-glover.yml
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
   - name: Acquire the Seventh mark of Power
     primaryGoals:
-      - !import ../../goals/victories/power/acquire-mark-power-7.yml
+      - !import /goals/victories/power/acquire-mark-power-7.yml
     supportingGoals:
-      - !import ../../goals/survive.yml
+      - !import /goals/survive.yml

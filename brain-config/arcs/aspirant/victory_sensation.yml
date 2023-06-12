@@ -1,6 +1,7 @@
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
 name: Aspirant Sensation Ascension
+legacy: aspirant
 selectionHint:
   anyOf:
     - elementId: ascensionsensationa
