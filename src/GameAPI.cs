@@ -6,6 +6,7 @@ namespace AutoccultistNS
     using SecretHistories.Assets.Scripts.Application.UI;
     using SecretHistories.Constants;
     using SecretHistories.Entities;
+    using SecretHistories.Entities.NullEntities;
     using SecretHistories.Enums;
     using SecretHistories.Fucine;
     using SecretHistories.Spheres;
@@ -112,7 +113,11 @@ namespace AutoccultistNS
                     throw new Exception("GameAPI.TabletopSphere: Game is not running.");
                 }
 
-                return Watchman.Get<HornedAxe>().GetSpheres().OfType<TabletopSphere>().Single();
+                Sphere tabletopSphere = Watchman.Get<HornedAxe>().GetSpheres().OfType<TabletopSphere>().FirstOrDefault();
+
+                // When resetting the game, it is possible for GameStateProvider to try and generate a game state during the dissolution process
+                // of the current save before the scene is unloaded.  This results in no tabletop sphere.
+                return tabletopSphere ?? new NullSphere();
             }
         }
 
