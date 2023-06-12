@@ -48,21 +48,11 @@ namespace AutoccultistNS
                 // Apparently the above isn't good enough to wait on the mansus, so let's wait for the cards to appear.
                 if (IsInMansus)
                 {
-                    try
+                    var ingress = GetActiveIngress();
+                    var hasChoices = GetMansusChoices(out var _) != null;
+                    var hasOutput = ingress != null && ingress.GetEgressOutputSphere().GetTokens().Any();
+                    if (!hasChoices && !hasOutput)
                     {
-                        var ingress = GetActiveIngress();
-                        var hasChoices = GetMansusChoices(out var _) != null;
-                        var hasOutput = ingress != null && ingress.GetEgressOutputSphere().GetTokens().Any();
-                        if (!hasChoices && !hasOutput)
-                        {
-                            return false;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // Mansus is borked...
-                        Autoccultist.Instance.LogWarn($"Failed to determine interactivity when in mansus: {ex.ToString()}");
-                        NoonUtility.LogException(ex);
                         return false;
                     }
                 }

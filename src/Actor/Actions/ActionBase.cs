@@ -1,10 +1,13 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public abstract class ActionBase : IAutoccultistAction
     {
         private bool executed = false;
 
-        public ActionResult Execute()
+        public Task<ActionResult> Execute(CancellationToken cancellationToken)
         {
             if (this.executed)
             {
@@ -12,9 +15,9 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             this.executed = true;
-            return this.OnExecute();
+            return this.OnExecute(cancellationToken);
         }
 
-        protected abstract ActionResult OnExecute();
+        protected abstract Task<ActionResult> OnExecute(CancellationToken cancellationToken);
     }
 }

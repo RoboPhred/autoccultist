@@ -3,7 +3,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action to open a situation window.
     /// </summary>
-    public class OpenSituationAction : ActionBase
+    public class OpenSituationAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSituationAction"/> class.

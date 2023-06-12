@@ -5,7 +5,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action to accepts the results of a mansus visit and resume the game.
     /// </summary>
-    public class AcceptMansusResultsAction : ActionBase
+    public class AcceptMansusResultsAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AcceptMansusResultsAction"/> class.

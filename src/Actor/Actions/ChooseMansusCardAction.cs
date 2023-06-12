@@ -6,7 +6,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action that closes a situation window.
     /// </summary>
-    public class ChooseMansusCardAction : ActionBase
+    public class ChooseMansusCardAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChooseMansusCardAction"/> class.

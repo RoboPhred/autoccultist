@@ -3,6 +3,8 @@ namespace AutoccultistNS.Actor
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     internal class RecoverableActionEnumerable : IEnumerable<IAutoccultistAction>
     {
@@ -52,11 +54,15 @@ namespace AutoccultistNS.Actor
                 this.onError = onError;
             }
 
-            public ActionResult Execute()
+            public async Task<ActionResult> Execute(CancellationToken cancellationToken)
             {
                 try
                 {
-                    return this.action.Execute();
+                    return await this.action.Execute(cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                    return ActionResult.NoOp;
                 }
                 catch (Exception ex)
                 {

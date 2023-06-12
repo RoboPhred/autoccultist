@@ -3,7 +3,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action that closes a situation window.
     /// </summary>
-    public class CloseSituationAction : ActionBase
+    public class CloseSituationAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseSituationAction"/> class.

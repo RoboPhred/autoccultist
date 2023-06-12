@@ -1,12 +1,13 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
 
     /// <summary>
     /// An action to start a situation processing cards.
     /// </summary>
-    public class StartSituationRecipeAction : ActionBase
+    public class StartSituationRecipeAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StartSituationRecipeAction"/> class.

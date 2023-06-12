@@ -8,7 +8,7 @@ namespace AutoccultistNS.Actor.Actions
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.
     /// </summary>
-    public class EmptySituationAction : ActionBase
+    public class EmptySituationAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmptySituationAction"/> class.

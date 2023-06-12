@@ -7,7 +7,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action to slot a card into a slot of a situation.
     /// </summary>
-    public class SlotCardAction : ActionBase
+    public class SlotCardAction : SyncActionBase
     {
         // TODO: This should take a specific card reservation, not a card matcher.
 

@@ -12,8 +12,8 @@ namespace AutoccultistNS.Actor
     /// </summary>
     public static class AutoccultistActor
     {
-        private static readonly Queue<PendingActionSet> PendingActionSets = new();
-        private static PendingActionSet currentActionSet;
+        private static readonly Queue<DeferredTask<bool>> PendingActionSets = new();
+        private static DeferredTask<bool> currentActionSet;
 
         private static GameAPI.PauseToken pauseToken;
 
@@ -34,7 +34,10 @@ namespace AutoccultistNS.Actor
         /// <returns>A task that will complete when all actions complete, or fail with an exception describing the action failure.</returns>
         public static Task PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
         {
-            var pendingAction = new PendingActionSet(actions.GetEnumerator(), cancellationToken ?? CancellationToken.None);
+            var pendingAction = new DeferredTask<bool>(
+                (innerCancellationToken) => ExecuteActionSet(actions.GetEnumerator(), innerCancellationToken),
+                cancellationToken ?? CancellationToken.None);
+
             PendingActionSets.Enqueue(pendingAction);
 
             if (!isDrainingQueue)
@@ -52,10 +55,10 @@ namespace AutoccultistNS.Actor
         {
             currentActionSet?.Cancel();
 
-            PendingActionSet pendingActionSet;
-            while ((pendingActionSet = PendingActionSets.DequeueOrDefault()) != null)
+            DeferredTask<bool> queuedTask;
+            while ((queuedTask = PendingActionSets.DequeueOrDefault()) != null)
             {
-                pendingActionSet.Cancel();
+                queuedTask.Cancel();
             }
 
             PendingActionSets.Clear();
@@ -73,7 +76,7 @@ namespace AutoccultistNS.Actor
             isDrainingQueue = true;
             try
             {
-                PendingActionSet set;
+                DeferredTask<bool> set;
                 while ((set = PendingActionSets.DequeueOrDefault()) != null)
                 {
                     currentActionSet = set;
@@ -83,10 +86,26 @@ namespace AutoccultistNS.Actor
             }
             finally
             {
-                OnIdle();
                 currentActionSet = null;
                 isDrainingQueue = false;
+                OnIdle();
             }
+        }
+
+        private static async Task<bool> ExecuteActionSet(IEnumerator<IAutoccultistAction> actions, CancellationToken cancellationToken)
+        {
+            while (actions.MoveNext())
+            {
+                var action = actions.Current;
+                Autoccultist.Instance.LogTrace($"Executing action {action}");
+                var result = await action.Execute(cancellationToken);
+                if (result != ActionResult.NoOp)
+                {
+                    await new EngineDelayTask(ActionDelay, cancellationToken).AwaitCompletion();
+                }
+            }
+
+            return true;
         }
 
         private static void OnActive()
@@ -105,115 +124,6 @@ namespace AutoccultistNS.Actor
             if (SortTableOnIdle)
             {
                 GameAPI.SortTable();
-            }
-        }
-
-        /// <summary>
-        /// A pending action set.
-        /// A PendingActionSet wrap ActionSet and keeps it on hold until Execute is called.
-        /// Cancellation of a pending action set is also possible.
-        /// </summary>
-        private class PendingActionSet
-        {
-            private readonly TaskCompletionSource<bool> taskCompletionSource = new();
-            private readonly IEnumerator<IAutoccultistAction> pendingActions;
-            private readonly CancellationToken externalCancellationToken;
-            private readonly CancellationTokenSource internalCancellationTokenSource = new();
-
-            private bool didExecute = false;
-
-            public PendingActionSet(IEnumerator<IAutoccultistAction> pendingActions, CancellationToken cancellationToken)
-            {
-                this.pendingActions = pendingActions;
-                this.externalCancellationToken = cancellationToken;
-            }
-
-            public Task Task => this.taskCompletionSource.Task;
-
-            public async Task Execute()
-            {
-                if (this.didExecute)
-                {
-                    throw new InvalidOperationException("This action set has already been executed.");
-                }
-
-                this.didExecute = true;
-
-                var cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(this.externalCancellationToken, this.internalCancellationTokenSource.Token).Token;
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var set = new ActionSet(this.pendingActions, cancellationToken);
-                try
-                {
-                    await set.AwaitCompletion();
-                    this.taskCompletionSource.TrySetResult(true);
-                }
-                catch (TaskCanceledException)
-                {
-                    this.taskCompletionSource.TrySetCanceled();
-                }
-                catch (Exception ex)
-                {
-                    this.taskCompletionSource.TrySetException(ex);
-                }
-            }
-
-            public void Cancel()
-            {
-                this.internalCancellationTokenSource.Cancel();
-                if (!this.didExecute)
-                {
-                    this.taskCompletionSource.TrySetCanceled();
-                }
-            }
-        }
-
-        private class ActionSet : AsyncUpdateTask<bool>
-        {
-            private readonly IEnumerator<IAutoccultistAction> actions;
-
-            private DateTime lastUpdate;
-
-            public ActionSet(IEnumerator<IAutoccultistAction> actions, CancellationToken cancellationToken)
-                : base(cancellationToken)
-            {
-                this.actions = actions;
-            }
-
-            protected override void Update()
-            {
-                if (this.lastUpdate + ActionDelay > DateTime.Now)
-                {
-                    // Not time to act yet.
-                    return;
-                }
-
-                if (!GameAPI.IsInteractable)
-                {
-                    // Not interactable at the moment
-                    return;
-                }
-
-                ActionResult actionResult;
-                do
-                {
-                    if (!this.actions.MoveNext())
-                    {
-                        this.SetComplete(true);
-                        return;
-                    }
-
-                    var action = this.actions.Current;
-
-                    // Execute the action, clear it out, and update the last update time
-                    //  to delay for the next action.
-                    Autoccultist.Instance.LogTrace($"Executing action {action}");
-                    actionResult = action.Execute();
-                }
-                while (actionResult == ActionResult.NoOp);
-
-                // We did the thing.  Set the last updated time so we can delay for the next action.
-                this.lastUpdate = DateTime.Now;
             }
         }
     }
