@@ -213,7 +213,7 @@ namespace AutoccultistNS.Actor
                 while (actionResult == ActionResult.NoOp);
 
                 // We did the thing.  Set the last updated time so we can delay for the next action.
-                lastUpdate = DateTime.Now;
+                this.lastUpdate = DateTime.Now;
             }
         }
     }

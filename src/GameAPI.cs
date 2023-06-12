@@ -121,6 +121,19 @@ namespace AutoccultistNS
             }
         }
 
+        public static Sphere CodexSphere
+        {
+            get
+            {
+                if (!IsRunning)
+                {
+                    throw new Exception("GameAPI.CodexSphere: Game is not running.");
+                }
+
+                return Watchman.Get<HornedAxe>().GetSphereByAbsolutePath(new FucinePath("*/codex")) ?? new NullSphere();
+            }
+        }
+
         /// <summary>
         /// Initialize the GameAPI.
         /// <para>

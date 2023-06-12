@@ -75,7 +75,7 @@ public class Autoccultist : MonoBehaviour
         {
             if (this.loadArcOnGameStart != null)
             {
-                LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
+                this.LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
                 Superego.SetArc(this.loadArcOnGameStart);
                 this.loadArcOnGameStart = null;
                 this.StartAutoccultist();

@@ -37,15 +37,7 @@ namespace AutoccultistNS.GUI
         public static Rect GetWindowRect(float width, float height)
         {
             Rect x;
-            // When not running, left to right, to avoid ui buttons
-            // if (!GameAPI.IsRunning)
-            // {
             x = new Rect(consumedWidth + 10, 30, width, height);
-            // }
-            // else
-            // {
-            //     x = new Rect(Screen.width - consumedWidth - width - 10, 30, width, height);
-            // }
             consumedWidth += width + 20;
             return x;
         }

@@ -29,5 +29,10 @@ namespace AutoccultistNS.GameState
         /// The card is in a mansus deck.
         /// </summary>
         Mansus,
+
+        /// <summary>
+        /// The card is an entry for the Codex mod (if installed).
+        /// </summary>
+        Codex,
     }
 }
