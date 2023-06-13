@@ -78,19 +78,24 @@ motivations:
       - !import /goals/followers/attract-followers.yml
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml
-  - name: Finish up Morlands, find rites from auction
+  - name: Finish up Morlands
     primaryGoals:
       - !import /goals/consume-bookdealer.yml
       - !import /goals/consume-books-lore-waitmorland.yml
       - !import /goals/find-auctionhouse.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/followers/attract-followers.yml
+      - !import /goals/funds/work-labor.yml
+  - name: Find Stumm
+    primaryGoals:
       - !import /goals/auction/acquire-stumm-only.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/cult/recruit-away-influences.yml
       - !import /goals/followers/attract-followers.yml
       - !import /goals/funds/work-labor.yml
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import /goals/mansus/acquire-way-wood.yml
