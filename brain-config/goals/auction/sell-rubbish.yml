@@ -5,24 +5,24 @@ requirements:
     # Acquire-everything uses the presence of one genericrubbishbook to indicate that the bookshop is closed
     #  and two genericrubbishbook to indicate that the auction house is bought out.
     - cardSet:
-      - elementId: genericrubbishbook
-      - elementId: genericrubbishbook
-      - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
 completedWhen:
   noneOf:
     - elementId: jumble
     - cardSet:
-      - elementId: genericrubbishbook
-      - elementId: genericrubbishbook
-      - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
 impulses:
   - name: Sell our rubbish
+    requirements:
+      anyOf:
+        - elementId: jumble
     operation:
       name: Sell our rubbish
       situation: explore
-      requirements:
-        oneOf:
-          - elementId: jumble
       startingRecipe:
         slots:
           explore:
@@ -32,14 +32,14 @@ impulses:
               - elementId: jumble
 
   - name: Sell a rubbish book
+    requirements:
+      cardSet:
+        - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
+        - elementId: genericrubbishbook
     operation:
       name: Sell a rubbish book
       situation: explore
-      requirements:
-        cardSet:
-          - elementId: genericrubbishbook
-          - elementId: genericrubbishbook
-          - elementId: genericrubbishbook
       startingRecipe:
         slots:
           explore:
