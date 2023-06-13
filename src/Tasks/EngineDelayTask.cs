@@ -1,9 +1,9 @@
-namespace AutoccultistNS
+namespace AutoccultistNS.Tasks
 {
     using System;
     using System.Threading;
 
-    public class EngineDelayTask : AsyncUpdateTask<bool>
+    public class EngineDelayTask : HeartbeatTask<bool>
     {
         private readonly TimeSpan delay;
         private readonly DateTime start = DateTime.Now;
@@ -18,7 +18,7 @@ namespace AutoccultistNS
         {
             if (this.start + this.delay < DateTime.Now)
             {
-                this.SetComplete(true);
+                this.SetResult(true);
             }
         }
     }

@@ -70,11 +70,6 @@ namespace AutoccultistNS.Brain
             ChoosingPortalCard,
 
             /// <summary>
-            /// A mansus card has been chosen and we are waiting to dump the portal result.
-            /// </summary>
-            AwaitingPortalResults,
-
-            /// <summary>
             /// The operation has finished and we are waiting for the contents to dump.
             /// </summary>
             Completing,
@@ -165,10 +160,6 @@ namespace AutoccultistNS.Brain
             else if (this.operationState == OperationState.Orphaning)
             {
                 this.UpdateOrphaning();
-            }
-            else if (this.operationState == OperationState.AwaitingPortalResults)
-            {
-                this.UpdateAwaitPortalResults();
             }
         }
 
@@ -269,18 +260,6 @@ namespace AutoccultistNS.Brain
 
             // Recipe changed.
             this.End();
-        }
-
-        private void UpdateAwaitPortalResults()
-        {
-            var state = GameStateProvider.Current;
-
-            if (state.Mansus.State != PortalActiveState.AwaitingCollection)
-            {
-                return;
-            }
-
-            this.RunCoroutine(this.CompleteOperationCoroutine(true), nameof(this.CompleteOperationCoroutine));
         }
 
         private void ContinueOperation()
@@ -474,18 +453,26 @@ namespace AutoccultistNS.Brain
         private IEnumerable<IAutoccultistAction> ChooseMansusCoroutine(IMansusSolution solution)
         {
             yield return new ChooseMansusCardAction(solution);
-            this.operationState = OperationState.AwaitingPortalResults;
+
+            // A mansus event always ends the situation.
+            this.operationState = OperationState.Completing;
+
+            try
+            {
+                yield return new OpenSituationAction(this.SituationId);
+                yield return new EmptySituationAction(this.SituationId);
+                yield return new CloseSituationAction(this.SituationId);
+            }
+            finally
+            {
+                this.End();
+            }
         }
 
-        private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine(bool acceptMansus = false)
+        private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine()
         {
             try
             {
-                if (acceptMansus)
-                {
-                    yield return new AcceptMansusResultsAction();
-                }
-
                 yield return new OpenSituationAction(this.SituationId);
                 yield return new EmptySituationAction(this.SituationId);
                 yield return new CloseSituationAction(this.SituationId);

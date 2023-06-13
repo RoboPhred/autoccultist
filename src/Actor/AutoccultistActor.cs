@@ -4,6 +4,7 @@ namespace AutoccultistNS.Actor
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using AutoccultistNS.Tasks;
 
     /// <summary>
     /// The actor, that performs game actions on our behalf.
@@ -54,6 +55,7 @@ namespace AutoccultistNS.Actor
         public static void AbortAllActions()
         {
             currentActionSet?.Cancel();
+            currentActionSet = null;
 
             DeferredTask<bool> queuedTask;
             while ((queuedTask = PendingActionSets.DequeueOrDefault()) != null)
@@ -66,7 +68,7 @@ namespace AutoccultistNS.Actor
 
         public static async void DrainActionSetQueue()
         {
-            if (PendingActionSets.Count == 0)
+            if (isDrainingQueue || PendingActionSets.Count == 0)
             {
                 return;
             }
@@ -101,7 +103,7 @@ namespace AutoccultistNS.Actor
                 var result = await action.Execute(cancellationToken);
                 if (result != ActionResult.NoOp)
                 {
-                    await new EngineDelayTask(ActionDelay, cancellationToken).AwaitCompletion();
+                    await new EngineDelayTask(ActionDelay, cancellationToken).Task;
                 }
             }
 

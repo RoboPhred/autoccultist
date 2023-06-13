@@ -3,6 +3,9 @@ namespace AutoccultistNS
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoccultistNS.Tasks;
     using SecretHistories.Assets.Scripts.Application.UI;
     using SecretHistories.Constants;
     using SecretHistories.Entities;
@@ -135,6 +138,16 @@ namespace AutoccultistNS
             GameEventSource.GameEnded += OnGameEnded;
         }
 
+        public static Task AwaitInteractable(CancellationToken cancellationToken)
+        {
+            if (IsInteractable)
+            {
+                return Task.FromResult(true);
+            }
+
+            return new AwaitConditionTask(() => IsInteractable, cancellationToken).Task;
+        }
+
         /// <summary>
         /// Gets all EnRoute spheres.
         /// </summary>
@@ -169,7 +182,7 @@ namespace AutoccultistNS
         {
             // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
             // of the visit.
-            var tabletopIngress = TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
+            var tabletopIngress = GetTabletopIngress();
             if (tabletopIngress != null)
             {
                 return tabletopIngress;
@@ -184,6 +197,28 @@ namespace AutoccultistNS
 
             // Note: There is a small period of time between the overworld concluding and the tabletop ingress appearing.
             return null;
+        }
+
+        public static Ingress GetTabletopIngress()
+        {
+            // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
+            // of the visit.
+            return TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the active ingress, awaiting it if necessary.
+        /// </summary>
+        public static async Task<Ingress> AwaitTabletopIngress(CancellationToken cancellationToken)
+        {
+            var existingIngress = GetTabletopIngress();
+            if (existingIngress != null)
+            {
+                return existingIngress;
+            }
+
+            await new AwaitConditionTask(() => GetTabletopIngress() != null, cancellationToken).Task;
+            return GetTabletopIngress();
         }
 
         public static Otherworld GetActiveOtherworld()

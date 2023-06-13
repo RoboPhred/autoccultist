@@ -1,4 +1,4 @@
-namespace AutoccultistNS
+namespace AutoccultistNS.Tasks
 {
     using System;
     using System.Threading;

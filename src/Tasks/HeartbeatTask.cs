@@ -1,30 +1,27 @@
-namespace AutoccultistNS
+namespace AutoccultistNS.Tasks
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
 
-    public abstract class AsyncUpdateTask<T> : IDisposable
+    public abstract class HeartbeatTask<T> : IDisposable
     {
         private readonly TaskCompletionSource<T> taskCompletionSource = new();
         private readonly CancellationToken cancellationToken;
 
         private bool isDisposed = false;
 
-        protected AsyncUpdateTask(CancellationToken cancellationToken)
+        protected HeartbeatTask(CancellationToken cancellationToken)
         {
             this.cancellationToken = cancellationToken;
             MechanicalHeart.OnBeat += this.OnBeat;
         }
 
-        ~AsyncUpdateTask()
+        public Task<T> Task => this.taskCompletionSource.Task;
+
+        ~HeartbeatTask()
         {
             this.Dispose();
-        }
-
-        public Task AwaitCompletion()
-        {
-            return this.taskCompletionSource.Task;
         }
 
         public void Dispose()
@@ -45,7 +42,7 @@ namespace AutoccultistNS
 
         protected abstract void Update();
 
-        protected void SetComplete(T value)
+        protected void SetResult(T value)
         {
             this.EnsureNotDisposed();
 
@@ -73,7 +70,7 @@ namespace AutoccultistNS
         {
             if (this.isDisposed)
             {
-                throw new ObjectDisposedException(nameof(AsyncUpdateTask<T>));
+                throw new ObjectDisposedException(nameof(HeartbeatTask<T>));
             }
         }
 
