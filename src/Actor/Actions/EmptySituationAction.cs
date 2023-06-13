@@ -54,7 +54,11 @@ namespace AutoccultistNS.Actor.Actions
             }
             else if (situation.State.Identifier == StateEnum.Complete)
             {
+                var debugLog = from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
+                               from token in spheres.GetTokens()
+                               select token.PayloadEntityId;
                 situation.Conclude();
+                Autoccultist.Instance.LogTrace($"Situation {this.SituationId} concluded with cards {string.Join(", ", debugLog)}.");
             }
             else
             {

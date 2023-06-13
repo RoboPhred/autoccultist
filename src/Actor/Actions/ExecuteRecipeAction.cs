@@ -45,7 +45,15 @@ namespace AutoccultistNS.Actor.Actions
 
             await this.FillSlots(cancellationToken);
 
+            var filledCardsLog = from sphere in this.GetSituation().GetSpheresByCategory(SphereCategory.Threshold)
+                                 let id = sphere.GoverningSphereSpec.Id
+                                 let token = sphere.GetTokens().FirstOrDefault()
+                                 where token != null
+                                 select $"{id} = {token.PayloadEntityId}";
+
             await this.FinalizeSituation(cancellationToken);
+
+            Autoccultist.Instance.LogTrace($"Recipe {this.RecipeName} started with slotted cards {string.Join(", ", filledCardsLog)}.");
 
             return ActionResult.Completed;
         }
@@ -120,7 +128,7 @@ namespace AutoccultistNS.Actor.Actions
 
             if (!slotSphere.CanAcceptToken(stack.Token))
             {
-                throw new ActionFailureException(this, $"Recipe {this.RecipeName} slot {slotId} on situation {this.SituationId} cannot accept card {card.ElementId}.");
+                throw new ActionFailureException(this, $"Recipe {this.RecipeName} slot {slotId} on situation {this.SituationId} cannot accept card {stack.Element.Id}.");
             }
 
             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
@@ -138,7 +146,7 @@ namespace AutoccultistNS.Actor.Actions
                 var awaitSphereFilled = new AwaitConditionTask(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
-                    throw new ActionFailureException(this, $"Timed out waiting for card to arrive in slot {slotId} in situation {this.SituationId}.");
+                    throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.");
                 }
 
                 GameStateProvider.Invalidate();

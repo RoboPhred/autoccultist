@@ -23,7 +23,7 @@ completedWhen:
     - elementId: wayspider
     - elementId: fragmentforgee
 # We use latern in our march to fragmentforgee, but we need to also get fragmentlanternc to answer one of the stag's riddles.
-# Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb
+# Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb, mothc, plus morland's last random lore
 # From the output of morlands, we do:
 # moth + lantern = lanternb
 # moth + lantern = lanternb
@@ -37,7 +37,10 @@ completedWhen:
 # => forged, lanternb, mothb, mothc
 # mothb + lanternb = lanternc
 # => forged, lanternc, mothc
-# This leaves us with a lanternc and mothc for the stag, which can then be combined for a lanternd, which can then be used with forged for forgee
+# This leaves us with a lanternc and mothc for the stag
+# ...After stag door:
+# => mothc + lanternc = lanternd
+# => forged + lanternd = forgee
 impulses:
   - name: Acquire the Stag Riddle
     forbidders:
@@ -59,24 +62,6 @@ impulses:
     operation: !import /operations/mansus/stag/aquire-way-stag-riddle-4.yml
   - name: Answer Ghirbi's riddle on Secret Histories
     operation: !import /operations/mansus/stag/aquire-way-stag-riddle-5.yml
-
-  # After we acquire the stag door, it is safe to consume our mothc and lanternc
-  # mothc + lanternc = lanternd
-  - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
-    priority: goal
-    requirements:
-      elementId: waystag_after
-    operation: !import /operations/lore/lantern/lore-subvert-moth-lantern-c.yml
-
-  # After we have the spider door, it is safe to consume our lanternd
-  # forged + lanternd = forgee
-  - name: Subvert the Phanaean Invocation to the Formula Fissive
-    priority: goal
-    requirements:
-      allOf:
-        - elementId: waystag_after
-        - elementId: wayspider
-    operation: !import /operations/lore/forge/lore-subvert-lantern-forge-d.yml
 
   - name: Acquire the Spider Door
     forbidders:
@@ -215,7 +200,27 @@ impulses:
   - name: Subvert A Wood-Whisper to An Unmerciful Mantra
     priority: goal
     forbidders:
-      # Only do this once
-      elementId: fragmentlanternc
+      anyOf:
+        # Only do this once
+        - elementId: fragmentlanternc
+        - elementId: fragmentlanternd
     operation: !import /operations/lore/lantern/lore-subvert-moth-lantern-b.yml
   # End Moth / Lantern / Forge juggling
+
+  # After we acquire the stag door, it is safe to consume our mothc and lanternc
+  # mothc + lanternc = lanternd
+  - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
+    priority: goal
+    requirements:
+      elementId: waystag_after
+    operation: !import /operations/lore/lantern/lore-subvert-moth-lantern-c.yml
+
+  # After we have the spider door, it is safe to consume our lanternd
+  # forged + lanternd = forgee
+  - name: Subvert the Phanaean Invocation to the Formula Fissive
+    priority: goal
+    requirements:
+      allOf:
+        - elementId: waystag_after
+        - elementId: wayspider
+    operation: !import /operations/lore/forge/lore-subvert-lantern-forge-d.yml

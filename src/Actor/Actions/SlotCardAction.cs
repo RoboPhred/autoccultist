@@ -81,10 +81,6 @@ namespace AutoccultistNS.Actor.Actions
 
             var stack = card.ToElementStack();
 
-            // The game sets the home location when we pick up a card or it starts to move, not when we drop it!
-            // Without this, the card will jump back to the position it was before the player moved it.
-            stack.Token.RequestHomeLocationFromCurrentSphere();
-
             if (UseItinerary)
             {
                 var itinerary = sphere.GetItineraryFor(stack.Token);
@@ -96,7 +92,7 @@ namespace AutoccultistNS.Actor.Actions
                 var awaitSphereFilled = new AwaitConditionTask(() => sphere.GetTokens().Contains(stack.Token), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
-                    throw new ActionFailureException(this, $"Timed out waiting for card to arrive in slot {this.SlotId} in situation {this.SituationId}.");
+                    throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {this.SlotId} in situation {this.SituationId}.");
                 }
 
                 GameStateProvider.Invalidate();

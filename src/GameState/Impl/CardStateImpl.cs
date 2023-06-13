@@ -161,6 +161,7 @@ namespace AutoccultistNS.GameState.Impl
                 return stack.Token.CalveToken(1).Payload as ElementStack;
             }
 
+            stack.Token.RequestHomeLocationFromCurrentSphere();
             return stack;
         }
     }
