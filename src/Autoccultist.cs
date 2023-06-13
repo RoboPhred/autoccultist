@@ -7,7 +7,6 @@ using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
 using AutoccultistNS.Yaml;
-using SecretHistories.Infrastructure.Persistence;
 using SecretHistories.Services;
 using SecretHistories.UI;
 using UnityEngine;

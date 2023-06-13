@@ -1,8 +1,6 @@
 namespace AutoccultistNS
 {
     using System;
-    using AutoccultistNS.Actor;
-    using AutoccultistNS.Brain;
 
     /// <summary>
     /// Update manager for all Autoccultist mechanisms.
