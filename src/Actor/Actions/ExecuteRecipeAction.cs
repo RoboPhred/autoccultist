@@ -29,6 +29,11 @@ namespace AutoccultistNS.Actor.Actions
             this.LeaveSituationOpen = leaveOpen;
         }
 
+        public override string ToString()
+        {
+            return $"ExecuteRecipeAction(RecipeName = {this.RecipeName}, SituationId = {this.SituationId})";
+        }
+
         protected override async Task<ActionResult> OnExecute(CancellationToken cancellationToken)
         {
             if (GameAPI.IsInMansus)

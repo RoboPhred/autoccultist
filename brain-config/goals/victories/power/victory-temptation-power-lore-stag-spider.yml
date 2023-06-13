@@ -174,7 +174,7 @@ impulses:
             - elementId: fragmentsecrethistoriesb
         - elementId: fragmentsecrethistoriesc
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
-    # End Secret Histories C
+  # End Secret Histories C
 
   # Begin Moth / Lantern / Forge juggling
   # moth + lantern = lanternb

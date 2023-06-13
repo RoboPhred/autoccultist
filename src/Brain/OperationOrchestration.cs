@@ -304,6 +304,10 @@ namespace AutoccultistNS.Brain
 
             yield return new ExecuteRecipeAction(this.SituationId, recipeSolution, $"{this.operation.Name} => startingRecipe", true);
 
+            var stateOnStarted = this.GetSituationState();
+            this.ongoingRecipe = stateOnStarted.CurrentRecipe;
+            this.ongoingRecipeTimeRemaining = stateOnStarted.RecipeTimeRemaining ?? 0;
+
             if (recipeSolution.EndOperation)
             {
                 yield return new CloseSituationAction(this.SituationId);
@@ -320,6 +324,10 @@ namespace AutoccultistNS.Brain
             if (followupRecipeSolution != null)
             {
                 yield return new ExecuteRecipeAction(this.SituationId, followupRecipeSolution, $"{this.operation.Name} => {situationState.CurrentRecipe}");
+
+                var stateOnFollowup = this.GetSituationState();
+                this.ongoingRecipe = stateOnFollowup.CurrentRecipe;
+                this.ongoingRecipeTimeRemaining = stateOnFollowup.RecipeTimeRemaining ?? 0;
             }
             else
             {

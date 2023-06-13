@@ -15,7 +15,7 @@ namespace AutoccultistNS.Brain
 
         private static readonly Dictionary<IGoal, long> PendingCompletions = new();
 
-        private static bool isStartingImpulse = false;
+        private static bool isCheckingImpulses = false;
         private static GameAPI.PauseToken pauseToken;
 
         /// <summary>
@@ -159,12 +159,12 @@ namespace AutoccultistNS.Brain
 
         private static async void CheckImpulses()
         {
-            if (isStartingImpulse)
+            if (isCheckingImpulses)
             {
                 return;
             }
 
-            isStartingImpulse = true;
+            isCheckingImpulses = true;
 
             // FIXME: We have unpaused gaps when we should be immediately starting more operations.
             // Might be happening when an op ends then needs to immediately re-begin.
@@ -198,6 +198,7 @@ namespace AutoccultistNS.Brain
                     }
 
                     var orchestration = SituationOrchestrator.StartOperation(operation);
+                    orchestration.Completed += HandleOperationCompleted;
                     await orchestration.AwaitCurrentTask();
                 }
                 else
@@ -209,8 +210,17 @@ namespace AutoccultistNS.Brain
             }
             finally
             {
-                isStartingImpulse = false;
+                isCheckingImpulses = false;
             }
+        }
+
+        private static void HandleOperationCompleted(object sender, EventArgs e)
+        {
+            var orchestration = (ISituationOrchestration)sender;
+            orchestration.Completed -= HandleOperationCompleted;
+            // Immediately re-check impulses in case this operation wants to begin again.
+            // This avoids a gap of unpaused-ness between the op ending and the next heartbeat.
+            CheckImpulses();
         }
 
 
