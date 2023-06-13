@@ -1,15 +1,20 @@
 namespace AutoccultistNS.Actor.Actions
 {
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
 
     /// <summary>
     /// An action to slot a card into a slot of a situation.
     /// </summary>
-    public class SlotCardAction : SyncActionBase
+    public class SlotCardAction : ActionBase
     {
         // TODO: This should take a specific card reservation, not a card matcher.
+
+        public static bool UseItinerary { get; set; } = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SlotCardAction"/> class.
@@ -45,7 +50,7 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override ActionResult OnExecute()
+        protected override async Task<ActionResult> OnExecute(CancellationToken cancellationToken)
         {
             if (GameAPI.IsInMansus)
             {
@@ -81,12 +86,32 @@ namespace AutoccultistNS.Actor.Actions
             // Without this, the card will jump back to the position it was before the player moved it.
             stack.Token.RequestHomeLocationFromCurrentSphere();
 
-            if (!GameAPI.TrySlotCard(sphere, stack))
+            if (UseItinerary)
             {
-                throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
+                var itinerary = sphere.GetItineraryFor(stack.Token);
+                itinerary.WithQuickDuration().Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
+
+                GameStateProvider.Invalidate();
+
+                // Would be nice if there was a way to subscribe to the itinerary, but whatever...
+                var awaitSphereFilled = new AwaitConditionTask(() => sphere.GetTokens().Contains(stack.Token), cancellationToken);
+                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
+                {
+                    throw new ActionFailureException(this, $"Timed out waiting for card to arrive in slot {this.SlotId} in situation {this.SituationId}.");
+                }
+
+                GameStateProvider.Invalidate();
+            }
+            else
+            {
+                if (!GameAPI.TrySlotCard(sphere, stack))
+                {
+                    throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
+                }
+
+                GameStateProvider.Invalidate();
             }
 
-            GameStateProvider.Invalidate();
             return ActionResult.Completed;
         }
     }
