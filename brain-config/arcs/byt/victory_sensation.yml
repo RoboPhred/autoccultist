@@ -153,7 +153,7 @@ motivations:
       - !import /goals/cult/recruit-away-influences.yml
   - name: Acquire the Stag Door
     primaryGoals:
-      #      - !import /goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
+#      - !import /goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
       - !import /goals/victories/sensation/acquire-lore-stag.yml
     supportingGoals:
       - !import /goals/survive.yml

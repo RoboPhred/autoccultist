@@ -2,9 +2,6 @@ name: Purchase Morland books
 requirements:
   elementId: locationbookdealer
 completedWhen:
-  noneOf:
-    # The bookdealer_exhausted can become hq.bookshop, which then is lost forever if we leave it.
-    # Since we can't rely on a card indicating we have completed morlands, we have to rely on the absense of the card.
-    - elementId: locationbookdealer
+  elementId: genericrubbishbook
 impulses:
   - !import /impulses/books/buy-morland-books.yml
