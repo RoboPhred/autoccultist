@@ -1,8 +1,12 @@
 name: Acquire everything from Oriflamme
 requirements:
-  elementId: locationauctionhouse
+  allOf:
+    - elementId: locationauctionhouse
+    - elementId: genericrubbishbook
 completedWhen:
-  elementId: genericrubbishbook
+  cardSet:
+    - elementId: genericrubbishbook
+    - elementId: genericrubbishbook
 impulses:
   - name: Purchase items at auction
     requirements: !import ../../conditions/has-slushfund-major.yml

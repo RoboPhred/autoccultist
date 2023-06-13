@@ -1,6 +1,8 @@
 name: Acquire Stumm
 requirements:
-  elementId: locationauctionhouse
+  allOf:
+    - elementId: locationauctionhouse
+    - elementId: genericrubbishbook
 completedWhen:
   elementId: ritefollowerconsumeinfluence
 impulses:

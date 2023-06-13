@@ -3,6 +3,7 @@ requirements:
   allOf:
     - elementId: locationauctionhouse
     - elementId: scholargreek
+    - elementId: genericrubbishbook
 completedWhen:
   elementId: ritetoolconsumeinfluence
 impulses:
