@@ -98,16 +98,27 @@ motivations:
     supportingGoals:
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/survive.yml
-  - name: Finish Morlands, collect rites
+  - name: Finish Morlands
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/romance/maintain-relationships.yml
+      - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
+  - name: Find STUMM!
+    primaryGoals:
       - !import ../../goals/auction/acquire-stumm.yml
     supportingGoals:
       - !import ../../goals/survive.yml
       - !import ../../goals/glover/work-glover.yml
       - !import ../../goals/romance/maintain-relationships.yml
       - !import ../../goals/cult/recruit-away-influences.yml
+      - !import ../../goals/mansus/acquire-way-wood.yml
+      - !import ../../goals/mansus/acquire-way-whitedoor.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import ../../goals/mansus/acquire-way-wood.yml

@@ -11,6 +11,7 @@ impulses:
       anyOf:
         - elementId: stumm
         - elementId: ritefollowerconsumeinfluence
+        - elementId: locationbookdealer
     operation: !import ../../operations/auction-purchase-stumm.yml
   - name: Watch Stumm
     requirements: !import ../../conditions/has-slushfund-minor.yml

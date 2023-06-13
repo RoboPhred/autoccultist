@@ -113,10 +113,16 @@ motivations:
       # Switch to labor while the glover card is being used.
       - !import ../../goals/funds/work-labor.yml
       - !import ../../goals/survive.yml
-  - name: Finish up Morlands, find rites from auction
+  - name: Finish up Morlands
     primaryGoals:
       - !import ../../goals/consume-bookdealer.yml
       - !import ../../goals/consume-books-lore-waitmorland.yml
+    supportingGoals:
+      - !import ../../goals/survive.yml
+      - !import ../../goals/glover/work-glover.yml
+      - !import ../../goals/find-auctionhouse.yml
+  - name: Find rites from auction
+    primaryGoals:
       - !import ../../goals/find-auctionhouse.yml
       - !import ../../goals/auction/acquire-stumm.yml
       - !import ../../goals/auction/acquire-truecompleteasclepiangreek.yml
