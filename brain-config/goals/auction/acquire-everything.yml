@@ -9,6 +9,6 @@ completedWhen:
     - elementId: genericrubbishbook
 impulses:
   - name: Purchase items at auction
-    requirements: !import ../../conditions/has-slushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     priority: goal
-    operation: !import ../../operations/auction-purchase.yml
+    operation: !import /operations/auction-purchase.yml

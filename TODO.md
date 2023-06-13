@@ -19,9 +19,16 @@ in addition to its current 'smart condition' enums
 
 ### Card consumption
 
+-- Might not need this anymore now that we wait for an operation to get established before starting another.
+
 Implement consumption into ICardState so simultanious orchestrations do not try to yoink eachother's cards.
 
 If consumed and aborted: ElementStackToken.ReturnToTabletop
 Only succeed if private ElementStackToken.IsOnTabletop `this.transform.parent.GetComponent<TabletopTokenContainer>() != null;`
 Throw error if ElementStackToken.Defunct
 Unique IDs? ElementStackToken.EntityWithMutationsId
+
+### FIXME: Gracefully recover from failed actions (redux)
+
+Since the ExecuteRecipeAction refactor, the RecoverableActionEnumerable no longer seems to work.
+It should capture the failed action and gracefully transition to the abort coroutine, but this is not happening.

@@ -1,0 +1,15 @@
+{
+  "cultures": [
+    {
+      "id": "en",
+      "uilabels$add": {
+        "UI_AUTOMATION": "Autoccultist",
+        "UI_AUTOMATION_ACTOR_DELAY": "Delay between actions",
+        "UI_AUTOMATION_TENTH": "0.1 seconds",
+        "UI_AUTOMATION_TWENTYFITH": "0.25 seconds",
+        "UI_AUTOMATION_HALF": "0.5 seconds",
+        "UI_AUTOMATION_ONE": "1 second"
+      }
+    }
+  ]
+}

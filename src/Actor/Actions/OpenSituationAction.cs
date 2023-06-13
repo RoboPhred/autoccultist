@@ -3,7 +3,7 @@ namespace AutoccultistNS.Actor.Actions
     /// <summary>
     /// An action to open a situation window.
     /// </summary>
-    public class OpenSituationAction : ActionBase
+    public class OpenSituationAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenSituationAction"/> class.
@@ -19,23 +19,32 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"OpenSituationAction(SituationId = {this.SituationId})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (GameAPI.IsInMansus)
             {
-                return;
+                throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null)
             {
-                return;
+                throw new ActionFailureException(this, "Situation is not available.");
+            }
+
+            if (situation.IsOpen)
+            {
+                return ActionResult.NoOp;
             }
 
             situation.OpenAt(situation.Token.Location);
+            return ActionResult.Completed;
         }
     }
 }

@@ -1,28 +1,32 @@
 namespace AutoccultistNS.Actor.Actions
 {
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
 
+    // TODO: This should take a specific card reservation, not a card matcher.
     /// <summary>
     /// An action to slot a card into a slot of a situation.
     /// </summary>
     public class SlotCardAction : ActionBase
     {
-        // TODO: This should take a specific card reservation, not a card matcher.
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SlotCardAction"/> class.
         /// </summary>
         /// <param name="situationId">The situation id of the situation to slot the card into.</param>
         /// <param name="slotId">The slot id of the slot in the situation to slot the card into.</param>
         /// <param name="cardMatcher">The card matcher to choose a card to slot.</param>
-        public SlotCardAction(string situationId, string slotId, ICardChooser cardMatcher)
+        public SlotCardAction(string situationId, string slotId, ISlotCardChooser cardMatcher)
         {
             this.SituationId = situationId;
             this.SlotId = slotId;
             this.CardMatcher = cardMatcher;
         }
+
+        public static bool UseItinerary { get; set; } = true;
 
         /// <summary>
         /// Gets the situation id of the situation to slot the card into.
@@ -37,13 +41,16 @@ namespace AutoccultistNS.Actor.Actions
         /// <summary>
         /// Gets the card matcher that will get the card to slot.
         /// </summary>
-        public ICardChooser CardMatcher { get; }
+        public ISlotCardChooser CardMatcher { get; }
+
+        public override string ToString()
+        {
+            return $"SlotCardAction(SituationId = {this.SituationId}, SlotId = {this.SlotId})";
+        }
 
         /// <inheritdoc/>
-        public override void Execute()
+        protected override async Task<ActionResult> OnExecute(CancellationToken cancellationToken)
         {
-            this.VerifyNotExecuted();
-
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -55,37 +62,52 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Situation is not available.");
             }
 
+            var card = CardManager.ChooseCard(this.CardMatcher);
+            if (card == null)
+            {
+                if (this.CardMatcher.Optional)
+                {
+                    return ActionResult.NoOp;
+                }
+
+                throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
+            }
+
             var sphere = situation.GetSpheresByCategory(SphereCategory.Threshold).FirstOrDefault(x => x.GoverningSphereSpec.Id == this.SlotId);
             if (sphere == null)
             {
                 throw new ActionFailureException(this, $"Situation {this.SituationId} has no matching slot {this.SlotId}.");
             }
 
-            var card = CardManager.ChooseCard(this.CardMatcher);
-            if (card == null)
-            {
-                throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
-            }
-
             var stack = card.ToElementStack();
 
-            // The game sets the home location when we pick up a card or it starts to move, not when we drop it!
-            // Without this, the card will jump back to the position it was before the player moved it.
-            stack.Token.RequestHomeLocationFromCurrentSphere();
-
-            if (!GameAPI.TrySlotCard(sphere, stack))
+            if (UseItinerary)
             {
-                Autoccultist.Instance.LogWarn($"Card {card.ElementId} in sphere {stack.Token.Sphere.Id} was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
-                throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
+                var itinerary = sphere.GetItineraryFor(stack.Token);
+                itinerary.WithQuickDuration().Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
+
+                GameStateProvider.Invalidate();
+
+                // Would be nice if there was a way to subscribe to the itinerary, but whatever...
+                var awaitSphereFilled = new AwaitConditionTask(() => sphere.GetTokens().Contains(stack.Token), cancellationToken);
+                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
+                {
+                    throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {this.SlotId} in situation {this.SituationId}.");
+                }
+
+                GameStateProvider.Invalidate();
+            }
+            else
+            {
+                if (!GameAPI.TrySlotCard(sphere, stack))
+                {
+                    throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
+                }
+
+                GameStateProvider.Invalidate();
             }
 
-            GameStateProvider.Invalidate();
-            Autoccultist.Instance.LogTrace($"Slotted card {card.ElementId} into situation {this.SituationId} slot {this.SlotId}.");
-        }
-
-        public override string ToString()
-        {
-            return $"SlotCardAction(Id = {this.Id}, SituationId = {this.SituationId}, SlotId = {this.SlotId})";
+            return ActionResult.Completed;
         }
     }
 }

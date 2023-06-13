@@ -2,6 +2,7 @@ namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
     using System.IO;
+    using AutoccultistNS.Brain;
     using AutoccultistNS.Yaml;
 
     /// <summary>
@@ -10,8 +11,8 @@ namespace AutoccultistNS.Config
     public static class Library
     {
         private static readonly List<YamlFileException> LibraryParseErrors = new();
-        private static readonly List<GoalConfig> LibraryGoals = new();
-        private static readonly List<ArcConfig> LibraryArcs = new();
+        private static readonly List<IGoal> LibraryGoals = new();
+        private static readonly List<IArc> LibraryArcs = new();
 
         /// <summary>
         /// Gets a collection of errors encountered while loading the library.
@@ -27,7 +28,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets the collection of loaded goals.
         /// </summary>
-        public static IReadOnlyCollection<GoalConfig> Goals
+        public static IReadOnlyCollection<IGoal> Goals
         {
             get
             {
@@ -38,7 +39,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets the collection of loaded arcs.
         /// </summary>
-        public static IReadOnlyCollection<ArcConfig> Arcs
+        public static IReadOnlyCollection<IArc> Arcs
         {
             get
             {

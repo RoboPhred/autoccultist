@@ -4,4 +4,4 @@ requirements:
 completedWhen:
   elementId: genericrubbishbook
 impulses:
-  - !import ../impulses/books/buy-morland-books.yml
+  - !import /impulses/books/buy-morland-books.yml

@@ -3,6 +3,7 @@ namespace AutoccultistNS.Brain
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
 
@@ -25,42 +26,9 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        /// <summary>
-        /// Run all updates for the situation orchestrator.
-        /// </summary>
-        public static void Update()
+        public static void Initialize()
         {
-            var state = GameStateProvider.Current;
-
-            foreach (var operation in ExecutingOperationsBySituation.Values.ToArray())
-            {
-                operation.Update();
-            }
-
-            // After we update the existing situation handlers, dump any completed ones if any remain.
-            //  This is because some situations operate on their own volition, without an executor associated with them.
-            foreach (var situation in state.Situations)
-            {
-                if (ExecutingOperationsBySituation.ContainsKey(situation.SituationId))
-                {
-                    // Already orchestrating this
-                    continue;
-                }
-
-                if (situation.State != StateEnum.Complete)
-                {
-                    // Situation is ongoing, no need to dump it.
-                    continue;
-                }
-
-                /*
-                We still want to dump even if the situation has nothing in it
-                This is particulary the case for situations that end with no output,
-                such as suspicion-free suspicion
-                */
-
-                DumpSituation(situation.SituationId);
-            }
+            MechanicalHeart.OnBeat += OnBeat;
         }
 
         /// <summary>
@@ -103,25 +71,67 @@ namespace AutoccultistNS.Brain
         /// Executes the given operation.
         /// </summary>
         /// <param name="operation">The operation to execute.</param>
-        public static void ExecuteOperation(IOperation operation)
+        public static ISituationOrchestration StartOperation(IOperation operation)
         {
             try
             {
                 if (ExecutingOperationsBySituation.ContainsKey(operation.Situation))
                 {
                     Autoccultist.Instance.LogWarn($"Cannot execute operation {operation.Name} because the situation {operation.Situation} already has an orchestration running.");
-                    return;
+                    return null;
                 }
 
                 var orchestration = new OperationOrchestration(operation);
                 ExecutingOperationsBySituation[operation.Situation] = orchestration;
                 orchestration.Completed += OnOrchestrationCompleted;
+
                 orchestration.Start();
+
+                return orchestration;
             }
             catch (Exception ex)
             {
                 Autoccultist.Instance.LogWarn($"Error executing operation {operation.Name}: {ex.Message}");
                 NoonUtility.LogException(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Run all updates for the situation orchestrator.
+        /// </summary>
+        private static void OnBeat(object sender, EventArgs e)
+        {
+            var state = GameStateProvider.Current;
+
+            foreach (var operation in ExecutingOperationsBySituation.Values.ToArray())
+            {
+                operation.Update();
+            }
+
+            // After we update the existing situation handlers, dump any completed ones if any remain.
+            //  This is because some situations operate on their own volition, without an executor associated with them.
+            foreach (var situation in state.Situations)
+            {
+                if (ExecutingOperationsBySituation.ContainsKey(situation.SituationId))
+                {
+                    // Already orchestrating this
+                    continue;
+                }
+
+                if (situation.State != StateEnum.Complete)
+                {
+                    // Situation is ongoing, no need to dump it.
+                    continue;
+                }
+
+                /*
+                We still want to dump even if the situation has nothing in it
+                This is particulary the case for situations that end with no output,
+                such as suspicion-free suspicion
+                */
+
+                DumpSituation(situation.SituationId);
             }
         }
 

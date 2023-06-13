@@ -21,4 +21,4 @@ forbidders:
     - allOf:
         - situation: explore
           containsAspects: { knock: 10 }
-operation: !import ../../../operations/vaults/continue-vault-follower-knock.yml
+operation: !import /operations/vaults/continue-vault-follower-knock.yml

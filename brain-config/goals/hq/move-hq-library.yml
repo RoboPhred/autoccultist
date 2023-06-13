@@ -7,4 +7,4 @@ completedWhen:
   elementId: hq.bookshop
 impulses:
   - name: Change Premises to Library
-    operation: !import ../../operations/hq/move-hq-library.yml
+    operation: !import /operations/hq/move-hq-library.yml

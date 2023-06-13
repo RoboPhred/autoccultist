@@ -31,7 +31,6 @@ namespace AutoccultistNS.Yaml
                 start = parsingEvent?.Start;
             }
 
-            Autoccultist.Instance.LogWarn($"Deserializing a {expectedType.FullName}, our next node is {reader.Current?.GetType().FullName}");
             if (this.nodeDeserializer.Deserialize(reader, expectedType, nestedObjectDeserializer, out value))
             {
                 if (value is IAfterYamlDeserialization afterDeserialized)

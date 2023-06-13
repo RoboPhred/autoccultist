@@ -62,12 +62,23 @@ namespace AutoccultistNS.GameState
                     from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
                     select cardState;
 
+                // FIXME: Spams the console with errors when not present.
+                // var codexCards =
+                //     from stack in GameAPI.CodexSphere.GetElementStacks()
+                //     from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Codex)
+                //     select cardState;
+
                 var situations =
                     from situation in GameAPI.GetSituations()
                     let state = new SituationStateImpl(situation)
                     select state;
 
-                return new GameStateImpl(tabletopCards.ToArray(), enRouteCards.ToArray(), situations.ToArray(), PortalStateImpl.FromCurrentState());
+                return new GameStateImpl(
+                    tabletopCards.ToArray(),
+                    enRouteCards.ToArray(),
+                    new ICardState[0], //codexCards.ToArray(),
+                    situations.ToArray(),
+                    PortalStateImpl.FromCurrentState());
             }
             catch (Exception ex)
             {

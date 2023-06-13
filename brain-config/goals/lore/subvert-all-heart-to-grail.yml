@@ -8,35 +8,33 @@ completedWhen:
 impulses:
   - name: Ensure we have glimmering
     priority: maintenance
-    forbidders:
-      !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/passion/study-passion.yml
-    
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
+    operation: !import /operations/passion/study-passion.yml
+
   - name: Combine Heart A
     requirements:
       allOf:
         - aspects: { lore: 1, grail: 4 }
-        - !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/heart/lore-combine-heart-a.yml
-    
+        - !import /conditions/can-answer-challenge-intuition.yml
+    operation: !import /operations/lore/heart/lore-combine-heart-a.yml
+
   - name: Combine Heart B
     requirements:
       allOf:
         - aspects: { lore: 1, grail: 6 }
-        - !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/heart/lore-combine-heart-b.yml
+        - !import /conditions/can-answer-challenge-intuition.yml
+    operation: !import /operations/lore/heart/lore-combine-heart-b.yml
 
   - name: Subvert Heart to Grail
-    requirements:
-      !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-c.yml
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: !import /operations/lore/grail/lore-subvert-heart-grail-c.yml
 
   - name: Downgrade Heart C
     forbidders:
       anyOf:
         - elementId: fragmentheartb
         - aspects: { lore: 1, grail: 6 }
-    operation: !import ../../operations/lore/heart/lore-breakdown-heart-c.yml
+    operation: !import /operations/lore/heart/lore-breakdown-heart-c.yml
 
   - name: Downgrade Grail B
     requirements:
@@ -45,7 +43,7 @@ impulses:
       anyOf:
         - elementId: fragmentgrail
         - elementId: fragmentheartb
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-b.yml
+    operation: !import /operations/lore/grail/lore-breakdown-grail-b.yml
 
   - name: Downgrade Grail C
     requirements:
@@ -56,40 +54,36 @@ impulses:
       anyOf:
         - elementId: fragmentgrailb
         - elementId: fragmentheartc
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-c.yml
+    operation: !import /operations/lore/grail/lore-breakdown-grail-c.yml
 
   - name: Subvert Heart B to Grail
-    requirements:
-      !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-b.yml
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: !import /operations/lore/grail/lore-subvert-heart-grail-b.yml
 
   - name: Downgrade Heart B
     forbidders:
       anyOf:
         - elementId: fragmentheart
         - aspects: { lore: 1, grail: 4 }
-    operation: !import ../../operations/lore/heart/lore-breakdown-heart-b.yml
-    
+    operation: !import /operations/lore/heart/lore-breakdown-heart-b.yml
+
   - name: Subvert Heart to Grail
-    requirements:
-      !import ../../conditions/can-answer-challenge-intuition.yml
-    operation: !import ../../operations/lore/grail/lore-subvert-heart-grail-a.yml
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: !import /operations/lore/grail/lore-subvert-heart-grail-a.yml
 
   - name: Combine Grail A
-    requirements:
-      !import ../../conditions/can-answer-challenge-intuition.yml
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
     forbidders:
       elementId: fragmentheart
-    operation: !import ../../operations/lore/grail/lore-combine-grail-a.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-a.yml
 
   - name: Combine Grail B
-    requirements:
-      !import ../../conditions/can-answer-challenge-intuition.yml
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
     forbidders:
       anyOf:
         - elementId: fragmentheart
         - elementId: fragmentheartb
-    operation: !import ../../operations/lore/grail/lore-combine-grail-b.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-b.yml
 
   - name: Downgrade Grail D
     requirements:
@@ -101,4 +95,4 @@ impulses:
       anyOf:
         - elementId: fragmentgrailc
         - elementId: fragmentheartd
-    operation: !import ../../operations/lore/grail/lore-breakdown-grail-d.yml
+    operation: !import /operations/lore/grail/lore-breakdown-grail-d.yml

@@ -12,4 +12,4 @@ completedWhen:
 impulses:
   - name: Date a Grail Follower
     priority: goal
-    operation: !import ../../operations/romance/date-grail-follower.yml
+    operation: !import /operations/romance/date-grail-follower.yml

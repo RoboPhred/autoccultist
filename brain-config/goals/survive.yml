@@ -2,4 +2,4 @@ name: Survive
 requirements:
   situation: time
 impulses:
-  - !import ../impulse-sets/survive.yml
+  - !import /impulse-sets/survive.yml

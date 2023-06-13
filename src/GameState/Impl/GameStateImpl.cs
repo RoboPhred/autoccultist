@@ -8,9 +8,10 @@ namespace AutoccultistNS.GameState.Impl
     /// </summary>
     internal class GameStateImpl : GameStateObject, IGameState
     {
-        private readonly ICollection<ICardState> tabletopCards;
-        private readonly ICollection<ICardState> enRouteCards;
-        private readonly ICollection<ISituationState> situations;
+        private readonly IReadOnlyCollection<ICardState> tabletopCards;
+        private readonly IReadOnlyCollection<ICardState> enRouteCards;
+        private readonly IReadOnlyCollection<ICardState> codexCards;
+        private readonly IReadOnlyCollection<ISituationState> situations;
 
         private readonly IPortalState mansus;
 
@@ -19,18 +20,20 @@ namespace AutoccultistNS.GameState.Impl
         /// </summary>
         /// <param name="tabletopCards">The tabletop cards in this state.</param>
         /// <param name="enRouteCards">The en route cards in this state.</param>
+        /// <param name="codexCards">The codex cards in this state.</param>
         /// <param name="situations">The situations in this state.</param>
         /// <param name="mansus">The mansus state.</param>
-        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ICardState> enRouteCards, ICollection<ISituationState> situations, IPortalState mansus)
+        public GameStateImpl(IReadOnlyCollection<ICardState> tabletopCards, IReadOnlyCollection<ICardState> enRouteCards, IReadOnlyCollection<ICardState> codexCards, IReadOnlyCollection<ISituationState> situations, IPortalState mansus)
         {
             this.tabletopCards = tabletopCards;
             this.enRouteCards = enRouteCards;
             this.situations = situations;
+            this.codexCards = codexCards;
             this.mansus = mansus;
         }
 
         /// <inheritdoc/>
-        public ICollection<ICardState> TabletopCards
+        public IReadOnlyCollection<ICardState> TabletopCards
         {
             get
             {
@@ -40,7 +43,7 @@ namespace AutoccultistNS.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public ICollection<ICardState> EnRouteCards
+        public IReadOnlyCollection<ICardState> EnRouteCards
         {
             get
             {
@@ -50,7 +53,17 @@ namespace AutoccultistNS.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public ICollection<ISituationState> Situations
+        public IReadOnlyCollection<ICardState> CodexCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.codexCards;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<ISituationState> Situations
         {
             get
             {

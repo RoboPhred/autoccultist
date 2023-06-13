@@ -23,7 +23,6 @@ namespace AutoccultistNS.Yaml
 
             var subjectType = expectedType.GetGenericArguments()[0];
 
-
             // We need to handle this specially, as we need to tunnel our "OneOrMany" into the inner document.
             if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
@@ -59,8 +58,6 @@ namespace AutoccultistNS.Yaml
                     value = Activator.CreateInstance(expectedType, new[] { new[] { value } });
                 }
 
-                Autoccultist.Instance.LogWarn($"OneOrMany parse complete.  We got {value.GetType().FullName}");
-
                 return true;
             }
             else
@@ -72,16 +69,12 @@ namespace AutoccultistNS.Yaml
 
         private object DeserializeOneOrMany(IParser reader, Type expectedType, Type subjectType, Func<IParser, Type, object> nestedObjectDeserializer)
         {
-            Autoccultist.Instance.LogWarn($"Deserializing OneOrMany with current {reader.Current?.GetType().Name}");
-
             IEnumerable items;
             if (reader.TryConsume<SequenceStart>(out var test))
             {
-                Autoccultist.Instance.LogWarn($"Deserializing OneOrMany in sequence.  Start was {test.Start} with tag {test.Tag}");
                 var sequenceItems = new List<object>();
                 while (!reader.TryConsume<SequenceEnd>(out var _))
                 {
-                    Autoccultist.Instance.LogWarn($"Deserializing OneOrMany in sequence with item {reader.Current?.GetType().Name} Start was {reader.Current?.Start}");
                     sequenceItems.Add(nestedObjectDeserializer(reader, subjectType));
                 }
 
@@ -89,7 +82,6 @@ namespace AutoccultistNS.Yaml
             }
             else
             {
-                Autoccultist.Instance.LogWarn($"Deserializing OneOrMany in single with item {reader.Current?.GetType().Name}");
                 var item = nestedObjectDeserializer(reader, subjectType);
                 var array = Array.CreateInstance(subjectType, 1);
                 array.SetValue(item, 0);
@@ -97,7 +89,6 @@ namespace AutoccultistNS.Yaml
             }
 
             var result = Activator.CreateInstance(expectedType, new[] { items });
-            Autoccultist.Instance.LogWarn($"OneOrMany DeserializeOneOrMany complete with {result.GetType().FullName}");
 
             return result;
         }

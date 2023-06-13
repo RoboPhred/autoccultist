@@ -15,6 +15,9 @@ namespace AutoccultistNS.Brain
 
         private static readonly Dictionary<IGoal, long> PendingCompletions = new();
 
+        private static bool isCheckingImpulses = false;
+        private static GameAPI.PauseToken pauseToken;
+
         /// <summary>
         /// Raised when a goal is completed.
         /// </summary>
@@ -29,6 +32,11 @@ namespace AutoccultistNS.Brain
             {
                 return ActiveGoals.ToArray();
             }
+        }
+
+        public static void Initialize()
+        {
+            MechanicalHeart.OnBeat += OnBeat;
         }
 
         /// <summary>
@@ -56,16 +64,6 @@ namespace AutoccultistNS.Brain
         public static void Reset()
         {
             ActiveGoals.Clear();
-        }
-
-        /// <summary>
-        /// Update and execute goals.
-        /// </summary>
-        public static void Update()
-        {
-            var state = GameStateProvider.Current;
-            TryCompleteGoals(state);
-            TryStartImpulses(state);
         }
 
         /// <summary>
@@ -105,8 +103,19 @@ namespace AutoccultistNS.Brain
             return sb.ToString();
         }
 
-        private static void TryCompleteGoals(IGameState state)
+        /// <summary>
+        /// Update and execute goals.
+        /// </summary>
+        private static void OnBeat(object sender, EventArgs e)
         {
+            TryCompleteGoals();
+            CheckImpulses();
+        }
+
+        private static void TryCompleteGoals()
+        {
+            var state = GameStateProvider.Current;
+
             // note: This PendingCompletions logic was an attempt to fix an issue where goals were completing prematurely.
             // The root issue was that the cards in situation output stacks were not being counted, and has been fixed.
 
@@ -148,28 +157,76 @@ namespace AutoccultistNS.Brain
             BrainEventSink.OnGoalCompleted(goal);
         }
 
-        private static void TryStartImpulses(IGameState state)
+        private static async void CheckImpulses()
         {
-            // Scan through all possible impulses and invoke the ones that can start.
-            //  Where multiple impulses try for the same verb, invoke the highest priority
-            var operations =
-                from goal in ActiveGoals
-                from impulse in goal.Impulses
-                where IsSituationAvailable(impulse.Operation.Situation)
-                where impulse.CanExecute(state)
-                orderby impulse.Priority descending
-                group impulse.Operation by impulse.Operation.Situation into situationGroup
-                select situationGroup.FirstOrDefault();
-
-            foreach (var operation in operations)
+            if (isCheckingImpulses)
             {
-                SituationOrchestrator.ExecuteOperation(operation);
+                return;
+            }
+
+            isCheckingImpulses = true;
+
+            // FIXME: We have unpaused gaps when we should be immediately starting more operations.
+            // Might be happening when an op ends then needs to immediately re-begin.
+            // This is because, while we wrap starting ops in our own pause token, we cannot wrap the completion of an op to launching the new op.
+
+            try
+            {
+                // Scan through all possible impulses and invoke the ones that can start.
+                //  Where multiple impulses try for the same verb, invoke the highest priority
+                var operations =
+                    from goal in ActiveGoals
+                    from impulse in goal.Impulses
+                    where IsSituationAvailable(impulse.Operation.Situation)
+                    where impulse.CanExecute(GameStateProvider.Current)
+                    orderby impulse.Priority descending
+                    group impulse.Operation by impulse.Operation.Situation into situationGroup
+                    select situationGroup.FirstOrDefault();
+
+                // We used to start all non-conflicting operations, but that can cause two ops to think they can start when they both
+                // want the same single card.
+                // Instead, start one at a time, then search again.
+                var operation = operations.FirstOrDefault();
+                if (operation != null)
+                {
+                    // We started doing things, pause.
+                    // Note: The operation will try to pause/unpause too, but we want to pause outside of that until we are sure
+                    // we have no more operations left to start.
+                    if (pauseToken == null)
+                    {
+                        pauseToken = GameAPI.Pause();
+                    }
+
+                    var orchestration = SituationOrchestrator.StartOperation(operation);
+                    orchestration.Completed += HandleOperationCompleted;
+                    await orchestration.AwaitCurrentTask();
+                }
+                else
+                {
+                    // Nothing more to do, let it unpause
+                    pauseToken?.Dispose();
+                    pauseToken = null;
+                }
+            }
+            finally
+            {
+                isCheckingImpulses = false;
             }
         }
 
+        private static void HandleOperationCompleted(object sender, EventArgs e)
+        {
+            var orchestration = (ISituationOrchestration)sender;
+            orchestration.Completed -= HandleOperationCompleted;
+            // Immediately re-check impulses in case this operation wants to begin again.
+            // This avoids a gap of unpaused-ness between the op ending and the next heartbeat.
+            CheckImpulses();
+        }
+
+
         private static bool IsSituationAvailable(string situationId)
         {
-            if (!SituationOrchestrator.CurrentOrchestrations.Keys.Contains(situationId))
+            if (SituationOrchestrator.CurrentOrchestrations.Keys.Contains(situationId))
             {
                 return false;
             }

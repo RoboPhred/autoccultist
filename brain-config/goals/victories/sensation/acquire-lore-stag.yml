@@ -26,17 +26,17 @@ impulses:
         - elementId: waystagbefore_4
         - elementId: waystagbefore_5
         - elementId: waystag_after
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle.yml
   - name: Answer Ghirbi's riddle on Moth
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-1.yml
   - name: Answer Ghirbi's riddle on Lantern
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-2.yml
   - name: Answer Ghirbi's riddle on Grail
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-3.yml
   - name: Answer Ghirbi's riddle on Knock
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-4.yml
   - name: Answer Ghirbi's riddle on Secret Histories
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-5.yml
 
   # Begin Knock C
   # Use Moth because it's the most abundant lore, early-game
@@ -49,13 +49,13 @@ impulses:
             - elementId: fragmentknockb
             - elementId: fragmentknockb
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-moth-knock-a.yml
+    operation: !import /operations/lore/knock/lore-subvert-moth-knock-a.yml
   - name: Subvert A Wood-Whisper to Knock
     requirements:
       elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-moth-knock-b.yml
+    operation: !import /operations/lore/knock/lore-subvert-moth-knock-b.yml
   # End Knock C
 
   # Begin Grail C
@@ -71,15 +71,15 @@ impulses:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/passion/study-passion.yml
-  
+    operation: !import /operations/passion/study-passion.yml
+
   - name: Combine A Megalesian Incantation
     requirements:
       elementId: waystagbefore_3
     forbidders:
       anyOf:
         - elementId: fragmentgrailc
-    operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-b.yml
   - name: Combine A Red Secret
     forbidders:
       anyOf:
@@ -87,7 +87,7 @@ impulses:
             - elementId: fragmentgrailb
             - elementId: fragmentgrailb
         - elementId: fragmentgrailc
-    operation: !import ../../../operations/lore/grail/lore-combine-grail-a.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-a.yml
   # End Grail C
 
   # Begin Secret Histories C
@@ -96,7 +96,7 @@ impulses:
       elementId: waystagbefore_5
     forbidders:
       elementId: fragmentsecrethistoriesc
-    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
   - name: Combine An Occult Scrap
     requirements:
       elementId: waystagbefore_5
@@ -106,25 +106,25 @@ impulses:
             - elementId: fragmentsecrethistoriesb
             - elementId: fragmentsecrethistoriesb
         - elementId: fragmentsecrethistoriesc
-    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
   - name: Mansus-grind for SH lore
     requirements:
       elementId: waystagbefore_5
     forbidders:
       anyOf:
         - cardSet:
-          - elementId: fragmentsecrethistoriesb
-          - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistoriesb
         - cardSet:
-          - elementId: fragmentsecrethistories
-          - elementId: fragmentsecrethistories
-          - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistoriesb
         - cardSet:
-          - elementId: fragmentsecrethistories
-          - elementId: fragmentsecrethistories
-          - elementId: fragmentsecrethistories
-          - elementId: fragmentsecrethistories
-    operation: !import ../../../operations/mansus/use-wood-secrethistories.yml
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+            - elementId: fragmentsecrethistories
+    operation: !import /operations/mansus/use-wood-secrethistories.yml
   # End Secret Histories C
 
   # Begin Lantern C
@@ -138,7 +138,7 @@ impulses:
             - elementId: fragmentlanternb
             - elementId: fragmentlanternb
         - elementId: fragmentlanternc
-    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-a.yml
+    operation: !import /operations/lore/lantern/lore-combine-lantern-a.yml
   - name: Combine An Iguvine Rite
     priority: goal
     requirements:
@@ -146,7 +146,7 @@ impulses:
     forbidders:
       anyOf:
         - elementId: fragmentlanternc
-    operation: !import ../../../operations/lore/lantern/lore-combine-lantern-b.yml
+    operation: !import /operations/lore/lantern/lore-combine-lantern-b.yml
   # End Lantern C
 
   # No need for a Moth section because the books we've acquired already provide that lore.

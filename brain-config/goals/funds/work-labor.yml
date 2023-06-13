@@ -1,4 +1,4 @@
 name: Work with physical labor
 impulses:
-  - !import ../../impulses/maint-refresh-health.yml
-  - !import ../../impulse-sets/procure-funds-labor.yml
+  - !import /impulses/maint-refresh-health.yml
+  - !import /impulse-sets/procure-funds-labor.yml

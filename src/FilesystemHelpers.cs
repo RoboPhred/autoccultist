@@ -13,15 +13,30 @@ namespace AutoccultistNS
         /// </summary>
         /// <param name="directoryPath">The path of the directory to walk.</param>
         /// <param name="handleFile">The action to take on encountering a file.</param>
-        public static void WalkDirectory(string directoryPath, Action<string> handleFile)
+        public static void WalkDirectory(string directoryPath, Action<string> handleFile, Func<string, bool> directoryFilter = null)
         {
             foreach (var file in Directory.GetFiles(directoryPath))
             {
+                if (Path.GetFileName(file).StartsWith("."))
+                {
+                    continue;
+                }
+
                 handleFile(file);
             }
 
             foreach (var directory in Directory.GetDirectories(directoryPath))
             {
+                if (Path.GetFileName(directory).StartsWith("."))
+                {
+                    continue;
+                }
+
+                if (directoryFilter != null && !directoryFilter(directory))
+                {
+                    continue;
+                }
+
                 WalkDirectory(directory, handleFile);
             }
         }

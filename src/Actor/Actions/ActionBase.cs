@@ -1,30 +1,23 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public abstract class ActionBase : IAutoccultistAction
     {
-        private static int currentId = 0;
         private bool executed = false;
 
-        public ActionBase()
-        {
-        }
-
-        public int Id { get; } = currentId++;
-
-        /// <inheritdoc/>
-        public abstract void Execute();
-
-        public override string ToString()
-        {
-            return $"{this.GetType().Name}(Id = {this.Id})";
-        }
-
-        protected void VerifyNotExecuted()
+        public Task<ActionResult> Execute(CancellationToken cancellationToken)
         {
             if (this.executed)
             {
-                throw new ActionFailureException(this, "This action has already been executed.");
+                throw new ActionFailureException(this, "Action has already executed.");
             }
+
+            this.executed = true;
+            return this.OnExecute(cancellationToken);
         }
+
+        protected abstract Task<ActionResult> OnExecute(CancellationToken cancellationToken);
     }
 }

@@ -17,6 +17,11 @@ namespace AutoccultistNS
         }
 
         /// <summary>
+        /// Raised when the mechanical heart beats.
+        /// </summary>
+        public static event EventHandler<EventArgs> OnBeat;
+
+        /// <summary>
         /// Gets a value indicating whether the mechanical heart is running in time with the standard heart.
         /// </summary>
         public static bool IsRunning { get; private set; } = false;
@@ -93,9 +98,7 @@ namespace AutoccultistNS
 
             try
             {
-                NucleusAccumbens.Update();
-                AutoccultistActor.Update();
-                SituationOrchestrator.Update();
+                OnBeat?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception ex)
             {

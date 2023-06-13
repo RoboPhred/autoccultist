@@ -47,6 +47,11 @@ namespace AutoccultistNS.GUI
                 }
             }
 
+            if (GUILayout.Button("New Game"))
+            {
+                NewGameGUI.IsShowing = !NewGameGUI.IsShowing;
+            }
+
             if (!GameAPI.IsRunning)
             {
                 GUILayout.Label("Game is not running.");
@@ -54,20 +59,19 @@ namespace AutoccultistNS.GUI
             }
 
             GUILayout.BeginHorizontal();
-            var mechHeart = GUILayout.Toggle(MechanicalHeart.IsRunning, "Mechanical Heart");
-            if (mechHeart != MechanicalHeart.IsRunning)
+            if (GUILayout.Button(MechanicalHeart.IsRunning ? "Pause" : "Run"))
             {
-                if (mechHeart)
-                {
-                    MechanicalHeart.Start();
-                }
-                else
+                if (MechanicalHeart.IsRunning)
                 {
                     MechanicalHeart.Stop();
                 }
+                else
+                {
+                    MechanicalHeart.Start();
+                }
             }
 
-            if (GUILayout.Button("Trigger Heartbeat"))
+            if (GUILayout.Button("Heartbeat"))
             {
                 MechanicalHeart.Step();
             }
@@ -83,9 +87,19 @@ namespace AutoccultistNS.GUI
                 ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
             }
 
-            if (GUILayout.Button("Reset SuperEgo"))
+            if (GUILayout.Button("Reset"))
             {
-                Superego.Clear();
+                Superego.ResetMotivations();
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label("Current Motivation: " + (Superego.CurrentMotivation != null ? Superego.CurrentMotivation.Name : "<None>"));
+            if (GUILayout.Button("Skip"))
+            {
+                Superego.SkipCurrentMotivation();
             }
 
             GUILayout.EndHorizontal();
@@ -107,21 +121,6 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-
-            GUILayout.Label("Current SuperEgo Motivation: " + (Superego.CurrentMotivation != null ? Superego.CurrentMotivation.Name : "<None>"));
-            if (GUILayout.Button("Skip"))
-            {
-                Superego.SkipCurrentMotivation();
-            }
-
-            GUILayout.EndHorizontal();
-
-            if (Superego.CurrentMotivation != Ego.CurrentMotivation)
-            {
-                GUILayout.Label("Current Ego Motivation: " + (Ego.CurrentMotivation != null ? Ego.CurrentMotivation.Name : "<None>"));
-            }
-
             if (GUILayout.Button("Diagnostics"))
             {
                 DiagnosticsGUI.IsShowing = !DiagnosticsGUI.IsShowing;
@@ -130,7 +129,7 @@ namespace AutoccultistNS.GUI
             GUILayout.BeginHorizontal();
 
             GUILayout.Label("Current Goals:");
-            if (GUILayout.Button("Toggle Goals Menu"))
+            if (GUILayout.Button("Goals Menu"))
             {
                 GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
             }

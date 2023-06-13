@@ -21,7 +21,7 @@ impulses:
             - elementId: eruditionplus
             - elementId: eruditionplus
             - elementId: eruditionplus
-    operation: !import ../../operations/reason/study-reason.yml
+    operation: !import /operations/reason/study-reason.yml
   - name: Acquire an erudition lesson through study
     priority: goal
     forbidders:
@@ -30,7 +30,7 @@ impulses:
         - elementId: eruditionplus
         - elementId: eruditionplus
         - elementId: eruditionplus
-    operation: !import ../../operations/learn-erudition-lesson.yml
+    operation: !import /operations/learn-erudition-lesson.yml
   - name: Acquire an erudition lesson through books
     priority: goal
     requirements:
@@ -43,7 +43,7 @@ impulses:
         - elementId: eruditionplus
         - elementId: eruditionplus
         - elementId: eruditionplus
-    operation: !import ../../operations/learn-erudition-lesson-textbookreason.yml
+    operation: !import /operations/learn-erudition-lesson-textbookreason.yml
   - name: Acquire a Rarefied Mind
     priority: goal
-    operation: !import ../../operations/reason/upgrade-skillreasonc-illumination.yml
+    operation: !import /operations/reason/upgrade-skillreasonc-illumination.yml

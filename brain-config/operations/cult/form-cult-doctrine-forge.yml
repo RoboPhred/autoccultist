@@ -1,11 +1,19 @@
 name: Establish the Unflinching Order
 situation: cult
 targetOngoing: true
+# While this lets us kick in if we do not have cards for all 3 recipes, this is totally fine for this situation,
+# since this situation loops each recipe until satisfied.
+# There are two possible failure modes this fixes:
+# - The operation might already be ongoing when the bot starts (from a save file, for example)
+#   In this case, the lore/secrethistories will be already stored, and not available on the table, blocking us from running.
+# - reason or a recruit might not be available by the time we want it, causing the operation to quit.  We want the operation
+#   to kick back in when the missing card is available.
+startCondition: currentRecipeSatisfied
 ongoingRecipes:
   cultfoundation:
     slots:
       Doctrine:
-        aspects: { forge: 1 }
+        aspects: { lore: 1, forge: 1 }
   cultfoundation_health:
     slots:
       Health:

@@ -11,7 +11,7 @@ impulses:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-junior.yml
+    operation: !import /operations/glover/work-glover-junior.yml
   - name: Work at Glover & Glover under Alden
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
@@ -19,7 +19,7 @@ impulses:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-alden.yml
+    operation: !import /operations/glover/work-glover-alden.yml
   - name: Work at Glover & Glover with dilligence
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
@@ -27,7 +27,7 @@ impulses:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-diligence.yml
+    operation: !import /operations/glover/work-glover-diligence.yml
   - name: Work a senior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
@@ -35,7 +35,7 @@ impulses:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
     priority: maintenance
-    operation: !import ../../../operations/glover/work-glover-senior.yml
+    operation: !import /operations/glover/work-glover-senior.yml
   - name: Plead for job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
@@ -43,7 +43,7 @@ impulses:
         - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
     priority: maintenance
-    operation: !import ../../../operations/glover/plead-glover.yml
+    operation: !import /operations/glover/plead-glover.yml
 
   - name: Explore the city for strange streets
     forbidders:
@@ -64,7 +64,7 @@ impulses:
                 influence: 1
                 knock:
                   greaterThanOrEqualTo: 5
-    operation: !import ../../../operations/explore/explore-city-follower.yml
+    operation: !import /operations/explore/explore-city-follower.yml
   - name: Explore strange streets by moonlight
     priority: goal
     forbidders:
@@ -90,7 +90,7 @@ impulses:
                 influence: 1
                 knock:
                   greaterThanOrEqualTo: 5
-    operation: !import ../../../operations/explore/explore-locationstreetsstrange.yml
+    operation: !import /operations/explore/explore-locationstreetsstrange.yml
   - name: Summon King Crucible
     priority: goal
     forbidders:

@@ -8,13 +8,13 @@ completedWhen:
 impulses:
   - name: Purchase STUMM! at auction
     priority: goal
-    requirements: !import ../../conditions/has-slushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders:
       anyOf:
         - elementId: stumm
         - elementId: ritefollowerconsumeinfluence
         - elementId: locationbookdealer
-    operation: !import ../../operations/auction-purchase-stumm.yml
+    operation: !import /operations/auction-purchase-stumm.yml
   - name: Watch Stumm
-    requirements: !import ../../conditions/has-slushfund-minor.yml
-    operation: !import ../../operations/watch-stumm.yml
+    requirements: !import /conditions/has-slushfund-minor.yml
+    operation: !import /operations/watch-stumm.yml

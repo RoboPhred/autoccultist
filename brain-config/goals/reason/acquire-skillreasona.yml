@@ -4,5 +4,5 @@ requirements:
 completedWhen:
   aspects: { reasonskill: 1 }
 impulses:
-  - !import ../../impulses/goal-learn-lesson-erudition.yml
-  - !import ../../impulses/norm-erudition-from-reason.yml
+  - !import /impulses/goal-learn-lesson-erudition.yml
+  - !import /impulses/norm-erudition-from-reason.yml

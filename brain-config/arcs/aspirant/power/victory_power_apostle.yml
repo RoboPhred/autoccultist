@@ -1,0 +1,7 @@
+name: Apostle Aestuant Victory
+legacy: apostleforge
+baseSavePath: ./.saves/victory_power_apostle.json
+motivations:
+  - name: Perpetual survival
+    primaryGoals:
+      - !import /goals/survive.yml

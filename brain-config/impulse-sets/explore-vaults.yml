@@ -1,4 +1,4 @@
-- !import ../impulses/vaults/generic/goal-explore-forge-edge.yml
-- !import ../impulses/vaults/generic/goal-explore-forge.yml
-- !import ../impulses/vaults/generic/goal-explore-edge.yml
-- !import ../impulses/vaults/generic/goal-explore-any.yml
+- !import /impulses/vaults/generic/goal-explore-forge-edge.yml
+- !import /impulses/vaults/generic/goal-explore-forge.yml
+- !import /impulses/vaults/generic/goal-explore-edge.yml
+- !import /impulses/vaults/generic/goal-explore-any.yml

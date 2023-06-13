@@ -11,4 +11,4 @@ impulses:
       aspects:
         sensationmarks:
           greaterThan: 2
-    operation: !import ../../../operations/victories/sensation/acquire-ascension-sensation.yml
+    operation: !import /operations/victories/sensation/acquire-ascension-sensation.yml

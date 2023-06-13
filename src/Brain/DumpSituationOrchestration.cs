@@ -3,6 +3,7 @@ namespace AutoccultistNS.Brain
     using System;
     using System.Collections.Generic;
     using System.Threading;
+    using System.Threading.Tasks;
     using AutoccultistNS.Actor;
     using AutoccultistNS.Actor.Actions;
 
@@ -11,7 +12,8 @@ namespace AutoccultistNS.Brain
     /// </summary>
     public class DumpSituationOrchestration : ISituationOrchestration
     {
-        private CancellationTokenSource currentTask;
+        private Task currentTask;
+        private CancellationTokenSource cancellationToken;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DumpSituationOrchestration"/> class.
@@ -49,16 +51,22 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         public void Abort()
         {
-            this.currentTask?.Cancel();
-            this.currentTask = null;
+            this.cancellationToken?.Cancel();
+            this.cancellationToken = null;
+        }
+
+        public Task AwaitCurrentTask()
+        {
+            return this.currentTask ?? Task.FromResult(true);
         }
 
         private async void DumpSituation()
         {
             try
             {
-                this.currentTask = new CancellationTokenSource();
-                await AutoccultistActor.PerformActions(this.DumpSituationCoroutine(), this.currentTask.Token);
+                this.cancellationToken = new CancellationTokenSource();
+                this.currentTask = AutoccultistActor.PerformActions(this.DumpSituationCoroutine(), this.cancellationToken.Token);
+                await this.currentTask;
             }
             catch (Exception ex)
             {
@@ -66,6 +74,8 @@ namespace AutoccultistNS.Brain
             }
             finally
             {
+                this.cancellationToken = null;
+                this.currentTask = null;
                 this.Completed?.Invoke(this, EventArgs.Empty);
             }
         }

@@ -23,7 +23,7 @@ completedWhen:
     - elementId: wayspider
     - elementId: fragmentforgee
 # We use latern in our march to fragmentforgee, but we need to also get fragmentlanternc to answer one of the stag's riddles.
-# Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb
+# Start with 2forge, forgeb, 2lantern, lanternb, 2moth, mothb, mothc, plus morland's last random lore
 # From the output of morlands, we do:
 # moth + lantern = lanternb
 # moth + lantern = lanternb
@@ -37,7 +37,10 @@ completedWhen:
 # => forged, lanternb, mothb, mothc
 # mothb + lanternb = lanternc
 # => forged, lanternc, mothc
-# This leaves us with a lanternc and mothc for the stag, which can then be combined for a lanternd, which can then be used with forged for forgee
+# This leaves us with a lanternc and mothc for the stag
+# ...After stag door:
+# => mothc + lanternc = lanternd
+# => forged + lanternd = forgee
 impulses:
   - name: Acquire the Stag Riddle
     forbidders:
@@ -48,40 +51,22 @@ impulses:
         - elementId: waystagbefore_4
         - elementId: waystagbefore_5
         - elementId: waystag_after
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle.yml
   - name: Answer Ghirbi's riddle on Moth
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-1.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-1.yml
   - name: Answer Ghirbi's riddle on Lantern
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-2.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-2.yml
   - name: Answer Ghirbi's riddle on Grail
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-3.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-3.yml
   - name: Answer Ghirbi's riddle on Knock
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-4.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-4.yml
   - name: Answer Ghirbi's riddle on Secret Histories
-    operation: !import ../../../operations/mansus/stag/aquire-way-stag-riddle-5.yml
-
-  # After we acquire the stag door, it is safe to consume our mothc and lanternc
-  # mothc + lanternc = lanternd
-  - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
-    priority: goal
-    requirements:
-      elementId: waystag_after
-    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-c.yml
-
-  # After we have the spider door, it is safe to consume our lanternd
-  # forged + lanternd = forgee
-  - name: Subvert the Phanaean Invocation to the Formula Fissive
-    priority: goal
-    requirements:
-      allOf:
-        - elementId: waystag_after
-        - elementId: wayspider
-    operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-d.yml
+    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-5.yml
 
   - name: Acquire the Spider Door
     forbidders:
       elementId: wayspider
-    operation: !import ../../../operations/mansus/acquire-way-spiderdoor.yml
+    operation: !import /operations/mansus/acquire-way-spiderdoor.yml
 
   - name: Ensure we have glimmering
     priority: maintenance
@@ -92,7 +77,7 @@ impulses:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import ../../../operations/passion/study-passion.yml
+    operation: !import /operations/passion/study-passion.yml
 
   # Begin Knock C
   # heart + knock = knockb
@@ -108,7 +93,7 @@ impulses:
             - elementId: fragmentknock
             - elementId: fragmentknock
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-heart-knock-a.yml
+    operation: !import /operations/lore/knock/lore-subvert-heart-knock-a.yml
   # knock + knock = knockb
   - name: Combine A Locksmith's Secret
     requirements:
@@ -119,7 +104,7 @@ impulses:
         - cardSet:
             - elementId: fragmentknockb
             - elementId: fragmentknockb
-    operation: !import ../../../operations/lore/knock/lore-combine-knock-a.yml
+    operation: !import /operations/lore/knock/lore-combine-knock-a.yml
   # knockb + knockb = knockc
   - name: Combine An Iguvine Rite
     requirements:
@@ -130,7 +115,7 @@ impulses:
             - elementId: fragmentknockb
             - elementId: fragmentknockb
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-combine-knock-b.yml
+    operation: !import /operations/lore/knock/lore-combine-knock-b.yml
   # winter + winter = winterb
   - name: Combine A Sexton's Secret
     requirements:
@@ -139,14 +124,14 @@ impulses:
       anyOf:
         - elementId: fragmentwinterb
         - elementId: fragmentknockc
-    operation: !import ../../../operations/lore/winter/lore-combine-winter-a.yml
+    operation: !import /operations/lore/winter/lore-combine-winter-a.yml
   # winterb + knockb = knockc
   - name: Subvert A White Ceremony to A Consent of Wounds
     requirements:
       elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
-    operation: !import ../../../operations/lore/knock/lore-subvert-winter-knock-b.yml
+    operation: !import /operations/lore/knock/lore-subvert-winter-knock-b.yml
   # End Knock C
 
   # Begin Grail C
@@ -155,7 +140,7 @@ impulses:
       elementId: waystagbefore_3
     forbidders:
       elementId: fragmentgrailc
-    operation: !import ../../../operations/lore/grail/lore-combine-grail-b.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-b.yml
 
   - name: Combine A Red Secret
     requirements:
@@ -166,7 +151,7 @@ impulses:
             - elementId: fragmentgrailb
             - elementId: fragmentgrailb
         - elementId: fragmentgrailc
-    operation: !import ../../../operations/lore/grail/lore-combine-grail-a.yml
+    operation: !import /operations/lore/grail/lore-combine-grail-a.yml
   # End Grail C
 
   # Begin Secret Histories C
@@ -175,7 +160,7 @@ impulses:
       elementId: waystagbefore_5
     forbidders:
       elementId: fragmentsecrethistoriesc
-    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
 
   - name: Combine An Occult Scrap
     requirements:
@@ -186,20 +171,20 @@ impulses:
             - elementId: fragmentsecrethistoriesb
             - elementId: fragmentsecrethistoriesb
         - elementId: fragmentsecrethistoriesc
-    operation: !import ../../../operations/lore/secrethistories/lore-combine-secrethistories-a.yml
-    # End Secret Histories C
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+  # End Secret Histories C
 
   # Begin Moth / Lantern / Forge juggling
   # moth + lantern = lanternb
   - name: Subvert A Barber's Warning with A Watchman's Secret to get A Mansus-Glimpse
     priority: goal
-    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-a.yml
+    operation: !import /operations/lore/lantern/lore-subvert-moth-lantern-a.yml
   # forge + forge = forgeb
   - name: Combine A Smith's Secret for An Ardent Orison
     priority: goal
     requirements:
       elementId: waystag_after
-    operation: !import ../../../operations/lore/forge/lore-combine-forge-a.yml
+    operation: !import /operations/lore/forge/lore-combine-forge-a.yml
   # forgeb + lanternb = forgec
   - name: Subvert A Mansus Glimpse to A Shaping Chant
     priority: goal
@@ -208,14 +193,14 @@ impulses:
     forbidders:
       anyOf:
         - cardSet:
-          # Stop at 3
-          - elementId: fragmentforgec
-          - elementId: fragmentforgec
-          - elementId: fragmentforgec
+            # Stop at 3
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
         - cardSet:
-          - elementId: fragmentforgec
-          - elementId: fragmentforged
-    operation: !import ../../../operations/lore/forge/lore-subvert-lantern-forge-b.yml
+            - elementId: fragmentforgec
+            - elementId: fragmentforged
+    operation: !import /operations/lore/forge/lore-subvert-lantern-forge-b.yml
   # forgec + forgec = forged
   - name: Combine A Shaping Chant for Callidate Invocation
     priority: goal
@@ -223,12 +208,32 @@ impulses:
       elementId: waystag_after
     forbidders:
       elementId: fragmentforged
-    operation: !import ../../../operations/lore/forge/lore-combine-forge-c.yml
+    operation: !import /operations/lore/forge/lore-combine-forge-c.yml
   # mothb + lanternb = lanternc
   - name: Subvert A Wood-Whisper to An Unmerciful Mantra
     priority: goal
     forbidders:
-      # Only do this once
-      elementId: fragmentlanternc
-    operation: !import ../../../operations/lore/lantern/lore-subvert-moth-lantern-b.yml
+      anyOf:
+        # Only do this once
+        - elementId: fragmentlanternc
+        - elementId: fragmentlanternd
+    operation: !import /operations/lore/lantern/lore-subvert-moth-lantern-b.yml
   # End Moth / Lantern / Forge juggling
+
+  # After we acquire the stag door, it is safe to consume our mothc and lanternc
+  # mothc + lanternc = lanternd
+  - name: Subvert An Ecdysiast's Parable to Phanaean Invocation
+    priority: goal
+    requirements:
+      elementId: waystag_after
+    operation: !import /operations/lore/lantern/lore-subvert-moth-lantern-c.yml
+
+  # After we have the spider door, it is safe to consume our lanternd
+  # forged + lanternd = forgee
+  - name: Subvert the Phanaean Invocation to the Formula Fissive
+    priority: goal
+    requirements:
+      allOf:
+        - elementId: waystag_after
+        - elementId: wayspider
+    operation: !import /operations/lore/forge/lore-subvert-lantern-forge-d.yml

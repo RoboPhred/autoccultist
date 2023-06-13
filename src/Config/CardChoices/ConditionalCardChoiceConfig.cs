@@ -9,6 +9,9 @@ namespace AutoccultistNS.Config.CardChoices
     /// </summary>
     public class ConditionalCardChoiceConfig : ISlottableCardChoiceConfig, IConfigObject
     {
+        /// <inheritdoc/>
+        public bool Optional { get; set; }
+
         /// <summary>
         /// Gets or sets the condition to gate this choice.
         /// </summary>

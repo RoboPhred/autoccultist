@@ -3,12 +3,17 @@ namespace AutoccultistNS
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoccultistNS.Tasks;
     using SecretHistories.Assets.Scripts.Application.UI;
     using SecretHistories.Constants;
     using SecretHistories.Entities;
+    using SecretHistories.Entities.NullEntities;
     using SecretHistories.Enums;
     using SecretHistories.Fucine;
     using SecretHistories.Spheres;
+    using SecretHistories.Spheres.Choreographers;
     using SecretHistories.Tokens.Payloads;
     using SecretHistories.UI;
     using UnityEngine;
@@ -46,21 +51,11 @@ namespace AutoccultistNS
                 // Apparently the above isn't good enough to wait on the mansus, so let's wait for the cards to appear.
                 if (IsInMansus)
                 {
-                    try
+                    var ingress = GetActiveIngress();
+                    var hasChoices = GetMansusChoices(out var _) != null;
+                    var hasOutput = ingress != null && ingress.GetEgressOutputSphere().GetTokens().Any();
+                    if (!hasChoices && !hasOutput)
                     {
-                        var ingress = GetActiveIngress();
-                        var hasChoices = GetMansusChoices(out var _) != null;
-                        var hasOutput = ingress != null && ingress.GetEgressOutputSphere().GetTokens().Any();
-                        if (!hasChoices && !hasOutput)
-                        {
-                            return false;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // Mansus is borked...
-                        Autoccultist.Instance.LogWarn($"Failed to determine interactivity when in mansus: {ex.ToString()}");
-                        NoonUtility.LogException(ex);
                         return false;
                     }
                 }
@@ -111,7 +106,24 @@ namespace AutoccultistNS
                     throw new Exception("GameAPI.TabletopSphere: Game is not running.");
                 }
 
-                return Watchman.Get<HornedAxe>().GetSpheres().OfType<TabletopSphere>().Single();
+                Sphere tabletopSphere = Watchman.Get<HornedAxe>().GetSpheres().OfType<TabletopSphere>().FirstOrDefault();
+
+                // When resetting the game, it is possible for GameStateProvider to try and generate a game state during the dissolution process
+                // of the current save before the scene is unloaded.  This results in no tabletop sphere.
+                return tabletopSphere ?? new NullSphere();
+            }
+        }
+
+        public static Sphere CodexSphere
+        {
+            get
+            {
+                if (!IsRunning)
+                {
+                    throw new Exception("GameAPI.CodexSphere: Game is not running.");
+                }
+
+                return Watchman.Get<HornedAxe>().GetSphereByAbsolutePath(new FucinePath("*/codex")) ?? new NullSphere();
             }
         }
 
@@ -124,6 +136,16 @@ namespace AutoccultistNS
         {
             GameEventSource.GameStarted += OnGameStarted;
             GameEventSource.GameEnded += OnGameEnded;
+        }
+
+        public static Task AwaitInteractable(CancellationToken cancellationToken)
+        {
+            if (IsInteractable)
+            {
+                return Task.FromResult(true);
+            }
+
+            return new AwaitConditionTask(() => IsInteractable, cancellationToken).Task;
         }
 
         /// <summary>
@@ -160,7 +182,7 @@ namespace AutoccultistNS
         {
             // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
             // of the visit.
-            var tabletopIngress = TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
+            var tabletopIngress = GetTabletopIngress();
             if (tabletopIngress != null)
             {
                 return tabletopIngress;
@@ -177,11 +199,38 @@ namespace AutoccultistNS
             return null;
         }
 
+        public static Ingress GetTabletopIngress()
+        {
+            // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
+            // of the visit.
+            return TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the active ingress, awaiting it if necessary.
+        /// </summary>
+        public static async Task<Ingress> AwaitTabletopIngress(CancellationToken cancellationToken)
+        {
+            var existingIngress = GetTabletopIngress();
+            if (existingIngress != null)
+            {
+                return existingIngress;
+            }
+
+            await new AwaitConditionTask(() => GetTabletopIngress() != null, cancellationToken).Task;
+            return GetTabletopIngress();
+        }
+
         public static Otherworld GetActiveOtherworld()
         {
             var numa = Watchman.Get<Numa>();
 
             return Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+        }
+
+        public static void SortTable()
+        {
+            (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
         }
 
         /// <summary>

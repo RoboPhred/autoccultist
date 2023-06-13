@@ -57,7 +57,7 @@ impulses:
   #    #         - elementId: fragmentsecrethistories
   #    #         - elementId: fragmentsecrethistories
   #    #     - elementId: vaultcapital4
-  #    operation: !import ../../operations/mansus/use-wood-secrethistories.yml
+  #    operation: !import /operations/mansus/use-wood-secrethistories.yml
 
   - name: Find Capital vaults
     forbidders:

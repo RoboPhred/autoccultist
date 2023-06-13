@@ -14,7 +14,7 @@ namespace AutoccultistNS.GameState
         /// <returns>An enumerable of all cards in the game.</returns>
         public static IEnumerable<ICardState> GetAllCards(this IGameState state)
         {
-            var allCards = state.TabletopCards.Concat(state.EnRouteCards).Concat(state.Situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards)));
+            var allCards = state.TabletopCards.Concat(state.EnRouteCards).Concat(state.Situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards))).Concat(state.CodexCards);
             switch (state.Mansus.State)
             {
                 case PortalActiveState.AwaitingCollection:

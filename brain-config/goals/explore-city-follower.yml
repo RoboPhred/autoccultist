@@ -4,4 +4,4 @@ completedWhen:
     - elementId: locationcabaret
     - elementId: locationauctionhouse
 impulses:
-  - !import ../impulses/explore-city-follower.yml
+  - !import /impulses/explore-city-follower.yml

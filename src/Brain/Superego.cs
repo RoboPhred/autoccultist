@@ -77,7 +77,7 @@ namespace AutoccultistNS.Brain
         }
 
         /// <summary>
-        /// Clears out all motivations.
+        /// Clears out all motivations and purge the arc.
         /// </summary>
         public static void Clear()
         {
@@ -85,6 +85,14 @@ namespace AutoccultistNS.Brain
             CurrentMotivation = null;
             Ego.SetMotivation(null);
             Motivations.Clear();
+        }
+
+        /// <summary>
+        /// Resets all motivations and begin fresh on this arc.
+        /// </summary>
+        public static void ResetMotivations()
+        {
+            SetArc(CurrentArc);
         }
 
         private static void TryNextMotivation()

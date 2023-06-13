@@ -10,4 +10,4 @@ completedWhen:
   elementId: waywhite
 impulses:
   - name: "Acquire Way: The White Door"
-    operation: !import ../../operations/mansus/acquire-way-whitedoor.yml
+    operation: !import /operations/mansus/acquire-way-whitedoor.yml

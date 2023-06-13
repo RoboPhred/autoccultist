@@ -7,23 +7,25 @@ namespace AutoccultistNS.GameState
     /// </summary>
     public interface IGameState
     {
-        // TODO: IReadOnlyCollection
         /// <summary>
         /// Gets a collection of cards on the tabletop.
         /// </summary>
-        ICollection<ICardState> TabletopCards { get; }
+        IReadOnlyCollection<ICardState> TabletopCards { get; }
 
-        // TODO: IReadOnlyCollection
         /// <summary>
         /// Gets a collection of cards that are currently en route to somewhere.
         /// </summary>
-        ICollection<ICardState> EnRouteCards { get; }
+        IReadOnlyCollection<ICardState> EnRouteCards { get; }
 
-        // TODO: IReadOnlyCollection
+        /// <summary>
+        /// Get a collection of cards in the codex mod, if installed.
+        /// </summary>
+        IReadOnlyCollection<ICardState> CodexCards { get; }
+
         /// <summary>
         /// Gets a collection of situations currently present in the game.
         /// </summary>
-        ICollection<ISituationState> Situations { get; }
+        IReadOnlyCollection<ISituationState> Situations { get; }
 
         /// <summary>
         /// Gets the mansus state.

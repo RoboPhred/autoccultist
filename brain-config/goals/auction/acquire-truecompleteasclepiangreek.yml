@@ -9,13 +9,13 @@ completedWhen:
 impulses:
   - name: Purchase items at auction
     priority: goal
-    requirements: !import ../../conditions/has-slushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders:
       anyOf:
         - elementId: truecompleteasclepiangreek
         - elementId: truecompleteasclepian
-    operation: !import ../../operations/auction-purchase.yml
+    operation: !import /operations/auction-purchase.yml
   - name: Read A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
-    operation: !import ../../operations/books/read-truecompleteasclepian.yml
+    operation: !import /operations/books/read-truecompleteasclepian.yml
   - name: Translate A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
-    operation: !import ../../operations/books/translate-truecompleteasclepian.yml
+    operation: !import /operations/books/translate-truecompleteasclepian.yml

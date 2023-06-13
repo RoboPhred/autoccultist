@@ -15,7 +15,7 @@ impulses:
     forbidders:
       elementId: thugforgeedge
     priority: maintenance
-    operation: !import ../../operations/explore/explore-city-criminal-bombmaker.yml
+    operation: !import /operations/explore/explore-city-criminal-bombmaker.yml
 
   - name: Send bombmaker on cult business
     priority: maintenance

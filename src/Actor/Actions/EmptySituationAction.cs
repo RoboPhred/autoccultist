@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System.Linq;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
 
@@ -7,7 +8,7 @@ namespace AutoccultistNS.Actor.Actions
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.
     /// </summary>
-    public class EmptySituationAction : ActionBase
+    public class EmptySituationAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmptySituationAction"/> class.
@@ -23,11 +24,14 @@ namespace AutoccultistNS.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
-        /// <inheritdoc/>
-        public override void Execute()
+        public override string ToString()
         {
-            this.VerifyNotExecuted();
+            return $"EmptySituationAction(SituationId = {this.SituationId})";
+        }
 
+        /// <inheritdoc/>
+        protected override ActionResult OnExecute()
+        {
             if (GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
@@ -41,11 +45,20 @@ namespace AutoccultistNS.Actor.Actions
 
             if (situation.State.Identifier == StateEnum.Unstarted)
             {
+                if (!situation.GetSpheresByCategory(SphereCategory.Threshold).SelectMany(s => s.GetTokens()).Any())
+                {
+                    return ActionResult.NoOp;
+                }
+
                 situation.DumpUnstartedBusiness();
             }
             else if (situation.State.Identifier == StateEnum.Complete)
             {
+                var debugLog = from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
+                               from token in spheres.GetTokens()
+                               select token.PayloadEntityId;
                 situation.Conclude();
+                Autoccultist.Instance.LogTrace($"Situation {this.SituationId} concluded with cards {string.Join(", ", debugLog)}.");
             }
             else
             {
@@ -53,6 +66,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             GameStateProvider.Invalidate();
+            return ActionResult.Completed;
         }
     }
 }
