@@ -7,7 +7,6 @@ namespace AutoccultistNS
     using System.Threading.Tasks;
     using AutoccultistNS.Tasks;
     using SecretHistories.Assets.Scripts.Application.UI;
-    using SecretHistories.Constants;
     using SecretHistories.Entities;
     using SecretHistories.Entities.NullEntities;
     using SecretHistories.Enums;
@@ -136,6 +135,22 @@ namespace AutoccultistNS
         {
             GameEventSource.GameStarted += OnGameStarted;
             GameEventSource.GameEnded += OnGameEnded;
+
+            // Unlock the game if the heart is stopped.  Re-lock on start.
+            MechanicalHeart.OnStart += (_, __) =>
+            {
+                if (pauseDepth > 0)
+                {
+                    Watchman.Get<LocalNexus>().ForcePauseGame(true);
+                }
+            };
+            MechanicalHeart.OnStop += (_, __) =>
+            {
+                if (pauseDepth > 0)
+                {
+                    Watchman.Get<LocalNexus>().UnForcePauseGame(true);
+                }
+            };
         }
 
         public static Task AwaitInteractable(CancellationToken cancellationToken)

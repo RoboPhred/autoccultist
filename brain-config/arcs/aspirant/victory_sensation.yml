@@ -105,12 +105,23 @@ motivations:
     primaryGoals:
       - !import /goals/consume-bookdealer.yml
       - !import /goals/consume-books-lore-waitmorland.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
+      - !import /goals/romance/maintain-relationships.yml
+      - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/mansus/acquire-way-wood.yml
+      - !import /goals/mansus/acquire-way-whitedoor.yml
+  - name: Find STUMM!
+    primaryGoals:
       - !import /goals/auction/acquire-stumm.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/mansus/acquire-way-wood.yml
+      - !import /goals/mansus/acquire-way-whitedoor.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import /goals/mansus/acquire-way-wood.yml
@@ -128,6 +139,7 @@ motivations:
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
+  # Wait until after the Hospital to move into Morland's so that the notoriety gets consumed by the HQ-move.
   - name: Move into Morlands
     primaryGoals:
       - !import /goals/hq/move-hq-library.yml

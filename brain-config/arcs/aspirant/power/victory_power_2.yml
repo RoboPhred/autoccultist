@@ -10,7 +10,6 @@
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
 name: Aspirant Power Ascension (MK2)
-legacy: aspirant
 selectionHint:
   anyOf:
     - elementId: introjob
@@ -78,41 +77,41 @@ motivations:
       - !import /goals/followers/attract-followers.yml
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml
-  - name: Finish up Morlands
+  - name: Finish up Morlands, find rites from auction
     primaryGoals:
       - !import /goals/consume-bookdealer.yml
       - !import /goals/consume-books-lore-waitmorland.yml
+    supportingGoals:
+      - !import /goals/survive.yml
       - !import /goals/find-auctionhouse.yml
-    supportingGoals:
-      - !import /goals/survive.yml
       - !import /goals/cult/recruit-away-influences.yml
       - !import /goals/followers/attract-followers.yml
       - !import /goals/funds/work-labor.yml
-  - name: Find Stumm
+      - !import /goals/mansus/acquire-way-wood.yml
+      - !import /goals/mansus/acquire-way-whitedoor.yml
+  - name: Move into Morlands, acquire a Rarefied Mind, Find Stumm!
     primaryGoals:
+      - !import /goals/find-auctionhouse.yml
       - !import /goals/auction/acquire-stumm-only.yml
+      - !import /goals/reason/acquire-skillreasond-illumination.yml
+      - !import /goals/hq/move-hq-library.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/cult/recruit-away-influences.yml
       - !import /goals/followers/attract-followers.yml
       - !import /goals/funds/work-labor.yml
+      - !import /goals/mansus/acquire-way-wood.yml
+      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - !import /goals/victories/power/acquire-dedication-power.yml
+      - !import /goals/victories/power/acquire-ascension-power.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import /goals/mansus/acquire-way-wood.yml
       - !import /goals/mansus/acquire-way-whitedoor.yml
     supportingGoals:
+      - !import /goals/survive.yml
       - !import /goals/cult/recruit-away-influences.yml
       - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
-  - name: Move into Morlands, acquire a Rarefied Mind
-    primaryGoals:
-      - !import /goals/hq/move-hq-library.yml
-      - !import /goals/reason/acquire-skillreasond-illumination.yml
-    supportingGoals:
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml
       - !import /goals/victories/power/acquire-dedication-power.yml
       - !import /goals/victories/power/acquire-ascension-power.yml

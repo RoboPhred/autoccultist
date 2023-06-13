@@ -67,11 +67,9 @@ namespace AutoccultistNS
 
             public void WhenSettingUpdated(object newValue)
             {
+                Autoccultist.Instance.LogTrace($"SettingActorSort: {newValue}");
                 var value = newValue as bool?;
-                if (value != null)
-                {
-                    AutoccultistActor.SortTableOnIdle = value.Value;
-                }
+                AutoccultistActor.SortTableOnIdle = value ?? false;
             }
         }
     }

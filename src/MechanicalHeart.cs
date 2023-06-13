@@ -21,6 +21,9 @@ namespace AutoccultistNS
         /// </summary>
         public static event EventHandler<EventArgs> OnBeat;
 
+        public static event EventHandler<EventArgs> OnStart;
+        public static event EventHandler<EventArgs> OnStop;
+
         /// <summary>
         /// Gets a value indicating whether the mechanical heart is running in time with the standard heart.
         /// </summary>
@@ -47,6 +50,7 @@ namespace AutoccultistNS
             NoonUtility.LogWarning("Starting Mechanical Heart.");
 
             IsRunning = true;
+            OnStart?.Invoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -62,6 +66,7 @@ namespace AutoccultistNS
             NoonUtility.LogWarning("Stopping Mechanical Heart.");
 
             IsRunning = false;
+            OnStop?.Invoke(null, EventArgs.Empty);
         }
 
         /// <summary>
