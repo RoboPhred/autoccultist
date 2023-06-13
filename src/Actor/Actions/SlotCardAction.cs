@@ -7,15 +7,12 @@ namespace AutoccultistNS.Actor.Actions
     using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
 
+    // TODO: This should take a specific card reservation, not a card matcher.
     /// <summary>
     /// An action to slot a card into a slot of a situation.
     /// </summary>
     public class SlotCardAction : ActionBase
     {
-        // TODO: This should take a specific card reservation, not a card matcher.
-
-        public static bool UseItinerary { get; set; } = true;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SlotCardAction"/> class.
         /// </summary>
@@ -28,6 +25,8 @@ namespace AutoccultistNS.Actor.Actions
             this.SlotId = slotId;
             this.CardMatcher = cardMatcher;
         }
+
+        public static bool UseItinerary { get; set; } = true;
 
         /// <summary>
         /// Gets the situation id of the situation to slot the card into.

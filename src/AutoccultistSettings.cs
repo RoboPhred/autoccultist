@@ -1,5 +1,6 @@
 namespace AutoccultistNS
 {
+    using System;
     using AutoccultistNS.Actor;
     using SecretHistories.Entities;
     using SecretHistories.Fucine;
@@ -12,6 +13,15 @@ namespace AutoccultistNS
 
         private static SortSettingReceiver sortSettingReceiver;
         // private static DelaySettingReceiver delaySettingReceiver;
+
+        public static TimeSpan ActionDelay
+        {
+            get
+            {
+                // return AutoccultistActor.ActionDelay;
+                return TimeSpan.FromSeconds(0.25);
+            }
+        }
 
         public static void Initialize()
         {

@@ -3,6 +3,7 @@ namespace AutoccultistNS.Brain
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
 
@@ -70,25 +71,29 @@ namespace AutoccultistNS.Brain
         /// Executes the given operation.
         /// </summary>
         /// <param name="operation">The operation to execute.</param>
-        public static void ExecuteOperation(IOperation operation)
+        public static ISituationOrchestration StartOperation(IOperation operation)
         {
             try
             {
                 if (ExecutingOperationsBySituation.ContainsKey(operation.Situation))
                 {
                     Autoccultist.Instance.LogWarn($"Cannot execute operation {operation.Name} because the situation {operation.Situation} already has an orchestration running.");
-                    return;
+                    return null;
                 }
 
                 var orchestration = new OperationOrchestration(operation);
                 ExecutingOperationsBySituation[operation.Situation] = orchestration;
                 orchestration.Completed += OnOrchestrationCompleted;
+
                 orchestration.Start();
+
+                return orchestration;
             }
             catch (Exception ex)
             {
                 Autoccultist.Instance.LogWarn($"Error executing operation {operation.Name}: {ex.Message}");
                 NoonUtility.LogException(ex);
+                return null;
             }
         }
 

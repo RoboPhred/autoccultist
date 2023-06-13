@@ -1,7 +1,7 @@
 namespace AutoccultistNS.Brain
 {
     using System;
-    using AutoccultistNS.GameState;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Identifies a class that orchestrates the behavior of a situation.
@@ -34,5 +34,10 @@ namespace AutoccultistNS.Brain
         /// </summary>
         /// <param name="gameState">The current game state.</param>
         void Abort();
+
+        /// <summary>
+        /// Wait for the current task to complete.
+        /// </summary>
+        Task AwaitCurrentTask();
     }
 }

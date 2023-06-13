@@ -17,12 +17,12 @@ namespace AutoccultistNS.Tasks
             MechanicalHeart.OnBeat += this.OnBeat;
         }
 
-        public Task<T> Task => this.taskCompletionSource.Task;
-
         ~HeartbeatTask()
         {
             this.Dispose();
         }
+
+        public Task<T> Task => this.taskCompletionSource.Task;
 
         public void Dispose()
         {

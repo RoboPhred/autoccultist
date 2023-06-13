@@ -20,11 +20,6 @@ namespace AutoccultistNS.Actor
 
         private static bool isDrainingQueue = false;
 
-        /// <summary>
-        /// Gets or sets the delay between each action.
-        /// </summary>
-        public static TimeSpan ActionDelay { get; set; } = TimeSpan.FromSeconds(0.25);
-
         public static bool SortTableOnIdle { get; set; } = true;
 
         /// <summary>
@@ -103,7 +98,7 @@ namespace AutoccultistNS.Actor
                 var result = await action.Execute(cancellationToken);
                 if (result != ActionResult.NoOp)
                 {
-                    await new EngineDelayTask(ActionDelay, cancellationToken).Task;
+                    await new EngineDelayTask(AutoccultistSettings.ActionDelay, cancellationToken).Task;
                 }
             }
 
