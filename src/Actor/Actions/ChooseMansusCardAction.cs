@@ -37,6 +37,19 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");
             }
 
+            await this.AwaitMansusReady(cancellationToken);
+
+            this.ChooseCard();
+
+            await this.AcceptCard(cancellationToken);
+
+            GameStateProvider.Invalidate();
+
+            return ActionResult.Completed;
+        }
+
+        private async Task AwaitMansusReady(CancellationToken cancellationToken)
+        {
             var awaitInteractable = GameAPI.AwaitInteractable(cancellationToken);
             if (await Task.WhenAny(awaitInteractable, Task.Delay(10000, cancellationToken)) != awaitInteractable)
             {
@@ -46,7 +59,10 @@ namespace AutoccultistNS.Actor.Actions
             // Give the mansus some time to animate its cards into being.
             // FIXME: Should include this in the Interactable check.
             await Task.Delay(1000, cancellationToken);
+        }
 
+        private void ChooseCard()
+        {
             var gameState = GameStateProvider.Current;
 
             if (gameState.Mansus.State != PortalActiveState.AwaitingSelection)
@@ -72,7 +88,10 @@ namespace AutoccultistNS.Actor.Actions
             {
                 throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", gameState.Mansus.DeckCards.Keys)}");
             }
+        }
 
+        private async Task AcceptCard(CancellationToken cancellationToken)
+        {
             var awaitIngress = GameAPI.AwaitTabletopIngress(cancellationToken);
             if (await Task.WhenAny(awaitIngress, Task.Delay(5000, cancellationToken)) != awaitIngress)
             {
@@ -85,10 +104,6 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             GameAPI.UserUnpause();
-
-            GameStateProvider.Invalidate();
-
-            return ActionResult.Completed;
         }
     }
 }
