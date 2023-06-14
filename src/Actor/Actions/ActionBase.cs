@@ -11,7 +11,7 @@ namespace AutoccultistNS.Actor.Actions
         {
             if (this.executed)
             {
-                throw new ActionFailureException(this, "Action has already executed.");
+                return Task.FromException<bool>(new ActionFailureException(this, "Action has already executed."));
             }
 
             this.executed = true;

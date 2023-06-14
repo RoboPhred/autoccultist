@@ -418,6 +418,10 @@ namespace AutoccultistNS.Brain
                         {
                             await coroutine(innerToken);
                         }
+                        catch (TaskCanceledException)
+                        {
+                            // Do nothing.
+                        }
                         catch (Exception ex)
                         {
                             await this.OnErrorCoroutine(ex, innerToken);

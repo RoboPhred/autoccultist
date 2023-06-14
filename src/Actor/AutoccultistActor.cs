@@ -77,8 +77,20 @@ namespace AutoccultistNS.Actor
                 while ((set = PendingActions.DequeueOrDefault()) != null)
                 {
                     currentAction = set;
-                    await set.Execute();
-                    currentAction = null;
+                    try
+                    {
+                        await set.Execute();
+                    }
+                    catch (Exception ex)
+                    {
+                        Autoccultist.Instance.LogWarn("Failed to perform action: " + ex.ToString());
+                    }
+                    finally
+                    {
+                        currentAction = null;
+                    }
+
+                    await MechanicalHeart.AwaitBeat(CancellationToken.None, AutoccultistSettings.ActionDelay);
                 }
             }
             finally

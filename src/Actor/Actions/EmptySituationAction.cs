@@ -1,14 +1,17 @@
 namespace AutoccultistNS.Actor.Actions
 {
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
+    using SecretHistories.UI;
 
     /// <summary>
     /// An action to dump all cards out of a situation window.
     /// Supports unstarted and completed situations.
     /// </summary>
-    public class EmptySituationAction : SyncActionBase
+    public class EmptySituationAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmptySituationAction"/> class.
@@ -30,7 +33,7 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override bool OnExecute()
+        protected override async Task<bool> OnExecute(CancellationToken cancellationToken)
         {
             if (GameAPI.IsInMansus)
             {
@@ -57,7 +60,16 @@ namespace AutoccultistNS.Actor.Actions
                 var debugLog = from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
                                from token in spheres.GetTokens()
                                select token.PayloadEntityId;
+
+                var shroudedTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).Where(x => x.Shrouded).ToList();
+                foreach (var token in shroudedTokens)
+                {
+                    token.Unshroud();
+                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+                }
+
                 situation.Conclude();
+
                 Autoccultist.Instance.LogTrace($"Situation {this.SituationId} concluded with cards {string.Join(", ", debugLog)}.");
             }
             else

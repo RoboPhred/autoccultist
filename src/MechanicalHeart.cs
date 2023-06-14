@@ -108,11 +108,8 @@ namespace AutoccultistNS
             }
 
             // Wait out the delay, then wait for the next beat
-            NoonUtility.LogWarning($"Waiting delay {delay}");
             await Task.Delay(delay.Value, cancellationToken);
-            NoonUtility.LogWarning($"Delay done, waiting OnBeat");
             await AwaitBeat(cancellationToken);
-            NoonUtility.LogWarning($"OnBeat done");
         }
 
         /// <summary>

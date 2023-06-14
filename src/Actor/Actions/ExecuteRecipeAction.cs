@@ -135,12 +135,7 @@ namespace AutoccultistNS.Actor.Actions
             {
                 var itinerary = slotSphere.GetItineraryFor(stack.Token);
 
-                var itineraryDuration = (float)AutoccultistSettings.ActionDelay.TotalSeconds * 2 / 3;
-                var postDelayDuration = AutoccultistSettings.ActionDelay - TimeSpan.FromSeconds(itineraryDuration);
-
-                itinerary.WithDuration(itineraryDuration).Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
-
-                GameStateProvider.Invalidate();
+                itinerary.WithDuration(0.1f).Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
 
                 // Would be nice if there was a way to subscribe to the itinerary, but whatever...
                 var awaitSphereFilled = new AwaitConditionTask(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
@@ -149,9 +144,8 @@ namespace AutoccultistNS.Actor.Actions
                     throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.");
                 }
 
-                GameStateProvider.Invalidate();
-
-                await Task.Delay(postDelayDuration, cancellationToken);
+                // Wait the full delay after slotting the card.
+                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
             }
             else
             {

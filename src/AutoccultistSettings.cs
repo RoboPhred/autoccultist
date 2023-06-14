@@ -19,7 +19,7 @@ namespace AutoccultistNS
             get
             {
                 // return AutoccultistActor.ActionDelay;
-                return TimeSpan.FromSeconds(0.25);
+                return TimeSpan.FromSeconds(.25);
             }
         }
 

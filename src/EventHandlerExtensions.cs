@@ -38,7 +38,7 @@ namespace AutoccultistNS
 
             private void Handler(object sender, T eventArgs)
             {
-                unsubscribe(this.Handler);
+                this.unsubscribe(this.Handler);
                 this.tcs.TrySetResult(eventArgs);
             }
         }

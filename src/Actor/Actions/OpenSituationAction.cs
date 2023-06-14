@@ -44,6 +44,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             situation.OpenAt(situation.Token.Location);
+
             return true;
         }
     }

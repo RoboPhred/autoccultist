@@ -21,6 +21,8 @@ public class Autoccultist : MonoBehaviour
 {
     private IArc loadArcOnGameStart;
 
+    public static event EventHandler GlobalUpdate;
+
     /// <summary>
     /// Gets the instance of the plugin.
     /// </summary>
@@ -41,8 +43,6 @@ public class Autoccultist : MonoBehaviour
             return Path.GetDirectoryName(assemblyLocation);
         }
     }
-
-    public static event EventHandler GlobalUpdate;
 
     public static void Initialise()
     {
