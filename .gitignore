@@ -2,6 +2,7 @@
 /externals_gateofhorn/
 /obj/
 /bin/
+/build/
 /.vs/
 /.vscode/
 /src/Experiments/
