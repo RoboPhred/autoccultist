@@ -7,7 +7,7 @@ namespace AutoccultistNS.Actor.Actions
     {
         private bool executed = false;
 
-        public Task<ActionResult> Execute(CancellationToken cancellationToken)
+        public Task<bool> Execute(CancellationToken cancellationToken)
         {
             if (this.executed)
             {
@@ -18,6 +18,6 @@ namespace AutoccultistNS.Actor.Actions
             return this.OnExecute(cancellationToken);
         }
 
-        protected abstract Task<ActionResult> OnExecute(CancellationToken cancellationToken);
+        protected abstract Task<bool> OnExecute(CancellationToken cancellationToken);
     }
 }

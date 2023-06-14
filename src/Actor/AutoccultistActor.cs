@@ -13,8 +13,8 @@ namespace AutoccultistNS.Actor
     /// </summary>
     public static class AutoccultistActor
     {
-        private static readonly Queue<DeferredTask<bool>> PendingActionSets = new();
-        private static DeferredTask<bool> currentActionSet;
+        private static readonly Queue<DeferredTask<bool>> PendingActions = new();
+        private static DeferredTask<bool> currentAction;
 
         private static GameAPI.PauseToken pauseToken;
 
@@ -23,22 +23,22 @@ namespace AutoccultistNS.Actor
         public static bool SortTableOnIdle { get; set; } = true;
 
         /// <summary>
-        /// Perform the actions from the enumerable.
+        /// Queue up an asynchronous action for fifo execution.
         /// </summary>
-        /// <param name="actions">An enumerable of actions to execute.</param>
+        /// <param name="action">The action to perform.</param>
         /// <param name="cancellationToken">An optional CancellationToken used to cancel the action execution.</param>
         /// <returns>A task that will complete when all actions complete, or fail with an exception describing the action failure.</returns>
-        public static Task PerformActions(IEnumerable<IAutoccultistAction> actions, CancellationToken? cancellationToken = null)
+        public static Task Perform(Func<CancellationToken, Task> action, CancellationToken? cancellationToken = null)
         {
             var pendingAction = new DeferredTask<bool>(
-                (innerCancellationToken) => ExecuteActionSet(actions.GetEnumerator(), innerCancellationToken),
+                (innerCancellationToken) => action(innerCancellationToken).ContinueWith(_ => true),
                 cancellationToken ?? CancellationToken.None);
 
-            PendingActionSets.Enqueue(pendingAction);
+            PendingActions.Enqueue(pendingAction);
 
             if (!isDrainingQueue)
             {
-                DrainActionSetQueue();
+                DrainActions();
             }
 
             return pendingAction.Task;
@@ -49,21 +49,21 @@ namespace AutoccultistNS.Actor
         /// </summary>
         public static void AbortAllActions()
         {
-            currentActionSet?.Cancel();
-            currentActionSet = null;
+            currentAction?.Cancel();
+            currentAction = null;
 
             DeferredTask<bool> queuedTask;
-            while ((queuedTask = PendingActionSets.DequeueOrDefault()) != null)
+            while ((queuedTask = PendingActions.DequeueOrDefault()) != null)
             {
                 queuedTask.Cancel();
             }
 
-            PendingActionSets.Clear();
+            PendingActions.Clear();
         }
 
-        public static async void DrainActionSetQueue()
+        public static async void DrainActions()
         {
-            if (isDrainingQueue || PendingActionSets.Count == 0)
+            if (isDrainingQueue || PendingActions.Count == 0)
             {
                 return;
             }
@@ -74,35 +74,19 @@ namespace AutoccultistNS.Actor
             try
             {
                 DeferredTask<bool> set;
-                while ((set = PendingActionSets.DequeueOrDefault()) != null)
+                while ((set = PendingActions.DequeueOrDefault()) != null)
                 {
-                    currentActionSet = set;
+                    currentAction = set;
                     await set.Execute();
-                    currentActionSet = null;
+                    currentAction = null;
                 }
             }
             finally
             {
-                currentActionSet = null;
+                currentAction = null;
                 isDrainingQueue = false;
                 OnIdle();
             }
-        }
-
-        private static async Task<bool> ExecuteActionSet(IEnumerator<IAutoccultistAction> actions, CancellationToken cancellationToken)
-        {
-            while (actions.MoveNext())
-            {
-                var action = actions.Current;
-                Autoccultist.Instance.LogTrace($"Executing action {action}");
-                var result = await action.Execute(cancellationToken);
-                if (result != ActionResult.NoOp)
-                {
-                    await new EngineDelayTask(AutoccultistSettings.ActionDelay, cancellationToken).Task;
-                }
-            }
-
-            return true;
         }
 
         private static void OnActive()

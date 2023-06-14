@@ -1,7 +1,6 @@
 namespace AutoccultistNS.Brain
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.Actor;
@@ -65,7 +64,7 @@ namespace AutoccultistNS.Brain
             try
             {
                 this.cancellationToken = new CancellationTokenSource();
-                this.currentTask = AutoccultistActor.PerformActions(this.DumpSituationCoroutine(), this.cancellationToken.Token);
+                this.currentTask = AutoccultistActor.Perform(this.DumpSituationCoroutine, this.cancellationToken.Token);
                 await this.currentTask;
             }
             catch (Exception ex)
@@ -80,11 +79,11 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private IEnumerable<IAutoccultistAction> DumpSituationCoroutine()
+        private async Task DumpSituationCoroutine(CancellationToken cancellationToken)
         {
-            yield return new OpenSituationAction(this.SituationId);
-            yield return new EmptySituationAction(this.SituationId);
-            yield return new CloseSituationAction(this.SituationId);
+            await new OpenSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+            await new EmptySituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+            await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
         }
     }
 }

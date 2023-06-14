@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override async Task<ActionResult> OnExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> OnExecute(CancellationToken cancellationToken)
         {
             if (GameAPI.IsInMansus)
             {
@@ -67,7 +68,7 @@ namespace AutoccultistNS.Actor.Actions
             {
                 if (this.CardMatcher.Optional)
                 {
-                    return ActionResult.NoOp;
+                    return false;
                 }
 
                 throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
@@ -81,10 +82,14 @@ namespace AutoccultistNS.Actor.Actions
 
             var stack = card.ToElementStack();
 
-            if (UseItinerary)
+            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
                 var itinerary = sphere.GetItineraryFor(stack.Token);
-                itinerary.WithQuickDuration().Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
+
+                var itineraryDuration = (float)AutoccultistSettings.ActionDelay.TotalSeconds * 2 / 3;
+                var postDelayDuration = AutoccultistSettings.ActionDelay - TimeSpan.FromSeconds(itineraryDuration);
+
+                itinerary.WithDuration(itineraryDuration).Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
 
                 GameStateProvider.Invalidate();
 
@@ -96,18 +101,21 @@ namespace AutoccultistNS.Actor.Actions
                 }
 
                 GameStateProvider.Invalidate();
+
+                await Task.Delay(postDelayDuration, cancellationToken);
             }
             else
             {
-                if (!GameAPI.TrySlotCard(sphere, stack))
+                // Even though we passed CanAcceptToken above, we should be gentle and re-try.
+                if (!sphere.TryAcceptToken(stack.Token, new Context(Context.ActionSource.DoubleClickSend)))
                 {
-                    throw new ActionFailureException(this, $"Card was not accepted by the slot {this.SlotId} in situation {this.SituationId}.");
+                    throw new ActionFailureException(this, $"Slot {this.SlotId} on situation {this.SituationId} cannot accept card {card.ElementId}.");
                 }
 
                 GameStateProvider.Invalidate();
             }
 
-            return ActionResult.Completed;
+            return true;
         }
     }
 }

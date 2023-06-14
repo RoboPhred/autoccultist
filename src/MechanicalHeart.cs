@@ -1,6 +1,8 @@
 namespace AutoccultistNS
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Update manager for all Autoccultist mechanisms.
@@ -20,6 +22,7 @@ namespace AutoccultistNS
         public static event EventHandler<EventArgs> OnBeat;
 
         public static event EventHandler<EventArgs> OnStart;
+
         public static event EventHandler<EventArgs> OnStop;
 
         /// <summary>
@@ -74,6 +77,42 @@ namespace AutoccultistNS
         {
             Stop();
             TriggerMechanicalBeat();
+        }
+
+        public static async Task AwaitStart(CancellationToken cancellationToken)
+        {
+            await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnStart += h, h => OnStart -= h, cancellationToken);
+        }
+
+        public static async Task AwaitBeat(CancellationToken cancellationToken, TimeSpan? delay = null)
+        {
+            if (!delay.HasValue)
+            {
+                // No delay specified, wait for the next beat.
+                await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnBeat += h, h => OnBeat -= h, cancellationToken);
+                return;
+            }
+
+            if (delay == TimeSpan.Zero)
+            {
+                if (!IsRunning)
+                {
+                    // Wait for a step, or for run
+                    // FIXME: We will leak OnStart.AwaitEvent handlers here... Need to make a WhenAny that cancells the remainders.
+                    await Task.WhenAny(AwaitBeat(cancellationToken), AwaitStart(cancellationToken));
+                    return;
+                }
+
+                // Special case: caller wanted to wait no time at all, so let it continue.
+                return;
+            }
+
+            // Wait out the delay, then wait for the next beat
+            NoonUtility.LogWarning($"Waiting delay {delay}");
+            await Task.Delay(delay.Value, cancellationToken);
+            NoonUtility.LogWarning($"Delay done, waiting OnBeat");
+            await AwaitBeat(cancellationToken);
+            NoonUtility.LogWarning($"OnBeat done");
         }
 
         /// <summary>

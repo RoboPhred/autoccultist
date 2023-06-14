@@ -1,7 +1,6 @@
 namespace AutoccultistNS.Brain
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -119,7 +118,7 @@ namespace AutoccultistNS.Brain
                 case StateEnum.RequiringExecution:
                     this.operationState = OperationState.Starting;
                     BrainEventSink.OnOperationStarted(this.operation);
-                    this.RunCoroutine(this.StartOperationCoroutine(), nameof(this.StartOperationCoroutine));
+                    this.RunCoroutine(this.StartOperationCoroutine, nameof(this.StartOperationCoroutine));
                     break;
                 case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
@@ -205,7 +204,7 @@ namespace AutoccultistNS.Brain
                 {
                     Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
                     this.operationState = OperationState.ChoosingPortalCard;
-                    this.RunCoroutine(this.ChooseMansusCoroutine(recipeSolution.MansusChoice), nameof(this.ChooseMansusCoroutine));
+                    this.RunCoroutine(token => this.ChooseMansusCoroutine(recipeSolution.MansusChoice, token), nameof(this.ChooseMansusCoroutine));
                     return;
                 }
                 else
@@ -215,7 +214,7 @@ namespace AutoccultistNS.Brain
             }
 
             this.operationState = OperationState.Completing;
-            this.RunCoroutine(this.CompleteOperationCoroutine(), nameof(this.CompleteOperationCoroutine));
+            this.RunCoroutine(this.CompleteOperationCoroutine, nameof(this.CompleteOperationCoroutine));
         }
 
         private void UpdateOngoing()
@@ -290,10 +289,10 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            this.RunCoroutine(this.ContinueSituationCoroutine(recipeSolution), nameof(this.ContinueSituationCoroutine));
+            this.RunCoroutine(token => this.ContinueSituationCoroutine(recipeSolution, token), nameof(this.ContinueSituationCoroutine));
         }
 
-        private IEnumerable<IAutoccultistAction> StartOperationCoroutine()
+        private async Task StartOperationCoroutine(CancellationToken cancellationToken)
         {
             var recipeSolution = this.operation.StartingRecipe;
 
@@ -302,7 +301,7 @@ namespace AutoccultistNS.Brain
                 throw new OperationFailedException($"Error in operation {this.operation.Name}: No starting recipe defined.");
             }
 
-            yield return new ExecuteRecipeAction(this.SituationId, recipeSolution, $"{this.operation.Name} => startingRecipe", true);
+            await new ExecuteRecipeAction(this.SituationId, recipeSolution, $"{this.operation.Name} => startingRecipe", true).ExecuteAndWait(cancellationToken);
 
             var stateOnStarted = this.GetSituationState();
             this.ongoingRecipe = stateOnStarted.CurrentRecipe;
@@ -310,9 +309,9 @@ namespace AutoccultistNS.Brain
 
             if (recipeSolution.EndOperation)
             {
-                yield return new CloseSituationAction(this.SituationId);
+                await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
                 this.operationState = OperationState.Orphaning;
-                yield break;
+                return;
             }
 
             // Mark us as ongoing now that we started the recipe.
@@ -323,15 +322,19 @@ namespace AutoccultistNS.Brain
             var followupRecipeSolution = this.operation.GetCurrentRecipeSolution(situationState);
             if (followupRecipeSolution != null)
             {
-                yield return new ExecuteRecipeAction(this.SituationId, followupRecipeSolution, $"{this.operation.Name} => {situationState.CurrentRecipe}");
+                await new ExecuteRecipeAction(this.SituationId, followupRecipeSolution, $"{this.operation.Name} => {situationState.CurrentRecipe}").Execute(cancellationToken);
 
+                // Note: The above might wait between starting the recipe and closing the window, meaning this might be a bit off.
+                // Really short recipes might trip this up.
                 var stateOnFollowup = this.GetSituationState();
                 this.ongoingRecipe = stateOnFollowup.CurrentRecipe;
                 this.ongoingRecipeTimeRemaining = stateOnFollowup.RecipeTimeRemaining ?? 0;
+
+                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
             }
             else
             {
-                yield return new CloseSituationAction(this.SituationId);
+                await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
             }
 
             if (followupRecipeSolution?.EndOperation == true)
@@ -340,15 +343,14 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private IEnumerable<IAutoccultistAction> ContinueSituationCoroutine(IRecipeSolution recipe)
+        private async Task ContinueSituationCoroutine(IRecipeSolution recipe, CancellationToken cancellationToken)
         {
             var situationState = this.GetSituationState();
 
             var slots = situationState.RecipeSlots;
             if (slots.Count == 0)
             {
-                // Nothing to do.
-                yield break;
+                return;
             }
 
             if (slots.Any(x => x.Card != null))
@@ -356,7 +358,7 @@ namespace AutoccultistNS.Brain
                 throw new OperationFailedException($"Error in operation {this.operation.Name} recipe {situationState.CurrentRecipe}: Cannot continue operation as cards are already slotted.");
             }
 
-            yield return new ExecuteRecipeAction(this.SituationId, recipe, $"{this.operation.Name} => {situationState.CurrentRecipe}");
+            await new ExecuteRecipeAction(this.SituationId, recipe, $"{this.operation.Name} => {situationState.CurrentRecipe}").Execute(cancellationToken);
 
             if (recipe.EndOperation)
             {
@@ -364,37 +366,22 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private IEnumerable<IAutoccultistAction> ChooseMansusCoroutine(IMansusSolution solution)
+        private async Task ChooseMansusCoroutine(IMansusSolution solution, CancellationToken cancellationToken)
         {
-            yield return new ChooseMansusCardAction(solution);
+            await new ChooseMansusCardAction(solution).ExecuteAndWait(cancellationToken);
 
             // A mansus event always ends the situation.
             this.operationState = OperationState.Completing;
 
-            try
-            {
-                yield return new OpenSituationAction(this.SituationId);
-                yield return new EmptySituationAction(this.SituationId);
-                yield return new CloseSituationAction(this.SituationId);
-            }
-            finally
-            {
-                this.End();
-            }
+            await this.CompleteOperationCoroutine(cancellationToken);
         }
 
-        private IEnumerable<IAutoccultistAction> CompleteOperationCoroutine()
+        private async Task CompleteOperationCoroutine(CancellationToken cancellationToken)
         {
-            try
-            {
-                yield return new OpenSituationAction(this.SituationId);
-                yield return new EmptySituationAction(this.SituationId);
-                yield return new CloseSituationAction(this.SituationId);
-            }
-            finally
-            {
-                this.End();
-            }
+            await new OpenSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+            await new EmptySituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+            await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
+            this.End();
         }
 
         private SlotCardAction GetSlotActionForRecipeSlotSpec(string specId, IRecipeSolution recipe)
@@ -407,12 +394,12 @@ namespace AutoccultistNS.Brain
             return new SlotCardAction(this.SituationId, specId, cardChoice);
         }
 
-        private async void RunCoroutine(IEnumerable<IAutoccultistAction> coroutine, string coroutineName)
+        private async void RunCoroutine(Func<CancellationToken, Task> coroutine, string coroutineName)
         {
             await this.AwaitCoroutine(coroutine, coroutineName);
         }
 
-        private async Task AwaitCoroutine(IEnumerable<IAutoccultistAction> coroutine, string coroutineName)
+        private async Task AwaitCoroutine(Func<CancellationToken, Task> coroutine, string coroutineName)
         {
             if (this.currentCoroutineName != null)
             {
@@ -423,7 +410,20 @@ namespace AutoccultistNS.Brain
             {
                 this.currentCoroutineName = coroutineName;
                 this.cancelCurrentTask = new CancellationTokenSource();
-                this.currentCoroutine = AutoccultistActor.PerformActions(new RecoverableActionEnumerable(coroutine, this.OnErrorCoroutine), this.cancelCurrentTask.Token);
+
+                this.currentCoroutine = AutoccultistActor.Perform(
+                    async (innerToken) =>
+                    {
+                        try
+                        {
+                            await coroutine(innerToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            await this.OnErrorCoroutine(ex, innerToken);
+                        }
+                    }, this.cancelCurrentTask.Token);
+
                 await this.currentCoroutine;
             }
             catch (Exception ex)
@@ -439,21 +439,31 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private IEnumerable<IAutoccultistAction> OnErrorCoroutine(Exception ex, RecoverableActionEnumerable.ActionErrorSource source)
+        private async Task OnErrorCoroutine(Exception ex, CancellationToken cancellationToken)
         {
-            Autoccultist.Instance.LogWarn($"Operation {this.operation.Name} failed in {source}: {ex.Message}");
+            Autoccultist.Instance.LogWarn($"Operation {this.operation.Name} failed: {ex.Message}");
             Autoccultist.Instance.LogWarn(ex.StackTrace);
 
-            var situation = this.GetSituationState();
-            if (situation.State == StateEnum.Unstarted || situation.State == StateEnum.RequiringExecution || situation.State == StateEnum.Complete)
+            try
             {
-                yield return new OpenSituationAction(this.SituationId);
-                yield return new EmptySituationAction(this.SituationId);
-                yield return new CloseSituationAction(this.SituationId);
+                var situation = this.GetSituationState();
+                if (situation.State == StateEnum.Unstarted || situation.State == StateEnum.RequiringExecution || situation.State == StateEnum.Complete)
+                {
+                    await new OpenSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+                    await new EmptySituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+                    await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
+                }
             }
-
-            // This will kill our cancellation token, which is fine as this is the last step of the enumerator.
-            this.Abort();
+            catch (Exception ex2)
+            {
+                Autoccultist.Instance.LogWarn($"Failed to clean up situation {this.SituationId} after operation {this.operation.Name} failed: {ex2.Message}");
+                Autoccultist.Instance.LogWarn(ex2.StackTrace);
+            }
+            finally
+            {
+                // This will kill our cancellation token, which is fine as this is the last step of the enumerator.
+                this.Abort();
+            }
         }
 
         private void End(bool aborted = false)

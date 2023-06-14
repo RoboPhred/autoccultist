@@ -25,21 +25,21 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override ActionResult OnExecute()
+        protected override bool OnExecute()
         {
             if (GameAPI.IsInMansus)
             {
-                return ActionResult.NoOp;
+                return false;
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
             if (situation == null || !situation.IsOpen)
             {
-                return ActionResult.NoOp;
+                return false;
             }
 
             situation.Close();
-            return ActionResult.Completed;
+            return true;
         }
     }
 }

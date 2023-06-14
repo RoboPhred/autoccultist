@@ -4,20 +4,20 @@ namespace AutoccultistNS.Tasks
     using System.Threading;
     using System.Threading.Tasks;
 
-    public abstract class HeartbeatTask<T> : IDisposable
+    public abstract class GlobalUpdateTask<T> : IDisposable
     {
         private readonly TaskCompletionSource<T> taskCompletionSource = new();
         private readonly CancellationToken cancellationToken;
 
         private bool isDisposed = false;
 
-        protected HeartbeatTask(CancellationToken cancellationToken)
+        protected GlobalUpdateTask(CancellationToken cancellationToken)
         {
             this.cancellationToken = cancellationToken;
-            MechanicalHeart.OnBeat += this.OnBeat;
+            Autoccultist.GlobalUpdate += this.OnUpdate;
         }
 
-        ~HeartbeatTask()
+        ~GlobalUpdateTask()
         {
             this.Dispose();
         }
@@ -37,7 +37,7 @@ namespace AutoccultistNS.Tasks
 
             this.taskCompletionSource.TrySetCanceled();
 
-            MechanicalHeart.OnBeat -= this.OnBeat;
+            Autoccultist.GlobalUpdate -= this.OnUpdate;
         }
 
         protected abstract void Update();
@@ -70,11 +70,11 @@ namespace AutoccultistNS.Tasks
         {
             if (this.isDisposed)
             {
-                throw new ObjectDisposedException(nameof(HeartbeatTask<T>));
+                throw new ObjectDisposedException(nameof(GlobalUpdateTask<T>));
             }
         }
 
-        private void OnBeat(object sender, EventArgs e)
+        private void OnUpdate(object sender, EventArgs e)
         {
             if (this.cancellationToken.IsCancellationRequested)
             {

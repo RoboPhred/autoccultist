@@ -3,7 +3,7 @@ namespace AutoccultistNS.Tasks
     using System;
     using System.Threading;
 
-    public class AwaitConditionTask : HeartbeatTask<bool>
+    public class AwaitConditionTask : GlobalUpdateTask<bool>
     {
         private readonly Func<bool> condition;
 

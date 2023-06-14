@@ -8,9 +8,9 @@ namespace AutoccultistNS.Actor.Actions
     {
         private bool executed = false;
 
-        public Task<ActionResult> Execute(CancellationToken cancellationToken)
+        public Task<bool> Execute(CancellationToken cancellationToken)
         {
-            var source = new TaskCompletionSource<ActionResult>();
+            var source = new TaskCompletionSource<bool>();
 
             if (this.executed)
             {
@@ -31,6 +31,6 @@ namespace AutoccultistNS.Actor.Actions
             return source.Task;
         }
 
-        protected abstract ActionResult OnExecute();
+        protected abstract bool OnExecute();
     }
 }

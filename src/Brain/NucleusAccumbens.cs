@@ -223,7 +223,6 @@ namespace AutoccultistNS.Brain
             CheckImpulses();
         }
 
-
         private static bool IsSituationAvailable(string situationId)
         {
             if (SituationOrchestrator.CurrentOrchestrations.Keys.Contains(situationId))

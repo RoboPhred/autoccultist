@@ -13,14 +13,6 @@ namespace AutoccultistNS.Actor.Actions
 
     public class ExecuteRecipeAction : ActionBase
     {
-        public string SituationId { get; }
-
-        public string RecipeName { get; }
-
-        public IRecipeSolution RecipeSolution { get; }
-
-        public bool LeaveSituationOpen { get; }
-
         public ExecuteRecipeAction(string situationId, IRecipeSolution recipeSolution, string recipeName, bool leaveOpen = false)
         {
             this.SituationId = situationId;
@@ -29,12 +21,20 @@ namespace AutoccultistNS.Actor.Actions
             this.LeaveSituationOpen = leaveOpen;
         }
 
+        public string SituationId { get; }
+
+        public string RecipeName { get; }
+
+        public IRecipeSolution RecipeSolution { get; }
+
+        public bool LeaveSituationOpen { get; }
+
         public override string ToString()
         {
             return $"ExecuteRecipeAction(RecipeName = {this.RecipeName}, SituationId = {this.SituationId})";
         }
 
-        protected override async Task<ActionResult> OnExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> OnExecute(CancellationToken cancellationToken)
         {
             if (GameAPI.IsInMansus)
             {
@@ -55,7 +55,7 @@ namespace AutoccultistNS.Actor.Actions
 
             Autoccultist.Instance.LogTrace($"Recipe {this.RecipeName} started with slotted cards {string.Join(", ", filledCardsLog)}.");
 
-            return ActionResult.Completed;
+            return true;
         }
 
         private async Task PrepareSituation(CancellationToken cancellationToken)
@@ -65,7 +65,7 @@ namespace AutoccultistNS.Actor.Actions
             if (!situation.IsOpen)
             {
                 situation.OpenAt(situation.Token.Location);
-                await Task.Delay(AutoccultistSettings.ActionDelay, cancellationToken);
+                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
             }
 
             if (situation.State.Identifier == StateEnum.Unstarted)
@@ -73,13 +73,13 @@ namespace AutoccultistNS.Actor.Actions
                 if (situation.GetSpheresByCategory(SphereCategory.Threshold).Any(s => s.GetTokens().Any()))
                 {
                     situation.DumpUnstartedBusiness();
-                    await Task.Delay(AutoccultistSettings.ActionDelay, cancellationToken);
+                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                 }
             }
             else if (situation.State.Identifier == StateEnum.Complete)
             {
                 situation.Conclude();
-                await Task.Delay(AutoccultistSettings.ActionDelay, cancellationToken);
+                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
             }
         }
 
@@ -164,6 +164,10 @@ namespace AutoccultistNS.Actor.Actions
                 GameStateProvider.Invalidate();
             }
 
+            // Hold us for the next beat, if we are not running live.
+            // ActionDelay either would have been waited due to the itinerary, or it will be zero.
+            await MechanicalHeart.AwaitBeat(cancellationToken, TimeSpan.Zero);
+
             return true;
         }
 
@@ -185,7 +189,7 @@ namespace AutoccultistNS.Actor.Actions
 
                 if (doClose)
                 {
-                    await Task.Delay(AutoccultistSettings.ActionDelay, cancellationToken);
+                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                 }
             }
 

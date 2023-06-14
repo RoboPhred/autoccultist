@@ -42,6 +42,8 @@ public class Autoccultist : MonoBehaviour
         }
     }
 
+    public static event EventHandler GlobalUpdate;
+
     public static void Initialise()
     {
         new GameObject().AddComponent<Autoccultist>();
@@ -146,6 +148,7 @@ public class Autoccultist : MonoBehaviour
         GameStateProvider.Invalidate();
         MechanicalHeart.Update();
         this.HandleHotkeys();
+        GlobalUpdate?.Invoke(this, EventArgs.Empty);
     }
 
     public void StartNewGame(IArc arc)

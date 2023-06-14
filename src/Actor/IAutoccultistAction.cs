@@ -11,8 +11,8 @@ namespace AutoccultistNS.Actor
         /// <summary>
         /// Execute the action.
         /// </summary>
-        /// <param name="cancellationToken">An optional CancellationToken used to cancel the action execution.</param>
-        /// <returns>The result of the action.</returns>
-        Task<ActionResult> Execute(CancellationToken cancellationToken);
+        /// <param name="cancellationToken">A CancellationToken used to cancel the action execution.</param>
+        /// <returns>A boolean indicating whether the action performed any activity or not.</returns>
+        Task<bool> Execute(CancellationToken cancellationToken);
     }
 }

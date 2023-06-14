@@ -25,7 +25,7 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override ActionResult OnExecute()
+        protected override bool OnExecute()
         {
             if (GameAPI.IsInMansus)
             {
@@ -40,11 +40,11 @@ namespace AutoccultistNS.Actor.Actions
 
             if (situation.IsOpen)
             {
-                return ActionResult.NoOp;
+                return false;
             }
 
             situation.OpenAt(situation.Token.Location);
-            return ActionResult.Completed;
+            return true;
         }
     }
 }

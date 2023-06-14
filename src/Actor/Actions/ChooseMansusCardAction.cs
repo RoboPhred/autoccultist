@@ -30,7 +30,7 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override async Task<ActionResult> OnExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> OnExecute(CancellationToken cancellationToken)
         {
             if (!GameAPI.IsInMansus)
             {
@@ -43,9 +43,7 @@ namespace AutoccultistNS.Actor.Actions
 
             await this.AcceptCard(cancellationToken);
 
-            GameStateProvider.Invalidate();
-
-            return ActionResult.Completed;
+            return true;
         }
 
         private async Task AwaitMansusReady(CancellationToken cancellationToken)

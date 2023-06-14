@@ -29,7 +29,7 @@ namespace AutoccultistNS.Actor.Actions
         }
 
         /// <inheritdoc/>
-        protected override ActionResult OnExecute()
+        protected override bool OnExecute()
         {
             if (GameAPI.IsInMansus)
             {
@@ -49,7 +49,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             GameStateProvider.Invalidate();
-            return ActionResult.Completed;
+            return true;
         }
     }
 }
