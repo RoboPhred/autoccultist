@@ -101,6 +101,12 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Failed to empty the mansus.");
             }
 
+            // Seems we get a lvl 3 unpause when the mansus completes.  Let's reassert the pause
+            // so that the actor keeps control.
+            GameAPI.ReassertPause();
+
+            // Unpause from the user's perspective, so the game will resume once the actor
+            // is done with its actions.
             GameAPI.UserUnpause();
         }
     }

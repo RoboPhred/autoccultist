@@ -141,14 +141,15 @@ namespace AutoccultistNS
             {
                 if (pauseDepth > 0)
                 {
-                    Watchman.Get<LocalNexus>().ForcePauseGame(true);
+                    Watchman.Get<LocalNexus>().ForcePauseGame(false);
                 }
             };
             MechanicalHeart.OnStop += (_, __) =>
             {
                 if (pauseDepth > 0)
                 {
-                    Watchman.Get<LocalNexus>().UnForcePauseGame(true);
+                    Watchman.Get<LocalNexus>().PauseGame(false);
+                    Watchman.Get<LocalNexus>().UnForcePauseGame(false);
                 }
             };
         }
@@ -397,6 +398,18 @@ namespace AutoccultistNS
         public static void UserUnpause()
         {
             Watchman.Get<LocalNexus>().UnPauseGame(true);
+        }
+
+        /// <summary>
+        /// Re-applies the current GameAPI pause state into the game.
+        /// </summary>
+        public static void ReassertPause()
+        {
+            if (pauseDepth > 0)
+            {
+                // FIXME: Use a higher level pause depth (probably 4) so we don't have to fight the mansus for control.
+                Watchman.Get<LocalNexus>().ForcePauseGame(false);
+            }
         }
 
         /// <summary>

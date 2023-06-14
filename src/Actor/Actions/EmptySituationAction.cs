@@ -93,6 +93,11 @@ namespace AutoccultistNS.Actor.Actions
                     throw new ActionFailureException(this, $"Timed out waiting for output cards to travel from situation {this.SituationId} to the tabletop.");
                 }
 
+                // Note: It takes a while for the cards to animate onto the table.
+                // It would be nice if we could include that time in our next event time, so we don't wait so long to close the situation.
+                // or even better, close it after a heartbeat then wait for the cards to finish moving.
+                // We might want to combine this with CloseSituationAction into a full ConcludeSituationAction
+
                 Autoccultist.Instance.LogTrace($"Situation {this.SituationId} concluded with cards {string.Join(", ", debugLog)}.");
             }
             else
