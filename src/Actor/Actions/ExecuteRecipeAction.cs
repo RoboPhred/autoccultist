@@ -99,10 +99,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             var remainingSlots = situation.GetSpheresByCategory(SphereCategory.Threshold).Where(x => x.Id != firstSlot.Id).ToArray();
-            foreach (var slot in remainingSlots)
-            {
-                await this.FillSlot(slot, cancellationToken);
-            }
+            await Task.WhenAll(remainingSlots.Select(x => this.FillSlot(x, cancellationToken)));
         }
 
         private async Task<bool> FillSlot(Sphere slotSphere, CancellationToken cancellationToken)

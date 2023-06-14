@@ -68,6 +68,10 @@ namespace AutoccultistNS.Actor.Actions
                     foreach (var token in shroudedTokens)
                     {
                         token.Unshroud();
+                    }
+
+                    if (shroudedTokens.Count > 0)
+                    {
                         await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                     }
                 }
