@@ -1,12 +1,7 @@
 name: Meet acquaintances and patrons
 completedWhen:
   allOf:
-    # Patrons
-    - elementId: aladimready
-    - elementId: bechetready
-    - elementId: janningsready
-    - elementId: poppyready
-    - elementId: sulochana
+    - !import /conditions/has-all-patrons.yml
     # Stop if we have all followers, but its possible for followers to die, so we also need to check if the deck is exhausted.
     - anyOf:
         - !import /conditions/has-all-followers.yml
