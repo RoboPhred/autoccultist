@@ -176,10 +176,11 @@ namespace AutoccultistNS.Brain
                 //  Where multiple impulses try for the same verb, invoke the highest priority
                 var operations =
                     from goal in ActiveGoals
-                    from impulse in goal.Impulses
+                    from set in goal.Impulses.Select((impulse, index) => new { Impulse = impulse, Index = index })
+                    let impulse = set.Impulse
                     where IsSituationAvailable(impulse.Operation.Situation)
                     where impulse.CanExecute(GameStateProvider.Current)
-                    orderby impulse.Priority descending
+                    orderby impulse.Priority descending, set.Index ascending
                     group impulse.Operation by impulse.Operation.Situation into situationGroup
                     select situationGroup.FirstOrDefault();
 
@@ -198,7 +199,6 @@ namespace AutoccultistNS.Brain
                     }
 
                     var orchestration = SituationOrchestrator.StartOperation(operation);
-                    orchestration.Completed += HandleOperationCompleted;
                     await orchestration.AwaitCurrentTask();
                 }
                 else
@@ -212,15 +212,6 @@ namespace AutoccultistNS.Brain
             {
                 isCheckingImpulses = false;
             }
-        }
-
-        private static void HandleOperationCompleted(object sender, EventArgs e)
-        {
-            var orchestration = (ISituationOrchestration)sender;
-            orchestration.Completed -= HandleOperationCompleted;
-            // Immediately re-check impulses in case this operation wants to begin again.
-            // This avoids a gap of unpaused-ness between the op ending and the next heartbeat.
-            CheckImpulses();
         }
 
         private static bool IsSituationAvailable(string situationId)

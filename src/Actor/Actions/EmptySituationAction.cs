@@ -5,6 +5,7 @@ namespace AutoccultistNS.Actor.Actions
     using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
     using SecretHistories.UI;
 
@@ -62,21 +63,35 @@ namespace AutoccultistNS.Actor.Actions
                                from token in spheres.GetTokens()
                                select token.PayloadEntityId;
 
+                var outputTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).ToList();
+
                 if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
                 {
-                    var shroudedTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).Where(x => x.Shrouded).ToList();
+                    var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
                     foreach (var token in shroudedTokens)
                     {
                         token.Unshroud();
                     }
 
-                    if (shroudedTokens.Count > 0)
+                    if (shroudedTokens.Length > 0)
                     {
                         await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                     }
                 }
 
                 situation.Conclude();
+
+                // Wait for the tokens to hit the table.
+                // We do not want to prematurely let our operation end before the tokens are on the table, as this can
+                // make lower priority impulses mistakenly trigger as the higher priority ops think we do not have the cards we need.
+                // Would be nice if there was a way to subscribe to the itinerary, but whatever...
+                var tabletop = GameAPI.TabletopSphere;
+                // Some cards might disappear during this process, so only compare the ones not defunct.
+                var awaitSphereFilled = new AwaitConditionTask(() => tabletop.GetTokens().ContainsAll(outputTokens.Where(x => !x.Defunct)), cancellationToken);
+                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
+                {
+                    throw new ActionFailureException(this, $"Timed out waiting for output cards to travel from situation {this.SituationId} to the tabletop.");
+                }
 
                 Autoccultist.Instance.LogTrace($"Situation {this.SituationId} concluded with cards {string.Join(", ", debugLog)}.");
             }
