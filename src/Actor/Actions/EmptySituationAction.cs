@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -61,11 +62,14 @@ namespace AutoccultistNS.Actor.Actions
                                from token in spheres.GetTokens()
                                select token.PayloadEntityId;
 
-                var shroudedTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).Where(x => x.Shrouded).ToList();
-                foreach (var token in shroudedTokens)
+                if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
                 {
-                    token.Unshroud();
-                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+                    var shroudedTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).Where(x => x.Shrouded).ToList();
+                    foreach (var token in shroudedTokens)
+                    {
+                        token.Unshroud();
+                        await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+                    }
                 }
 
                 situation.Conclude();
