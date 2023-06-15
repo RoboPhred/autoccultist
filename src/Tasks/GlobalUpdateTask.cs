@@ -11,8 +11,6 @@ namespace AutoccultistNS.Tasks
 
         private bool isDisposed = false;
 
-        protected bool IsDisposed => this.isDisposed;
-
         protected GlobalUpdateTask(CancellationToken cancellationToken)
         {
             this.cancellationToken = cancellationToken;
@@ -25,6 +23,8 @@ namespace AutoccultistNS.Tasks
         }
 
         public Task<T> Task => this.taskCompletionSource.Task;
+
+        protected bool IsDisposed => this.isDisposed;
 
         public void Dispose()
         {
@@ -44,7 +44,9 @@ namespace AutoccultistNS.Tasks
             this.OnDisposed();
         }
 
-        protected virtual void OnDisposed() { }
+        protected virtual void OnDisposed()
+        {
+        }
 
         protected abstract void Update();
 

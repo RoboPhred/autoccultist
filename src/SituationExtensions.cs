@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using SecretHistories.Entities;
-using SecretHistories.Enums;
-using SecretHistories.Spheres;
-
 namespace AutoccultistNS
 {
+    using System.Collections.Generic;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.Spheres;
+
     public static class SituationExtensions
     {
         public static IReadOnlyList<Sphere> GetCurrentThresholdSpheres(this Situation situation)
