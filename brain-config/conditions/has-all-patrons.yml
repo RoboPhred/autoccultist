@@ -5,6 +5,7 @@ allOf:
       - elementId: janningsaway
   - anyOf:
       - elementId: poppy
+      - elementId: poppyready
       - elementId: poppycommission
       - elementId: poppycommissionready
       - elementId: poppyaway
