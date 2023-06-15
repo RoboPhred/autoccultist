@@ -378,9 +378,7 @@ namespace AutoccultistNS.Brain
 
         private async Task CompleteOperationCoroutine(CancellationToken cancellationToken)
         {
-            await new OpenSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
-            await new EmptySituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
-            await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
+            await new ConcludeSituationAction(this.SituationId).Execute(cancellationToken);
             this.End();
         }
 
@@ -453,9 +451,7 @@ namespace AutoccultistNS.Brain
                 var situation = this.GetSituationState();
                 if (situation.State == StateEnum.Unstarted || situation.State == StateEnum.RequiringExecution || situation.State == StateEnum.Complete)
                 {
-                    await new OpenSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
-                    await new EmptySituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
-                    await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
+                    await new ConcludeSituationAction(this.SituationId).Execute(cancellationToken);
                 }
             }
             catch (Exception ex2)
