@@ -366,30 +366,21 @@ namespace AutoccultistNS
             }
         }
 
-        public static bool EmptyMansusEgress()
+        public static Sphere GetMansusEgressSphere()
         {
             var ingress = GetActiveIngress();
             if (ingress == null)
             {
-                Autoccultist.Instance.LogWarn("EmptyMansusEgress: Could not find active ingress.");
-                return false;
+                return null;
             }
 
             var output = ingress.GetEgressOutputSphere();
             if (output == null)
             {
-                Autoccultist.Instance.LogWarn($"EmptyMansusEgress: Could not find output sphere for ingress {ingress.Id}");
-                return false;
+                return null;
             }
 
-            if (output.Tokens.Count == 0)
-            {
-                Autoccultist.Instance.LogWarn($"EmptyMansusEgress: No tokens in output sphere {output.Id}");
-                return false;
-            }
-
-            output.EvictAllTokens(new Context(Context.ActionSource.PlayerDumpAll));
-            return true;
+            return output;
         }
 
         /// <summary>

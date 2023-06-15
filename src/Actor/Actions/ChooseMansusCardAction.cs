@@ -1,5 +1,7 @@
 namespace AutoccultistNS.Actor.Actions
 {
+    using System;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.Brain;
@@ -96,9 +98,27 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "ChooseMansusCardAction: Timed out waiting for ingress to appear.");
             }
 
-            if (!GameAPI.EmptyMansusEgress())
+            var sphere = GameAPI.GetMansusEgressSphere();
+
+            if (sphere == null)
             {
-                throw new ActionFailureException(this, "Failed to empty the mansus.");
+                throw new ActionFailureException(this, "Failed to find mansus egress sphere.");
+            }
+
+            if (sphere.Tokens.Count > 0 && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+            {
+                var shroudedTokens = sphere.Tokens.Where(x => x.Shrouded).ToArray();
+                foreach (var token in shroudedTokens)
+                {
+                    token.Unshroud();
+                }
+
+                if (shroudedTokens.Length > 0)
+                {
+                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+                }
+
+                sphere.EvictAllTokens(new Context(Context.ActionSource.PlayerDumpAll));
             }
 
             // Seems we get a lvl 3 unpause when the mansus completes.  Let's reassert the pause
