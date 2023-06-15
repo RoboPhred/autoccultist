@@ -1,0 +1,17 @@
+name: Begin the Intro
+requirements:
+  anyOf:
+    - elementId: legacyapostlegrailjob
+completedWhen:
+  noneOf:
+    - elementId: legacyapostlegrailjob
+
+impulses:
+  - name: Work the intro job
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacyapostlegrailjob
