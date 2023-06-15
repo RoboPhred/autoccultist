@@ -74,7 +74,7 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"No matching card was found for situation {this.SituationId} slot {this.SlotId}.");
             }
 
-            var sphere = situation.GetSpheresByCategory(SphereCategory.Threshold).FirstOrDefault(x => x.GoverningSphereSpec.Id == this.SlotId);
+            var sphere = situation.GetCurrentThresholdSpheres().FirstOrDefault(x => x.GoverningSphereSpec.Id == this.SlotId);
             if (sphere == null)
             {
                 throw new ActionFailureException(this, $"Situation {this.SituationId} has no matching slot {this.SlotId}.");

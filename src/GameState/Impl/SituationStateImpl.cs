@@ -56,7 +56,7 @@ namespace AutoccultistNS.GameState.Impl
             }
 
             var slots =
-                from sphere in situation.GetSpheresByCategory(SphereCategory.Threshold)
+                from sphere in situation.GetCurrentThresholdSpheres()
                 select new SituationSlotImpl(sphere);
 
             // We can create new ICardState states here, as IGameState only creates states for tabled cards, of which these are not.

@@ -461,7 +461,7 @@ namespace AutoccultistNS.Brain
             }
             finally
             {
-                // This will kill our cancellation token, which is fine as this is the last step of the enumerator.
+                // This will kill our cancellation token, which is fine as this is the last step.
                 this.Abort();
             }
         }

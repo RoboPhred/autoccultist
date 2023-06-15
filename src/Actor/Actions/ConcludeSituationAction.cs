@@ -50,7 +50,7 @@ namespace AutoccultistNS.Actor.Actions
 
             if (situation.State.Identifier == StateEnum.Unstarted || situation.State.Identifier == StateEnum.RequiringExecution)
             {
-                var thresholdTokens = situation.GetSpheresByCategory(SphereCategory.Threshold).SelectMany(s => s.GetTokens()).ToArray();
+                var thresholdTokens = situation.GetCurrentThresholdSpheres().SelectMany(s => s.GetTokens()).ToArray();
                 if (thresholdTokens.Length == 0)
                 {
                     return false;
@@ -62,14 +62,9 @@ namespace AutoccultistNS.Actor.Actions
                     await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                 }
 
-                var tabletop = GameAPI.TabletopSphere;
-
-                // Wait for the tokens to hit the table.
-                // We do not want to prematurely let our operation end before the tokens are on the table, as this can
-                // make lower priority impulses mistakenly trigger as the higher priority ops think we do not have the cards we need.
-                // Would be nice if there was a way to subscribe to the itinerary, but whatever...
-                // Some cards might disappear during this process, so only compare the ones not defunct.
-                var awaitSphereFilled = new AwaitConditionTask(() => tabletop.GetTokens().ContainsAll(thresholdTokens.Where(x => !x.Defunct)), cancellationToken);
+                // Wait for the tokens to finish moving.
+                // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
+                var awaitSphereFilled = new AwaitConditionTask(() => thresholdTokens.TokensAreStable(), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for threshold cards to travel from situation {this.SituationId} to the tabletop.");
@@ -105,14 +100,9 @@ namespace AutoccultistNS.Actor.Actions
 
                 situation.Conclude();
 
-                var tabletop = GameAPI.TabletopSphere;
-
-                // Wait for the tokens to hit the table.
-                // We do not want to prematurely let our operation end before the tokens are on the table, as this can
-                // make lower priority impulses mistakenly trigger as the higher priority ops think we do not have the cards we need.
-                // Would be nice if there was a way to subscribe to the itinerary, but whatever...
-                // Some cards might disappear during this process, so only compare the ones not defunct.
-                var awaitSphereFilled = new AwaitConditionTask(() => tabletop.GetTokens().ContainsAll(outputTokens.Where(x => !x.Defunct)), cancellationToken);
+                // Wait for the tokens to finish moving.
+                // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
+                var awaitSphereFilled = new AwaitConditionTask(() => outputTokens.TokensAreStable(), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for output cards to travel from situation {this.SituationId} to the tabletop.");

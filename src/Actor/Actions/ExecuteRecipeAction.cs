@@ -45,7 +45,7 @@ namespace AutoccultistNS.Actor.Actions
 
             await this.FillSlots(cancellationToken);
 
-            var filledCardsLog = from sphere in this.GetSituation().GetSpheresByCategory(SphereCategory.Threshold)
+            var filledCardsLog = from sphere in this.GetSituation().GetCurrentThresholdSpheres()
                                  let id = sphere.GoverningSphereSpec.Id
                                  let token = sphere.GetTokens().FirstOrDefault()
                                  where token != null
@@ -70,7 +70,7 @@ namespace AutoccultistNS.Actor.Actions
 
             if (situation.State.Identifier == StateEnum.Unstarted)
             {
-                if (situation.GetSpheresByCategory(SphereCategory.Threshold).Any(s => s.GetTokens().Any()))
+                if (situation.GetCurrentThresholdSpheres().Any(s => s.GetTokens().Any()))
                 {
                     situation.DumpUnstartedBusiness();
                     await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
@@ -87,7 +87,7 @@ namespace AutoccultistNS.Actor.Actions
         {
             var situation = this.GetSituation();
 
-            var firstSlot = situation.GetSpheresByCategory(SphereCategory.Threshold).FirstOrDefault();
+            var firstSlot = situation.GetCurrentThresholdSpheres().FirstOrDefault();
             if (!firstSlot)
             {
                 throw new ActionFailureException(this, $"Situation {this.SituationId} has no slots.");
@@ -98,7 +98,7 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"Failed to fill first slot of recipe {this.RecipeName} in situation {this.SituationId}.");
             }
 
-            var remainingSlots = situation.GetSpheresByCategory(SphereCategory.Threshold).Where(x => x.Id != firstSlot.Id).ToArray();
+            var remainingSlots = situation.GetCurrentThresholdSpheres().Where(x => x.Id != firstSlot.Id).ToArray();
             foreach (var slot in remainingSlots)
             {
                 await this.FillSlot(slot, cancellationToken);

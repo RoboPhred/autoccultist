@@ -40,7 +40,7 @@ namespace AutoccultistNS
             sb.AppendLine("- stored aspects: " + storedAspects);
 
             sb.AppendLine("- slots:");
-            DumpSphereSpec(situation.GetSpheresByCategory(SphereCategory.Threshold), sb);
+            DumpSphereSpec(situation.GetCurrentThresholdSpheres(), sb);
 
             sb.AppendLine("- stored stacks");
             DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.SituationStorage), sb);
@@ -49,7 +49,7 @@ namespace AutoccultistNS
             DumpSphereContent(situation.GetSingleSphereByCategory(SphereCategory.Output), sb);
         }
 
-        private static void DumpSphereSpec(List<Sphere> spheres, StringBuilder sb)
+        private static void DumpSphereSpec(IEnumerable<Sphere> spheres, StringBuilder sb)
         {
             foreach (var sphere in spheres)
             {
