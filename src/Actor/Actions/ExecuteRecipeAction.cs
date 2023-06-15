@@ -45,15 +45,7 @@ namespace AutoccultistNS.Actor.Actions
 
             await this.FillSlots(cancellationToken);
 
-            var filledCardsLog = from sphere in this.GetSituation().GetCurrentThresholdSpheres()
-                                 let id = sphere.GoverningSphereSpec.Id
-                                 let token = sphere.GetTokens().FirstOrDefault()
-                                 where token != null
-                                 select $"{id} = {token.PayloadEntityId}";
-
             await this.FinalizeSituation(cancellationToken);
-
-            Autoccultist.Instance.LogTrace($"Recipe {this.RecipeName} started with slotted cards {string.Join(", ", filledCardsLog)}.");
 
             return true;
         }

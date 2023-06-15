@@ -2,6 +2,8 @@ namespace AutoccultistNS
 {
     using System.Collections.Generic;
     using System.Linq;
+    using SecretHistories.Spheres;
+    using SecretHistories.States;
     using SecretHistories.UI;
 
     public static class TokenExtensions
@@ -19,9 +21,13 @@ namespace AutoccultistNS
                 return true;
             }
 
-            // Is this a good option?  Tokens are sometimes in UnknownState, but not before the game does anything with them...
-            // This function is mainly used to confirm that a token is located somewhere sane and not traveling.
-            // We could check for the traveling states, or check to see if we are definitively in a sphere.
+            // Cards randomly end up in this state... hmmm
+            // I think its base game, but it might be Shelves auto-sort
+            if (token.CurrentState is UnknownState)
+            {
+                return token.Sphere is not EnRouteSphere;
+            }
+
             return token.CurrentState.Docked();
         }
     }

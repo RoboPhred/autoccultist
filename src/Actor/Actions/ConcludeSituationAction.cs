@@ -62,12 +62,14 @@ namespace AutoccultistNS.Actor.Actions
                     await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                 }
 
+                situation.DumpUnstartedBusiness();
+
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
                 var awaitSphereFilled = new AwaitConditionTask(() => thresholdTokens.TokensAreStable(), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
-                    throw new ActionFailureException(this, $"Timed out waiting for threshold cards to travel from situation {this.SituationId} to the tabletop.");
+                    throw new ActionFailureException(this, $"Timed out waiting for threshold cards to stabilize from the dumping of situation {this.SituationId}.");
                 }
             }
             else if (situation.State.Identifier == StateEnum.Complete)
@@ -77,10 +79,6 @@ namespace AutoccultistNS.Actor.Actions
                     situation.OpenAt(situation.Token.Location);
                     await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                 }
-
-                var debugLog = from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
-                               from token in spheres.GetTokens()
-                               select token.PayloadEntityId;
 
                 var outputTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).ToList();
 
@@ -105,18 +103,8 @@ namespace AutoccultistNS.Actor.Actions
                 var awaitSphereFilled = new AwaitConditionTask(() => outputTokens.TokensAreStable(), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
-                    throw new ActionFailureException(this, $"Timed out waiting for output cards to travel from situation {this.SituationId} to the tabletop.");
+                    throw new ActionFailureException(this, $"Timed out waiting for output cards to stabilize from the conclusion of situation {this.SituationId}.");
                 }
-
-                // Note: It takes a while for the cards to animate onto the table.
-                // It would be nice if we could include that time in our next event time, so we don't wait so long to close the situation.
-                // or even better, close it after a heartbeat then wait for the cards to finish moving.
-                // We might want to combine this with CloseSituationAction into a full ConcludeSituationAction
-
-                Autoccultist.Instance.LogTrace($"Situation {this.SituationId} concluded with cards {string.Join(", ", debugLog)}.");
-
-                // Wait on a heartbeat but dont use any delay, as we waited on the cards
-                await MechanicalHeart.AwaitBeat(cancellationToken, TimeSpan.Zero);
             }
             else
             {
@@ -126,10 +114,12 @@ namespace AutoccultistNS.Actor.Actions
             // Situation might go away when we Conclude
             if (!situation.Token.Defunct && situation.IsOpen)
             {
+                // Wait on a heartbeat but dont use any delay, as we waited on the cards
+                await MechanicalHeart.AwaitBeat(cancellationToken, TimeSpan.Zero);
+
                 situation.Close();
             }
 
-            GameStateProvider.Invalidate();
             return true;
         }
     }
