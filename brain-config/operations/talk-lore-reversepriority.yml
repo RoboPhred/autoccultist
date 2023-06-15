@@ -1,0 +1,15 @@
+name: Speak of esoteric matters
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      oneOf:
+        - aspects: { lore: 1, winter: 2 }
+        - aspects: { lore: 1, edge: 2 }
+        - aspects: { lore: 1, forge: 2 }
+        - aspects: { lore: 1, lantern: 2 }
+        - aspects: { lore: 1, moth: 2 }
+        - aspects: { lore: 1, grail: 2 }
+        - aspects: { lore: 1, heart: 2 }
+        - aspects: { lore: 1, knock: 2 }
+        - aspects: { lore: 1, secrethistories: 2 }
