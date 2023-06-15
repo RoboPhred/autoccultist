@@ -4,6 +4,7 @@ completedWhen:
   # However, there is ONE circumstance in which she might leave....
   anyOf:
     - elementId: sulochana
+    - elementId: marinette.enroute
     - elementId: marinette
     - elementId: apostlegrail.pillar4
 impulses:

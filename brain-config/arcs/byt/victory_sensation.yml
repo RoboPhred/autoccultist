@@ -67,6 +67,11 @@ motivations:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
       - !import /goals/consume-books-lore-waitmorland.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/followers/attract-grail-follower.yml
+      - !import /goals/followers/find-sulochana.yml
+      - !import /goals/cult/recruit-grail-lore-grail.yml
+      - !import /goals/cult/recruit-heart-lore-grail.yml
   - name: Find a Grail believer, meet Sulochana
     primaryGoals:
       - !import /goals/followers/attract-grail-follower.yml
@@ -92,21 +97,25 @@ motivations:
     supportingGoals:
       - !import /goals/funds/work-labor.yml
       - !import /goals/survive.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
   - name: Go on a date
     primaryGoals:
       - !import /goals/romance/gain-relationship-grail.yml
     supportingGoals:
       - !import /goals/glover/work-glover.yml
       - !import /goals/survive.yml
+      - !import /goals/consume-bookdealer.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
   - name: Finish Morlands
     primaryGoals:
       - !import /goals/consume-bookdealer.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
       - !import /goals/mansus/acquire-way-wood.yml
       - !import /goals/mansus/acquire-way-whitedoor.yml
   - name: Find STUMM!
@@ -119,6 +128,7 @@ motivations:
       - !import /goals/cult/recruit-away-influences.yml
       - !import /goals/mansus/acquire-way-wood.yml
       - !import /goals/mansus/acquire-way-whitedoor.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
   - name: Acquire the Wood and White Door
     primaryGoals:
       - !import /goals/mansus/acquire-way-wood.yml
@@ -128,6 +138,7 @@ motivations:
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
   - name: Raid the hospital
     primaryGoals:
       - !import /goals/vaults/st-agnes-hospital.yml
@@ -136,6 +147,7 @@ motivations:
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
   - name: Move into Morlands
     primaryGoals:
       - !import /goals/hq/move-hq-library.yml
@@ -143,6 +155,7 @@ motivations:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
       - !import /goals/cult/recruit-away-influences.yml
+      - !import /goals/consume-books-lore-waitmorland.yml
   - name: Read the books from St. Agnes
     primaryGoals:
       - !import /goals/consume-books-lore-waitmorland.yml
