@@ -23,6 +23,11 @@ namespace AutoccultistNS.Tasks
             }
         }
 
+        protected override void OnDisposed()
+        {
+            GameEventSource.GameEnded -= this.HandleGameEnded;
+        }
+
         private void HandleGameEnded(object sender, EventArgs e)
         {
             GameEventSource.GameEnded -= this.HandleGameEnded;

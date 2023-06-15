@@ -99,7 +99,10 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             var remainingSlots = situation.GetSpheresByCategory(SphereCategory.Threshold).Where(x => x.Id != firstSlot.Id).ToArray();
-            await Task.WhenAll(remainingSlots.Select(x => this.FillSlot(x, cancellationToken)));
+            foreach (var slot in remainingSlots)
+            {
+                await this.FillSlot(slot, cancellationToken);
+            }
         }
 
         private async Task<bool> FillSlot(Sphere slotSphere, CancellationToken cancellationToken)
@@ -138,7 +141,7 @@ namespace AutoccultistNS.Actor.Actions
                 var awaitSphereFilled = new AwaitConditionTask(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
                 if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
                 {
-                    throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.");
+                    throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.  Our token ended up in state {stack.Token.CurrentState} at sphere {stack.Token.Sphere.Id}.");
                 }
 
                 // Wait the full delay after slotting the card.
