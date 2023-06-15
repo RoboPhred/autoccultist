@@ -12,7 +12,6 @@ namespace AutoccultistNS
             // Note: Used to be situation.GetSpheresByCategory(SphereCategory.Threshold), but that seemingly returns an unstable order.
             // Chel says it should be otherwise, but bot is slotting things randomly.
             // Trying this instead at Chel's suggestion.
-
             if (situation.State.Identifier == StateEnum.Ongoing)
             {
                 return situation.GetDominion(SituationDominionEnum.RecipeThresholds).Spheres;

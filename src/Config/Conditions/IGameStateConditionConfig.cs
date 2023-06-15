@@ -9,7 +9,7 @@ namespace AutoccultistNS.Config.Conditions
     [DuckTypeCandidate(typeof(SituationCondition))]
     [DuckTypeCandidate(typeof(CardSetCondition))]
     [DuckTypeCandidate(typeof(CardExistsCondition))]
-    public interface IGameStateConditionConfig : IConfigObject, IGameStateCondition
+    public interface IGameStateConditionConfig : INamedConfigObject, IGameStateCondition
     {
     }
 }

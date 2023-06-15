@@ -14,7 +14,7 @@ namespace AutoccultistNS.Config.Conditions
     /// require either all to match, at least one to match, or none to match.
     /// </summary>
     [DuckTypeKeys(new[] { "allOf", "anyOf", "noneOf" })]
-    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible, IAfterYamlDeserialization
+    public class CompoundCondition : ConditionConfig, IYamlConvertible
     {
         /// <summary>
         /// A mode by which CompoundCondition resolves the relationship between its child conditions.
@@ -47,17 +47,13 @@ namespace AutoccultistNS.Config.Conditions
         /// </summary>
         public List<IGameStateConditionConfig> Requirements { get; set; } = new List<IGameStateConditionConfig>();
 
-        /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override string ToString()
         {
-            if (this.Requirements == null || this.Requirements.Count == 0)
-            {
-                throw new InvalidConfigException("CompoundCondition must have requirements.");
-            }
+            return $"CompoundCondition({this.Mode}, Name = \"{this.Name}\")";
         }
 
         /// <inheritdoc/>
-        public ConditionResult IsConditionMet(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
             var recordedFailures = new List<ConditionResult>();
             foreach (var condition in this.Requirements)
@@ -98,6 +94,15 @@ namespace AutoccultistNS.Config.Conditions
             }
 
             return ConditionResult.Success;
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAfterDeserialized(Mark start, Mark end)
+        {
+            if (this.Requirements == null || this.Requirements.Count == 0)
+            {
+                throw new InvalidConfigException("CompoundCondition must have requirements.");
+            }
         }
 
         /// <inheritdoc/>

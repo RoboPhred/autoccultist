@@ -195,6 +195,12 @@ namespace AutoccultistNS.Config
             {
                 throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");
             }
+
+            this.OnAfterDeserialized(start, end);
+        }
+
+        protected virtual void OnAfterDeserialized(Mark start, Mark end)
+        {
         }
 
         protected virtual IEnumerable<ICardState> FilterCards(IEnumerable<ICardState> cards)

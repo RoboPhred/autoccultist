@@ -77,25 +77,45 @@ namespace AutoccultistNS.Brain
             sb.Append("Active Goals:\n");
             foreach (var goal in ActiveGoals)
             {
-                sb.AppendFormat("- {0}\n", goal.Name);
-                sb.AppendFormat("- Impulses\n");
+                sb.AppendFormat("- Goal: {0}\n", goal.Name);
+                if (goal.Requirements != null)
+                {
+                    var goalMatch = goal.Requirements.IsConditionMet(GameStateProvider.Current);
+                    sb.AppendFormat("- - Requirements: {0}\n", goalMatch.IsConditionMet);
+                    if (!goalMatch)
+                    {
+                        sb.AppendFormat("- - - {0}\n", goalMatch);
+                    }
+                }
+
+                if (goal.CompletedWhen != null)
+                {
+                    var goalMatch = goal.CompletedWhen.IsConditionMet(GameStateProvider.Current);
+                    sb.AppendFormat("- - CompletedWhen: {0}\n", goalMatch.IsConditionMet);
+                    if (!goalMatch)
+                    {
+                        sb.AppendFormat("- - - {0}\n", goalMatch);
+                    }
+                }
+
+                sb.AppendFormat("- - Impulses\n");
                 foreach (var impulse in goal.Impulses.OrderBy(x => x.Priority))
                 {
-                    sb.AppendFormat("- - {0}\n", impulse.Name);
-                    sb.AppendFormat("- - - Priority: {0}\n", impulse.Priority);
+                    sb.AppendFormat("- - - {0}\n", impulse.Name);
+                    sb.AppendFormat("- - - - Priority: {0}\n", impulse.Priority);
 
                     var reqMatch = impulse?.IsConditionMet(state);
-                    sb.AppendFormat("- - - Requirements met: {0}\n", reqMatch.IsConditionMet);
+                    sb.AppendFormat("- - - - Requirements met: {0}\n", reqMatch.IsConditionMet);
                     if (!reqMatch)
                     {
-                        sb.AppendFormat("- - - - {0}\n", reqMatch);
+                        sb.AppendFormat("- - - - - {0}\n", reqMatch);
                     }
 
                     var opMatch = impulse.Operation.IsConditionMet(state);
-                    sb.AppendFormat("- - - Operation ready: {0}\n", opMatch.IsConditionMet);
+                    sb.AppendFormat("- - - - Operation ready: {0}\n", opMatch.IsConditionMet);
                     if (!opMatch)
                     {
-                        sb.AppendFormat("- - - - {0}\n", opMatch);
+                        sb.AppendFormat("- - - - - {0}\n", opMatch);
                     }
                 }
             }
@@ -165,10 +185,6 @@ namespace AutoccultistNS.Brain
             }
 
             isCheckingImpulses = true;
-
-            // FIXME: We have unpaused gaps when we should be immediately starting more operations.
-            // Might be happening when an op ends then needs to immediately re-begin.
-            // This is because, while we wrap starting ops in our own pause token, we cannot wrap the completion of an op to launching the new op.
 
             try
             {

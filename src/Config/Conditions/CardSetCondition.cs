@@ -8,7 +8,7 @@ namespace AutoccultistNS.Config.Conditions
     /// <summary>
     /// A set of CardChoice matchers.  All card choices must be matched with no overlap for this condition to pass.
     /// </summary>
-    public class CardSetCondition : ICardConditionConfig, IAfterYamlDeserialization
+    public class CardSetCondition : ConditionConfig, ICardConditionConfig
     {
         /// <summary>
         /// Gets or sets a list of cards, all of which must be present at the same time to meet this condition.
@@ -28,7 +28,7 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public ConditionResult IsConditionMet(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
             return this.CardsMatchSet(state.GetAllCards());
         }

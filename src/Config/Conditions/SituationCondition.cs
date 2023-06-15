@@ -9,7 +9,7 @@ namespace AutoccultistNS.Config.Conditions
     /// <summary>
     /// A condition dealing with matching the state of situations.
     /// </summary>
-    public class SituationCondition : IGameStateConditionConfig, IAfterYamlDeserialization
+    public class SituationCondition : ConditionConfig, IAfterYamlDeserialization
     {
         /// <summary>
         /// Possible states to check situations against.
@@ -90,7 +90,7 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public ConditionResult IsConditionMet(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
