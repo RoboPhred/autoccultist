@@ -10,8 +10,6 @@ namespace AutoccultistNS.Config.Conditions
     /// </summary>
     public class CardExistsCondition : CardChooserConfig, ICardConditionConfig
     {
-        public string Name { get; set; }
-
         /// <inheritdoc/>
         public ConditionResult IsConditionMet(IGameState state)
         {
@@ -33,16 +31,6 @@ namespace AutoccultistNS.Config.Conditions
             }
 
             return ConditionResult.Success;
-        }
-
-        protected override void OnAfterDeserialized(Mark start, Mark end)
-        {
-            if (string.IsNullOrEmpty(this.Name))
-            {
-                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
-            }
-
-            base.OnAfterDeserialized(start, end);
         }
     }
 }

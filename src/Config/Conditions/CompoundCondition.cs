@@ -97,15 +97,6 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        protected override void OnAfterDeserialized(Mark start, Mark end)
-        {
-            if (this.Requirements == null || this.Requirements.Count == 0)
-            {
-                throw new InvalidConfigException("CompoundCondition must have requirements.");
-            }
-        }
-
-        /// <inheritdoc/>
         void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
             parser.Consume<MappingStart>();
@@ -140,6 +131,15 @@ namespace AutoccultistNS.Config.Conditions
         void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
         {
             throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAfterDeserialized(Mark start, Mark end)
+        {
+            if (this.Requirements == null || this.Requirements.Count == 0)
+            {
+                throw new InvalidConfigException("CompoundCondition must have requirements.");
+            }
         }
     }
 }

@@ -19,15 +19,6 @@ namespace AutoccultistNS.Config.Conditions
         public List<CardExistsCondition> CardSet { get; set; } = new List<CardExistsCondition>();
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
-        {
-            if (this.CardSet == null || this.CardSet.Count == 0)
-            {
-                throw new InvalidConfigException("CardSet must have card choices.");
-            }
-        }
-
-        /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)
         {
             return this.CardsMatchSet(state.GetAllCards());
@@ -52,6 +43,17 @@ namespace AutoccultistNS.Config.Conditions
             }
 
             return ConditionResult.Success;
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAfterDeserialized(Mark start, Mark end)
+        {
+            if (this.CardSet == null || this.CardSet.Count == 0)
+            {
+                throw new InvalidConfigException("CardSet must have card choices.");
+            }
+
+            base.OnAfterDeserialized(start, end);
         }
     }
 }

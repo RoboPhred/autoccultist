@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// Represents a choice of a card based on various attributes.
     /// </summary>
-    public class CardChooserConfig : ICardChooser, IConfigObject, IAfterYamlDeserialization
+    public class CardChooserConfig : ICardChooser, INamedConfigObject, IAfterYamlDeserialization
     {
         /// <summary>
         /// Specify whether the card choice should go for the oldest or youngest card it can find.
@@ -29,6 +29,9 @@ namespace AutoccultistNS.Config
             Youngest,
         }
 
+        /// <summary>
+        /// Specifies whether the card choice should go for the card with the highest or lowest aspect weight.
+        /// </summary>
         public enum CardAspectWeightSelection
         {
             /// <summary>
@@ -41,6 +44,9 @@ namespace AutoccultistNS.Config
             /// </summary>
             Lowest,
         }
+
+        /// <inheritdoc/>
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the element id of the card to choose.
@@ -140,6 +146,8 @@ namespace AutoccultistNS.Config
         {
             var content = new List<string>();
 
+            content.Add($"Name: \"{this.Name}\"");
+
             if (this.ElementId != null)
             {
                 content.Add($"elementId: {this.ElementId}");
@@ -191,6 +199,11 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         void IAfterYamlDeserialization.AfterDeserialized(Mark start, Mark end)
         {
+            if (string.IsNullOrEmpty(this.Name))
+            {
+                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
+            }
+
             if (string.IsNullOrEmpty(this.ElementId) && (this.Aspects == null || this.Aspects.Count == 0) && (this.AllowedElementIds == null || this.AllowedElementIds.Count == 0))
             {
                 throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");

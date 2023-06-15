@@ -3,13 +3,12 @@ namespace AutoccultistNS.Config.Conditions
     using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
     /// A condition dealing with matching the state of situations.
     /// </summary>
-    public class SituationCondition : ConditionConfig, IAfterYamlDeserialization
+    public class SituationCondition : ConditionConfig
     {
         /// <summary>
         /// Possible states to check situations against.
@@ -79,15 +78,6 @@ namespace AutoccultistNS.Config.Conditions
         /// If null, this condition will not be checked.
         /// </summary>
         public Dictionary<string, ValueCondition> ContainsAspects { get; set; }
-
-        /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
-        {
-            if (string.IsNullOrEmpty(this.Situation))
-            {
-                throw new InvalidConfigException("SituationCondition must have a situationId.");
-            }
-        }
 
         /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)
@@ -167,6 +157,17 @@ namespace AutoccultistNS.Config.Conditions
             }
 
             return ConditionResult.Success;
+        }
+
+        /// <inheritdoc/>
+        protected override void OnAfterDeserialized(Mark start, Mark end)
+        {
+            if (string.IsNullOrEmpty(this.Situation))
+            {
+                throw new InvalidConfigException("SituationCondition must have a situationId.");
+            }
+
+            base.OnAfterDeserialized(start, end);
         }
     }
 }
