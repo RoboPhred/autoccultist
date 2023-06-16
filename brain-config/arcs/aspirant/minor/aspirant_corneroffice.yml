@@ -15,6 +15,7 @@ motivations:
       - !import /goals/aspirant/find-collaborator.yml
   - name: Hit the gym
     primaryGoals:
+      # 3 health so we can explore
       - !import /goals/health/acquire-skillhealtha.yml
       - !import /goals/health/acquire-skillhealthb.yml
     supportingGoals:
@@ -23,9 +24,9 @@ motivations:
   - name: Hit the books
     primaryGoals:
       - !import /goals/reason/acquire-skillreasona.yml
-      - !import /goals/reason/acquire-skillreasonb.yml
-      # ...Might need all 3 here?
-      - !import /goals/reason/acquire-skillreasonc.yml
+      # Our reason actually refreshes right as alden demands more, so we are fine with 2
+      # - !import /goals/reason/acquire-skillreasonb.yml
+      # - !import /goals/reason/acquire-skillreasonc.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml

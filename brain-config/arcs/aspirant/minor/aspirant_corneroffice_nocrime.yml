@@ -6,17 +6,17 @@ motivations:
       - !import /goals/aspirant/begin-intro.yml
   - name: Hit the gym
     primaryGoals:
+      # Just need 2 to fend off sickness.
       - !import /goals/health/acquire-skillhealtha.yml
-      - !import /goals/health/acquire-skillhealthb.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml
   - name: Hit the books
     primaryGoals:
+      # Our reason actually refreshes right as alden demands more, so we are fine with 2
       - !import /goals/reason/acquire-skillreasona.yml
-      - !import /goals/reason/acquire-skillreasonb.yml
-      # ...Might need all 3 here?
-      - !import /goals/reason/acquire-skillreasonc.yml
+      # - !import /goals/reason/acquire-skillreasonb.yml
+      # - !import /goals/reason/acquire-skillreasonc.yml
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml

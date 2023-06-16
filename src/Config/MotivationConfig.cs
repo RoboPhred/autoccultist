@@ -38,6 +38,17 @@ namespace AutoccultistNS.Config
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
             }
+
+            if (this.PrimaryGoals == null || this.PrimaryGoals.Count == 0)
+            {
+                throw new YamlException(start, end, "Motivation must have at least one primary goal.");
+            }
+
+            if (this.SupportingGoals == null)
+            {
+                // Can happen if the config includes supportingGoals but doesnt put anything in it.
+                this.SupportingGoals = new List<GoalConfig>();
+            }
         }
     }
 }

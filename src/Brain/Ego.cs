@@ -39,7 +39,7 @@ namespace AutoccultistNS.Brain
 
             CurrentMotivation = motivation;
 
-            if (IsRunning)
+            if (IsRunning && motivation != null)
             {
                 TryStartMotivation();
             }
@@ -72,23 +72,30 @@ namespace AutoccultistNS.Brain
 
             var state = GameStateProvider.Current;
 
-            foreach (var goal in CurrentMotivation.PrimaryGoals)
+            // This shouldn't really be null, but its possible if a config file is malformed.
+            if (CurrentMotivation.PrimaryGoals != null)
             {
-                if (!goal.IsSatisfied(state))
+                foreach (var goal in CurrentMotivation.PrimaryGoals)
                 {
-                    NucleusAccumbens.AddGoal(goal);
-                }
-                else
-                {
-                    Autoccultist.Instance.LogTrace($"Ego: Primary goal \"{goal.Name}\" of motivation \"{CurrentMotivation.Name}\" is already satisfied.");
+                    if (!goal.IsSatisfied(state))
+                    {
+                        NucleusAccumbens.AddGoal(goal);
+                    }
+                    else
+                    {
+                        Autoccultist.Instance.LogTrace($"Ego: Primary goal \"{goal.Name}\" of motivation \"{CurrentMotivation.Name}\" is already satisfied.");
+                    }
                 }
             }
 
-            foreach (var goal in CurrentMotivation.SupportingGoals)
+            if (CurrentMotivation.SupportingGoals != null)
             {
-                if (!goal.IsSatisfied(state))
+                foreach (var goal in CurrentMotivation.SupportingGoals)
                 {
-                    NucleusAccumbens.AddGoal(goal);
+                    if (!goal.IsSatisfied(state))
+                    {
+                        NucleusAccumbens.AddGoal(goal);
+                    }
                 }
             }
 
@@ -115,7 +122,7 @@ namespace AutoccultistNS.Brain
 
         private static void CheckAllGoalsCompleted()
         {
-            if (CurrentMotivation.PrimaryGoals.Any(x => NucleusAccumbens.CurrentGoals.Contains(x)))
+            if (CurrentMotivation == null || CurrentMotivation.PrimaryGoals.Any(x => NucleusAccumbens.CurrentGoals.Contains(x)))
             {
                 return;
             }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using AutoccultistNS;
 using AutoccultistNS.Brain;
 using AutoccultistNS.Config;
@@ -20,6 +21,8 @@ using UnityEngine.SceneManagement;
 public class Autoccultist : MonoBehaviour
 {
     private IArc loadArcOnGameStart;
+
+    private Thread mainThread;
 
     public static event EventHandler GlobalUpdate;
 
@@ -55,6 +58,8 @@ public class Autoccultist : MonoBehaviour
     public void Start()
     {
         Instance = this;
+
+        this.mainThread = Thread.CurrentThread;
 
         SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(this.HandleSceneLoaded);
         SceneManager.sceneUnloaded += new UnityAction<Scene>(this.HandleSceneUnloaded);
@@ -94,6 +99,14 @@ public class Autoccultist : MonoBehaviour
         };
 
         this.LogInfo("Autoccultist initialized.");
+    }
+
+    public void EnsureMainThread()
+    {
+        if (Thread.CurrentThread != this.mainThread)
+        {
+            throw new InvalidOperationException("This method must be called from the main thread.");
+        }
     }
 
     /// <summary>
