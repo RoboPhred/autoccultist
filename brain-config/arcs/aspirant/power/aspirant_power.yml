@@ -35,7 +35,7 @@ motivations:
       - !import /goals/survive.yml
   - name: Study bequest contents
     primaryGoals:
-      - !import /goals/aspirant/discover-bookdealer.yml
+      - !import /goals/discover-bookdealer.yml
       - !import /goals/aspirant/find-collaborator.yml
     supportingGoals:
       - !import /goals/survive.yml

@@ -10,7 +10,7 @@ motivations:
       # Need the two below
       - !import /goals/aspirant/study-bequest-passion.yml
       # Need explore to find a hireling
-      - !import /goals/aspirant/discover-bookdealer.yml
+      - !import /goals/discover-bookdealer.yml
       # Need talk to set them on alden
       - !import /goals/aspirant/find-collaborator.yml
   - name: Hit the gym

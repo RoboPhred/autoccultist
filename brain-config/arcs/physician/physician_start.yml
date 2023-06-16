@@ -1,0 +1,13 @@
+name: "Physician: Startup"
+legacy: physician
+selectionHint:
+  anyOf:
+    - elementId: legacyphysicianjob
+motivations:
+  - name: Begin the Game
+    primaryGoals:
+      - !import /goals/physician/work-institute.yml
+      - !import /goals/physician/study-notes.yml
+      - !import /goals/discover-bookdealer.yml
+    secondaryGoals:
+      - !import /goals/survive.yml
