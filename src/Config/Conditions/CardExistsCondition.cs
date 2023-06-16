@@ -2,8 +2,6 @@ namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.Yaml;
-    using YamlDotNet.Core;
 
     /// <summary>
     /// Represents a choice of a card based on various attributes.

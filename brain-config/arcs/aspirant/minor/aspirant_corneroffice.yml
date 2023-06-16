@@ -1,0 +1,78 @@
+name: "Aspirant: A Corner Office"
+legacy: aspirant
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - !import /goals/aspirant/begin-intro.yml
+  - name: Study the bequest and unlock verbs
+    # Note: Not needed for crime free. Needed here to unlock explore
+    primaryGoals:
+      # Need the two below
+      - !import /goals/aspirant/study-bequest-passion.yml
+      # Need explore to find a hireling
+      - !import /goals/aspirant/discover-bookdealer.yml
+      # Need talk to set them on alden
+      - !import /goals/aspirant/find-collaborator.yml
+  - name: Hit the gym
+    primaryGoals:
+      - !import /goals/health/acquire-skillhealtha.yml
+      - !import /goals/health/acquire-skillhealthb.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/funds/work-labor.yml
+  - name: Hit the books
+    primaryGoals:
+      - !import /goals/reason/acquire-skillreasona.yml
+      - !import /goals/reason/acquire-skillreasonb.yml
+      # ...Might need all 3 here?
+      - !import /goals/reason/acquire-skillreasonc.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/funds/work-labor.yml
+  - name: Get a job, await Alden
+    primaryGoals:
+      - !import /goals/glover/acquire-job-glover-junior.yml
+      - !import /goals/glover/acquire-job-glover-standard.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+  - name: Dispose of alden
+    primaryGoals:
+      - name: Dispose of Alden
+        completedWhen:
+          anyOf:
+            - elementId: gloverandglover_difficultbossa_gone_job
+            - elementId: gloverandgloverjob
+            - elementId: gloverandgloverjob_youngerglovergone
+            - elementId: gloverandgloverseniorjob
+            - elementId: gloverandgloverseniorjob_youngerglovergone
+            - elementId: gloverandglovertopjob
+            - elementId: gloverandglovertopjob_tainted
+        impulses:
+          - name: Find a devious or potent minion
+            # We want to look for a mid-level minion here, as I think it will be faster to go for the 70% success chance than try with the 30%
+            forbidders:
+              anyOf:
+                - !import /conditions/has-suspicion.yml
+                - aspects: { hireling: 1 }
+            operation: !import /operations/explore/explore-city-criminal-potent.yml
+          - name: Re-hire a minion
+            operation: !import /operations/hirelings/rehire-hireling-any.yml
+          - name: Dispose of Alden with moth
+            priority: goal
+            operation: !import /operations/annoyance/madden-annoyance.yml
+          - name: Dispose of Alden with edge
+            priority: goal
+            operation: !import /operations/annoyance/murder-annoyance.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml
+  - name: This is my life, now
+    primaryGoals:
+      - name: Such as it is
+        impulses:
+          - name: Better get used to it
+            priority: goal
+            operation: !import /operations/glover/work-glover-acceptance.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml

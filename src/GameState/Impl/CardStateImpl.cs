@@ -54,15 +54,14 @@ namespace AutoccultistNS.GameState.Impl
             var enRoute = sourceStack.Token.Sphere is EnRouteSphere;
             var tokenState = sourceStack.Token.CurrentState;
 
-            // Do we really need to check if its on the tabletop?  We could slot cards sitting around unused inside verbs, but we probably only want to take from table.
-            // Might revisit this if we ever support the technique of slotting a card to pause the timer.
-            //this.isSlottable = location == CardLocation.Tabletop && !enRoute && !tokenState.InPlayerDrivenMotion() && !tokenState.InSystemDrivenMotion() && !sourceStack.Defunct;
-
-            // New decision: isSlottable should be true if we can yoink this card, even if it is not on the tabletop.
+            // isSlottable should be true if we can yoink this card, even if it is not on the tabletop.
             // This allows a SlotCardAction to concievably target cards in verbs that are still in their warmup period.
             // This is useful in several "pro" strategies where sulochana is used in the talk verb to pauase the timer on influences.
+            // Note: In practice, SlottableCardChooser still looks for tabletop only.
             this.isSlottable = !enRoute
                 && !sourceStack.Defunct
+                // These are unreliable, token states tend to randomly not be updated.
+                // See: UnknownState cards sitting on the board.
                 && !tokenState.InPlayerDrivenMotion()
                 && !tokenState.InSystemDrivenMotion()
                 && sourceStack.Token.Sphere.IsExteriorSphere;

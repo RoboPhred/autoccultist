@@ -9,6 +9,7 @@
     /// </summary>
     [DuckTypeCandidate(typeof(CardSetCondition))]
     [DuckTypeCandidate(typeof(CardExistsCondition))]
+    [DuckTypeCandidate(typeof(AnyCardExistsCondition))]
     public interface ICardConditionConfig : IGameStateConditionConfig
     {
         /// <summary>

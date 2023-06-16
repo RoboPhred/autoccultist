@@ -1,17 +1,18 @@
-name: Explore the city to find a bomb maker
 situation: explore
 startingRecipe:
   slots:
     explore:
       oneOf:
         - aspects: { follower: 1 }
+        # Can hirelings explore the city too?
         - elementId: health
 conditionalOngoingRecipes:
   - condition:
       situation: explore
-      recipe: explorechoosepaycriminal
       storedCardsMatch:
-        elementId: thugforgeedge
+        anyOf:
+          - aspects: { hireling: 1, moth: 5 }
+          - aspects: { hireling: 1, edge: 5 }
     slots:
       Payment:
         elementId: funds

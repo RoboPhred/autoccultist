@@ -1,0 +1,38 @@
+name: "Aspirant: A Corner Office (no crime)"
+legacy: aspirant
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - !import /goals/aspirant/begin-intro.yml
+  - name: Hit the gym
+    primaryGoals:
+      - !import /goals/health/acquire-skillhealtha.yml
+      - !import /goals/health/acquire-skillhealthb.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/funds/work-labor.yml
+  - name: Hit the books
+    primaryGoals:
+      - !import /goals/reason/acquire-skillreasona.yml
+      - !import /goals/reason/acquire-skillreasonb.yml
+      # ...Might need all 3 here?
+      - !import /goals/reason/acquire-skillreasonc.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/funds/work-labor.yml
+  - name: Get a job, await Alden
+    primaryGoals:
+      - !import /goals/glover/acquire-job-glover-junior.yml
+      - !import /goals/glover/acquire-job-glover-standard.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+  - name: This is my life, now
+    primaryGoals:
+      - name: Such as it is
+        impulses:
+          - name: Better get used to it
+            priority: goal
+            operation: !import /operations/glover/work-glover-acceptance.yml
+    supportingGoals:
+      - !import /goals/survive.yml
+      - !import /goals/glover/work-glover.yml

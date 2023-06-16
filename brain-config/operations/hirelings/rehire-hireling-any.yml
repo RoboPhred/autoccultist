@@ -3,6 +3,6 @@ situation: talk
 startingRecipe:
   slots:
     talk:
-      elementId: { hireling: 1 }
+      aspects: { hireling: 1 }
     Subject:
       elementId: funds

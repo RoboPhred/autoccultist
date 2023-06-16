@@ -1,4 +1,4 @@
-name: Seduce Alden
+name: Murder an Annoyance
 situation: talk
 startingRecipe:
   slots:
@@ -6,9 +6,9 @@ startingRecipe:
       aspectWeightBias: highest
       aspects:
         follower: 1
-        grail: 1
+        edge: 1
 ongoingRecipes:
   talktofollower:
     slots:
       Subject:
-        elementId: gloverandglover_difficultbossa_job
+        aspects: { annoyance: 1 }

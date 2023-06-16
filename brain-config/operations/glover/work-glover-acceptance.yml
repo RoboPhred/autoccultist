@@ -1,0 +1,12 @@
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: gloverandgloverseniorjob
+    Devotion:
+      elementId: reason
+ongoingRecipes:
+  gloverandgloverseniorwork_retirementoption:
+    slots:
+      Acceptance:
+        elementId: passion
