@@ -1,5 +1,5 @@
 # This arc advances the game as much as possible without starting a cult or exploring any locations.
-name: Complete early game [no cult]
+name: "Aspirant: Complete early game [no cult]"
 legacy: aspirant
 selectionHint:
   anyOf:

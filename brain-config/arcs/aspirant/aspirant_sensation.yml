@@ -1,6 +1,6 @@
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
-name: Aspirant Sensation Ascension
+name: "Aspirant: Sensation Ascension"
 legacy: aspirant
 selectionHint:
   anyOf:
@@ -157,7 +157,7 @@ motivations:
       - !import /goals/cult/recruit-away-influences.yml
   - name: Acquire the Stag Door
     primaryGoals:
-#      - !import /goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
+      #      - !import /goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
       - !import /goals/victories/sensation/acquire-lore-stag.yml
     supportingGoals:
       - !import /goals/survive.yml
