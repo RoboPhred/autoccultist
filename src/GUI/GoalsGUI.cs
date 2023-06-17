@@ -154,9 +154,8 @@ namespace AutoccultistNS.GUI
                 let satisfied = goal.IsSatisfied(GameStateProvider.Current)
                 let canActivate = goal.CanActivate(GameStateProvider.Current)
                 let active = NucleusAccumbens.CurrentGoals.Contains(goal)
-                let realCanActivate = canActivate && !satisfied
-                where filterCanActivate == false || realCanActivate
-                orderby realCanActivate descending, goal.Name.ToLower()
+                where filterCanActivate == false || canActivate
+                orderby goal.Name.ToLower()
                 select new { Goal = goal, Satisfied = satisfied, CanActivate = canActivate, Active = active };
 
             foreach (var pair in goals)
