@@ -47,7 +47,7 @@ namespace AutoccultistNS.Config
             }
         }
 
-        private static string GoalsDirectory
+        public static string GoalsDirectory
         {
             get
             {
@@ -55,7 +55,7 @@ namespace AutoccultistNS.Config
             }
         }
 
-        private static string ArcsDirectory
+        public static string ArcsDirectory
         {
             get
             {

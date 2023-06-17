@@ -14,6 +14,11 @@ namespace AutoccultistNS.Brain
         string Name { get; }
 
         /// <summary>
+        /// Gets the file path to the goal definition.
+        /// </summary>
+        string FilePath { get; }
+
+        /// <summary>
         /// Gets the condition which is required to be met for this goal to activate.
         /// <para>
         /// The goal will remain activated after these conditions are met,

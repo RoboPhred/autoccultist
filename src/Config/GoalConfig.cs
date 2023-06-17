@@ -19,6 +19,9 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public string Name { get; set; }
 
+        /// <inheritdoc/>
+        public string FilePath { get; private set; }
+
         /// <summary>
         /// Gets or sets the condition which is required to be met for this goal to activate.
         /// <para>
@@ -92,6 +95,8 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public void AfterDeserialized(Mark start, Mark end)
         {
+            this.FilePath = Deserializer.CurrentFilePath;
+
             if (string.IsNullOrEmpty(this.Name))
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
