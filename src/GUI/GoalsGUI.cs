@@ -56,7 +56,6 @@ namespace AutoccultistNS.GUI
 
             if (exactFolder)
             {
-                NoonUtility.Log($"Filtering {path} against {folderFilter}");
                 if (path == null)
                 {
                     return false;
@@ -73,8 +72,6 @@ namespace AutoccultistNS.GUI
                 else
                 {
                     var fullPath = path.Substring(0, endOfFolder + 1);
-
-                    NoonUtility.Log($"FullPath is {fullPath}");
 
                     if (fullPath.ToLower() != folderFilter.ToLower())
                     {
@@ -183,18 +180,18 @@ namespace AutoccultistNS.GUI
 
                 if (pair.Active)
                 {
-                    GUILayout.Label("[Active]", GUILayout.Width(75));
+                    GUILayout.Label("[Active]");
                 }
                 else if (pair.CanActivate)
                 {
-                    if (GUILayout.Button("Activate", GUILayout.Width(75)))
+                    if (GUILayout.Button("Activate"))
                     {
                         NucleusAccumbens.AddGoal(goal);
                     }
                 }
                 else if (pair.Satisfied)
                 {
-                    GUILayout.Label("[Satisfied]", GUILayout.Width(75));
+                    GUILayout.Label("[Satisfied]");
                 }
 
                 GUILayout.EndHorizontal();
