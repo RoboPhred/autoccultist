@@ -26,9 +26,6 @@ namespace AutoccultistNS.Config.Conditions
             var failures = new List<ConditionResult>();
             foreach (var chooser in this.AnyOf)
             {
-                // TODO: Each chooser individually chooses a card, so its possible for a chooser
-                // to have multiple choices, but choose the one that is the only viable card for another chooser.
-                // We should get all candidates for all choosers and try to satisfy them all.
                 var choice = chooser.ChooseCard(cards);
                 if (choice != null)
                 {
