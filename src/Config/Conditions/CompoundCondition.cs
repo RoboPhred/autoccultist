@@ -134,8 +134,10 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        protected override void OnAfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (this.Requirements == null || this.Requirements.Count == 0)
             {
                 throw new InvalidConfigException("CompoundCondition must have requirements.");

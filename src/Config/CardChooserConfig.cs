@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// Represents a choice of a card based on various attributes.
     /// </summary>
-    public class CardChooserConfig : ICardChooser, INamedConfigObject, IAfterYamlDeserialization
+    public class CardChooserConfig : NamedConfigObject, ICardChooser
     {
         /// <summary>
         /// Specify whether the card choice should go for the oldest or youngest card it can find.
@@ -44,9 +44,6 @@ namespace AutoccultistNS.Config
             /// </summary>
             Lowest,
         }
-
-        /// <inheritdoc/>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the element id of the card to choose.
@@ -197,8 +194,10 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        void IAfterYamlDeserialization.AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (string.IsNullOrEmpty(this.Name))
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
@@ -208,12 +207,6 @@ namespace AutoccultistNS.Config
             {
                 throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");
             }
-
-            this.OnAfterDeserialized(start, end);
-        }
-
-        protected virtual void OnAfterDeserialized(Mark start, Mark end)
-        {
         }
 
         protected virtual IEnumerable<ICardState> FilterCards(IEnumerable<ICardState> cards)

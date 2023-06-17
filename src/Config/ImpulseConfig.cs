@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config
     /// An Impulse represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Impulse allow for its execution, the task should execute.
     /// </summary>
-    public class ImpulseConfig : IConfigObject, IImpulse, IAfterYamlDeserialization
+    public class ImpulseConfig : NamedConfigObject, IImpulse
     {
         private readonly ImpulseConfigCondition impulseCondition;
 
@@ -23,11 +23,6 @@ namespace AutoccultistNS.Config
         /// Gets or sets the impulse that this impulse inherits from.
         /// </summary>
         public ImpulseConfig Extends { get; set; }
-
-        /// <summary>
-        /// Gets or sets the human-friendly display name for this impulse.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the priority for this impulse.
@@ -60,8 +55,10 @@ namespace AutoccultistNS.Config
         IOperation IImpulse.Operation => this.Operation ?? this.Extends?.Operation;
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (string.IsNullOrEmpty(this.Name))
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);

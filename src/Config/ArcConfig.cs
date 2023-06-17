@@ -17,14 +17,9 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
-    public class ArcConfig : IConfigObject, IArc, IAfterYamlDeserialization
+    public class ArcConfig : NamedConfigObject, IArc
     {
         private string arcFolder;
-
-        /// <summary>
-        /// Gets or sets the name of this arc.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the legacy this arc is designed to run on, if any.
@@ -86,8 +81,10 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             this.arcFolder = Path.GetDirectoryName(Deserializer.CurrentFilePath);
 
             if (string.IsNullOrEmpty(this.Name))

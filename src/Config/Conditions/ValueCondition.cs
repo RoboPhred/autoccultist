@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config.Conditions
     /// <summary>
     /// Specifies a comparison against a time value.
     /// </summary>
-    public class ValueCondition : IConfigObject, IYamlConvertible, IValueCondition, IAfterYamlDeserialization
+    public class ValueCondition : ConfigObject, IYamlConvertible, IValueCondition
     {
         /// <summary>
         /// Gets or sets a value indicating that the target value must be greater than this amount.
@@ -36,8 +36,10 @@ namespace AutoccultistNS.Config.Conditions
         public float? LessThanOrEqualTo { get; set; }
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (!this.GreaterThan.HasValue && !this.LessThan.HasValue && !this.GreaterThanOrEqualTo.HasValue && !this.LessThanOrEqualTo.HasValue)
             {
                 throw new InvalidConfigException("Value condition must specify at least one of: greaterThan, greaterThanOrEqualTo, lessThan, lessThanOrEqualTo");

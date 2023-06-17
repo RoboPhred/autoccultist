@@ -45,14 +45,14 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        protected override void OnAfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (this.CardSet == null || this.CardSet.Count == 0)
             {
                 throw new InvalidConfigException("CardSet must have card choices.");
             }
-
-            base.OnAfterDeserialized(start, end);
         }
     }
 }

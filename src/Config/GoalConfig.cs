@@ -14,14 +14,8 @@ namespace AutoccultistNS.Config
     /// <para>
     /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
-    public class GoalConfig : INamedConfigObject, IGoal, IAfterYamlDeserialization
+    public class GoalConfig : NamedConfigObject, IGoal
     {
-        /// <inheritdoc/>
-        public string Name { get; set; }
-
-        /// <inheritdoc/>
-        public string FilePath { get; private set; }
-
         /// <summary>
         /// Gets or sets the condition which is required to be met for this goal to activate.
         /// <para>
@@ -90,19 +84,6 @@ namespace AutoccultistNS.Config
             }
 
             return this.CompletedWhen.IsConditionMet(state);
-        }
-
-        /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
-        {
-            this.FilePath = Deserializer.CurrentFilePath;
-
-            if (string.IsNullOrEmpty(this.Name))
-            {
-                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
-            }
-
-            // Used to require goals to have impulses, but we can have goals that wait for events.
         }
     }
 }

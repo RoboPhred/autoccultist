@@ -7,7 +7,7 @@ namespace AutoccultistNS.Config.CardChoices
     /// <summary>
     /// Selects a card from its choice only if a condition is met.
     /// </summary>
-    public class ConditionalCardChoiceConfig : ISlottableCardChoiceConfig, IConfigObject
+    public class ConditionalCardChoiceConfig : ConfigObject, ISlottableCardChoiceConfig
     {
         /// <inheritdoc/>
         public bool Optional { get; set; }

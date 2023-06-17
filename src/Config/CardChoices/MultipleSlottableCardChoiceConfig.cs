@@ -7,7 +7,7 @@ namespace AutoccultistNS.Config.CardChoices
     /// <summary>
     /// Defines configuration for a list of card choices where the first valid choice will be chosen.
     /// </summary>
-    public class MultipleSlottableCardChoiceConfig : ISlottableCardChoiceConfig, IConfigObject
+    public class MultipleSlottableCardChoiceConfig : ConfigObject, ISlottableCardChoiceConfig
     {
         /// <inheritdoc/>
         public bool Optional { get; set; }

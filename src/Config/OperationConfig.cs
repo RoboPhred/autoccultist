@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
     /// </summary>
-    public class OperationConfig : INamedConfigObject, IGameStateCondition, IOperation, IAfterYamlDeserialization
+    public class OperationConfig : NamedConfigObject, IGameStateCondition, IOperation
     {
         private IReadOnlyDictionary<string, IRecipeSolution> ongoingRecipes;
 
@@ -33,9 +33,6 @@ namespace AutoccultistNS.Config
             /// Note: conditionalOngoingRecipes will be checked if no ongoingRecipe matches the current recipe.
             CurrentRecipeSatisfied,
         }
-
-        /// <inheritdoc/>
-        public string Name { get; set; }
 
         public OperationConfig Extends { get; set; }
 
@@ -110,8 +107,10 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (string.IsNullOrEmpty(this.Name))
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);

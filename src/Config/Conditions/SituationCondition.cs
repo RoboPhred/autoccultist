@@ -160,14 +160,14 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        protected override void OnAfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (string.IsNullOrEmpty(this.Situation))
             {
                 throw new InvalidConfigException("SituationCondition must have a situationId.");
             }
-
-            base.OnAfterDeserialized(start, end);
         }
     }
 }

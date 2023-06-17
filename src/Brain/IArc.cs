@@ -14,6 +14,11 @@ namespace AutoccultistNS.Brain
         string Name { get; }
 
         /// <summary>
+        /// Gets the file path to the arc file.
+        /// </summary>
+        string FilePath { get; }
+
+        /// <summary>
         /// Gets the selection hint to be used to determine the current arc on loading a save.
         /// </summary>
         IGameStateCondition SelectionHint { get; }

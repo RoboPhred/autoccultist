@@ -7,7 +7,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// Provides configuration for solving a mansus event.
     /// </summary>
-    public class MansusSolutionConfig : IConfigObject, IMansusSolution, IAfterYamlDeserialization
+    public class MansusSolutionConfig : ConfigObject, IMansusSolution
     {
         /// <summary>
         /// Gets or sets the card choice to match against the face up card.
@@ -23,8 +23,10 @@ namespace AutoccultistNS.Config
         ICardChooser IMansusSolution.FaceUpCard => this.FaceUpCard;
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
+            base.AfterDeserialized(start, end);
+
             if (this.Deck == null)
             {
                 throw new InvalidConfigException("deck is required.");

@@ -41,16 +41,6 @@ namespace AutoccultistNS.GUI
             GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 900), GoalsWindow, "Autoccultist Goals");
         }
 
-        public static string ToLibraryPath(string path)
-        {
-            if (path.StartsWith(Library.GoalsDirectory))
-            {
-                return path.Substring(Library.GoalsDirectory.Length + 1);
-            }
-
-            return null;
-        }
-
         private static bool FilterGoal(IGoal goal, bool exactFolder)
         {
             if (!goal.Name.ToLower().Contains(searchFilter))
@@ -58,7 +48,7 @@ namespace AutoccultistNS.GUI
                 return false;
             }
 
-            var path = ToLibraryPath(goal.FilePath);
+            var path = goal.GetLibraryPath();
             if (path == null && !string.IsNullOrEmpty(folderFilter))
             {
                 return false;
@@ -134,7 +124,7 @@ namespace AutoccultistNS.GUI
                 from goal in Library.Goals
                 where goal.FilePath != null
                 where FilterGoal(goal, false)
-                let path = ToLibraryPath(goal.FilePath)
+                let path = goal.GetLibraryPath()
                 where path != null
                 let relative = path.Substring(folderFilter.Length)
                 let split = relative.IndexOf(Path.DirectorySeparatorChar)
@@ -164,7 +154,7 @@ namespace AutoccultistNS.GUI
                 let satisfied = goal.IsSatisfied(GameStateProvider.Current)
                 let canActivate = goal.CanActivate(GameStateProvider.Current)
                 let active = NucleusAccumbens.CurrentGoals.Contains(goal)
-                let realCanActivate = canActivate && !satisfied && !active
+                let realCanActivate = canActivate && !satisfied
                 where filterCanActivate == false || realCanActivate
                 orderby realCanActivate descending, goal.Name.ToLower()
                 select new { Goal = goal, Satisfied = satisfied, CanActivate = canActivate, Active = active };
@@ -177,20 +167,20 @@ namespace AutoccultistNS.GUI
 
                 GUILayout.Space(20);
 
+                var prepend = string.Empty;
                 if (!string.IsNullOrEmpty(searchFilter))
                 {
                     // When searching, we show deep folders.  So show the path
-                    var path = ToLibraryPath(goal.FilePath);
+                    var path = goal.GetLibraryPath();
                     var lastMarker = path.LastIndexOf(Path.DirectorySeparatorChar);
                     path = path.Substring(0, lastMarker + 1);
                     path = path.Substring(folderFilter.Length);
-
-                    GUILayout.Label(path, GUILayout.ExpandWidth(false));
+                    prepend = path;
                 }
 
-                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
+                GUILayout.Label(prepend + goal.Name, GUILayout.ExpandWidth(false));
 
-                GUILayout.Label("", GUILayout.ExpandWidth(true));
+                GUILayout.Label(string.Empty, GUILayout.ExpandWidth(true));
 
                 if (pair.Active)
                 {
