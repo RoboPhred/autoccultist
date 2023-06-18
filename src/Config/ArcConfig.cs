@@ -17,6 +17,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
+    [LibraryPath("arcs")]
     public class ArcConfig : NamedConfigObject, IArc
     {
         private string arcFolder;

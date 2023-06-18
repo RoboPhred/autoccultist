@@ -8,36 +8,28 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// Defines configuration for a motivation.
     /// </summary>
-    public class MotivationConfig : IMotivation, IAfterYamlDeserialization
+    public class MotivationConfig : NamedConfigObject, IMotivation
     {
-        /// <summary>
-        /// Gets or sets the motivation name.
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
-        public List<GoalConfig> PrimaryGoals { get; set; } = new();
+        public List<LibraryConfigObject<GoalConfig>> PrimaryGoals { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the secondary goals of this motivation.
         /// </summary>
-        public List<GoalConfig> SupportingGoals { get; set; } = new();
+        public List<LibraryConfigObject<GoalConfig>> SupportingGoals { get; set; } = new();
 
         /// <inheritdoc/>
-        IReadOnlyList<IGoal> IMotivation.PrimaryGoals => this.PrimaryGoals;
+        IReadOnlyList<IGoal> IMotivation.PrimaryGoals => this.PrimaryGoals.ConvertAll(g => g.Value);
 
         /// <inheritdoc/>
-        IReadOnlyList<IGoal> IMotivation.SupportingGoals => this.SupportingGoals;
+        IReadOnlyList<IGoal> IMotivation.SupportingGoals => this.SupportingGoals.ConvertAll(g => g.Value);
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override void AfterDeserialized(Mark start, Mark end)
         {
-            if (string.IsNullOrEmpty(this.Name))
-            {
-                this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
-            }
+            base.AfterDeserialized(start, end);
 
             if (this.PrimaryGoals == null || this.PrimaryGoals.Count == 0)
             {
@@ -46,8 +38,8 @@ namespace AutoccultistNS.Config
 
             if (this.SupportingGoals == null)
             {
-                // Can happen if the config includes supportingGoals but doesnt put anything in it.
-                this.SupportingGoals = new List<GoalConfig>();
+                // Can happen if the config includes supportingGoals but doesn't put anything in it.
+                this.SupportingGoals = new();
             }
         }
     }

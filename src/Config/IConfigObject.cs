@@ -9,6 +9,11 @@ namespace AutoccultistNS.Config
     public interface IConfigObject
     {
         /// <summary>
+        /// Gets the unique identifier for this config object.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
         /// Gets the path to the file that this object was loaded from.
         /// </summary>
         [YamlIgnore]

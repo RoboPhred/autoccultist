@@ -96,6 +96,8 @@ namespace AutoccultistNS.Yaml
         /// <returns>The parser for the given file.</returns>
         public static T DeserializeFromParser<T>(string filePath, Func<IParser, T> func, bool cache = true)
         {
+            filePath = Path.GetFullPath(filePath);
+
             if (ParsingFiles.Contains(filePath))
             {
                 throw new InvalidOperationException($"Circular import detected: {string.Join(" -> ", ParsingFiles.Reverse())} -> {filePath}");

@@ -6,7 +6,6 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.GameState;
     using AutoccultistNS.Yaml;
-    using YamlDotNet.Core;
 
     /// <summary>
     /// A Goal represents a collection of impulses which activate under certain conditions,
@@ -14,6 +13,7 @@ namespace AutoccultistNS.Config
     /// <para>
     /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
+    [LibraryPath("goals")]
     public class GoalConfig : NamedConfigObject, IGoal
     {
         /// <summary>

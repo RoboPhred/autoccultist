@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Config
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using AutoccultistNS.Brain;
@@ -11,8 +12,8 @@ namespace AutoccultistNS.Config
     public static class Library
     {
         private static readonly List<YamlFileException> LibraryParseErrors = new();
-        private static readonly List<IGoal> LibraryGoals = new();
-        private static readonly List<IArc> LibraryArcs = new();
+        private static readonly List<GoalConfig> LibraryGoals = new();
+        private static readonly List<ArcConfig> LibraryArcs = new();
 
         /// <summary>
         /// Gets a collection of errors encountered while loading the library.
@@ -61,6 +62,69 @@ namespace AutoccultistNS.Config
             {
                 return Path.Combine(Autoccultist.AssemblyDirectory, "arcs");
             }
+        }
+
+        /// <summary>
+        /// Gets a library config object by file path.
+        /// </summary>
+        public static T GetByFilePath<T>(string filePath) where T : IConfigObject
+        {
+            var candidates = new List<IConfigObject>();
+
+            if (typeof(T).IsAssignableFrom(typeof(IGoal)))
+            {
+                candidates.AddRange(LibraryGoals);
+            }
+
+            if (typeof(T).IsAssignableFrom(typeof(IArc)))
+            {
+                candidates.AddRange(LibraryArcs);
+            }
+
+            var result = candidates.Find(candidate => candidate.FilePath == filePath);
+
+            return (T)result;
+        }
+
+        /// <summary>
+        /// Gets a library config object by ID.
+        /// </summary>
+        public static T GetById<T>(string id) where T : IConfigObject
+        {
+            var candidates = new List<IConfigObject>();
+
+            if (typeof(T).IsAssignableFrom(typeof(IGoal)))
+            {
+                candidates.AddRange(LibraryGoals);
+            }
+
+            if (typeof(T).IsAssignableFrom(typeof(IArc)))
+            {
+                candidates.AddRange(LibraryArcs);
+            }
+
+            var result = candidates.Find(candidate => candidate.Id == id);
+
+            return (T)result;
+        }
+
+        public static IConfigObject GetById(Type type, string id)
+        {
+            var candidates = new List<IConfigObject>();
+
+            if (typeof(IGoal).IsAssignableFrom(type))
+            {
+                candidates.AddRange(LibraryGoals);
+            }
+
+            if (typeof(IArc).IsAssignableFrom(type))
+            {
+                candidates.AddRange(LibraryArcs);
+            }
+
+            var result = candidates.Find(candidate => candidate.Id == id);
+
+            return result;
         }
 
         /// <summary>
