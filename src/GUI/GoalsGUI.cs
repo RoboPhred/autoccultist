@@ -119,7 +119,6 @@ namespace AutoccultistNS.GUI
 
             var folders =
                 from goal in Library.Goals
-                where goal.FilePath != null
                 where FilterGoal(goal, false)
                 let path = goal.GetLibraryPath()
                 where path != null

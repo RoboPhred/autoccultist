@@ -6,7 +6,12 @@ namespace AutoccultistNS.Config
     {
         public static string GetLibraryPath(this IGoal goal)
         {
-            var path = goal.FilePath;
+            if (goal is not IConfigObject configObject)
+            {
+                return null;
+            }
+
+            var path = configObject.FilePath;
             if (path.StartsWith(Library.GoalsDirectory))
             {
                 return path.Substring(Library.GoalsDirectory.Length + 1);
@@ -17,7 +22,11 @@ namespace AutoccultistNS.Config
 
         public static string GetLibraryPath(this IArc arc)
         {
-            var path = arc.FilePath;
+            if (arc is not IConfigObject configObject)
+            {
+                return null;
+            }
+            var path = configObject.FilePath;
             if (path.StartsWith(Library.ArcsDirectory))
             {
                 return path.Substring(Library.ArcsDirectory.Length + 1);

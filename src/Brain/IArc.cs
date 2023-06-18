@@ -14,11 +14,6 @@ namespace AutoccultistNS.Brain
         string Name { get; }
 
         /// <summary>
-        /// Gets the file path to the arc file.
-        /// </summary>
-        string FilePath { get; }
-
-        /// <summary>
         /// Gets the selection hint to be used to determine the current arc on loading a save.
         /// </summary>
         IGameStateCondition SelectionHint { get; }
@@ -34,8 +29,9 @@ namespace AutoccultistNS.Brain
         bool SupportsNewGame { get; }
 
         /// <summary>
-        /// Gets a game persistence provider to start a new instance of this arc.
+        /// Gets a game persistence provider to start a new instance of this arc, if supported.
         /// </summary>
+        /// <returns>A <see cref="IGamePersistenceProvider"/> instance to start the new game, or `null` if not supported.</returns>
         GamePersistenceProvider GetNewGameProvider();
     }
 }
