@@ -31,7 +31,7 @@ namespace AutoccultistNS.Config
         /// Leave as null if none is specified.
         /// If specified, this will take precidence over <see cref="Legacy"/> when starting new games from arcs.
         /// </summary>
-        public string BaseSavePath { get; set; }
+        public string StartFromSave { get; set; }
 
         /// <summary>
         /// Gets or sets a list of motivations that will drive the execution of this arc.
@@ -53,9 +53,9 @@ namespace AutoccultistNS.Config
         {
             get
             {
-                if (!string.IsNullOrEmpty(this.BaseSavePath))
+                if (!string.IsNullOrEmpty(this.StartFromSave))
                 {
-                    return File.Exists(Path.Combine(this.arcFolder, this.BaseSavePath));
+                    return File.Exists(Path.Combine(this.arcFolder, this.StartFromSave));
                 }
 
                 if (!string.IsNullOrEmpty(this.Legacy))
@@ -97,9 +97,9 @@ namespace AutoccultistNS.Config
                 throw new InvalidConfigException("Brain must have at least one motivation.");
             }
 
-            if (!string.IsNullOrEmpty(this.BaseSavePath))
+            if (!string.IsNullOrEmpty(this.StartFromSave))
             {
-                var fullPath = Path.Combine(this.arcFolder, this.BaseSavePath);
+                var fullPath = Path.Combine(this.arcFolder, this.StartFromSave);
                 if (!File.Exists(fullPath))
                 {
                     throw new InvalidConfigException($"Base save file \"{fullPath}\" does not exist.");
@@ -119,9 +119,9 @@ namespace AutoccultistNS.Config
         public GamePersistenceProvider GetNewGameProvider()
         {
             // Base saves take priority over legacy.
-            if (!string.IsNullOrEmpty(this.BaseSavePath))
+            if (!string.IsNullOrEmpty(this.StartFromSave))
             {
-                var path = Path.Combine(this.arcFolder, this.BaseSavePath);
+                var path = Path.Combine(this.arcFolder, this.StartFromSave);
                 if (!File.Exists(path))
                 {
                     return null;

@@ -27,3 +27,14 @@ If consumed and aborted: ElementStackToken.ReturnToTabletop
 Only succeed if private ElementStackToken.IsOnTabletop `this.transform.parent.GetComponent<TabletopTokenContainer>() != null;`
 Throw error if ElementStackToken.Defunct
 Unique IDs? ElementStackToken.EntityWithMutationsId
+
+### Hide hidden aspects from bot?
+
+Do we want the bot to play it straight and not to have access to knowledge the player does not?
+Caveat: Apostle run has 'trapped fascination'. The aspect for this is hidden, BUT: The player can know which one it is by noticing what verb spat it out.
+
+### General game info condition
+
+Condition matchers for:
+
+- Current Legacy
