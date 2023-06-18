@@ -1,5 +1,5 @@
 name: Study notes from a Previous Patient
-priority: goal
+# priority: goal
 requirements:
   elementId: legacyphysiciannotes
 impulses:

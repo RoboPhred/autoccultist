@@ -1,0 +1,11 @@
+name: "Detective: Startup"
+legacy: detective
+selectionHint:
+  anyOf:
+    - elementId: legacydetectivejob
+motivations:
+  - name: Begin the Game
+    primaryGoals:
+      - !import /goals/legacy/detective/work-station.yml
+    supportingGoals:
+      - !import /goals/survive.yml
