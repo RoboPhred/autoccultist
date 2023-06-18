@@ -8,11 +8,13 @@ startingRecipe:
         - elementId: health
 conditionalOngoingRecipes:
   - condition:
-      situation: explore
-      storedCardsMatch:
-        anyOf:
-          - aspects: { hireling: 1, moth: 5 }
-          - aspects: { hireling: 1, edge: 5 }
+      anyOf:
+        - situation: explore
+          storedCardsMatch:
+            aspects: { hireling: 1, edge: 5 }
+        - situation: explore
+          storedCardsMatch:
+            aspects: { hireling: 1, moth: 5 }
     slots:
       Payment:
         elementId: funds
