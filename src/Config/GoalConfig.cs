@@ -36,7 +36,8 @@ namespace AutoccultistNS.Config
         /// <para>
         /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        public List<OneOrMany<IReactionConfig>> Impulses { get; set; } = new();
+        // public List<OneOrMany<IReactionConfig>> Impulses { get; set; } = new();
+        public FlatList<ImpulseConfig> Impulses { get; set; } = new();
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.
@@ -86,7 +87,7 @@ namespace AutoccultistNS.Config
 
         public IEnumerable<IReaction> GetReactions(IGameState state)
         {
-            return this.Impulses.SelectMany(i => i);
+            return this.Impulses;
         }
     }
 }

@@ -139,7 +139,7 @@ namespace AutoccultistNS.Yaml
                     .WithNamingConvention(NamingConvention)
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
-                    .WithNodeDeserializer(new OneOrManyDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new FlatListDeserializer(), s => s.OnTop())
                     .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
                     .WithNodeDeserializer(objectDeserializer => new WrappedObjectNodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
                     .Build();

@@ -36,7 +36,7 @@ motivations:
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml
-  - name: Get a stronger physique while finding people to recruit
+  - name: Get a stronger physique
     primaryGoals:
       - !import /goals/health/acquire-skillhealtha-with-work.yml
       - !import /goals/health/acquire-skillhealthb-with-work.yml
