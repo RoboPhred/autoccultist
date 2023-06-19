@@ -290,7 +290,7 @@ namespace AutoccultistNS.Brain
             {
                 if (executions.Remove(execution))
                 {
-                    break;
+                    return;
                 }
             }
 

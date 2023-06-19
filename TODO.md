@@ -38,3 +38,8 @@ Caveat: Apostle run has 'trapped fascination'. The aspect for this is hidden, BU
 Condition matchers for:
 
 - Current Legacy
+
+### Clean up NucleusAccumbens
+
+- Mess of maps and hash sets in there... Way too much redundant codependent state
+- Sometimes we get a reaction execution completion but can't find what imperative it belonged to...
