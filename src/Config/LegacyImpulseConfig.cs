@@ -10,12 +10,12 @@ namespace AutoccultistNS.Config
     /// An Impulse represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Impulse allow for its execution, the task should execute.
     /// </summary>
-    public class ImpulseConfig : NamedConfigObject, IReactionConfig
+    public class LegacyImpulseConfig : NamedConfigObject, IImpulseConfig
     {
         /// <summary>
         /// Gets or sets the impulse that this impulse inherits from.
         /// </summary>
-        public ImpulseConfig Extends { get; set; }
+        public LegacyImpulseConfig Extends { get; set; }
 
         /// <summary>
         /// Gets or sets the priority for this impulse.
@@ -39,7 +39,7 @@ namespace AutoccultistNS.Config
         public OperationConfig Operation { get; set; }
 
         /// <inheritdoc/>
-        TaskPriority IReaction.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
+        TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)
@@ -89,7 +89,7 @@ namespace AutoccultistNS.Config
             return ConditionResult.Success;
         }
 
-        public IReactionExecution Execute()
+        public IReaction Execute()
         {
             return (this.Operation ?? this.Extends.Operation).Execute();
         }

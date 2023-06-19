@@ -1,19 +1,23 @@
 namespace AutoccultistNS.Brain
 {
-    /// <summary>
-    /// A reaction is an action that the bot conditionally wants to perform.
-    /// When the condition is reached, the bot will perform its action.
-    /// </summary>
-    public interface IReaction : IGameStateCondition
+    using System;
+    using System.Threading.Tasks;
+
+    public interface IReaction
     {
         /// <summary>
-        /// Gets the priority of this reaction.
+        /// Raised when this reaciton execution completes.
         /// </summary>
-        TaskPriority Priority { get; }
+        event EventHandler Completed;
 
         /// <summary>
-        /// Perform the action associated with this reaction.
+        /// Abort the execution.
         /// </summary>
-        IReactionExecution Execute();
+        void Abort();
+
+        /// <summary>
+        /// Returns a task that completes when this reaction is established and ongoing.
+        /// </summary>
+        Task AwaitStarted();
     }
 }

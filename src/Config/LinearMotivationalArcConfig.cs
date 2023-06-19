@@ -167,9 +167,9 @@ namespace AutoccultistNS.Config
             return this.GetActiveMotivation(gameState)?.DescribeCurrentGoals(gameState);
         }
 
-        public IEnumerable<IReaction> GetReactions(IGameState state)
+        public IEnumerable<IImpulse> GetReactions(IGameState state)
         {
-            return this.GetActiveMotivation(state)?.GetReactions(state) ?? Enumerable.Empty<IReaction>();
+            return this.GetActiveMotivation(state)?.GetReactions(state) ?? Enumerable.Empty<IImpulse>();
         }
 
         private MotivationConfig GetActiveMotivation(IGameState state)

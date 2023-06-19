@@ -4,12 +4,12 @@ namespace AutoccultistNS.Brain
     using System.Threading.Tasks;
 
     // FIXME: This is a bit of a hack shim between the old orchestration system and the new reaction system.
-    public class OperationReactionExecution : IReactionExecution
+    public class OperationReaction : IReaction
     {
         private readonly ISituationOrchestration orchestration;
         private readonly Task startTask;
 
-        public OperationReactionExecution(IOperation operation)
+        public OperationReaction(IOperation operation)
         {
             this.Operation = operation;
 
@@ -32,7 +32,7 @@ namespace AutoccultistNS.Brain
 
         public override string ToString()
         {
-            return $"OperationReactionExecution:{this.Operation}";
+            return $"OperationReaction:{this.Operation}";
         }
 
         public void Abort()

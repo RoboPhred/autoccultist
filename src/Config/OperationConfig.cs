@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
     /// </summary>
-    public class OperationConfig : NamedConfigObject, IOperation, IReactionConfig
+    public class OperationConfig : NamedConfigObject, IOperation, IImpulseConfig
     {
         /// <summary>
         /// Defines options for when to consider this operation startable.
@@ -46,7 +46,7 @@ namespace AutoccultistNS.Config
         /// Operations with a higher priority will run before lower priority operation.
         /// </summary>
         /// <remarks>
-        /// This will have no effect if this operation is nested inside another reaction such as an <see cref="ImpulseConfig"/>.
+        /// This will have no effect if this operation is nested inside another reaction such as an <see cref="LegacyImpulseConfig"/>.
         /// </remarks>
         public TaskPriority? Priority { get; set; }
 
@@ -79,17 +79,17 @@ namespace AutoccultistNS.Config
 
         string IOperation.Situation => this.Situation ?? this.Extends?.Situation;
 
-        TaskPriority IReaction.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
+        TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
         public override string ToString()
         {
             return $"OperationConfig(Name = {this.Name}, Situation = {this.Situation})";
         }
 
-        public IReactionExecution Execute()
+        public IReaction Execute()
         {
             NoonUtility.Log($"Executing operation {this.Name}.");
-            return new OperationReactionExecution(this);
+            return new OperationReaction(this);
         }
 
         /// <inheritdoc/>

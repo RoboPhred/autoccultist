@@ -42,6 +42,6 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets the active reactions for this imperative.
         /// </summary>
-        IEnumerable<IReaction> GetReactions(IGameState state);
+        IEnumerable<IImpulse> GetReactions(IGameState state);
     }
 }

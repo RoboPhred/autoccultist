@@ -62,7 +62,7 @@ namespace AutoccultistNS.Config
             }
         }
 
-        public IEnumerable<IReaction> GetReactions(IGameState state)
+        public IEnumerable<IImpulse> GetReactions(IGameState state)
         {
             foreach (var goal in this.PrimaryGoals.Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
             {

@@ -15,13 +15,13 @@ namespace AutoccultistNS.Brain
 
         // These are redundant, but we need efficient lookup of reactions.
         // This is a mess... We need to track:
-        // - Reactions, so we know not to run them multiple times
-        // - ReactionExecutions by imperative, so we can abort them.
-        // - Reactions by ReactionExecution, so we can remove them from ActiveReactions on complete.
+        // - impulses, so we know not to run them multiple times
+        // - reactions by imperative, so we can abort them.
+        // - impulses by reaction, so we can remove them from RunningImpulses on complete.
         //   I dont think we can rely on lambda hooks here as that will lead to memory leaks... I think... I can't remember if our static class will keep our handler around.
-        private static readonly HashSet<IReaction> RunningReactions = new();
-        private static readonly Dictionary<IReactionExecution, IReaction> ReactionsByExecution = new();
-        private static readonly Dictionary<IImperative, HashSet<IReactionExecution>> ActiveImperativeExecutions = new();
+        private static readonly HashSet<IImpulse> RunningImpulses = new();
+        private static readonly Dictionary<IReaction, IImpulse> ImpulsesByReaction = new();
+        private static readonly Dictionary<IImperative, HashSet<IReaction>> ActiveReactionsByImperative = new();
 
         private static bool isCheckingReactions = false;
         private static GameAPI.PauseToken pauseToken;
@@ -64,7 +64,7 @@ namespace AutoccultistNS.Brain
             }
 
             ActiveImperatives.Add(imperative);
-            ActiveImperativeExecutions.Add(imperative, new HashSet<IReactionExecution>());
+            ActiveReactionsByImperative.Add(imperative, new HashSet<IReaction>());
         }
 
         /// <summary>
@@ -75,12 +75,12 @@ namespace AutoccultistNS.Brain
         {
             ActiveImperatives.Remove(imperative);
 
-            foreach (var execution in ActiveImperativeExecutions[imperative])
+            foreach (var execution in ActiveReactionsByImperative[imperative])
             {
                 execution.Abort();
             }
 
-            ActiveImperativeExecutions.Remove(imperative);
+            ActiveReactionsByImperative.Remove(imperative);
         }
 
         /// <summary>
@@ -88,13 +88,13 @@ namespace AutoccultistNS.Brain
         /// </summary>
         public static void Reset()
         {
-            foreach (var execution in ActiveImperativeExecutions.Values.SelectMany(r => r).ToArray())
+            foreach (var execution in ActiveReactionsByImperative.Values.SelectMany(r => r).ToArray())
             {
                 execution.Abort();
             }
 
             ActiveImperatives.Clear();
-            ActiveImperativeExecutions.Clear();
+            ActiveReactionsByImperative.Clear();
         }
 
         public static string DumpStatus()
@@ -163,7 +163,7 @@ namespace AutoccultistNS.Brain
                 while (true)
                 {
                     // Scan through all possible reactions and invoke the highest priority one that can start
-                    var pairing = GetReadyReactions().FirstOrDefault();
+                    var pairing = GetReadyImpulses().FirstOrDefault();
                     if (pairing == null)
                     {
                         return;
@@ -192,10 +192,10 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets all reactions that are ready to be invoked, in order of priority.
         /// </summary>
-        private static IEnumerable<EnumeratedReaction> GetReadyReactions()
+        private static IEnumerable<EnumeratedReaction> GetReadyImpulses()
         {
-            return from reaction in GetActiveReactions()
-                   where !RunningReactions.Contains(reaction.Reaction)
+            return from reaction in GetAllImpulses()
+                   where !RunningImpulses.Contains(reaction.Reaction)
                    where reaction.Reaction.IsConditionMet(GameStateProvider.Current)
                    select reaction;
         }
@@ -203,7 +203,7 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets all reactions that are currently active, in order of priority.
         /// </summary>
-        private static IEnumerable<EnumeratedReaction> GetActiveReactions()
+        private static IEnumerable<EnumeratedReaction> GetAllImpulses()
         {
             // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
             return
@@ -228,22 +228,22 @@ namespace AutoccultistNS.Brain
         {
             // Clean up our mess of tracking maps.
             // FIXME: This is disgusting.  Track these better.
-            if (ActiveImperativeExecutions.TryGetValue(imperative, out var executions))
+            if (ActiveReactionsByImperative.TryGetValue(imperative, out var executions))
             {
                 foreach (var execution in executions.ToArray())
                 {
-                    execution.Completed -= HandleReactionExecutionCompleted;
+                    execution.Completed -= HandleReactionCompleted;
                     execution.Abort();
 
-                    if (ReactionsByExecution.TryGetValue(execution, out var reaction))
+                    if (ImpulsesByReaction.TryGetValue(execution, out var reaction))
                     {
-                        RunningReactions.Remove(reaction);
+                        RunningImpulses.Remove(reaction);
                     }
 
-                    ReactionsByExecution.Remove(execution);
+                    ImpulsesByReaction.Remove(execution);
                 }
 
-                ActiveImperativeExecutions.Remove(imperative);
+                ActiveReactionsByImperative.Remove(imperative);
             }
 
             if (!ActiveImperatives.Remove(imperative))
@@ -254,39 +254,35 @@ namespace AutoccultistNS.Brain
             OnImperativeCompleted?.Invoke(null, new ImperativeEventArgs(imperative));
         }
 
-        private static void OnReactionStarted(IImperative imperative, IReaction reaction, IReactionExecution execution)
+        private static void OnReactionStarted(IImperative imperative, IImpulse reaction, IReaction execution)
         {
             // FIXME: We keep so many variations of the same imperative => reaction => execution mapping.  Clean this up
-            RunningReactions.Add(reaction);
-            ActiveImperativeExecutions[imperative].Add(execution);
-            ReactionsByExecution.Add(execution, reaction);
+            RunningImpulses.Add(reaction);
+            ActiveReactionsByImperative[imperative].Add(execution);
+            ImpulsesByReaction.Add(execution, reaction);
 
-            execution.Completed += HandleReactionExecutionCompleted;
+            execution.Completed += HandleReactionCompleted;
         }
 
-        private static void HandleReactionExecutionCompleted(object sender, EventArgs e)
+        private static void HandleReactionCompleted(object sender, EventArgs e)
         {
-            var execution = (IReactionExecution)sender;
-            execution.Completed -= HandleReactionExecutionCompleted;
-
-            // Note: We briefly tried to have execution carry its own IReaction property, but that turned out to be a no-go
-            // since ImpulseConfig is an IReaction that returns the IReactionExecution created by a sub-IReaction (OperationConfig)
-            // This meant that ImpulseConfig.Execute().Reaction would return a OperationConfig, which wouldn't correspond to what we used.
+            var execution = (IReaction)sender;
+            execution.Completed -= HandleReactionCompleted;
 
             // FIXME: More disgusting tracking maps.
-            if (ReactionsByExecution.TryGetValue(execution, out var reaction))
+            if (ImpulsesByReaction.TryGetValue(execution, out var reaction))
             {
-                RunningReactions.Remove(reaction);
+                RunningImpulses.Remove(reaction);
             }
             else
             {
                 Autoccultist.Instance.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find reaction for execution {execution}");
             }
 
-            ReactionsByExecution.Remove(execution);
+            ImpulsesByReaction.Remove(execution);
 
             // Shame we don't know what imperative this was part of, but we shouldn't have very many parallel imperatives
-            foreach (var executions in ActiveImperativeExecutions.Values)
+            foreach (var executions in ActiveReactionsByImperative.Values)
             {
                 if (executions.Remove(execution))
                 {
@@ -301,7 +297,7 @@ namespace AutoccultistNS.Brain
         {
             public IImperative Imperative { get; set; }
 
-            public IReaction Reaction { get; set; }
+            public IImpulse Reaction { get; set; }
 
             public int Index { get; set; }
         }

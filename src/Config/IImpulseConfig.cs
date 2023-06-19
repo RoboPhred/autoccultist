@@ -4,8 +4,8 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Yaml;
 
     [DuckTypeCandidate(typeof(OperationConfig))]
-    [DuckTypeCandidate(typeof(ImpulseConfig))]
-    public interface IReactionConfig : IConfigObject, IReaction
+    [DuckTypeCandidate(typeof(LegacyImpulseConfig))]
+    public interface IImpulseConfig : IConfigObject, IImpulse
     {
     }
 }
