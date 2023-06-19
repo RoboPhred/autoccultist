@@ -30,7 +30,6 @@ namespace AutoccultistNS.Brain
 
         public IOperation Operation { get; }
 
-
         public override string ToString()
         {
             return $"OperationReactionExecution:{this.Operation}";

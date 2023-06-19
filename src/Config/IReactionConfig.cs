@@ -5,5 +5,7 @@ namespace AutoccultistNS.Config
 
     [DuckTypeCandidate(typeof(OperationConfig))]
     [DuckTypeCandidate(typeof(ImpulseConfig))]
-    public interface IReactionConfig : IConfigObject, IReaction { }
+    public interface IReactionConfig : IConfigObject, IReaction
+    {
+    }
 }

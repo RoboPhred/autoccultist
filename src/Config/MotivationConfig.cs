@@ -19,14 +19,14 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
-        public List<GoalConfig> PrimaryGoals { get; set; } = new();
         // public List<LibraryConfigObject<GoalConfig>> PrimaryGoals { get; set; } = new();
+        public List<GoalConfig> PrimaryGoals { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the secondary goals of this motivation.
         /// </summary>
-        public List<GoalConfig> SupportingGoals { get; set; } = new();
         // public List<LibraryConfigObject<GoalConfig>> SupportingGoals { get; set; } = new();
+        public List<GoalConfig> SupportingGoals { get; set; } = new();
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)

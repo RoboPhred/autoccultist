@@ -58,10 +58,10 @@ namespace AutoccultistNS.GameState.Impl
             // This allows a SlotCardAction to concievably target cards in verbs that are still in their warmup period.
             // This is useful in several "pro" strategies where sulochana is used in the talk verb to pauase the timer on influences.
             // Note: In practice, SlottableCardChooser still looks for tabletop only.
+            // WARN: tokenState.InPlayerDrivenMotion and tokenState.InSystemDrivenMotion are unreliable, token
+            //  states tend to randomly not be updated. See: UnknownState cards sitting on the board.
             this.isSlottable = !enRoute
                 && !sourceStack.Defunct
-                // These are unreliable, token states tend to randomly not be updated.
-                // See: UnknownState cards sitting on the board.
                 && !tokenState.InPlayerDrivenMotion()
                 && !tokenState.InSystemDrivenMotion()
                 && sourceStack.Token.Sphere.IsExteriorSphere;

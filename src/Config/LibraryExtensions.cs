@@ -1,36 +1,29 @@
 namespace AutoccultistNS.Config
 {
+    using System.IO;
     using AutoccultistNS.Brain;
 
     public static class LibraryExtensions
     {
-        public static string GetLibraryPath(this IGoal goal)
+        public static string GetLibraryPath(this IImperative goal)
         {
             if (goal is not IConfigObject configObject)
             {
                 return null;
             }
 
-            var path = configObject.FilePath;
-            if (path.StartsWith(Library.GoalsDirectory))
-            {
-                return path.Substring(Library.GoalsDirectory.Length + 1);
-            }
-
-            return null;
-        }
-
-        public static string GetLibraryPath(this IArc arc)
-        {
-            if (arc is not IConfigObject configObject)
+            var libraryPath = LibraryPathAttribute.GetLibraryPath(goal.GetType());
+            if (libraryPath == null)
             {
                 return null;
             }
 
+            libraryPath = Path.Combine(Autoccultist.AssemblyDirectory, libraryPath);
+
             var path = configObject.FilePath;
-            if (path.StartsWith(Library.ArcsDirectory))
+            if (path.StartsWith(libraryPath))
             {
-                return path.Substring(Library.ArcsDirectory.Length + 1);
+                return path.Substring(libraryPath.Length + 1);
             }
 
             return null;

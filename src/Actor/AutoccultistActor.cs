@@ -20,8 +20,6 @@ namespace AutoccultistNS.Actor
 
         private static bool isDrainingQueue = false;
 
-        public static bool SortTableOnIdle { get; set; } = true;
-
         /// <summary>
         /// Queue up an asynchronous action for fifo execution.
         /// </summary>
@@ -114,7 +112,7 @@ namespace AutoccultistNS.Actor
             pauseToken?.Dispose();
             pauseToken = null;
 
-            if (SortTableOnIdle)
+            if (AutoccultistSettings.SortTableOnIdle)
             {
                 GameAPI.SortTable();
             }

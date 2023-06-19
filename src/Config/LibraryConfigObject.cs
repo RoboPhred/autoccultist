@@ -12,14 +12,15 @@ namespace AutoccultistNS.Config
     /// <para>
     /// Values should be a string file path, a config object id, or an !import directive.
     /// </summary>
-    public class LibraryConfigObject<T> : IYamlConvertible where T : IConfigObject
+    public class LibraryConfigObject<T> : IYamlConvertible
+        where T : IConfigObject
     {
-        public T Value { get; private set; }
-
         public LibraryConfigObject(T value)
         {
             this.Value = value;
         }
+
+        public T Value { get; private set; }
 
         public static implicit operator T(LibraryConfigObject<T> obj)
         {

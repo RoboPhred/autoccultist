@@ -4,8 +4,14 @@ namespace AutoccultistNS.Brain
 
     public class ReactionFailedException : Exception
     {
-        public ReactionFailedException(string message) : base(message) { }
+        public ReactionFailedException(string message)
+            : base(message)
+        {
+        }
 
-        public ReactionFailedException(string message, Exception innerException) : base(message, innerException) { }
+        public ReactionFailedException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

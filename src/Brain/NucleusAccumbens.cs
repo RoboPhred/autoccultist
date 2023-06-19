@@ -205,8 +205,8 @@ namespace AutoccultistNS.Brain
         /// </summary>
         private static IEnumerable<EnumeratedReaction> GetActiveReactions()
         {
+            // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
             return
-                // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
                 from imperative in ActiveImperatives
                 from reaction in imperative.GetReactions(GameStateProvider.Current).Select((r, index) => new { Value = r, Index = index })
                 orderby reaction.Value.Priority descending, reaction.Index ascending
@@ -232,9 +232,9 @@ namespace AutoccultistNS.Brain
             {
                 foreach (var execution in executions.ToArray())
                 {
-
                     execution.Completed -= HandleReactionExecutionCompleted;
                     execution.Abort();
+
                     if (ReactionsByExecution.TryGetValue(execution, out var reaction))
                     {
                         RunningReactions.Remove(reaction);
