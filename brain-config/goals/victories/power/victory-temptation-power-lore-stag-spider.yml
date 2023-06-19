@@ -40,6 +40,7 @@ completedWhen:
 # This leaves us with a lanternc and mothc for the stag
 # ...After stag door:
 # => mothc + lanternc = lanternd
+# ...After spider door (needs lanternd)
 # => forged + lanternd = forgee
 impulses:
   - name: Acquire the Stag Riddle
@@ -193,13 +194,14 @@ impulses:
     forbidders:
       anyOf:
         - cardSet:
-            # Stop at 3
+            # Stop at 2 (Note: Was 3, but the plans above call for 2?)
             - elementId: fragmentforgec
             - elementId: fragmentforgec
-            - elementId: fragmentforgec
+            # - elementId: fragmentforgec
         - cardSet:
-            - elementId: fragmentforgec
+            # - elementId: fragmentforgec
             - elementId: fragmentforged
+        - elementId: fragmentforgee
     operation: !import /operations/lore/forge/lore-subvert-lantern-forge-b.yml
   # forgec + forgec = forged
   - name: Combine A Shaping Chant for Callidate Invocation
@@ -207,6 +209,7 @@ impulses:
     requirements:
       elementId: waystag_after
     forbidders:
+      # Only do this once
       elementId: fragmentforged
     operation: !import /operations/lore/forge/lore-combine-forge-c.yml
   # mothb + lanternb = lanternc

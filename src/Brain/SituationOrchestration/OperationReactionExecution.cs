@@ -30,6 +30,11 @@ namespace AutoccultistNS.Brain
 
         public event EventHandler Completed;
 
+        public override string ToString()
+        {
+            return $"OperationReactionExecution:{this.Operation}";
+        }
+
         public void Abort()
         {
             this.orchestration.Abort();
