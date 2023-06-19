@@ -2,7 +2,6 @@ namespace AutoccultistNS.Yaml
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -23,13 +22,9 @@ namespace AutoccultistNS.Yaml
 
             var subjectType = expectedType.GetGenericArguments()[0];
 
-            NoonUtility.LogWarning($"Deserializing FlatList of type " + subjectType.Name);
-
             // We need to handle this specially, as we need to tunnel our "FlatList" into the inner document.
             if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
-                NoonUtility.LogWarning($"...We are import");
-
                 value = Deserializer.DeserializeFromParser(filePath, importParser =>
                 {
                     // Expecting a basic, non fragment single document file.
@@ -48,8 +43,6 @@ namespace AutoccultistNS.Yaml
             }
             else
             {
-                NoonUtility.LogWarning($"...We are not import");
-
                 value = this.DeserializeFlatList(reader, expectedType, subjectType, nestedObjectDeserializer);
                 return true;
             }
@@ -72,28 +65,19 @@ namespace AutoccultistNS.Yaml
 
         private IEnumerable<object> DeserializeFlatListElement(IParser reader, Type subjectType, Func<IParser, Type, object> nestedObjectDeserializer)
         {
-            NoonUtility.LogWarning($"...Got item in flat list");
-
             // TODO: Might be able to simplify this, especially the !import bit, by trying to call
             // nestedObjectDeserializer with the right target type (FlatList<T>), but it will have to accept a top-level Object instead of always being a list.
 
             var result = new List<object>();
             if (reader.TryConsume<SequenceStart>(out var _))
             {
-                NoonUtility.LogWarning($"...Item is sequence");
-
                 while (!reader.TryConsume<SequenceEnd>(out var _))
                 {
-                    NoonUtility.LogWarning($"...Handling item in sequence " + reader.Peek<NodeEvent>().ToString());
                     result.AddRange(this.DeserializeFlatListElement(reader, subjectType, nestedObjectDeserializer));
                 }
-
-                NoonUtility.LogWarning($"...Ended sequence");
             }
             else if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
-                NoonUtility.LogWarning($"...Item is import");
-
                 // This import could give us a list of a single item
                 // important: If this gives us a single item, we MUST return that single item back through the parser for
                 // caching reasons, as we need to cache what's in the file, not what we want
@@ -106,13 +90,11 @@ namespace AutoccultistNS.Yaml
                     object innerValue;
                     if (!importParser.Accept<SequenceStart>(out var _))
                     {
-                        NoonUtility.LogWarning($"...Item import is single");
                         // We have a single item, so we need to return it back through the parser
                         innerValue = nestedObjectDeserializer(importParser, subjectType);
                     }
                     else
                     {
-                        NoonUtility.LogWarning($"...Item import is list");
                         // It's a list, parse it according to our own rules.
                         // Note: We are assuming this list is meant for us, so our cached value will be flattened!
                         innerValue = this.DeserializeFlatListElement(importParser, subjectType, nestedObjectDeserializer);
@@ -135,11 +117,8 @@ namespace AutoccultistNS.Yaml
             }
             else
             {
-                NoonUtility.LogWarning($"...Item is not sequence " + reader.Peek<NodeEvent>().ToString());
                 result.Add(nestedObjectDeserializer(reader, subjectType));
             }
-
-            NoonUtility.LogWarning($"...Handled item in flat list");
 
             return result;
         }

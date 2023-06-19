@@ -18,7 +18,6 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
-    [LibraryPath("arcs")]
     public class LinearMotivationalArcConfig : NamedConfigObject, IArcConfig
     {
         private string arcFolder;

@@ -73,7 +73,7 @@ namespace AutoccultistNS.Brain
 
         private async Task DumpSituationCoroutine(CancellationToken cancellationToken)
         {
-            await new ConcludeSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+            await new ConcludeSituationAction(this.SituationId).Execute(cancellationToken);
         }
     }
 }

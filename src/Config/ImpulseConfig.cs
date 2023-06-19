@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config
     /// An Impulse represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Impulse allow for its execution, the task should execute.
     /// </summary>
-    public class ImpulseConfig : NamedConfigObject, IReaction
+    public class ImpulseConfig : NamedConfigObject, IReactionConfig
     {
         /// <summary>
         /// Gets or sets the impulse that this impulse inherits from.

@@ -25,7 +25,8 @@ namespace AutoccultistNS.Yaml
             }
 
             // Things get gnarly here, as we might be parsing an !import tag.
-            // FIXME: No reason this should be here if we had a proper parser order, but reordering them any other way causes baffling parsing errors.
+            // We will have to peek into the import file, figure out what type it is of all our ducks, then parse it as that type.
+            // This is safe to cache as the file should always be that type.
             if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
                 value = Deserializer.DeserializeFromParser(filePath, importParser =>

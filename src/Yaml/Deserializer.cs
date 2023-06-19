@@ -135,14 +135,15 @@ namespace AutoccultistNS.Yaml
 
         private static IDeserializer BuildDeserializer()
         {
-            return new DeserializerBuilder()
+            var valueDeserializer = new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
-                    .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
                     .WithNodeDeserializer(new FlatListDeserializer(), s => s.OnTop())
-                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.After<FlatListDeserializer>())
+                    .WithNodeDeserializer(new ImportDeserializer(), s => s.After<DuckTypeDeserializer>())
                     .WithNodeDeserializer(objectDeserializer => new WrappedObjectNodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
-                    .Build();
+                    .BuildValueDeserializer();
+            return YamlDotNet.Serialization.Deserializer.FromValueDeserializer(new WrappedValueDeserializer(valueDeserializer));
         }
     }
 }

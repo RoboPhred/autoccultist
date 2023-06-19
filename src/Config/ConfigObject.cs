@@ -31,7 +31,7 @@ namespace AutoccultistNS.Config
             if (string.IsNullOrEmpty(this.Id))
             {
                 var id = this.FilePath;
-                var rootPath = LibraryPathAttribute.GetLibraryPath(this.GetType()) ?? Autoccultist.AssemblyDirectory;
+                var rootPath = LibraryConfigObjectAttribute.GetLibraryPath(this.GetType()) ?? Autoccultist.AssemblyDirectory;
                 id = FilesystemHelpers.GetRelativePath(id, rootPath);
                 id = Path.ChangeExtension(id, null);
                 id = id.Replace('\\', '/');

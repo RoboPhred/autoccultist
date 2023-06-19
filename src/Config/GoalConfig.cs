@@ -1,7 +1,6 @@
 namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
-    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.GameState;
@@ -13,8 +12,8 @@ namespace AutoccultistNS.Config
     /// <para>
     /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
-    [LibraryPath("goals")]
-    public class GoalConfig : NamedConfigObject, IGoal
+    [LibraryConfigObject("goals")]
+    public class GoalConfig : NamedConfigObject, IImperativeConfig, IGoal
     {
         /// <summary>
         /// Gets or sets the condition which is required to be met for this goal to activate.
@@ -37,7 +36,7 @@ namespace AutoccultistNS.Config
         /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
         // public List<OneOrMany<IReactionConfig>> Impulses { get; set; } = new();
-        public FlatList<ImpulseConfig> Impulses { get; set; } = new();
+        public FlatList<IReactionConfig> Impulses { get; set; } = new();
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.

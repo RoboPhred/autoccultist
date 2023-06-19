@@ -12,7 +12,7 @@ namespace AutoccultistNS.Config
                 return null;
             }
 
-            var libraryPath = LibraryPathAttribute.GetLibraryPath(goal.GetType());
+            var libraryPath = LibraryConfigObjectAttribute.GetLibraryPath(goal.GetType());
             if (libraryPath == null)
             {
                 return null;

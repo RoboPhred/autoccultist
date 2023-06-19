@@ -2,10 +2,10 @@ namespace AutoccultistNS.Config
 {
     using System;
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class LibraryPathAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
+    public class LibraryConfigObjectAttribute : Attribute
     {
-        public LibraryPathAttribute(string path)
+        public LibraryConfigObjectAttribute(string path)
         {
             this.Path = path;
         }
@@ -14,7 +14,7 @@ namespace AutoccultistNS.Config
 
         public static string GetLibraryPath(Type type)
         {
-            var attribute = (LibraryPathAttribute)Attribute.GetCustomAttribute(type, typeof(LibraryPathAttribute));
+            var attribute = (LibraryConfigObjectAttribute)Attribute.GetCustomAttribute(type, typeof(LibraryConfigObjectAttribute));
             if (string.IsNullOrEmpty(attribute?.Path))
             {
                 return null;

@@ -27,39 +27,38 @@ namespace AutoccultistNS.Config
             return obj.Value;
         }
 
+        public void ImportFrom(string fileName)
+        {
+            var providedName = FilesystemHelpers.GetRelativePath(fileName, Autoccultist.AssemblyDirectory);
+            var value = Library.GetByFilePath<T>(providedName);
+
+            if (value == null)
+            {
+                throw new YamlException($"Could not find {typeof(T).Name} with name '{providedName}' in the library.");
+            }
+
+            this.Value = value;
+        }
+
         public void Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
-            string providedName;
             T value;
 
-            NoonUtility.LogWarning("Reading LibraryConfigObject for type " + typeof(T).Name + " from " + AutoccultistNS.Yaml.Deserializer.CurrentFilePath);
+            var providedName = parser.Consume<Scalar>().Value;
 
-            // For backwards compatibility.
-            if (ImportDeserializer.TryConsumeImport(parser, out var fileName))
+            if (providedName.StartsWith("./"))
             {
-                NoonUtility.LogWarning("Got import for filename " + fileName);
-                providedName = FilesystemHelpers.GetRelativePath(fileName, Autoccultist.AssemblyDirectory);
-                NoonUtility.LogWarning("Got relative path " + providedName);
-                value = Library.GetByFilePath<T>(providedName);
+                var resolved = Path.Combine(AutoccultistNS.Yaml.Deserializer.CurrentFilePath, providedName.Substring(2));
+                value = Library.GetByFilePath<T>(resolved);
+            }
+            else if (providedName.StartsWith("/"))
+            {
+                var resolved = Path.Combine(Autoccultist.AssemblyDirectory, providedName.Substring(1));
+                value = Library.GetByFilePath<T>(resolved);
             }
             else
             {
-                providedName = parser.Consume<Scalar>().Value;
-
-                if (providedName.StartsWith("./"))
-                {
-                    var resolved = Path.Combine(AutoccultistNS.Yaml.Deserializer.CurrentFilePath, providedName.Substring(2));
-                    value = Library.GetByFilePath<T>(resolved);
-                }
-                else if (providedName.StartsWith("/"))
-                {
-                    var resolved = Path.Combine(Autoccultist.AssemblyDirectory, providedName.Substring(1));
-                    value = Library.GetByFilePath<T>(resolved);
-                }
-                else
-                {
-                    value = Library.GetById<T>(providedName);
-                }
+                value = Library.GetById<T>(providedName);
             }
 
             if (value == null)

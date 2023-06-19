@@ -4,6 +4,7 @@ namespace AutoccultistNS.Config
     using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
 
     /// <summary>
@@ -12,21 +13,19 @@ namespace AutoccultistNS.Config
     /// <para>
     /// For legacy reasons, a motivation can always activate regardless of its goals.
     /// </summary>
-    public class MotivationConfig : NamedConfigObject, IImperative
+    public class MotivationConfig : NamedConfigObject, IImperativeConfig, IImperative
     {
         // FIXME: LibraryConfigObject not working with imports here...  !import probably takes priority then fails to import to LibraryConfigObject
 
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
-        // public List<LibraryConfigObject<GoalConfig>> PrimaryGoals { get; set; } = new();
-        public List<GoalConfig> PrimaryGoals { get; set; } = new();
+        public FlatList<IImperativeConfig> PrimaryGoals { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the secondary goals of this motivation.
         /// </summary>
-        // public List<LibraryConfigObject<GoalConfig>> SupportingGoals { get; set; } = new();
-        public List<GoalConfig> SupportingGoals { get; set; } = new();
+        public FlatList<IImperativeConfig> SupportingGoals { get; set; } = new();
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)

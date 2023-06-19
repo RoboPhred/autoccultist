@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
     /// </summary>
-    public class OperationConfig : NamedConfigObject, IOperation, IReaction
+    public class OperationConfig : NamedConfigObject, IOperation, IReactionConfig
     {
         /// <summary>
         /// Defines options for when to consider this operation startable.

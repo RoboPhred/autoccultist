@@ -155,6 +155,7 @@ namespace AutoccultistNS.Config
             catch (YamlFileException ex)
             {
                 LibraryParseErrors.Add(ex);
+                NoonUtility.LogWarning(ex.ToString());
             }
         }
 
@@ -174,6 +175,7 @@ namespace AutoccultistNS.Config
             catch (YamlFileException ex)
             {
                 LibraryParseErrors.Add(ex);
+                NoonUtility.LogWarning(ex.ToString());
             }
         }
     }
