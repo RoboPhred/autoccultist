@@ -51,49 +51,57 @@ namespace AutoccultistNS.Brain
         /// <returns>True if the situation is idle and available, False otherwise.</returns>
         public static bool IsSituationAvailable(string situationId)
         {
-            var situation = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == situationId);
-            if (situation == null)
+            if (CurrentOrchestrations.Keys.Contains(situationId))
             {
+                // We are doing something with it.
                 return false;
             }
 
-            if (situation.State != StateEnum.Unstarted && situation.State != StateEnum.Complete)
+            var situationState = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == situationId);
+            if (situationState == null)
             {
-                // Busy doing something.
+                // Situation doesnt exist.
                 return false;
             }
 
-            // Not busy, but we are still orchestrating it.
-            return !ExecutingOperationsBySituation.ContainsKey(situationId);
+            if (situationState.State == SecretHistories.Enums.StateEnum.Unstarted)
+            {
+                // We can take over unstarted situations.
+                return true;
+            }
+
+            if (situationState.State == SecretHistories.Enums.StateEnum.Ongoing)
+            {
+                // Only take over ongoing situations if they are empty.
+                return situationState.RecipeSlots.All(x => x.Card == null);
+            }
+
+            // Don't know what the situation is doing, leave it alone.
+            return false;
         }
 
         /// <summary>
         /// Executes the given operation.
         /// </summary>
         /// <param name="operation">The operation to execute.</param>
-        public static ISituationOrchestration StartOperation(IOperation operation)
+        public static ISituationOrchestration RegisterOperation(IOperation operation)
         {
             try
             {
                 if (ExecutingOperationsBySituation.ContainsKey(operation.Situation))
                 {
-                    Autoccultist.Instance.LogWarn($"Cannot execute operation {operation.Name} because the situation {operation.Situation} already has an orchestration running.");
-                    return null;
+                    throw new OperationFailedException($"Cannot register operation {operation.Name} because the situation {operation.Situation} already has an orchestration running.");
                 }
 
                 var orchestration = new OperationOrchestration(operation);
                 ExecutingOperationsBySituation[operation.Situation] = orchestration;
                 orchestration.Completed += OnOrchestrationCompleted;
 
-                orchestration.Start();
-
                 return orchestration;
             }
             catch (Exception ex)
             {
-                Autoccultist.Instance.LogWarn($"Error executing operation {operation.Name}: {ex.Message}");
-                NoonUtility.LogException(ex);
-                return null;
+                throw new OperationFailedException($"Failed to register operation {operation.Name}.", ex);
             }
         }
 

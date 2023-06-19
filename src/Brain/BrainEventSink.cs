@@ -6,24 +6,6 @@ namespace AutoccultistNS.Brain
     public static class BrainEventSink
     {
         /// <summary>
-        /// Called when a goal is started.
-        /// </summary>
-        /// <param name="goal">The started goal.</param>
-        public static void OnGoalStarted(IGoal goal)
-        {
-            Autoccultist.Instance.LogInfo($"Starting goal {goal.Name}.");
-        }
-
-        /// <summary>
-        /// Called when a goal is completed.
-        /// </summary>
-        /// <param name="goal">The completed goal.</param>
-        public static void OnGoalCompleted(IGoal goal)
-        {
-            Autoccultist.Instance.LogInfo($"Goal {goal.Name} is now complete.");
-        }
-
-        /// <summary>
         /// Called when an operation is started.
         /// </summary>
         /// <param name="operation">The started operation.</param>

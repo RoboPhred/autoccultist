@@ -11,7 +11,6 @@ namespace AutoccultistNS.Brain
     /// </summary>
     public class DumpSituationOrchestration : ISituationOrchestration
     {
-        private Task currentTask;
         private CancellationTokenSource cancellationToken;
 
         /// <summary>
@@ -36,9 +35,9 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public void Start()
+        public Task Start()
         {
-            this.DumpSituation();
+            return this.DumpSituation();
         }
 
         /// <inheritdoc/>
@@ -54,18 +53,12 @@ namespace AutoccultistNS.Brain
             this.cancellationToken = null;
         }
 
-        public Task AwaitCurrentTask()
-        {
-            return this.currentTask ?? Task.FromResult(true);
-        }
-
-        private async void DumpSituation()
+        private async Task DumpSituation()
         {
             try
             {
                 this.cancellationToken = new CancellationTokenSource();
-                this.currentTask = AutoccultistActor.Perform(this.DumpSituationCoroutine, this.cancellationToken.Token);
-                await this.currentTask;
+                await AutoccultistActor.Perform(this.DumpSituationCoroutine, this.cancellationToken.Token);
             }
             catch (Exception ex)
             {
@@ -74,7 +67,6 @@ namespace AutoccultistNS.Brain
             finally
             {
                 this.cancellationToken = null;
-                this.currentTask = null;
                 this.Completed?.Invoke(this, EventArgs.Empty);
             }
         }

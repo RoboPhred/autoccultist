@@ -103,8 +103,16 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public void Start()
+        public async Task Start()
         {
+            if (!GameStateProvider.Current.Situations.Any(x => x.SituationId == this.SituationId))
+            {
+                // Situation was removed, abort.
+                Autoccultist.Instance.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
+                this.Abort();
+                return;
+            }
+
             if (this.operationState != OperationState.Unstarted)
             {
                 return;
@@ -118,12 +126,12 @@ namespace AutoccultistNS.Brain
                 case StateEnum.RequiringExecution:
                     this.operationState = OperationState.Starting;
                     BrainEventSink.OnOperationStarted(this.operation);
-                    this.RunCoroutine(this.StartOperationCoroutine, nameof(this.StartOperationCoroutine));
+                    await this.AwaitCoroutine(this.StartOperationCoroutine, nameof(this.StartOperationCoroutine));
                     break;
                 case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
                     BrainEventSink.OnOperationStarted(this.operation);
-                    this.ContinueOperation();
+                    await this.ContinueOperation();
                     break;
                 default:
                     // This happened to a the cult activity that should have been ongoing...  Got stuck on an unstarted state.
@@ -171,11 +179,6 @@ namespace AutoccultistNS.Brain
             this.End(true);
         }
 
-        public Task AwaitCurrentTask()
-        {
-            return this.currentCoroutine ?? Task.FromResult(true);
-        }
-
         private ISituationState GetSituationState()
         {
             var situation = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.SituationId);
@@ -199,7 +202,7 @@ namespace AutoccultistNS.Brain
             // We dont even know this is our portal, although we can guess by checking to see if our situation has a portal assigned to it.
             if (situation.CurrentRecipePortal != null && GameStateProvider.Current.Mansus.State != PortalActiveState.Closed)
             {
-                var recipeSolution = this.operation.GetCurrentRecipeSolution(situation);
+                var recipeSolution = this.operation.GetRecipeSolution(situation);
                 if (recipeSolution != null && recipeSolution.MansusChoice != null)
                 {
                     Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
@@ -264,7 +267,7 @@ namespace AutoccultistNS.Brain
             this.End();
         }
 
-        private void ContinueOperation()
+        private async Task ContinueOperation()
         {
             var situation = this.GetSituationState();
 
@@ -281,7 +284,7 @@ namespace AutoccultistNS.Brain
             this.ongoingRecipe = currentRecipe;
             this.ongoingRecipeTimeRemaining = situation.RecipeTimeRemaining ?? 0;
 
-            var recipeSolution = this.operation.GetCurrentRecipeSolution(situation);
+            var recipeSolution = this.operation.GetRecipeSolution(situation);
 
             if (recipeSolution == null)
             {
@@ -289,12 +292,13 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            this.RunCoroutine(token => this.ContinueSituationCoroutine(recipeSolution, token), nameof(this.ContinueSituationCoroutine));
+            await this.AwaitCoroutine(token => this.ContinueSituationCoroutine(recipeSolution, token), nameof(this.ContinueSituationCoroutine));
         }
 
         private async Task StartOperationCoroutine(CancellationToken cancellationToken)
         {
-            var recipeSolution = this.operation.StartingRecipe;
+            var stateOnBegin = this.GetSituationState();
+            var recipeSolution = this.operation.GetRecipeSolution(stateOnBegin);
 
             if (recipeSolution == null)
             {
@@ -318,11 +322,11 @@ namespace AutoccultistNS.Brain
             this.operationState = OperationState.Ongoing;
 
             // Accept the current recipe and fill its needs
-            var situationState = this.GetSituationState();
-            var followupRecipeSolution = this.operation.GetCurrentRecipeSolution(situationState);
+            var stateOnOngoing = this.GetSituationState();
+            var followupRecipeSolution = this.operation.GetRecipeSolution(stateOnOngoing);
             if (followupRecipeSolution != null)
             {
-                await new ExecuteRecipeAction(this.SituationId, followupRecipeSolution, $"{this.operation.Name} => {situationState.CurrentRecipe}").Execute(cancellationToken);
+                await new ExecuteRecipeAction(this.SituationId, followupRecipeSolution, $"{this.operation.Name} => {stateOnOngoing.CurrentRecipe}").Execute(cancellationToken);
 
                 // Note: The above might wait between starting the recipe and closing the window, meaning this might be a bit off.
                 // Really short recipes might trip this up.

@@ -48,6 +48,16 @@ namespace AutoccultistNS.GameState
         {
             GameStateObject.CurrentStateVersion++;
 
+            if (!GameAPI.IsRunning)
+            {
+                return new GameStateImpl(
+                    new ICardState[0],
+                    new ICardState[0],
+                    new ICardState[0],
+                    new ISituationState[0],
+                    PortalStateImpl.FromCurrentState());
+            }
+
             try
             {
                 var tabletopCards =

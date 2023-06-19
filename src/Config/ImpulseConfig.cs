@@ -10,15 +10,8 @@ namespace AutoccultistNS.Config
     /// An Impulse represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Impulse allow for its execution, the task should execute.
     /// </summary>
-    public class ImpulseConfig : NamedConfigObject, IImpulse
+    public class ImpulseConfig : NamedConfigObject, IReaction
     {
-        private readonly ImpulseConfigCondition impulseCondition;
-
-        public ImpulseConfig()
-        {
-            this.impulseCondition = new ImpulseConfigCondition(this);
-        }
-
         /// <summary>
         /// Gets or sets the impulse that this impulse inherits from.
         /// </summary>
@@ -46,13 +39,7 @@ namespace AutoccultistNS.Config
         public OperationConfig Operation { get; set; }
 
         /// <inheritdoc/>
-        string IImpulse.Name => this.Name ?? this.Extends?.Name;
-
-        /// <inheritdoc/>
-        TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
-
-        /// <inheritdoc/>
-        IOperation IImpulse.Operation => this.Operation ?? this.Extends?.Operation;
+        TaskPriority IReaction.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)
@@ -72,43 +59,39 @@ namespace AutoccultistNS.Config
 
         public ConditionResult IsConditionMet(IGameState state)
         {
-            return this.impulseCondition.IsConditionMet(state);
+            var requirements = this.Requirements ?? this.Extends?.Requirements;
+            var forbidders = this.Forbidders ?? this.Extends?.Forbidders;
+
+            if (requirements != null)
+            {
+                var reqsMet = requirements.IsConditionMet(state);
+                if (!reqsMet)
+                {
+                    return new AddendedConditionFailure(reqsMet, "Impulse requirements not met.");
+                }
+            }
+
+            if (forbidders != null)
+            {
+                var forbidsMet = forbidders.IsConditionMet(state);
+                if (forbidsMet)
+                {
+                    return new AddendedConditionFailure(new GameStateConditionFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
+                }
+            }
+
+            var operationState = (this.Operation ?? this.Extends.Operation).IsConditionMet(state);
+            if (!operationState)
+            {
+                return new AddendedConditionFailure(operationState, "Operation condition not met.");
+            }
+
+            return ConditionResult.Success;
         }
 
-        private class ImpulseConfigCondition : IGameStateCondition
+        public IReactionExecution Execute()
         {
-            private readonly ImpulseConfig impulse;
-
-            public ImpulseConfigCondition(ImpulseConfig impulse)
-            {
-                this.impulse = impulse;
-            }
-
-            public ConditionResult IsConditionMet(IGameState state)
-            {
-                var requirements = this.impulse.Requirements ?? this.impulse.Extends?.Requirements;
-                var forbidders = this.impulse.Forbidders ?? this.impulse.Extends?.Forbidders;
-
-                if (requirements != null)
-                {
-                    var reqsMet = requirements.IsConditionMet(state);
-                    if (!reqsMet)
-                    {
-                        return new AddendedConditionFailure(reqsMet, "Impulse requirements not met.");
-                    }
-                }
-
-                if (forbidders != null)
-                {
-                    var forbidsMet = forbidders.IsConditionMet(state);
-                    if (forbidsMet)
-                    {
-                        return new AddendedConditionFailure(new GameStateConditionFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
-                    }
-                }
-
-                return ConditionResult.Success;
-            }
+            return (this.Operation ?? this.Extends.Operation).Execute();
         }
     }
 }

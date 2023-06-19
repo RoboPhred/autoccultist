@@ -149,7 +149,7 @@ namespace AutoccultistNS.GUI
                 where FilterGoal(goal, string.IsNullOrEmpty(searchFilter))
                 let satisfied = goal.IsSatisfied(GameStateProvider.Current)
                 let canActivate = goal.CanActivate(GameStateProvider.Current)
-                let active = NucleusAccumbens.CurrentGoals.Contains(goal)
+                let active = NucleusAccumbens.CurrentImperatives.Contains(goal)
                 where filterCanActivate == false || canActivate
                 orderby goal.Name.ToLower()
                 select new { Goal = goal, Satisfied = satisfied, CanActivate = canActivate, Active = active };
@@ -183,9 +183,9 @@ namespace AutoccultistNS.GUI
                 }
                 else if (pair.CanActivate)
                 {
-                    if (GUILayout.Button("Activate"))
+                    if (GUILayout.Button("Activate", GUILayout.ExpandWidth(false)))
                     {
-                        NucleusAccumbens.AddGoal(goal);
+                        NucleusAccumbens.AddImperative(goal);
                     }
                 }
                 else if (pair.Satisfied)

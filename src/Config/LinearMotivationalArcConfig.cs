@@ -6,6 +6,7 @@ namespace AutoccultistNS.Config
     using System.Threading.Tasks;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
+    using AutoccultistNS.GameState;
     using AutoccultistNS.Yaml;
     using SecretHistories.Commands.Encausting;
     using SecretHistories.Entities;
@@ -18,7 +19,7 @@ namespace AutoccultistNS.Config
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
     [LibraryPath("arcs")]
-    public class ArcConfig : NamedConfigObject, IArc
+    public class LinearMotivationalArcConfig : NamedConfigObject, IArcConfig
     {
         private string arcFolder;
 
@@ -43,9 +44,6 @@ namespace AutoccultistNS.Config
         /// Gets or sets the selection hint to be used to determine the current arc on loading a save.
         /// </summary>
         public IGameStateConditionConfig SelectionHint { get; set; }
-
-        /// <inheritdoc/>
-        IReadOnlyList<IMotivation> IArc.Motivations => this.Motivations;
 
         /// <inheritdoc/>
         IGameStateCondition IArc.SelectionHint => this.SelectionHint;
@@ -76,9 +74,9 @@ namespace AutoccultistNS.Config
         /// <param name="filePath">The path to the config file to load.</param>
         /// <returns>A ArcConfig loaded from the file.</returns>
         /// <exception cref="Brain.Config.InvalidConfigException">The config file at the path contains invalid configuration.</exception>
-        public static ArcConfig Load(string filePath)
+        public static LinearMotivationalArcConfig Load(string filePath)
         {
-            return Deserializer.Deserialize<ArcConfig>(filePath);
+            return Deserializer.Deserialize<LinearMotivationalArcConfig>(filePath);
         }
 
         /// <inheritdoc/>
@@ -141,6 +139,49 @@ namespace AutoccultistNS.Config
                 }
 
                 return new FreshGameProvider(legacy);
+            }
+
+            return null;
+        }
+
+        public ConditionResult CanActivate(IGameState state)
+        {
+            return ConditionResult.Success;
+        }
+
+        public ConditionResult IsSatisfied(IGameState state)
+        {
+            foreach (var motivation in this.Motivations)
+            {
+                var result = motivation.IsSatisfied(state);
+                if (!result)
+                {
+                    return result;
+                }
+            }
+
+            return ConditionResult.Success;
+        }
+
+        public IEnumerable<string> DescribeCurrentGoals(IGameState gameState)
+        {
+            return this.GetActiveMotivation(gameState)?.DescribeCurrentGoals(gameState);
+        }
+
+        public IEnumerable<IReaction> GetReactions(IGameState state)
+        {
+            return this.GetActiveMotivation(state)?.GetReactions(state) ?? Enumerable.Empty<IReaction>();
+        }
+
+        private MotivationConfig GetActiveMotivation(IGameState state)
+        {
+            foreach (var motivation in this.Motivations)
+            {
+                var result = motivation.IsSatisfied(state);
+                if (!result)
+                {
+                    return motivation;
+                }
             }
 
             return null;

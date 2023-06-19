@@ -82,20 +82,17 @@ public class Autoccultist : MonoBehaviour
             if (this.loadArcOnGameStart != null)
             {
                 this.LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
-                Superego.SetArc(this.loadArcOnGameStart);
+                NucleusAccumbens.AddImperative(this.loadArcOnGameStart);
                 this.loadArcOnGameStart = null;
                 this.StartAutoccultist();
             }
-            else
-            {
-                Superego.AutoselectArc();
-            }
+
+            // TODO: Autoselect an arc.
         };
 
         GameEventSource.GameEnded += (_, __) =>
         {
             this.StopAutoccultist();
-            Superego.SetArc(null);
         };
 
         this.LogInfo("Autoccultist initialized.");
@@ -114,7 +111,7 @@ public class Autoccultist : MonoBehaviour
     /// </summary>
     public void ReloadAll()
     {
-        var previousArcName = Superego.CurrentArc?.Name;
+        var previousArc = NucleusAccumbens.CurrentImperatives.OfType<IArc>().FirstOrDefault();
 
         this.StopAutoccultist();
         this.LogInfo("Reloading all configs");
@@ -124,10 +121,10 @@ public class Autoccultist : MonoBehaviour
 
         if (GameAPI.IsRunning)
         {
-            var arc = Library.Arcs.FirstOrDefault(a => a.Name == previousArcName);
+            var arc = Library.Arcs.FirstOrDefault(a => a.Name == previousArc.Name);
             if (arc != null)
             {
-                Superego.SetArc(arc);
+                NucleusAccumbens.AddImperative(arc);
             }
         }
     }
@@ -230,16 +227,13 @@ public class Autoccultist : MonoBehaviour
 
     public void StartAutoccultist()
     {
-        Ego.Start();
         MechanicalHeart.Start();
     }
 
     public void StopAutoccultist()
     {
         MechanicalHeart.Stop();
-        Ego.Stop();
         NucleusAccumbens.Reset();
-        Superego.Clear();
         SituationOrchestrator.AbortAll();
     }
 

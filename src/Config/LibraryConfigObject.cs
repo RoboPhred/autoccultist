@@ -31,10 +31,14 @@ namespace AutoccultistNS.Config
             string providedName;
             T value;
 
+            NoonUtility.LogWarning("Reading LibraryConfigObject for type " + typeof(T).Name + " from " + AutoccultistNS.Yaml.Deserializer.CurrentFilePath);
+
             // For backwards compatibility.
             if (ImportDeserializer.TryConsumeImport(parser, out var fileName))
             {
+                NoonUtility.LogWarning("Got import for filename " + fileName);
                 providedName = FilesystemHelpers.GetRelativePath(fileName, Autoccultist.AssemblyDirectory);
+                NoonUtility.LogWarning("Got relative path " + providedName);
                 value = Library.GetByFilePath<T>(providedName);
             }
             else

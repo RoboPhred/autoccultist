@@ -38,36 +38,29 @@ namespace AutoccultistNS.Config
         /// </summary>
         public List<OneOrMany<ImpulseConfig>> Impulses { get; set; } = new List<OneOrMany<ImpulseConfig>>();
 
-        /// <inheritdoc/>
-        string IGoal.Name => this.Name;
-
-        /// <inheritdoc/>
-        IGameStateCondition IGoal.Requirements => this.Requirements;
-
-        /// <inheritdoc/>
-        IGameStateCondition IGoal.CompletedWhen => this.CompletedWhen;
-
-        /// <inheritdoc/>
-        IReadOnlyList<IImpulse> IGoal.Impulses => this.Impulses.SelectMany(x => x).ToArray();
-
         /// <summary>
         /// Determines whether the goal can activate with the given game state.
         /// </summary>
         /// <param name="state">The game state to check conditions against.</param>
         /// <returns>True if this goal is able to activate, False otherwise.</returns>
-        public bool CanActivate(IGameState state)
+        public ConditionResult CanActivate(IGameState state)
         {
-            if (this.IsSatisfied(state))
+            var satsifiedMatch = this.IsSatisfied(state);
+            if (satsifiedMatch)
             {
-                return false;
+                return new AddendedConditionFailure(new GameStateConditionFailure(this.CompletedWhen, satsifiedMatch), "Goal is already completed.");
             }
 
-            if (this.Requirements != null && this.Requirements.IsConditionMet(state) == false)
+            if (this.Requirements != null)
             {
-                return false;
+                var requirementsMatch = this.Requirements.IsConditionMet(state);
+                if (!requirementsMatch)
+                {
+                    return new AddendedConditionFailure(new GameStateConditionFailure(this.Requirements, requirementsMatch), "Goal requirements are not met.");
+                }
             }
 
-            return true;
+            return ConditionResult.Success;
         }
 
         /// <summary>
@@ -75,15 +68,25 @@ namespace AutoccultistNS.Config
         /// </summary>
         /// <param name="state">The game state to check conditions against.</param>
         /// <returns>True if the goal is completed, False otherwise.</returns>
-        public bool IsSatisfied(IGameState state)
+        public ConditionResult IsSatisfied(IGameState state)
         {
             if (this.CompletedWhen == null)
             {
                 // Never completes
-                return false;
+                return new GeneralConditionFailure("Goal has no completion condition.");
             }
 
             return this.CompletedWhen.IsConditionMet(state);
+        }
+
+        public IEnumerable<string> DescribeCurrentGoals(IGameState gameState)
+        {
+            return new[] { this.Name };
+        }
+
+        public IEnumerable<IReaction> GetReactions(IGameState state)
+        {
+            return this.Impulses.SelectMany(i => i);
         }
     }
 }

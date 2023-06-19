@@ -35,6 +35,7 @@ namespace AutoccultistNS.GUI
 
         private static void DiagnosticsWindow(int id)
         {
+            // FIXME: Reimplement this
             if (GUILayout.Button("Dump Nucleus Accumbens"))
             {
                 content = NucleusAccumbens.DumpStatus();

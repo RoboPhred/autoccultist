@@ -1,4 +1,4 @@
-name: Meet acquaintances and patrons
+name: Meet acquaintances and patrons (reverse priority)
 completedWhen:
   allOf:
     - !import /conditions/has-all-patrons.yml
@@ -16,7 +16,6 @@ impulses:
         - !import /conditions/has-all-followers.yml
     # We need passion to find an acquaintance, and reason to find a patron.  Might want to mark these as requirements
     operation: !import /operations/talk-lore-reversepriority.yml
-
 # Don't follow up on rumors.
 # We can semi-safely assume the reason reversepriority is being invoked is because the bot wants its SH lore available.
 # This suggests that it's preparing for an Expedition, in which case getting Notoriety will only slow it down.

@@ -2,7 +2,6 @@ namespace AutoccultistNS.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using AutoccultistNS.GameState;
     using AutoccultistNS.Yaml;
     using YamlDotNet.Core;

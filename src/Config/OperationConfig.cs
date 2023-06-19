@@ -5,12 +5,13 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
     using AutoccultistNS.Yaml;
+    using SecretHistories.Enums;
     using YamlDotNet.Core;
 
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
     /// </summary>
-    public class OperationConfig : NamedConfigObject, IGameStateCondition, IOperation
+    public class OperationConfig : NamedConfigObject, IOperation, IReaction
     {
         private IReadOnlyDictionary<string, IRecipeSolution> ongoingRecipes;
 
@@ -34,12 +35,24 @@ namespace AutoccultistNS.Config
             CurrentRecipeSatisfied,
         }
 
+        /// <summary>
+        /// Gets or sets the operation that this operation inherits from.
+        /// </summary>
         public OperationConfig Extends { get; set; }
 
         /// <summary>
         /// Gets or sets the situation id to target for this operation.
         /// </summary>
         public string Situation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the priority for this operation.
+        /// Operations with a higher priority will run before lower priority operation.
+        /// </summary>
+        /// <remarks>
+        /// This will have no effect if this operation is nested inside another reaction such as an <see cref="ImpulseConfig"/>.
+        /// </remarks>
+        public TaskPriority? Priority { get; set; }
 
         /// <summary>
         /// Gets or sets the condition for when this operation should start.
@@ -70,40 +83,17 @@ namespace AutoccultistNS.Config
 
         string IOperation.Situation => this.Situation ?? this.Extends?.Situation;
 
-        /// <inheritdoc/>
-        IRecipeSolution IOperation.StartingRecipe => this.StartingRecipe ?? this.Extends?.StartingRecipe;
+        TaskPriority IReaction.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
-        /// <inheritdoc/>
-        IReadOnlyDictionary<string, IRecipeSolution> IOperation.OngoingRecipes
+        public override string ToString()
         {
-            get
-            {
-                if (this.ongoingRecipes == null)
-                {
-                    var extended = this.Extends?.OngoingRecipes ?? new Dictionary<string, RecipeSolutionConfig>();
-                    var self = this.OngoingRecipes ?? new Dictionary<string, RecipeSolutionConfig>();
-
-                    // Extended comes first, self second.  This way, our current op overrides extended ops.
-                    this.ongoingRecipes = extended.Merge(self).ToDictionary(x => x.Key, x => (IRecipeSolution)x.Value);
-                }
-
-                return this.ongoingRecipes;
-            }
+            return $"OperationConfig(Name = {this.Name}, Situation = {this.Situation})";
         }
 
-        /// <inheritdoc/>
-        IReadOnlyList<IConditionalRecipeSolution> IOperation.ConditionalOngoingRecipes
+        public IReactionExecution Execute()
         {
-            get
-            {
-                if (this.conditionalOngoingRecipes == null)
-                {
-                    // Our conditionals come first so they take priority.
-                    this.conditionalOngoingRecipes = this.ConditionalOngoingRecipes.Concat(this.Extends?.ConditionalOngoingRecipes ?? new List<ConditionalRecipeSolutionConfig>()).ToList().AsReadOnly();
-                }
-
-                return this.conditionalOngoingRecipes;
-            }
+            NoonUtility.Log($"Executing operation {this.Name}.");
+            return new OperationReactionExecution(this);
         }
 
         /// <inheritdoc/>
@@ -122,12 +112,43 @@ namespace AutoccultistNS.Config
             }
         }
 
-        ConditionResult IGameStateCondition.IsConditionMet(IGameState state)
+        public IRecipeSolution GetRecipeSolution(ISituationState situationState, IGameState gameState = null)
         {
-            var selfAsInterface = (IOperation)this;
-            var situationId = selfAsInterface.Situation;
-            var startingRecipe = selfAsInterface.StartingRecipe;
-            var ongoingRecipes = selfAsInterface.OngoingRecipes;
+            if (gameState == null)
+            {
+                gameState = GameStateProvider.Current;
+            }
+
+            if (situationState.State == StateEnum.Unstarted)
+            {
+                return this.GetStartingRecipe() ?? this.GetConditionalRecipes().FirstOrDefault(x => x.IsConditionMet(gameState));
+            }
+
+            if (situationState.CurrentRecipe == null)
+            {
+                return null;
+            }
+
+            if (this.OngoingRecipes != null && this.GetOngoingRecipes().TryGetValue(situationState.CurrentRecipe, out var recipe))
+            {
+                return recipe;
+            }
+
+            return this.GetConditionalRecipes().FirstOrDefault(x => x.IsConditionMet(gameState));
+        }
+
+        public ConditionResult IsConditionMet(IGameState state)
+        {
+            // This isn't really relative to game state, but we have to use this here, as IReaction is not specific to situations and
+            // NucleusAccumbens can no longer verify this.
+            if (!SituationOrchestrator.IsSituationAvailable(this.Situation ?? this.Extends?.Situation))
+            {
+                return new SituationConditionFailure(this.Situation ?? this.Extends?.Situation, "Situation is busy with another orchestration.");
+            }
+
+            var situationId = this.Situation ?? this.Extends?.Situation;
+            var startingRecipe = this.GetStartingRecipe();
+            var ongoingRecipes = this.GetOngoingRecipes();
 
             var targetOngoing = this.TargetOngoing ?? this.Extends?.TargetOngoing ?? false;
             var startCondition = this.StartCondition ?? this.Extends?.StartCondition ?? OperationStartCondition.AllRecipesSatisified;
@@ -145,8 +166,6 @@ namespace AutoccultistNS.Config
 
             if (startCondition == OperationStartCondition.AllRecipesSatisified)
             {
-                // We currently take advantage of only ever having RecipeSolutionConfigs and rely on knowledge of
-                //  their optional cards.  This may be problematic if we ever get other types of recipe solutions.
                 IEnumerable<ICardChooser> requiredCards = new ICardChooser[0];
 
                 if (!targetOngoing && startingRecipe != null)
@@ -169,16 +188,8 @@ namespace AutoccultistNS.Config
             }
             else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
             {
-                IRecipeSolution recipeSolution;
-                if (situation.State == SecretHistories.Enums.StateEnum.Unstarted)
-                {
-                    recipeSolution = startingRecipe;
-                }
-                else
-                {
-                    recipeSolution = this.GetCurrentRecipeSolution(situation);
-                }
 
+                var recipeSolution = this.GetRecipeSolution(situation);
                 if (recipeSolution == null)
                 {
                     return new SituationConditionFailure(situationId, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
@@ -191,6 +202,57 @@ namespace AutoccultistNS.Config
             }
 
             return ConditionResult.Success;
+        }
+
+        private IRecipeSolution GetStartingRecipe()
+        {
+            if (this.StartingRecipe != null)
+            {
+                return this.StartingRecipe;
+            }
+
+            if (this.Extends != null)
+            {
+                return this.Extends.GetStartingRecipe();
+            }
+
+            return null;
+        }
+
+        private IReadOnlyDictionary<string, IRecipeSolution> GetOngoingRecipes()
+        {
+            IReadOnlyDictionary<string, IRecipeSolution> ongoingRecipes = new Dictionary<string, IRecipeSolution>();
+
+            if (this.OngoingRecipes != null)
+            {
+                ongoingRecipes = this.OngoingRecipes.ToDictionary(x => x.Key, x => (IRecipeSolution)x.Value);
+            }
+
+            if (this.Extends != null)
+            {
+                // Extended comes first, self second.  This way, our current op overrides extended ops.
+                ongoingRecipes = this.Extends.GetOngoingRecipes().Merge(ongoingRecipes);
+            }
+
+            return ongoingRecipes;
+        }
+
+        private IReadOnlyCollection<IConditionalRecipeSolution> GetConditionalRecipes()
+        {
+            var conditionalRecipes = new List<IConditionalRecipeSolution>();
+
+            if (this.ConditionalOngoingRecipes != null)
+            {
+                // Our conditionals come first so they take priority.
+                conditionalRecipes.AddRange(this.ConditionalOngoingRecipes);
+            }
+
+            if (this.Extends != null)
+            {
+                conditionalRecipes.AddRange(this.Extends.GetConditionalRecipes());
+            }
+
+            return conditionalRecipes;
         }
     }
 }

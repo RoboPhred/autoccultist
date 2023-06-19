@@ -169,6 +169,11 @@ namespace AutoccultistNS
         /// </summary>
         public static IEnumerable<Sphere> GetEnRouteSpheres()
         {
+            if (!IsRunning)
+            {
+                return Enumerable.Empty<Sphere>();
+            }
+
             return Watchman.Get<HornedAxe>().GetSpheres().OfType<EnRouteSphere>();
         }
 
@@ -177,6 +182,11 @@ namespace AutoccultistNS
         /// </summary>
         public static IEnumerable<Situation> GetSituations()
         {
+            if (!IsRunning)
+            {
+                return Enumerable.Empty<Situation>();
+            }
+
             return Watchman.Get<HornedAxe>().GetRegisteredSituations();
         }
 
@@ -196,6 +206,11 @@ namespace AutoccultistNS
         /// <returns>The active ingress, or null if there is no active ingress.</returns>
         public static Ingress GetActiveIngress()
         {
+            if (!IsRunning)
+            {
+                return null;
+            }
+
             // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
             // of the visit.
             var tabletopIngress = GetTabletopIngress();
@@ -217,6 +232,11 @@ namespace AutoccultistNS
 
         public static Ingress GetTabletopIngress()
         {
+            if (!IsRunning)
+            {
+                return null;
+            }
+
             // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
             // of the visit.
             return TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
@@ -239,6 +259,11 @@ namespace AutoccultistNS
 
         public static Otherworld GetActiveOtherworld()
         {
+            if (!IsRunning)
+            {
+                return null;
+            }
+
             var numa = Watchman.Get<Numa>();
 
             return Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
@@ -246,47 +271,19 @@ namespace AutoccultistNS
 
         public static void SortTable()
         {
+            if (!IsRunning)
+            {
+                return;
+            }
+
             (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
         }
 
         /// <summary>
-        /// Try to slots the card into the given sphere, if accepted by its spec.
+        /// Gets the various card choices available in the mansus, if any
         /// </summary>
-        /// <param name="cardId">The id of the card to slot.</param>
-        /// <returns>True if successful, or false if the card was not accepted..</returns>
-        public static bool TrySlotCard(Sphere sphere, ElementStack card)
-        {
-            var token = card.Token;
-            if (!sphere.CanAcceptToken(token))
-            {
-                if (!sphere.HasEnoughSpaceForToken(token))
-                {
-                    Autoccultist.Instance.LogWarn($"Rejecting sloting of {card.EntityId} into sphere {sphere.Id} because there is not enough space.");
-                }
-                else if (!sphere.IsValidDestinationForToken(token))
-                {
-                    Autoccultist.Instance.LogWarn($"Rejecting sloting of {card.EntityId} into sphere {sphere.Id} because it is not a valid destination.");
-                }
-                else
-                {
-                    Autoccultist.Instance.LogWarn($"Rejecting sloting of {card.EntityId} into sphere {sphere.Id} for unknown reason.");
-                }
-
-                return false;
-            }
-
-            sphere.AcceptToken(token, new Context(Context.ActionSource.DoubleClickSend));
-
-            return true;
-
-            // This is what double click does.
-            // Might want to use this instead, if we can accept the time delay as the card transfers.
-            // Currently, we are set up to assume the card is slotted immediately.  We would need to make the
-            // SlotCardAction await the slotting for this to be of use.
-
-            // this.sphere.GetItineraryFor(elementStack.Token).WithDuration(0.3f).Depart(elementStack, new Context(Context.ActionSource.DoubleClickSend));
-        }
-
+        /// <param name="faceUpDeckName">The name of the face up deck.</param>
+        /// <returns>A dictionary of deck name to card.  If the mansus is not open, `null` is returned.</returns>
         public static IReadOnlyDictionary<string, ElementStack> GetMansusChoices(out string faceUpDeckName)
         {
             faceUpDeckName = null;
@@ -323,6 +320,11 @@ namespace AutoccultistNS
             }
         }
 
+        /// <summary>
+        /// Chooses a card from the deck in the mansus.
+        /// </summary>
+        /// <param name="deckName">The name of the deck to choose from.</param>
+        /// <returns>True if the card was chosen, False otherwise.</returns>
         public static bool ChooseMansusDeck(string deckName)
         {
             try
@@ -366,6 +368,9 @@ namespace AutoccultistNS
             }
         }
 
+        /// <summary>
+        /// Gets the output card sphere from the mansus.
+        /// </summary>
         public static Sphere GetMansusEgressSphere()
         {
             var ingress = GetActiveIngress();

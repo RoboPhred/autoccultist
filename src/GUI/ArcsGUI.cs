@@ -1,6 +1,7 @@
 namespace AutoccultistNS.GUI
 {
     using System;
+    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using UnityEngine;
@@ -38,16 +39,8 @@ namespace AutoccultistNS.GUI
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 
-            GUILayout.BeginHorizontal();
-
-            GUILayout.Label($"Current Arc: {Superego.CurrentArc?.Name ?? "None"}");
-
-            if (GUILayout.Button("Autodetect", GUILayout.ExpandWidth(false)))
-            {
-                Superego.AutoselectArc();
-            }
-
-            GUILayout.EndHorizontal();
+            var currentArc = NucleusAccumbens.CurrentImperatives.OfType<IArc>().FirstOrDefault();
+            GUILayout.Label($"Current Arc: {currentArc?.Name ?? "None"}");
 
             GUILayout.Label("Available Arcs");
 
@@ -59,7 +52,12 @@ namespace AutoccultistNS.GUI
 
                 if (GUILayout.Button("Activate", GUILayout.ExpandWidth(false)))
                 {
-                    Superego.SetArc(arc);
+                    if (currentArc != null)
+                    {
+                        NucleusAccumbens.RemoveImperative(currentArc);
+                    }
+
+                    NucleusAccumbens.AddImperative(arc);
                 }
 
                 GUILayout.EndHorizontal();

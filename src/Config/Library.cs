@@ -13,7 +13,7 @@ namespace AutoccultistNS.Config
     {
         private static readonly List<YamlFileException> LibraryParseErrors = new();
         private static readonly List<GoalConfig> LibraryGoals = new();
-        private static readonly List<ArcConfig> LibraryArcs = new();
+        private static readonly List<IArcConfig> LibraryArcs = new();
 
         /// <summary>
         /// Gets a collection of errors encountered while loading the library.
@@ -166,7 +166,7 @@ namespace AutoccultistNS.Config
         {
             try
             {
-                var arc = Deserializer.Deserialize<ArcConfig>(filePath);
+                var arc = Deserializer.Deserialize<LinearMotivationalArcConfig>(filePath);
                 LibraryArcs.Add(arc);
             }
             catch (YamlFileException ex)

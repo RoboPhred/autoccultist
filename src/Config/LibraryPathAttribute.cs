@@ -15,7 +15,12 @@ namespace AutoccultistNS.Config
         public static string GetLibraryPath(Type type)
         {
             var attribute = (LibraryPathAttribute)Attribute.GetCustomAttribute(type, typeof(LibraryPathAttribute));
-            return attribute?.Path;
+            if (string.IsNullOrEmpty(attribute?.Path))
+            {
+                return null;
+            }
+
+            return System.IO.Path.Combine(Autoccultist.AssemblyDirectory, attribute?.Path);
         }
     }
 }

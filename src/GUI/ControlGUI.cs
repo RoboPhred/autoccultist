@@ -4,6 +4,7 @@ namespace AutoccultistNS.GUI
     using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
+    using AutoccultistNS.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -80,46 +81,26 @@ namespace AutoccultistNS.GUI
 
             GUILayout.BeginHorizontal();
 
-            GUILayout.Label($"Current Arc: {Superego.CurrentArc?.Name ?? "None"}");
+            var currentArc = NucleusAccumbens.CurrentImperatives.OfType<IArc>().FirstOrDefault();
+            GUILayout.Label($"Current Arc: {currentArc?.Name ?? "None"}");
 
             if (GUILayout.Button("Arcs", GUILayout.ExpandWidth(false)))
             {
                 ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
             }
 
-            if (GUILayout.Button("Reset"))
-            {
-                Superego.ResetMotivations();
-            }
-
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
+            // TODO: Do we want to keep visibility into motivations?
+            // GUILayout.BeginHorizontal();
 
-            GUILayout.Label("Current Motivation: " + (Superego.CurrentMotivation != null ? Superego.CurrentMotivation.Name : "<None>"));
-            if (GUILayout.Button("Skip"))
-            {
-                Superego.SkipCurrentMotivation();
-            }
+            // GUILayout.Label("Current Motivation: " + (Superego.CurrentMotivation != null ? Superego.CurrentMotivation.Name : "<None>"));
+            // if (GUILayout.Button("Skip"))
+            // {
+            //     Superego.SkipCurrentMotivation();
+            // }
 
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-
-            var taskRunner = GUILayout.Toggle(Ego.IsRunning, "Ego");
-            if (taskRunner != Ego.IsRunning)
-            {
-                if (taskRunner)
-                {
-                    Ego.Start();
-                }
-                else
-                {
-                    Ego.Stop();
-                }
-            }
-
-            GUILayout.EndHorizontal();
+            // GUILayout.EndHorizontal();
 
             if (GUILayout.Button("Diagnostics"))
             {
@@ -136,28 +117,12 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
-            foreach (var goal in NucleusAccumbens.CurrentGoals)
+            foreach (var imperative in NucleusAccumbens.CurrentImperatives)
             {
-                var prefix = "[Custom]";
-                if (Ego.CurrentMotivation?.PrimaryGoals.Contains(goal) == true)
+                foreach (var goal in imperative.DescribeCurrentGoals(GameStateProvider.Current))
                 {
-                    prefix = "[Primary]";
+                    GUILayout.Label(goal);
                 }
-                else if (Ego.CurrentMotivation?.SupportingGoals.Contains(goal) == true)
-                {
-                    prefix = "[Supporting]";
-                }
-
-                GUILayout.BeginHorizontal();
-
-                GUILayout.Label($"{prefix} {goal.Name}");
-
-                if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
-                {
-                    NucleusAccumbens.RemoveGoal(goal);
-                }
-
-                GUILayout.EndHorizontal();
             }
 
             GUILayout.Label("Current Orchestrations:");

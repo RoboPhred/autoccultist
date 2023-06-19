@@ -21,8 +21,9 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Start the orchestration operating.
         /// </summary>
-        void Start();
+        Task Start();
 
+        // FIXME: Remove this and rely on internal updates
         /// <summary>
         /// Allow the orchestration to perform its on-update tasks.
         /// </summary>
@@ -34,10 +35,5 @@ namespace AutoccultistNS.Brain
         /// </summary>
         /// <param name="gameState">The current game state.</param>
         void Abort();
-
-        /// <summary>
-        /// Wait for the current task to complete.
-        /// </summary>
-        Task AwaitCurrentTask();
     }
 }
