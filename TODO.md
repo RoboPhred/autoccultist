@@ -17,17 +17,6 @@ We will both want to replace or add to the base operation's conditions
 This also means we need to turn the startingCondition prop of an operation into a IGameStateCondition
 in addition to its current 'smart condition' enums
 
-### Card consumption
-
--- Might not need this anymore now that we wait for an operation to get established before starting another.
-
-Implement consumption into ICardState so simultanious orchestrations do not try to yoink eachother's cards.
-
-If consumed and aborted: ElementStackToken.ReturnToTabletop
-Only succeed if private ElementStackToken.IsOnTabletop `this.transform.parent.GetComponent<TabletopTokenContainer>() != null;`
-Throw error if ElementStackToken.Defunct
-Unique IDs? ElementStackToken.EntityWithMutationsId
-
 ### Hide hidden aspects from bot?
 
 Do we want the bot to play it straight and not to have access to knowledge the player does not?
