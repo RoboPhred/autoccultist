@@ -220,7 +220,7 @@ namespace AutoccultistNS.Brain
             this.RunCoroutine(this.CompleteOperationCoroutine, nameof(this.CompleteOperationCoroutine));
         }
 
-        private void UpdateOngoing()
+        private async void UpdateOngoing()
         {
             var situation = this.GetSituationState();
             var clockState = situation.State;
@@ -231,7 +231,7 @@ namespace AutoccultistNS.Brain
                 this.completionDebounceTime = null;
 
                 // See if we need to slot new cards.
-                this.ContinueOperation();
+                await this.ContinueOperation();
             }
             else if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
             {
