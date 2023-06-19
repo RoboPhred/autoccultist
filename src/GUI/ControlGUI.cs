@@ -91,17 +91,6 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
-            // TODO: Do we want to keep visibility into motivations?
-            // GUILayout.BeginHorizontal();
-
-            // GUILayout.Label("Current Motivation: " + (Superego.CurrentMotivation != null ? Superego.CurrentMotivation.Name : "<None>"));
-            // if (GUILayout.Button("Skip"))
-            // {
-            //     Superego.SkipCurrentMotivation();
-            // }
-
-            // GUILayout.EndHorizontal();
-
             if (GUILayout.Button("Diagnostics"))
             {
                 DiagnosticsGUI.IsShowing = !DiagnosticsGUI.IsShowing;

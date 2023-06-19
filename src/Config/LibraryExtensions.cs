@@ -26,6 +26,7 @@ namespace AutoccultistNS.Config
             {
                 return null;
             }
+
             var path = configObject.FilePath;
             if (path.StartsWith(Library.ArcsDirectory))
             {

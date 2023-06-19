@@ -1,8 +1,8 @@
-using System;
-using System.Threading.Tasks;
-
 namespace AutoccultistNS.Brain
 {
+    using System;
+    using System.Threading.Tasks;
+
     // FIXME: This is a bit of a hack shim between the old orchestration system and the new reaction system.
     public class OperationReactionExecution : IReactionExecution
     {
@@ -26,9 +26,10 @@ namespace AutoccultistNS.Brain
             }
         }
 
+        public event EventHandler Completed;
+
         public IOperation Operation { get; }
 
-        public event EventHandler Completed;
 
         public override string ToString()
         {

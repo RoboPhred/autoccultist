@@ -13,10 +13,6 @@ namespace AutoccultistNS.Config
     /// </summary>
     public class OperationConfig : NamedConfigObject, IOperation, IReaction
     {
-        private IReadOnlyDictionary<string, IRecipeSolution> ongoingRecipes;
-
-        private IReadOnlyList<IConditionalRecipeSolution> conditionalOngoingRecipes;
-
         /// <summary>
         /// Defines options for when to consider this operation startable.
         /// </summary>
@@ -188,7 +184,6 @@ namespace AutoccultistNS.Config
             }
             else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
             {
-
                 var recipeSolution = this.GetRecipeSolution(situation);
                 if (recipeSolution == null)
                 {

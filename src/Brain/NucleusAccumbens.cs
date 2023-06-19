@@ -233,6 +233,7 @@ namespace AutoccultistNS.Brain
                 foreach (var execution in executions.ToArray())
                 {
 
+                    execution.Completed -= HandleReactionExecutionCompleted;
                     execution.Abort();
                     if (ReactionsByExecution.TryGetValue(execution, out var reaction))
                     {
@@ -299,7 +300,9 @@ namespace AutoccultistNS.Brain
         private class EnumeratedReaction
         {
             public IImperative Imperative { get; set; }
+
             public IReaction Reaction { get; set; }
+
             public int Index { get; set; }
         }
     }

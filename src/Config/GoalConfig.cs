@@ -36,7 +36,7 @@ namespace AutoccultistNS.Config
         /// <para>
         /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        public List<OneOrMany<ImpulseConfig>> Impulses { get; set; } = new List<OneOrMany<ImpulseConfig>>();
+        public List<OneOrMany<IReactionConfig>> Impulses { get; set; } = new();
 
         /// <summary>
         /// Determines whether the goal can activate with the given game state.

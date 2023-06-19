@@ -67,7 +67,8 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets a library config object by file path.
         /// </summary>
-        public static T GetByFilePath<T>(string filePath) where T : IConfigObject
+        public static T GetByFilePath<T>(string filePath)
+            where T : IConfigObject
         {
             var candidates = new List<IConfigObject>();
 
@@ -89,7 +90,8 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets a library config object by ID.
         /// </summary>
-        public static T GetById<T>(string id) where T : IConfigObject
+        public static T GetById<T>(string id)
+            where T : IConfigObject
         {
             var candidates = new List<IConfigObject>();
 
