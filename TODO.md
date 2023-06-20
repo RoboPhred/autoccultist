@@ -37,3 +37,8 @@ Condition matchers for:
 
 Mansus events have a high chance of causing operations to die, now that we can't pause the message pump when it is open.
 In theory the game should be paused during all our ops and during the mansus event so no other operations might tick forward... How are ops still managing to run during it?
+
+### Parser is getting disgusting
+
+Having to use property types to indicate things like "load this from the goals library" and "make this a flat array" is causing bloody chaos for caching.
+Hack into the object parser and let us specify attributes on properties to use custom parsers for them.

@@ -3,6 +3,7 @@ namespace AutoccultistNS.Config
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Yaml;
 
@@ -70,21 +71,19 @@ namespace AutoccultistNS.Config
         public static T GetByFilePath<T>(string filePath)
             where T : IConfigObject
         {
+            return (T)GetByFilePath(typeof(T), filePath);
+        }
+
+        public static object GetByFilePath(Type type, string filePath)
+        {
             var candidates = new List<IConfigObject>();
 
-            if (typeof(T).IsAssignableFrom(typeof(IGoal)))
-            {
-                candidates.AddRange(LibraryGoals);
-            }
-
-            if (typeof(T).IsAssignableFrom(typeof(IArc)))
-            {
-                candidates.AddRange(LibraryArcs);
-            }
+            candidates.AddRange(LibraryGoals.Where(x => type.IsAssignableFrom(x.GetType())));
+            candidates.AddRange(LibraryArcs.Where(x => type.IsAssignableFrom(x.GetType())));
 
             var result = candidates.Find(candidate => candidate.FilePath == filePath);
 
-            return (T)result;
+            return result;
         }
 
         /// <summary>
@@ -93,36 +92,15 @@ namespace AutoccultistNS.Config
         public static T GetById<T>(string id)
             where T : IConfigObject
         {
-            var candidates = new List<IConfigObject>();
-
-            if (typeof(T).IsAssignableFrom(typeof(IGoal)))
-            {
-                candidates.AddRange(LibraryGoals);
-            }
-
-            if (typeof(T).IsAssignableFrom(typeof(IArc)))
-            {
-                candidates.AddRange(LibraryArcs);
-            }
-
-            var result = candidates.Find(candidate => candidate.Id == id);
-
-            return (T)result;
+            return (T)GetById(typeof(T), id);
         }
 
         public static IConfigObject GetById(Type type, string id)
         {
             var candidates = new List<IConfigObject>();
 
-            if (typeof(IGoal).IsAssignableFrom(type))
-            {
-                candidates.AddRange(LibraryGoals);
-            }
-
-            if (typeof(IArc).IsAssignableFrom(type))
-            {
-                candidates.AddRange(LibraryArcs);
-            }
+            candidates.AddRange(LibraryGoals.Where(x => type.IsAssignableFrom(x.GetType())));
+            candidates.AddRange(LibraryArcs.Where(x => type.IsAssignableFrom(x.GetType())));
 
             var result = candidates.Find(candidate => candidate.Id == id);
 

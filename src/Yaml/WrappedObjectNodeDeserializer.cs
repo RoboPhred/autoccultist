@@ -31,7 +31,6 @@ namespace AutoccultistNS.Yaml
                 start = parsingEvent?.Start;
             }
 
-            NoonUtility.LogWarning($"Deserializing type " + expectedType.Name + " at " + start?.ToString());
             if (this.nodeDeserializer.Deserialize(reader, expectedType, nestedObjectDeserializer, out value))
             {
                 if (value is IAfterYamlDeserialization afterDeserialized)

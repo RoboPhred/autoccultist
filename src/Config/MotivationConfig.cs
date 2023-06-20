@@ -20,12 +20,12 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
-        public FlatList<IImperativeConfig> PrimaryGoals { get; set; } = new();
+        public FlatList<ObjectOrLibraryEntry<IImperativeConfig>> PrimaryGoals { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the secondary goals of this motivation.
         /// </summary>
-        public FlatList<IImperativeConfig> SupportingGoals { get; set; } = new();
+        public FlatList<ObjectOrLibraryEntry<IImperativeConfig>> SupportingGoals { get; set; } = new();
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)
@@ -51,12 +51,12 @@ namespace AutoccultistNS.Config
 
         public IEnumerable<string> DescribeCurrentGoals(IGameState state)
         {
-            foreach (var goal in this.PrimaryGoals.Where(g => !g.IsSatisfied(state)).SelectMany(x => x.DescribeCurrentGoals(state)))
+            foreach (var goal in this.PrimaryGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.DescribeCurrentGoals(state)))
             {
                 yield return $"[Primary]: {goal}";
             }
 
-            foreach (var goal in this.SupportingGoals.Where(g => !g.IsSatisfied(state)).SelectMany(x => x.DescribeCurrentGoals(state)))
+            foreach (var goal in this.SupportingGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.DescribeCurrentGoals(state)))
             {
                 yield return $"[Supporting]: {goal}";
             }
@@ -64,12 +64,12 @@ namespace AutoccultistNS.Config
 
         public IEnumerable<IImpulse> GetReactions(IGameState state)
         {
-            foreach (var goal in this.PrimaryGoals.Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
+            foreach (var goal in this.PrimaryGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
             {
                 yield return goal;
             }
 
-            foreach (var goal in this.SupportingGoals.Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
+            foreach (var goal in this.SupportingGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
             {
                 yield return goal;
             }
@@ -79,7 +79,7 @@ namespace AutoccultistNS.Config
         {
             foreach (var goal in this.PrimaryGoals)
             {
-                var result = goal.IsSatisfied(state);
+                var result = goal.Value.IsSatisfied(state);
                 if (!result)
                 {
                     return new AddendedConditionFailure(result, "Primary goal unsatisfied");

@@ -24,120 +24,120 @@ selectionHint:
 motivations:
   - name: Begin the game
     primaryGoals:
-      - !import /goals/aspirant/begin-intro.yml
+      - aspirant/begin-intro
   # Here we activate Time and begin the Ascension in earnest
   - name: Activate power temptation
     primaryGoals:
-      - !import /goals/aspirant/study-bequest-passion.yml
+      - aspirant/study-bequest-passion
   - name: Study bequest contents
     primaryGoals:
-      - !import /goals/discover-bookdealer.yml
-      - !import /goals/aspirant/find-collaborator.yml
+      - discover-bookdealer
+      - aspirant/find-collaborator
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Get a stronger physique
     primaryGoals:
-      - !import /goals/health/acquire-skillhealtha-with-work.yml
-      - !import /goals/health/acquire-skillhealthb-with-work.yml
+      - health/acquire-skillhealtha-with-work
+      - health/acquire-skillhealthb-with-work
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Get a little passionate while finding people to recruit
     primaryGoals:
-      - !import /goals/passion/acquire-skillpassiona.yml
+      - passion/acquire-skillpassiona
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Get a scholarship while finding people to recruit
     primaryGoals:
-      - !import /goals/reason/acquire-skillreasona.yml
-      - !import /goals/reason/acquire-skillreasonb.yml
-      - !import /goals/reason/acquire-skillreasonc.yml
+      - reason/acquire-skillreasona
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
     supportingGoals:
-      - !import /goals/cult/form-cult-doctrine-secrethistories.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - cult/form-cult-doctrine-secrethistories
+      - followers/attract-followers
+      - survive
+      - funds/work-labor
   - name: Establish Society of St. Hydra
     primaryGoals:
-      - !import /goals/cult/form-cult-doctrine-secrethistories.yml
+      - cult/form-cult-doctrine-secrethistories
     supportingGoals:
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - followers/attract-followers
+      - survive
+      - funds/work-labor
   - name: Get swole, find people to recruit
     primaryGoals:
-      - !import /goals/health/acquire-skillhealthc-with-work.yml
+      - health/acquire-skillhealthc-with-work
       # Although we don't need the extra health, the additional level of healthskill means we do health work even faster, meaning more money.
-      - !import /goals/health/acquire-skillhealthd-power-with-work.yml
+      - health/acquire-skillhealthd-power-with-work
     supportingGoals:
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/find-auctionhouse.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - cult/recruit-away-influences
+      - followers/attract-followers
+      - find-auctionhouse
+      - followers/attract-followers
+      - survive
+      - funds/work-labor
   - name: Finish up Morlands, find rites from auction
     primaryGoals:
-      - !import /goals/consume-bookdealer.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
+      - consume-bookdealer
+      - consume-books-lore-waitmorland
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/find-auctionhouse.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/funds/work-labor.yml
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - survive
+      - find-auctionhouse
+      - cult/recruit-away-influences
+      - followers/attract-followers
+      - funds/work-labor
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
   - name: Move into Morlands, acquire a Rarefied Mind, Find Stumm!
     primaryGoals:
-      - !import /goals/find-auctionhouse.yml
-      - !import /goals/auction/acquire-stumm-only.yml
-      - !import /goals/reason/acquire-skillreasond-illumination.yml
-      - !import /goals/hq/move-hq-library.yml
+      - find-auctionhouse
+      - auction/acquire-stumm-only
+      - reason/acquire-skillreasond-illumination
+      - hq/move-hq-library
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/funds/work-labor.yml
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
-      - !import /goals/victories/power/acquire-dedication-power.yml
-      - !import /goals/victories/power/acquire-ascension-power.yml
+      - survive
+      - cult/recruit-away-influences
+      - followers/attract-followers
+      - funds/work-labor
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+      - victories/power/acquire-dedication-power
+      - victories/power/acquire-ascension-power
   - name: Acquire the Wood and White Door
     primaryGoals:
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/funds/work-labor.yml
-      - !import /goals/victories/power/acquire-dedication-power.yml
-      - !import /goals/victories/power/acquire-ascension-power.yml
+      - survive
+      - cult/recruit-away-influences
+      - followers/attract-followers
+      - funds/work-labor
+      - victories/power/acquire-dedication-power
+      - victories/power/acquire-ascension-power
   - name: Acquire the Stag Door, Spider Door, and the Formula Fissive
     primaryGoals:
-      - !import /goals/victories/power/victory-temptation-power-lore-stag-spider.yml
+      - victories/power/victory-temptation-power-lore-stag-spider
     supportingGoals:
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
-      - !import /goals/victories/power/acquire-dedication-power.yml
-      - !import /goals/victories/power/acquire-ascension-power.yml
+      - cult/recruit-away-influences
+      - followers/attract-followers
+      - survive
+      - funds/work-labor
+      - victories/power/acquire-dedication-power
+      - victories/power/acquire-ascension-power
   - name: Achieve the Marks of Power
     primaryGoals:
-      - !import /goals/victories/power/acquire-dedication-power.yml
-      - !import /goals/victories/power/acquire-ascension-power.yml
+      - victories/power/acquire-dedication-power
+      - victories/power/acquire-ascension-power
     supportingGoals:
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - cult/recruit-away-influences
+      - followers/attract-followers
+      - survive
+      - funds/work-labor
   - name: Acquire the Seventh mark of Power
     primaryGoals:
-      - !import /goals/victories/power/acquire-mark-power-7-labor.yml
+      - victories/power/acquire-mark-power-7-labor
     supportingGoals:
       # Do not include work on this list, as acquire-mark-power-7-labor has its own rules for when work is performed.
-      - !import /goals/survive.yml
+      - survive

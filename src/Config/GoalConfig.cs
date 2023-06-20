@@ -1,6 +1,7 @@
 namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
+    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.GameState;
@@ -35,7 +36,6 @@ namespace AutoccultistNS.Config
         /// <para>
         /// Each impulse provides an operation and conditions under which the operation will be performed.
         /// </summary>
-        // public List<OneOrMany<IReactionConfig>> Impulses { get; set; } = new();
         public FlatList<IImpulseConfig> Impulses { get; set; } = new();
 
         /// <summary>

@@ -117,7 +117,14 @@ namespace AutoccultistNS.Yaml
 
                 if (cache)
                 {
-                    DeserializedObjectCache[filePath] = result;
+                    if (result is IYamlValueWrapper wrapper)
+                    {
+                        DeserializedObjectCache[filePath] = wrapper.Unwrap();
+                    }
+                    else
+                    {
+                        DeserializedObjectCache[filePath] = result;
+                    }
                 }
 
                 return result;
@@ -138,7 +145,8 @@ namespace AutoccultistNS.Yaml
             var valueDeserializer = new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
-                    .WithNodeDeserializer(new FlatListDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new CustomDeserializer(), s => s.OnTop())
+                    .WithNodeDeserializer(new FlatListDeserializer(), s => s.After<CustomDeserializer>())
                     .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.After<FlatListDeserializer>())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.After<DuckTypeDeserializer>())
                     .WithNodeDeserializer(objectDeserializer => new WrappedObjectNodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())

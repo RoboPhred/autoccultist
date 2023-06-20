@@ -2,6 +2,7 @@ namespace AutoccultistNS.Yaml
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -32,6 +33,7 @@ namespace AutoccultistNS.Yaml
                     importParser.Consume<DocumentStart>();
 
                     var innerValue = this.DeserializeFlatList(importParser, expectedType, subjectType, nestedObjectDeserializer);
+                    // WARN: Caches as FlatList.  That extends from List, so it should be fine???
 
                     importParser.Consume<DocumentEnd>();
                     importParser.Consume<StreamEnd>();
@@ -57,10 +59,24 @@ namespace AutoccultistNS.Yaml
                 items.AddRange(this.DeserializeFlatListElement(reader, subjectType, nestedObjectDeserializer));
             }
 
-            var itemsEnumerable = typeof(System.Linq.Enumerable).GetMethod(nameof(System.Linq.Enumerable.Cast)).MakeGenericMethod(subjectType).Invoke(null, new[] { items });
-            var result = Activator.CreateInstance(expectedType, new[] { itemsEnumerable });
-
-            return result;
+            try
+            {
+                // FIXME: This is nasty
+                // This is beyond frustrating.  Having to use types as interpretations on parsing instead of simply decorating the property means
+                // our reinterpretation types are getting cached as the values we want to store.  See IYamlValueWrapper
+                // On the flip side, we also have to deal with the fact that unwrapped values are cached and get passed to us here, and linq Cast ignores implicit/explicit operators.
+                // So fuck it, lets reflect into the internals of .net and call the implicit operators manually.
+                var itemsEnumerable = items.Select(x => TypeExtensions.Cast(subjectType, x)).ToArray();
+                // Now do the nastier hack of getting an enumerable in the right type, so we can choose the right ctor in CreateInstance
+                var typedEnumerable = typeof(System.Linq.Enumerable).GetMethod(nameof(System.Linq.Enumerable.Cast)).MakeGenericMethod(new[] { subjectType }).Invoke(null, new[] { itemsEnumerable });
+                var result = Activator.CreateInstance(expectedType, new[] { typedEnumerable });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                NoonUtility.LogWarning($"Failed to deserialize flat list of type {expectedType} with subject type {subjectType}.  Items are {string.Join(", ", items.Select(x => x.GetType().Name))}");
+                throw ex;
+            }
         }
 
         private IEnumerable<object> DeserializeFlatListElement(IParser reader, Type subjectType, Func<IParser, Type, object> nestedObjectDeserializer)
