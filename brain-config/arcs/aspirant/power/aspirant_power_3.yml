@@ -191,6 +191,7 @@ motivations:
 
   recruit_everyone:
     name: Recruit Everyone
+    # Once we get close to ascending, go ham and make sure we have everyone recruited as fodder for the spider door.
     requires:
       - establish_cult
       # Don't start recruiting everyone until we have need of them for the spider door
@@ -217,6 +218,7 @@ motivations:
     requires:
       - acquire_doors_and_fissive
       - begin_ascension
+      - recruit_everyone
     blocks:
       # Don't do any work motivations as we need the work verb free.
       - work_gg
