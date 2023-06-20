@@ -58,15 +58,9 @@ impulses:
           work:
             elementId: ritefollowerconsumeinfluence
           Invocation:
-            aspects:
-              lore: 1
-              forge:
-                greaterThanOrEqualTo: 10
+            aspects: { lore: 1, forge: 10 }
           Assistant:
-            aspects:
-              follower: 1
-              lantern:
-                greaterThanOrEqualTo: 2
+            aspects: { follower: 1, lantern: 2 }
           Offering:
             aspects:
               influence: 1
@@ -135,10 +129,7 @@ impulses:
         - elementId: ascensionpowerf
     forbidders:
       anyOf:
-        - aspects:
-            influence: 1
-            forge:
-              greaterThanOrEqualTo: 15
+        - aspects: { influence: 1, forge: 15 }
     operation:
       name: Enter the spider door
       situation: dream
@@ -165,10 +156,7 @@ impulses:
           work:
             elementId: ritefollowerconsumeinfluence
           Invocation:
-            aspects:
-              lore: 1
-              forge:
-                greaterThanOrEqualTo: 10
+            aspects: { lore: 1, forge: 10 }
           Assistant:
             elementId: spirit_forgee_edge
           Offering:
