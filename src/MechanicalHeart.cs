@@ -130,7 +130,7 @@ namespace AutoccultistNS
 
         private static void TriggerMechanicalBeat()
         {
-            if (!GameAPI.IsRunning)
+            if (!GameAPI.IsInteractable)
             {
                 return;
             }

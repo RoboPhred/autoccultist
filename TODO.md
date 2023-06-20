@@ -42,3 +42,13 @@ In theory the game should be paused during all our ops and during the mansus eve
 
 Having to use property types to indicate things like "load this from the goals library" and "make this a flat array" is causing bloody chaos for caching.
 Hack into the object parser and let us specify attributes on properties to use custom parsers for them.
+
+### Stop the bot doing things when it shouldnt
+
+- Mansus is open, bot still tries to run things... We can't rely on pausing the actor anymore since everything is async.
+- Victory is in progress, bot tries to dump the victorious verb and do other things while the victory is playing out.
+
+We can probably add an interactability check to MechanicalHeart.AwaitBeat
+
+- Do we want to never beat at all when the game isnt interactable?
+- Do we want to trust the user interactability stuff the mansus uses for this?
