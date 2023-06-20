@@ -25,6 +25,9 @@ motivations:
     name: Work at Glover and Glover
     requires:
       - get_gg
+    blocks:
+      # glover and glover is more lucrative than labor, so stop doing labor when it is available.
+      - work_labor
     primaryGoals:
       - glover/work-glover
       - glover/acquire-job-glover-standard
@@ -35,9 +38,6 @@ motivations:
       - begin_game
       # Don't start time until time starts naturally.
       - study_bequest
-    until:
-      # glover and glover is more lucrative than labor, so stop doing labor when it is available.
-      - work_gg
     primaryGoals:
       - funds/work-labor
   # End jobs
