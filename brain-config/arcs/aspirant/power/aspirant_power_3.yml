@@ -106,8 +106,13 @@ motivations:
     name: Get a Rarified Mind
     requires:
       - get_scholarship_major
-    # Wait until the cards are available
-    requirePrimaryGoals: true
+      # We were using requiresPrimaryGoals, but that causes this motivation to end
+      # the moment we consume one of our required books, so instead we have to wait until we know we have enough textbookreasons.
+      - drain_morlands
+      - read_all_lore
+    blocks:
+      # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
+      - get_stumm
     primaryGoals:
       - reason/acquire-skillreasond-illumination
   # End skills
@@ -125,6 +130,10 @@ motivations:
     requires:
       # We need to have explore and talk
       - study_bequest_contents
+      # We can miss patrons if establish_cult runs or completes soon before this runs
+      # This is because establish_cult exhausts our reason, preventing us meeting the patron challenge.
+      # We don't really care though, as we don't need them in this arc.
+      # - get_scholarship_minor
     primaryGoals:
       - followers/attract-followers
 
@@ -146,16 +155,22 @@ motivations:
 
   # Begin lore and rite collection
   drain_morlands:
-    name: Buy and read books from Morlands
+    name: Buy all books from Morlands
     requires:
       # We need explore
       - study_bequest_contents
+    primaryGoals:
+      # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
+      - consume-bookdealer
+
+  read_all_lore:
+    name: Read all lore books
+    requires:
       # Don't do this until we have the skills so we are not monopolizing the study verb
       # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
       - get_buff
       - get_scholarship_major
     primaryGoals:
-      - consume-bookdealer
       - consume-books-lore-waitmorland
 
   get_stumm:
@@ -185,6 +200,8 @@ motivations:
     requires:
       - acquire_early_doors
       - drain_morlands
+      - read_all_lore
+      - get_rarified_mind
       # Don't need stumm for this, even though it gives us a winter lore.
     primaryGoals:
       - victories/power/victory-temptation-power-lore-stag-spider
