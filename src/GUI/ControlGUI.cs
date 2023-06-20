@@ -79,7 +79,10 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
-            GUILayout.Label($"Average Update: {Autoccultist.AverageUpdateTime:0.0000}");
+            if (GUILayout.Button("Performance"))
+            {
+                PerformanceGUI.IsShowing = !PerformanceGUI.IsShowing;
+            }
 
             GUILayout.BeginHorizontal();
 

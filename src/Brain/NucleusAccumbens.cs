@@ -163,7 +163,7 @@ namespace AutoccultistNS.Brain
                 while (true)
                 {
                     // Scan through all possible reactions and invoke the highest priority one that can start
-                    var pairing = GetReadyImpulses().FirstOrDefault();
+                    var pairing = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
                     if (pairing == null)
                     {
                         return;

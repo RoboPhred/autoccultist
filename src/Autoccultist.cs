@@ -24,11 +24,6 @@ public class Autoccultist : MonoBehaviour
 
     private Thread mainThread;
 
-    private DateTime lastFpsSample;
-    double averageUpdateTime;
-    private int timeSamples;
-    private double timeTotal;
-
     public static event EventHandler GlobalUpdate;
 
     /// <summary>
@@ -39,8 +34,6 @@ public class Autoccultist : MonoBehaviour
         get;
         private set;
     }
-
-    public static double AverageUpdateTime => Instance.averageUpdateTime;
 
     /// <summary>
     /// Gets the directory the mod dll is located in.
@@ -95,7 +88,6 @@ public class Autoccultist : MonoBehaviour
     {
         NoonUtility.LogWarning($"{message}\n{ex.Message}\n{ex.StackTrace}");
     }
-
 
     /// <summary>
     /// Starts the mod.
@@ -191,6 +183,7 @@ public class Autoccultist : MonoBehaviour
         }
 
         DiagnosticsGUI.OnGUI();
+        PerformanceGUI.OnGUI();
         GoalsGUI.OnGUI();
         ArcsGUI.OnGUI();
     }
@@ -200,24 +193,13 @@ public class Autoccultist : MonoBehaviour
     /// </summary>
     public void Update()
     {
-        var now = DateTime.Now;
-
-        if (lastFpsSample + TimeSpan.FromSeconds(1) < now)
+        PerfMonitor.Monitor($"Global Update", () =>
         {
-            averageUpdateTime = timeTotal / timeSamples;
-            lastFpsSample = now;
-            timeSamples = 0;
-            timeTotal = 0;
-        }
-
-        GameStateProvider.Invalidate();
-        MechanicalHeart.Update();
-        this.HandleHotkeys();
-        GlobalUpdate?.Invoke(this, EventArgs.Empty);
-
-        var timeTaken = (DateTime.Now - now).TotalSeconds;
-        timeTotal += timeTaken;
-        timeSamples++;
+            GameStateProvider.Invalidate();
+            MechanicalHeart.Update();
+            this.HandleHotkeys();
+            GlobalUpdate?.Invoke(this, EventArgs.Empty);
+        });
     }
 
     public void StartNewGame(IArc arc)

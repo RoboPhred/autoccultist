@@ -125,27 +125,13 @@ namespace AutoccultistNS.Config
             // Make sure our dependencies are valid
             foreach (var motivation in this.motivations)
             {
-                foreach (var req in motivation.Value.RequiresAllOf)
+                var config = motivation.Value;
+                var dependenices = config.Requires.Concat(config.RequiresAny).Concat(config.Until).Concat(config.UntilAny).Concat(config.WhileAny).Concat(config.Blocks).Distinct();
+                foreach (var req in dependenices)
                 {
                     if (!this.motivations.ContainsKey(req))
                     {
                         throw new SemanticErrorException(motivation.Value.Start, motivation.Value.End, $"Motivation {motivation.Key} \"{motivation.Value.Name}\" requires motivation key {req} which does not exist.");
-                    }
-                }
-
-                foreach (var until in motivation.Value.UntilAllOf)
-                {
-                    if (!this.motivations.ContainsKey(until))
-                    {
-                        throw new SemanticErrorException(motivation.Value.Start, motivation.Value.End, $"Motivation {motivation.Key} \"{motivation.Value.Name}\" waits until motivation key {until} which does not exist.");
-                    }
-                }
-
-                foreach (var @while in motivation.Value.WhileAnyOf)
-                {
-                    if (!this.motivations.ContainsKey(@while))
-                    {
-                        throw new SemanticErrorException(motivation.Value.Start, motivation.Value.End, $"Motivation {motivation.Key} \"{motivation.Value.Name}\" waits while motivation key {@while} which does not exist.");
                     }
                 }
             }
@@ -195,16 +181,36 @@ namespace AutoccultistNS.Config
                 // Mark that we are processing it to catch circular dependencies.
                 cache[key] = MotivationStatus.Processing;
 
-                if (motivation.RequiresAllOf.Count > 0 && motivation.RequiresAllOf.Any(x => this.ResolveMotivationStatus(x, state, cache) != MotivationStatus.Satisfied))
+                // We could cache blockers per key on after deserialize...
+                var blockers = this.motivations.Where(x => x.Value.Blocks.Contains(key)).Select(x => x.Key).ToArray();
+                if (blockers.Length > 0 && blockers.Any(x => this.ResolveMotivationStatus(x, state, cache) == MotivationStatus.CanRun))
                 {
+                    // We are blocked by another motivation that is running.
                     cache[key] = MotivationStatus.MissingRequirements;
                 }
-                else if (motivation.UntilAllOf.Count > 0 && motivation.UntilAllOf.All(x => this.ResolveMotivationStatus(x, state, cache) == MotivationStatus.Satisfied))
+                else if (motivation.Requires.Count > 0 && motivation.Requires.Any(x => this.ResolveMotivationStatus(x, state, cache) != MotivationStatus.Satisfied))
                 {
+                    // At least one req is not satisfied
                     cache[key] = MotivationStatus.MissingRequirements;
                 }
-                else if (motivation.WhileAnyOf.Count > 0 && motivation.WhileAnyOf.All(x => this.ResolveMotivationStatus(x, state, cache) != MotivationStatus.CanRun))
+                else if (motivation.RequiresAny.Count > 0 && motivation.RequiresAny.All(x => this.ResolveMotivationStatus(x, state, cache) != MotivationStatus.Satisfied))
                 {
+                    // All RequiresAny are not satisfied
+                    cache[key] = MotivationStatus.MissingRequirements;
+                }
+                else if (motivation.Until.Count > 0 && motivation.Until.All(x => this.ResolveMotivationStatus(x, state, cache) == MotivationStatus.Satisfied))
+                {
+                    // All Until entries are complete, so we can't run anymore.
+                    cache[key] = MotivationStatus.MissingRequirements;
+                }
+                else if (motivation.UntilAny.Count > 0 && motivation.UntilAny.Any(x => this.ResolveMotivationStatus(x, state, cache) == MotivationStatus.Satisfied))
+                {
+                    // At least one UntilAny entry is complete, so we can't run anymore.
+                    cache[key] = MotivationStatus.MissingRequirements;
+                }
+                else if (motivation.WhileAny.Count > 0 && motivation.WhileAny.All(x => this.ResolveMotivationStatus(x, state, cache) != MotivationStatus.CanRun))
+                {
+                    // none of our WhielAny candidates can run, so we cannot run.
                     cache[key] = MotivationStatus.MissingRequirements;
                 }
                 else
@@ -227,19 +233,36 @@ namespace AutoccultistNS.Config
             /// Gets or sets the list of motivations that must be complete before this motivation can run.
             /// All of these motivations must be complete before this motivation can run.
             /// </summary>
-            public List<string> RequiresAllOf { get; set; } = new();
+            public List<string> Requires { get; set; } = new();
+
+            /// <summary>
+            /// Gets or sets the list of motivations for which any completion can allow this motivation to run.
+            /// At least one of these motivations must be satisfied for this motivation to run.
+            /// </summary>
+            public List<string> RequiresAny { get; set; } = new();
 
             /// <summary>
             /// Gets or sets the list of motivations that must be incomplete for this motivation to run.
             /// This motivation can run until all of these motivations are complete.
             /// </summary>
-            public List<string> UntilAllOf { get; set; } = new();
+            public List<string> Until { get; set; } = new();
+
+            /// <summary>
+            /// Gets or sets the list of motivations that must be incomplete for this motivation to run.
+            /// This motivation can run until any of these motivations are complete.
+            /// </summary>
+            public List<string> UntilAny { get; set; } = new();
 
             /// <summary>
             /// Gets or sets the list of motivations that must be running for this motivation to run.
             /// As long as any of these motivations are running, this motivation can run.
             /// </summary>
-            public List<string> WhileAnyOf { get; set; } = new();
+            public List<string> WhileAny { get; set; } = new();
+
+            /// <summary>
+            /// While we are capable of running, block thee other motivations from running
+            /// </summary>
+            public List<string> Blocks { get; set; } = new();
 
             public override ConditionResult CanActivate(IGameState state)
             {

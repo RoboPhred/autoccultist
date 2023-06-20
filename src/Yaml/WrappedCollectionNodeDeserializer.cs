@@ -4,7 +4,8 @@ namespace AutoccultistNS.Yaml
 
     public class WrappedCollectionNodeDeserializer : AfterDeserializeDeserializer
     {
-        public WrappedCollectionNodeDeserializer(INodeDeserializer parent) : base(parent)
+        public WrappedCollectionNodeDeserializer(INodeDeserializer parent)
+            : base(parent)
         {
         }
     }
