@@ -17,19 +17,11 @@ namespace AutoccultistNS.Config
                 return false;
             }
 
-            NoonUtility.LogWarning($"Deserializing type {expectedType} at {AutoccultistNS.Yaml.Deserializer.CurrentFilePath}:{reader.Current?.Start}");
-
-
-            // FIXME: We return values wrapped in a ObjectOrLibraryEntry, as we are forced to.
-            // However, this means values cache as that.  This is bullshit.
-            // We introduced IYamlValueUnwrapper as a nasty hack to work around it.
-
             var subjectType = expectedType.GetGenericArguments()[0];
             var start = reader.Current?.Start;
 
             if (reader.TryConsume<Scalar>(out var scalar))
             {
-                NoonUtility.LogWarning($"Deserializing scalar {scalar.Value} at {AutoccultistNS.Yaml.Deserializer.CurrentFilePath}:{reader.Current?.Start}");
                 var providedName = scalar.Value;
                 object data;
 

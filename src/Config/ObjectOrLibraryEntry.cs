@@ -12,7 +12,6 @@ namespace AutoccultistNS.Config
     public class ObjectOrLibraryEntry<T> : IYamlValueWrapper
         where T : IConfigObject
     {
-
         public ObjectOrLibraryEntry()
         {
         }
@@ -23,16 +22,6 @@ namespace AutoccultistNS.Config
         }
 
         public T Value { get; private set; }
-
-        object IYamlValueWrapper.Unwrap()
-        {
-            return this.Value;
-        }
-
-        public override string ToString()
-        {
-            return $"ObjectOrLibraryEntry<{typeof(T).Name}>({this.Value})";
-        }
 
         public static implicit operator ObjectOrLibraryEntry<T>(T value)
         {
@@ -47,6 +36,16 @@ namespace AutoccultistNS.Config
             }
 
             return obj.Value;
+        }
+
+        object IYamlValueWrapper.Unwrap()
+        {
+            return this.Value;
+        }
+
+        public override string ToString()
+        {
+            return $"ObjectOrLibraryEntry<{typeof(T).Name}>({this.Value})";
         }
     }
 }

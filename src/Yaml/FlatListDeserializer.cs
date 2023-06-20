@@ -32,8 +32,8 @@ namespace AutoccultistNS.Yaml
                     importParser.Consume<StreamStart>();
                     importParser.Consume<DocumentStart>();
 
-                    var innerValue = this.DeserializeFlatList(importParser, expectedType, subjectType, nestedObjectDeserializer);
                     // WARN: Caches as FlatList.  That extends from List, so it should be fine???
+                    var innerValue = this.DeserializeFlatList(importParser, expectedType, subjectType, nestedObjectDeserializer);
 
                     importParser.Consume<DocumentEnd>();
                     importParser.Consume<StreamEnd>();
@@ -67,8 +67,10 @@ namespace AutoccultistNS.Yaml
                 // On the flip side, we also have to deal with the fact that unwrapped values are cached and get passed to us here, and linq Cast ignores implicit/explicit operators.
                 // So fuck it, lets reflect into the internals of .net and call the implicit operators manually.
                 var itemsEnumerable = items.Select(x => TypeExtensions.Cast(subjectType, x)).ToArray();
+
                 // Now do the nastier hack of getting an enumerable in the right type, so we can choose the right ctor in CreateInstance
                 var typedEnumerable = typeof(System.Linq.Enumerable).GetMethod(nameof(System.Linq.Enumerable.Cast)).MakeGenericMethod(new[] { subjectType }).Invoke(null, new[] { itemsEnumerable });
+
                 var result = Activator.CreateInstance(expectedType, new[] { typedEnumerable });
                 return result;
             }
@@ -83,7 +85,6 @@ namespace AutoccultistNS.Yaml
         {
             // TODO: Might be able to simplify this, especially the !import bit, by trying to call
             // nestedObjectDeserializer with the right target type (FlatList<T>), but it will have to accept a top-level Object instead of always being a list.
-
             var result = new List<object>();
             if (reader.TryConsume<SequenceStart>(out var _))
             {
