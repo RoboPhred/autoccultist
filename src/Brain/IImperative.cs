@@ -33,15 +33,20 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets a list of goal descriptions for all goals this imperative is working on.
         /// </summary>
-        /// <param name="gameState">The game state to check conditions against.</param>
+        /// <param name="state">The game state to check conditions against.</param>
         /// <remarks>
         /// This is for user consumption in the UI, to inform the user what the bot is currently working on.
         /// </remarks>
-        IEnumerable<string> DescribeCurrentGoals(IGameState gameState);
+        IEnumerable<string> DescribeCurrentGoals(IGameState state);
 
         /// <summary>
         /// Gets the active reactions for this imperative.
         /// </summary>
-        IEnumerable<IImpulse> GetReactions(IGameState state);
+        IEnumerable<IImpulse> GetImpulses(IGameState state);
+
+        /// <summary>
+        /// Gets an enumerable of all imperatives, including children.
+        /// </summary>
+        IEnumerable<IImperative> Flatten();
     }
 }

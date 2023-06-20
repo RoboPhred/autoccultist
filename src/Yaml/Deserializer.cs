@@ -131,7 +131,7 @@ namespace AutoccultistNS.Yaml
             }
             catch (YamlException ex) when (!(ex is YamlFileException))
             {
-                NoonUtility.LogWarning(ex, $"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
+                Autoccultist.LogWarn(ex, $"Error parsing file {CurrentFilePath}: {ex.GetInnermostMessage()}");
                 throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.GetInnermostMessage(), ex);
             }
             finally
@@ -149,7 +149,9 @@ namespace AutoccultistNS.Yaml
                     .WithNodeDeserializer(new FlatListDeserializer(), s => s.After<CustomDeserializer>())
                     .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.After<FlatListDeserializer>())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.After<DuckTypeDeserializer>())
-                    .WithNodeDeserializer(objectDeserializer => new WrappedObjectNodeDeserializer(objectDeserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
+                    .WithNodeDeserializer(deserializer => new WrappedDictionaryNodeDeserializer(deserializer), s => s.InsteadOf<DictionaryNodeDeserializer>())
+                    .WithNodeDeserializer(deserializer => new WrappedCollectionNodeDeserializer(deserializer), s => s.InsteadOf<CollectionNodeDeserializer>())
+                    .WithNodeDeserializer(deserializer => new WrappedObjectNodeDeserializer(deserializer), s => s.InsteadOf<ObjectNodeDeserializer>())
                     .BuildValueDeserializer();
             return YamlDotNet.Serialization.Deserializer.FromValueDeserializer(new WrappedValueDeserializer(valueDeserializer));
         }

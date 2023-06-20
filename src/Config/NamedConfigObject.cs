@@ -6,6 +6,8 @@ namespace AutoccultistNS.Config
     {
         public string Name { get; set; }
 
+        public bool AutoName { get; private set; } = false;
+
         public override string ToString()
         {
             return $"{this.GetType().Name}(Name = {this.Name})";
@@ -17,6 +19,7 @@ namespace AutoccultistNS.Config
 
             if (string.IsNullOrWhiteSpace(this.Name))
             {
+                this.AutoName = true;
                 this.Name = NameGenerator.GenerateName(this.FilePath, start);
             }
         }

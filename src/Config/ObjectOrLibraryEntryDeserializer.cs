@@ -42,7 +42,7 @@ namespace AutoccultistNS.Config
 
                 if (data == null)
                 {
-                    throw new YamlFileException(AutoccultistNS.Yaml.Deserializer.CurrentFilePath, start, reader.Current?.End, $"Could not find {subjectType.Name} with name '{providedName}' in the library.");
+                    throw new SemanticErrorException(start, reader.Current?.End, $"Could not find {subjectType.Name} with name '{providedName}' in the library.");
                 }
 
                 value = Activator.CreateInstance(expectedType, new[] { data });

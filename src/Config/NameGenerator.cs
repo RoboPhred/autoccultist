@@ -16,7 +16,7 @@ namespace AutoccultistNS.Config
         public static string GenerateName(string filePath, Mark start)
         {
             var relFile = FilesystemHelpers.GetRelativePath(filePath, Autoccultist.AssemblyDirectory);
-            if (start != null)
+            if (start != null && start.Line > 1)
             {
                 return $"{relFile}:{start.Line}";
             }

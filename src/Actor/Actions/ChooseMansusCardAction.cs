@@ -72,14 +72,14 @@ namespace AutoccultistNS.Actor.Actions
 
             if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
             {
-                Autoccultist.Instance.LogTrace("Choosing face up card from mansus.");
+                Autoccultist.LogTrace("Choosing face up card from mansus.");
 
                 // This is the card we want.
                 GameAPI.ChooseMansusDeck(gameState.Mansus.FaceUpDeck);
             }
             else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
             {
-                Autoccultist.Instance.LogTrace($"Choosing deck {this.MansusSolution.Deck} from mansus.");
+                Autoccultist.LogTrace($"Choosing deck {this.MansusSolution.Deck} from mansus.");
 
                 // This is the card we want.
                 GameAPI.ChooseMansusDeck(this.MansusSolution.Deck);

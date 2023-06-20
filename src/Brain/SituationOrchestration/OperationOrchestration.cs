@@ -108,7 +108,7 @@ namespace AutoccultistNS.Brain
             if (!GameStateProvider.Current.Situations.Any(x => x.SituationId == this.SituationId))
             {
                 // Situation was removed, abort.
-                Autoccultist.Instance.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
+                Autoccultist.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
                 this.Abort();
                 return;
             }
@@ -147,7 +147,7 @@ namespace AutoccultistNS.Brain
             if (!GameStateProvider.Current.Situations.Any(x => x.SituationId == this.SituationId))
             {
                 // Situation was removed, abort.
-                Autoccultist.Instance.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
+                Autoccultist.LogWarn($"Situation {this.SituationId} was removed while executing operation {this.operation.Name}.");
                 this.Abort();
                 return;
             }
@@ -194,7 +194,7 @@ namespace AutoccultistNS.Brain
         {
             var situation = this.GetSituationState();
 
-            Autoccultist.Instance.LogTrace($"Completing operation {this.operation.Name} on recipe {situation.CurrentRecipe}.");
+            Autoccultist.LogTrace($"Completing operation {this.operation.Name} on recipe {situation.CurrentRecipe}.");
 
             // We currently assume mansus only ever occurs as the last recipe of a situation.
             // FIXME: This is quite janky...  We just hope the portal manages to open by the time we notice completion.
@@ -205,14 +205,14 @@ namespace AutoccultistNS.Brain
                 var recipeSolution = this.operation.GetRecipeSolution(situation);
                 if (recipeSolution != null && recipeSolution.MansusChoice != null)
                 {
-                    Autoccultist.Instance.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
+                    Autoccultist.LogTrace($"Choosing mansus card for operation {this.operation.Name} portal {situation.CurrentRecipePortal}.");
                     this.operationState = OperationState.ChoosingPortalCard;
                     this.RunCoroutine(token => this.ChooseMansusCoroutine(recipeSolution.MansusChoice, token), nameof(this.ChooseMansusCoroutine));
                     return;
                 }
                 else
                 {
-                    Autoccultist.Instance.LogWarn($"Unhandled mansus event for recipeId {situation.CurrentRecipe} in operation {this.operation.Name}.");
+                    Autoccultist.LogWarn($"Unhandled mansus event for recipeId {situation.CurrentRecipe} in operation {this.operation.Name}.");
                 }
             }
 
@@ -434,7 +434,7 @@ namespace AutoccultistNS.Brain
             }
             catch (Exception ex)
             {
-                Autoccultist.Instance.LogWarn(ex, $"Failed to run operation {this.operation.Name}: {ex.Message}");
+                Autoccultist.LogWarn(ex, $"Failed to run operation {this.operation.Name}: {ex.Message}");
                 this.Abort();
             }
             finally
@@ -447,8 +447,8 @@ namespace AutoccultistNS.Brain
 
         private async Task OnErrorCoroutine(Exception ex, CancellationToken cancellationToken)
         {
-            Autoccultist.Instance.LogWarn($"Operation {this.operation.Name} failed: {ex.Message}");
-            Autoccultist.Instance.LogWarn(ex.StackTrace);
+            Autoccultist.LogWarn($"Operation {this.operation.Name} failed: {ex.Message}");
+            Autoccultist.LogWarn(ex.StackTrace);
 
             try
             {
@@ -460,8 +460,8 @@ namespace AutoccultistNS.Brain
             }
             catch (Exception ex2)
             {
-                Autoccultist.Instance.LogWarn($"Failed to clean up situation {this.SituationId} after operation {this.operation.Name} failed: {ex2.Message}");
-                Autoccultist.Instance.LogWarn(ex2.StackTrace);
+                Autoccultist.LogWarn($"Failed to clean up situation {this.SituationId} after operation {this.operation.Name} failed: {ex2.Message}");
+                Autoccultist.LogWarn(ex2.StackTrace);
             }
             finally
             {

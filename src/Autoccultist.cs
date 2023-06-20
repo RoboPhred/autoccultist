@@ -24,6 +24,11 @@ public class Autoccultist : MonoBehaviour
 
     private Thread mainThread;
 
+    private DateTime lastFpsSample;
+    double averageUpdateTime;
+    private int timeSamples;
+    private double timeTotal;
+
     public static event EventHandler GlobalUpdate;
 
     /// <summary>
@@ -34,6 +39,8 @@ public class Autoccultist : MonoBehaviour
         get;
         private set;
     }
+
+    public static double AverageUpdateTime => Instance.averageUpdateTime;
 
     /// <summary>
     /// Gets the directory the mod dll is located in.
@@ -51,6 +58,44 @@ public class Autoccultist : MonoBehaviour
     {
         new GameObject().AddComponent<Autoccultist>();
     }
+
+    /// <summary>
+    /// Log an info-level message.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    public static void LogInfo(string message)
+    {
+        NoonUtility.Log(message);
+    }
+
+    /// <summary>
+    /// Log a trace-level message.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    public static void LogTrace(string message)
+    {
+        NoonUtility.Log(message);
+    }
+
+    /// <summary>
+    /// Log a warning-level message.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    public static void LogWarn(string message)
+    {
+        NoonUtility.LogWarning(message);
+    }
+
+    /// <summary>
+    /// Logs a warning-level message with an exception.
+    /// </summary>
+    /// <param name="ex">The exception to log.</param>
+    /// <param name="message">The message.</param>
+    public static void LogWarn(Exception ex, string message)
+    {
+        NoonUtility.LogWarning($"{message}\n{ex.Message}\n{ex.StackTrace}");
+    }
+
 
     /// <summary>
     /// Starts the mod.
@@ -81,7 +126,7 @@ public class Autoccultist : MonoBehaviour
         {
             if (this.loadArcOnGameStart != null)
             {
-                this.LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
+                LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
                 NucleusAccumbens.AddImperative(this.loadArcOnGameStart);
                 this.loadArcOnGameStart = null;
                 this.StartAutoccultist();
@@ -95,7 +140,7 @@ public class Autoccultist : MonoBehaviour
             this.StopAutoccultist();
         };
 
-        this.LogInfo("Autoccultist initialized.");
+        LogInfo("Autoccultist initialized.");
     }
 
     public void EnsureMainThread()
@@ -114,7 +159,7 @@ public class Autoccultist : MonoBehaviour
         var previousArc = NucleusAccumbens.CurrentImperatives.OfType<IArc>().FirstOrDefault();
 
         this.StopAutoccultist();
-        this.LogInfo("Reloading all configs");
+        LogInfo("Reloading all configs");
 
         Deserializer.ClearCache();
         Library.LoadAll();
@@ -155,74 +200,51 @@ public class Autoccultist : MonoBehaviour
     /// </summary>
     public void Update()
     {
+        var now = DateTime.Now;
+
+        if (lastFpsSample + TimeSpan.FromSeconds(1) < now)
+        {
+            averageUpdateTime = timeTotal / timeSamples;
+            lastFpsSample = now;
+            timeSamples = 0;
+            timeTotal = 0;
+        }
+
         GameStateProvider.Invalidate();
         MechanicalHeart.Update();
         this.HandleHotkeys();
         GlobalUpdate?.Invoke(this, EventArgs.Empty);
+
+        var timeTaken = (DateTime.Now - now).TotalSeconds;
+        timeTotal += timeTaken;
+        timeSamples++;
     }
 
     public void StartNewGame(IArc arc)
     {
         if (arc == null)
         {
-            this.LogWarn("Cannot StartNewGame with null arc");
+            LogWarn("Cannot StartNewGame with null arc");
             return;
         }
 
         if (!arc.SupportsNewGame)
         {
-            this.LogWarn($"Cannot start a new game based on arc {arc.Name}: This arc does not support new games.");
+            LogWarn($"Cannot start a new game based on arc {arc.Name}: This arc does not support new games.");
             return;
         }
 
         var provider = arc.GetNewGameProvider();
         if (provider != null)
         {
-            this.LogTrace($"Starting a new game with arc {arc.Name}");
+            LogTrace($"Starting a new game with arc {arc.Name}");
             this.loadArcOnGameStart = arc;
             Watchman.Get<StageHand>().LoadGameOnTabletop(provider);
         }
         else
         {
-            this.LogWarn($"Cannot start a new game based on arc {arc.Name}: No provider was found.");
+            LogWarn($"Cannot start a new game based on arc {arc.Name}: No provider was found.");
         }
-    }
-
-    /// <summary>
-    /// Log an info-level message.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    public void LogInfo(string message)
-    {
-        NoonUtility.Log(message);
-    }
-
-    /// <summary>
-    /// Log a trace-level message.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    public void LogTrace(string message)
-    {
-        NoonUtility.Log(message);
-    }
-
-    /// <summary>
-    /// Log a warning-level message.
-    /// </summary>
-    /// <param name="message">The message to log.</param>
-    public void LogWarn(string message)
-    {
-        NoonUtility.LogWarning(message);
-    }
-
-    /// <summary>
-    /// Logs a warning-level message with an exception.
-    /// </summary>
-    /// <param name="ex">The exception to log.</param>
-    /// <param name="message">The message.</param>
-    public void LogWarn(Exception ex, string message)
-    {
-        NoonUtility.LogWarning($"{message}\n{ex.Message}\n{ex.StackTrace}");
     }
 
     public void StartAutoccultist()

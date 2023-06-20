@@ -13,10 +13,8 @@ namespace AutoccultistNS.Config
     /// <para>
     /// For legacy reasons, a motivation can always activate regardless of its goals.
     /// </summary>
-    public class MotivationConfig : NamedConfigObject, IImperativeConfig, IImperative
+    public class MotivationConfig : NamedConfigObject, IMotivationConfig
     {
-        // FIXME: LibraryConfigObject not working with imports here...  !import probably takes priority then fails to import to LibraryConfigObject
-
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
@@ -26,6 +24,12 @@ namespace AutoccultistNS.Config
         /// Gets or sets the secondary goals of this motivation.
         /// </summary>
         public FlatList<ObjectOrLibraryEntry<IImperativeConfig>> SupportingGoals { get; set; } = new();
+
+        IReadOnlyList<IImperativeConfig> IMotivationConfig.PrimaryGoals => this.PrimaryGoals.Select(x => x.Value).ToArray();
+
+        IReadOnlyList<IImperativeConfig> IMotivationConfig.SupportingGoals => this.SupportingGoals.Select(x => x.Value).ToArray();
+
+        string IImperative.Name => throw new System.NotImplementedException();
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)
@@ -44,13 +48,19 @@ namespace AutoccultistNS.Config
             }
         }
 
-        public ConditionResult CanActivate(IGameState state)
+        /// <inheritdoc/>
+        public virtual ConditionResult CanActivate(IGameState state)
         {
+            // For legacy reasons, we consider motivations to always be ready to start.
+            // This is overriden in newer systems.
             return ConditionResult.Success;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> DescribeCurrentGoals(IGameState state)
         {
+            yield return $"[Motivation]: {this.Name}";
+
             foreach (var goal in this.PrimaryGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.DescribeCurrentGoals(state)))
             {
                 yield return $"[Primary]: {goal}";
@@ -62,19 +72,37 @@ namespace AutoccultistNS.Config
             }
         }
 
-        public IEnumerable<IImpulse> GetReactions(IGameState state)
+        /// <inheritdoc/>
+        public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            foreach (var goal in this.PrimaryGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
+            foreach (var goal in this.PrimaryGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetImpulses(state)))
             {
                 yield return goal;
             }
 
-            foreach (var goal in this.SupportingGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetReactions(state)))
+            foreach (var goal in this.SupportingGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetImpulses(state)))
             {
                 yield return goal;
             }
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<IImperative> Flatten()
+        {
+            yield return this;
+
+            var goals =
+                from goal in this.PrimaryGoals.Select(x => x.Value).Concat(this.SupportingGoals.Select(x => x.Value))
+                from flat in goal.Flatten()
+                select flat;
+
+            foreach (var goal in goals)
+            {
+                yield return goal;
+            }
+        }
+
+        /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
             foreach (var goal in this.PrimaryGoals)

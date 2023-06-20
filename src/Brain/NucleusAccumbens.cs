@@ -120,7 +120,7 @@ namespace AutoccultistNS.Brain
                 }
 
                 sb.AppendLine("- Reactions");
-                var reactions = from pair in imperative.GetReactions(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
+                var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
                                 orderby pair.Reaction.Priority descending, pair.Index ascending
                                 select pair.Reaction;
                 foreach (var reaction in reactions)
@@ -208,7 +208,7 @@ namespace AutoccultistNS.Brain
             // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
             return
                 from imperative in ActiveImperatives
-                from reaction in imperative.GetReactions(GameStateProvider.Current).Select((r, index) => new { Value = r, Index = index })
+                from reaction in imperative.GetImpulses(GameStateProvider.Current).Distinct().Select((r, index) => new { Value = r, Index = index })
                 orderby reaction.Value.Priority descending, reaction.Index ascending
                 select new EnumeratedReaction { Imperative = imperative, Reaction = reaction.Value };
         }
@@ -276,7 +276,7 @@ namespace AutoccultistNS.Brain
             }
             else
             {
-                Autoccultist.Instance.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find reaction for execution {execution}");
+                Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find reaction for execution {execution}");
             }
 
             ImpulsesByReaction.Remove(execution);
@@ -290,7 +290,7 @@ namespace AutoccultistNS.Brain
                 }
             }
 
-            Autoccultist.Instance.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find imperative for execution {execution}");
+            Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find imperative for execution {execution}");
         }
 
         private class EnumeratedReaction

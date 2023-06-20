@@ -147,7 +147,7 @@ namespace AutoccultistNS.Config
         {
             try
             {
-                var arc = Deserializer.Deserialize<LinearMotivationalArcConfig>(filePath);
+                var arc = Deserializer.Deserialize<MotivationalArcConfig>(filePath);
                 LibraryArcs.Add(arc);
             }
             catch (YamlFileException ex)

@@ -84,7 +84,7 @@ namespace AutoccultistNS
                 var heartGo = GameObject.Find("Heart");
                 if (heartGo == null)
                 {
-                    NoonUtility.LogWarning("Could not find Heart.");
+                    Autoccultist.LogWarn("Could not find Heart.");
                     return GameSpeed.Paused;
                 }
 
@@ -315,7 +315,7 @@ namespace AutoccultistNS
             }
             catch (Exception ex)
             {
-                NoonUtility.LogWarning($"Exception in GameAPI.GetMansusChoices: {ex.ToString()}");
+                Autoccultist.LogWarn($"Exception in GameAPI.GetMansusChoices: {ex.ToString()}");
                 return null;
             }
         }
@@ -363,7 +363,7 @@ namespace AutoccultistNS
             }
             catch (Exception ex)
             {
-                NoonUtility.LogWarning($"Exception in GameAPI.ChooseMansusDeck: {ex.ToString()}");
+                Autoccultist.LogWarn($"Exception in GameAPI.ChooseMansusDeck: {ex.ToString()}");
                 return false;
             }
         }
@@ -525,7 +525,7 @@ namespace AutoccultistNS
             /// </summary>
             ~PauseToken()
             {
-                NoonUtility.LogWarning("Leaked PauseToken");
+                Autoccultist.LogWarn("Leaked PauseToken");
             }
 
             /// <inheritdoc/>

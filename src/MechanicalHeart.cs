@@ -38,17 +38,17 @@ namespace AutoccultistNS
             // Don't run if the game isn't running.
             if (!GameAPI.IsRunning)
             {
-                NoonUtility.LogWarning("Ignoring Mechanical Heart start: game not running.");
+                Autoccultist.LogWarn("Ignoring Mechanical Heart start: game not running.");
                 return;
             }
 
             if (IsRunning)
             {
-                NoonUtility.LogWarning("Ignoring Mechanical Heart start: already running.");
+                Autoccultist.LogWarn("Ignoring Mechanical Heart start: already running.");
                 return;
             }
 
-            NoonUtility.LogWarning("Starting Mechanical Heart.");
+            Autoccultist.LogTrace("Starting Mechanical Heart.");
 
             IsRunning = true;
             OnStart?.Invoke(null, EventArgs.Empty);
@@ -64,7 +64,7 @@ namespace AutoccultistNS
                 return;
             }
 
-            NoonUtility.LogWarning("Stopping Mechanical Heart.");
+            Autoccultist.LogTrace("Stopping Mechanical Heart.");
 
             IsRunning = false;
             OnStop?.Invoke(null, EventArgs.Empty);
@@ -141,7 +141,7 @@ namespace AutoccultistNS
             }
             catch (Exception ex)
             {
-                Autoccultist.Instance.LogWarn($"Error in Mechanical Heart: {ex.Message}");
+                Autoccultist.LogWarn($"Error in Mechanical Heart: {ex.Message}");
                 NoonUtility.LogException(ex);
                 MechanicalHeart.Stop();
             }

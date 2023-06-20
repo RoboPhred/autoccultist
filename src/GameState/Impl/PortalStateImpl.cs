@@ -31,7 +31,7 @@ namespace AutoccultistNS.GameState.Impl
             var output = ingress.GetEgressOutputSphere();
             if (output == null)
             {
-                NoonUtility.LogWarning($"Open ingress {ingress.EntityId} has no output sphere.");
+                Autoccultist.LogWarn($"Open ingress {ingress.EntityId} has no output sphere.");
                 return;
             }
 

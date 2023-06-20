@@ -4,7 +4,6 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Yaml;
 
     [DuckTypeCandidate(typeof(GoalConfig))]
-    [DuckTypeCandidate(typeof(MotivationConfig))]
     public interface IImperativeConfig : IConfigObject, IImperative
     {
     }

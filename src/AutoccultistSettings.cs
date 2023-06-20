@@ -42,7 +42,7 @@ namespace AutoccultistNS
 
             public void WhenSettingUpdated(object newValue)
             {
-                Autoccultist.Instance.LogTrace($"SettingActorSort: {newValue}");
+                Autoccultist.LogTrace($"SettingActorSort: {newValue}");
                 var value = newValue as bool?;
                 SortTableOnIdle = value ?? false;
             }

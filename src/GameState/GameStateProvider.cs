@@ -32,6 +32,19 @@ namespace AutoccultistNS.GameState
             }
         }
 
+        public static IGameState Empty
+        {
+            get
+            {
+                return new GameStateImpl(
+                    new ICardState[0],
+                    new ICardState[0],
+                    new ICardState[0],
+                    new ISituationState[0],
+                    PortalStateImpl.FromCurrentState());
+            }
+        }
+
         /// <summary>
         /// Invalidates the current game state.
         /// </summary>
@@ -50,12 +63,7 @@ namespace AutoccultistNS.GameState
 
             if (!GameAPI.IsRunning)
             {
-                return new GameStateImpl(
-                    new ICardState[0],
-                    new ICardState[0],
-                    new ICardState[0],
-                    new ISituationState[0],
-                    PortalStateImpl.FromCurrentState());
+                return GameStateProvider.Empty;
             }
 
             try
@@ -94,7 +102,7 @@ namespace AutoccultistNS.GameState
             }
             catch (Exception ex)
             {
-                NoonUtility.LogWarning($"Exception in GameStateProvider.FromCurrentState: {ex.ToString()}");
+                Autoccultist.LogWarn($"Exception in GameStateProvider.FromCurrentState: {ex.ToString()}");
                 NoonUtility.LogException(ex);
                 throw;
             }

@@ -62,7 +62,7 @@ namespace AutoccultistNS.Brain
             }
             catch (Exception ex)
             {
-                NoonUtility.LogWarning(ex, $"Failed to dump situation {this.SituationId}: {ex.Message}");
+                Autoccultist.LogWarn(ex, $"Failed to dump situation {this.SituationId}: {ex.Message}");
             }
             finally
             {

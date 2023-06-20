@@ -88,7 +88,6 @@ namespace AutoccultistNS.Config
 
         public IReaction Execute()
         {
-            NoonUtility.Log($"Executing operation {this.Name}.");
             return new OperationReaction(this);
         }
 

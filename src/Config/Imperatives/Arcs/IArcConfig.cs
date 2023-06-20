@@ -4,7 +4,7 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Yaml;
 
     [LibraryConfigObject("arcs")]
-    [DuckTypeCandidate(typeof(LinearMotivationalArcConfig))]
+    [DuckTypeCandidate(typeof(MotivationalArcConfig))]
     public interface IArcConfig : INamedConfigObject, IArc
     {
     }

@@ -84,9 +84,14 @@ namespace AutoccultistNS.Config
             return new[] { this.Name };
         }
 
-        public IEnumerable<IImpulse> GetReactions(IGameState state)
+        public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             return this.Impulses;
+        }
+
+        public IEnumerable<IImperative> Flatten()
+        {
+            return new IImperative[] { this };
         }
     }
 }

@@ -18,7 +18,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
-    public class LinearMotivationalArcConfig : NamedConfigObject, IArcConfig
+    public class MotivationalArcConfig : NamedConfigObject, IArcConfig
     {
         private string arcFolder;
 
@@ -37,7 +37,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets a list of motivations that will drive the execution of this arc.
         /// </summary>
-        public List<MotivationConfig> Motivations { get; set; } = new();
+        public MotivationCollectionConfig Motivations { get; set; }
 
         /// <summary>
         /// Gets or sets the selection hint to be used to determine the current arc on loading a save.
@@ -73,9 +73,9 @@ namespace AutoccultistNS.Config
         /// <param name="filePath">The path to the config file to load.</param>
         /// <returns>A ArcConfig loaded from the file.</returns>
         /// <exception cref="Brain.Config.InvalidConfigException">The config file at the path contains invalid configuration.</exception>
-        public static LinearMotivationalArcConfig Load(string filePath)
+        public static MotivationalArcConfig Load(string filePath)
         {
-            return Deserializer.Deserialize<LinearMotivationalArcConfig>(filePath);
+            return Deserializer.Deserialize<MotivationalArcConfig>(filePath);
         }
 
         /// <inheritdoc/>
@@ -145,45 +145,32 @@ namespace AutoccultistNS.Config
 
         public ConditionResult CanActivate(IGameState state)
         {
-            return ConditionResult.Success;
+            return this.Motivations.CanActivate(state);
         }
 
         public ConditionResult IsSatisfied(IGameState state)
         {
-            foreach (var motivation in this.Motivations)
+            return this.Motivations.IsSatisfied(state);
+        }
+
+        public IEnumerable<string> DescribeCurrentGoals(IGameState state)
+        {
+            return this.Motivations.DescribeCurrentGoals(state);
+        }
+
+        public IEnumerable<IImpulse> GetImpulses(IGameState state)
+        {
+            return this.Motivations.GetImpulses(state);
+        }
+
+        public IEnumerable<IImperative> Flatten()
+        {
+            yield return this;
+
+            foreach (var child in this.Motivations.Flatten())
             {
-                var result = motivation.IsSatisfied(state);
-                if (!result)
-                {
-                    return result;
-                }
+                yield return child;
             }
-
-            return ConditionResult.Success;
-        }
-
-        public IEnumerable<string> DescribeCurrentGoals(IGameState gameState)
-        {
-            return this.GetActiveMotivation(gameState)?.DescribeCurrentGoals(gameState);
-        }
-
-        public IEnumerable<IImpulse> GetReactions(IGameState state)
-        {
-            return this.GetActiveMotivation(state)?.GetReactions(state) ?? Enumerable.Empty<IImpulse>();
-        }
-
-        private MotivationConfig GetActiveMotivation(IGameState state)
-        {
-            foreach (var motivation in this.Motivations)
-            {
-                var result = motivation.IsSatisfied(state);
-                if (!result)
-                {
-                    return motivation;
-                }
-            }
-
-            return null;
         }
 
         private class ArcPersistenceProvider : GamePersistenceProvider

@@ -6,81 +6,106 @@ selectionHint:
     - elementId: introjob
     - elementId: bequestintro
 motivations:
-  - name: Begin the game
+  begin_game:
+    name: Begin the game
     primaryGoals:
-      - !import /goals/aspirant/begin-intro.yml
-  - name: Get a job
+      - aspirant/begin-intro
+  survive_forever:
+    name: Survive
     primaryGoals:
-      - !import /goals/glover/acquire-job-glover-junior.yml
+      - survive
+  study_bequest:
+    name: Study bequest contents
+    requiresAllOf:
+      - begin_game
+    primaryGoals:
+      - aspirant/study-bequest-passion
+      - discover-bookdealer
+      - aspirant/find-collaborator
+  get_buff:
+    name: Get a stronger physique
+    requiresAllOf:
+      - begin_game
+      - study_bequest # We need the study verb
+    primaryGoals:
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
     supportingGoals:
-      - !import /goals/survive.yml
-  - name: Study bequest contents
+      - funds/work-labor
+  get_scholarship_minor:
+    name: Get a scholarship
+    requiresAllOf:
+      - get_buff # Wait until we finish leveling up our other skill so the situations don't conflict
     primaryGoals:
-      - !import /goals/aspirant/study-bequest-passion.yml
-      - !import /goals/discover-bookdealer.yml
-      - !import /goals/aspirant/find-collaborator.yml
+      - reason/acquire-skillreasona
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Get a stronger physique while finding people to recruit
+      - funds/work-labor # Still work with labor as get_gg waits on us
+  get_scholarship_major:
+    name: Get a profound scholarship
+    requiresAllOf:
+      - get_scholarship_minor
     primaryGoals:
-      - !import /goals/health/acquire-skillhealtha.yml
-    supportingGoals:
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Get a scholarship while finding people to recruit
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+  get_gg:
+    name: Get a job
+    requiresAllOf:
+      - begin_game
+      # Wait until we get our scholarship so we have the reason to spare
+      - get_scholarship_minor
     primaryGoals:
-      - !import /goals/reason/acquire-skillreasona.yml
-      - !import /goals/reason/acquire-skillreasonb.yml
-      - !import /goals/reason/acquire-skillreasonc.yml
-    supportingGoals:
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Get a promotion while finding people to recruit
+      - glover/acquire-job-glover-junior
+  get_gg_promotion:
+    name: Get a promotion while finding people to recruit
+    requiresAllOf:
+      - get_gg
     primaryGoals:
-      - !import /goals/glover/acquire-job-glover-standard.yml
-    supportingGoals:
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-  - name: Get swole, find people to recruit
+      - glover/acquire-job-glover-standard
+  work_forever:
+    name: Work Forever
+    requiresAllOf:
+      - get_gg
     primaryGoals:
-      - !import /goals/health/acquire-skillhealthb.yml
-      - !import /goals/health/acquire-skillhealthc.yml
-    supportingGoals:
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Finish finding people to recruit, buy and read books
+      - glover/work-glover
+  find_recruits:
+    name: Finding people to recruit
+    requiresAllOf:
+      - study_bequest # We need to have explore and talk
     primaryGoals:
-      - !import /goals/followers/attract-followers.yml
-      - !import /goals/consume-bookdealer.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
-    supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Prepare for Oriflamme
+      - followers/attract-followers
+  drain_morlands:
+    name: Buy and read books from Morlands
+    requiresAllOf:
+      - study_bequest
+      # Don't do this until we have the skills so we are not monopolizing the study verb
+      # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
+      - get_buff
+      - get_scholarship_major
     primaryGoals:
-      - !import /goals/find-auctionhouse.yml
-      - !import /goals/auction/sell-rubbish.yml
-    supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Buy out Oriflamme, Acquire the Wood and White Door
+      - followers/attract-followers
+      - consume-bookdealer
+      - consume-books-lore-waitmorland
+  drain_auctionhouse:
+    name: Buy and read books from Oriflamme
+    requiresAllOf:
+      - drain_morlands # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
     primaryGoals:
-      - !import /goals/auction/acquire-everything.yml
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - find-auctionhouse
+      - auction/acquire-everything
       - name: Watch Stumm
         completedWhen:
           elementId: ritefollowerconsumeinfluence
         impulses:
           - operation: !import /operations/watch-stumm.yml
-    supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-  - name: Perpetual survival
+  acquire_early_doors:
+    name: Acquire the Wood and White Door
+    # Don't start until any of our primary goals can start.
+    # Note: This might mean this motivation starts and stops repeatedly until all goals are completed.
+    requirePrimaryGoals: true
     primaryGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+    supportingGoals:
+      - survive
+      - glover/work-glover

@@ -76,7 +76,7 @@ namespace AutoccultistNS.Yaml
             }
             catch (Exception ex)
             {
-                NoonUtility.LogWarning($"Failed to deserialize flat list of type {expectedType} with subject type {subjectType}.  Items are {string.Join(", ", items.Select(x => x.GetType().Name))}");
+                Autoccultist.LogWarn(ex, $"Failed to deserialize flat list of type {expectedType} with subject type {subjectType}.  Items are {string.Join(", ", items.Select(x => x.GetType().Name))}");
                 throw ex;
             }
         }

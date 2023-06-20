@@ -81,7 +81,7 @@ namespace AutoccultistNS.Actor
                     }
                     catch (Exception ex)
                     {
-                        Autoccultist.Instance.LogWarn("Failed to perform action: " + ex.ToString());
+                        Autoccultist.LogWarn("Failed to perform action: " + ex.ToString());
                     }
                     finally
                     {

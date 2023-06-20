@@ -79,6 +79,8 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
+            GUILayout.Label($"Average Update: {Autoccultist.AverageUpdateTime:0.0000}");
+
             GUILayout.BeginHorizontal();
 
             var currentArc = NucleusAccumbens.CurrentImperatives.OfType<IArc>().FirstOrDefault();
