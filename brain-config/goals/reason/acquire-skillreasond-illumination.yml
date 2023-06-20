@@ -2,6 +2,9 @@ name: Acquire a Rarefied Mind
 requirements:
   allOf:
     - elementId: skillreasonc
+    - cardSet:
+        - elementId: textbookreason
+        - elementId: textbookreason
     - anyOf:
         - aspects: { lore: 1, lantern: 1 }
         - aspects: { lore: 1, forge: 1 }
