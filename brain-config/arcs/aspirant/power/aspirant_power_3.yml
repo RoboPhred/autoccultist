@@ -102,8 +102,8 @@ motivations:
       - reason/acquire-skillreasonb
       - reason/acquire-skillreasonc
 
-  get_rarified_mind:
-    name: Get a Rarified Mind
+  get_rarefied_mind:
+    name: Get a Rarefied Mind
     requires:
       - get_scholarship_major
       # We were using requiresPrimaryGoals, but that causes this motivation to end
@@ -201,7 +201,7 @@ motivations:
       - acquire_early_doors
       - drain_morlands
       - read_all_lore
-      - get_rarified_mind
+      - get_rarefied_mind
       # Don't need stumm for this, even though it gives us a winter lore.
     primaryGoals:
       - victories/power/victory-temptation-power-lore-stag-spider
