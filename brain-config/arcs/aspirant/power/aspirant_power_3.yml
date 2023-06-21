@@ -104,15 +104,19 @@ motivations:
 
   get_rarefied_mind:
     name: Get a Rarefied Mind
+    # Do this whenever we end up with the right amount of textbooks
+    # This is so we can keep our study verb busy when we are waiting to get enough money to spend at morlands.
+    # Danger: if our goal requirements drop off, this can disable and stop the motivation, which deadlocks the bot.
+    # Even a brief moment of disabling can allow read_all_lore to trigger again, taking over the study verb and causing our
+    # precious eruditionplus to decay.
+    # If this is unreliable, remove this, and require read_all_lore and drain_morland instead
+    requirePrimaryGoals: true
     requires:
       - get_scholarship_major
-      # We were using requiresPrimaryGoals, but that causes this motivation to end
-      # the moment we consume one of our required books, so instead we have to wait until we know we have enough textbookreasons.
-      - drain_morlands
-      - read_all_lore
     blocks:
       # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
       - get_stumm
+      - read_all_lore
     primaryGoals:
       - reason/acquire-skillreasond-illumination
   # End skills
@@ -219,6 +223,16 @@ motivations:
       - recruit_when_needed
     primaryGoals:
       - cult/recruit-lore-forge
+
+  # Notes on improving this:
+  # Right now, we generate notoriety => evidence and sit there twiddling our thumbs for 10 minutes waiting for it to go away
+  # We should instead:
+  # - Get a heart follower as a disciple
+  # - Use the spider door to find our forge influence
+  #   -  Use heart follower to get rid of notoriety
+  # - When we have forge, keep it fresh with sulochana
+  # - Dive for knock to get crucible
+  # - Win
 
   # Begin ascension
   begin_ascension:

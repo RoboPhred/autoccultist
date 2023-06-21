@@ -1,6 +1,12 @@
 name: Achieve the Seventh Mark of Power (using Labor)
 requirements:
-  elementId: ascensionpowerc
+  allOf:
+    - elementId: ascensionpowerc
+    - elementId: wayspider
+    - elementId: waystag_after
+    - elementId: ritefollowerconsumeinfluence
+    - aspects: { lore: 1, forge: 10 }
+    - aspects: { follower: 1, lantern: 2 }
 completedWhen:
   aspects: { desire: 7 }
 impulses:
@@ -62,10 +68,7 @@ impulses:
           Assistant:
             aspects: { follower: 1, lantern: 2 }
           Offering:
-            aspects:
-              influence: 1
-              knock:
-                greaterThanOrEqualTo: 5
+            aspects: { influence: 1, knock: 5 }
             ageBias: oldest
       ongoingRecipes:
         summoninglosingcontrol:
@@ -148,18 +151,4 @@ impulses:
 
   - name: Ascend
     priority: goal
-    operation:
-      name: Ascend
-      situation: work
-      startingRecipe:
-        slots:
-          work:
-            elementId: ritefollowerconsumeinfluence
-          Invocation:
-            aspects: { lore: 1, forge: 10 }
-          Assistant:
-            elementId: spirit_forgee_edge
-          Offering:
-            elementId: influenceforgeg
-          Desire:
-            elementId: ascensionpowerf
+    operation: !import /operations/victories/power/ascend-followerconsumeinfluence.yml
