@@ -1,7 +1,6 @@
 namespace AutoccultistNS.Brain
 {
     using System;
-    using System.Threading.Tasks;
 
     public interface IReaction
     {
@@ -16,8 +15,8 @@ namespace AutoccultistNS.Brain
         void Abort();
 
         /// <summary>
-        /// Returns a task that completes when this reaction is established and ongoing.
+        /// Start the reaction.
         /// </summary>
-        Task AwaitStarted();
+        void Start();
     }
 }

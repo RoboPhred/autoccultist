@@ -97,9 +97,9 @@ namespace AutoccultistNS
             {
                 if (!IsRunning)
                 {
-                    // Wait for a step, or for run
-                    // FIXME: We will leak OnStart.AwaitEvent handlers here... Need to make a WhenAny that cancells the remainders.
-                    await Task.WhenAny(AwaitBeat(cancellationToken), AwaitStart(cancellationToken));
+                    // Note: We used to also wait for Start, but that means once of our two AwaitEvent tasks were not being cancelled.
+                    // Rather than making a cancellation aware AwaitAll, just wait for the next beat, which will happen the next frame after Start()
+                    await AwaitBeat(cancellationToken);
                     return;
                 }
 

@@ -103,7 +103,7 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public async Task Start()
+        public void Start()
         {
             if (!GameStateProvider.Current.Situations.Any(x => x.SituationId == this.SituationId))
             {
@@ -126,12 +126,12 @@ namespace AutoccultistNS.Brain
                 case StateEnum.RequiringExecution:
                     this.operationState = OperationState.Starting;
                     BrainEventSink.OnOperationStarted(this.operation);
-                    await this.AwaitCoroutine(this.StartOperationCoroutine, nameof(this.StartOperationCoroutine));
+                    this.RunCoroutine(this.StartOperationCoroutine, nameof(this.StartOperationCoroutine));
                     break;
                 case StateEnum.Ongoing:
                     this.operationState = OperationState.Ongoing;
                     BrainEventSink.OnOperationStarted(this.operation);
-                    await this.ContinueOperation();
+                    this.ContinueOperation();
                     break;
                 default:
                     // This happened to a the cult activity that should have been ongoing...  Got stuck on an unstarted state.
@@ -220,20 +220,12 @@ namespace AutoccultistNS.Brain
             this.RunCoroutine(this.CompleteOperationCoroutine, nameof(this.CompleteOperationCoroutine));
         }
 
-        private async void UpdateOngoing()
+        private void UpdateOngoing()
         {
             var situation = this.GetSituationState();
             var clockState = situation.State;
-            if (clockState == StateEnum.Ongoing)
-            {
-                // The situation is running its recipe.
-                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
-                this.completionDebounceTime = null;
 
-                // See if we need to slot new cards.
-                await this.ContinueOperation();
-            }
-            else if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
+            if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
             {
                 if (this.completionDebounceTime == null)
                 {
@@ -247,6 +239,19 @@ namespace AutoccultistNS.Brain
                     // Enough time has passed that we can consider the operation completed.
                     this.Complete();
                 }
+
+                return;
+            }
+
+            if (clockState == StateEnum.Ongoing)
+            {
+                // The situation is running its recipe.
+                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
+                this.completionDebounceTime = null;
+
+                // See if we need to slot new cards.
+                this.ContinueOperation();
+                return;
             }
         }
 
@@ -267,7 +272,7 @@ namespace AutoccultistNS.Brain
             this.End();
         }
 
-        private async Task ContinueOperation()
+        private void ContinueOperation()
         {
             var situation = this.GetSituationState();
 
@@ -292,7 +297,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            await this.AwaitCoroutine(token => this.ContinueSituationCoroutine(recipeSolution, token), nameof(this.ContinueSituationCoroutine));
+            this.RunCoroutine(token => this.ContinueSituationCoroutine(recipeSolution, token), nameof(this.ContinueSituationCoroutine));
         }
 
         private async Task StartOperationCoroutine(CancellationToken cancellationToken)
@@ -313,7 +318,7 @@ namespace AutoccultistNS.Brain
 
             if (recipeSolution.EndOperation)
             {
-                await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
+                await new CloseSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
                 this.operationState = OperationState.Orphaning;
                 return;
             }
@@ -338,7 +343,7 @@ namespace AutoccultistNS.Brain
             }
             else
             {
-                await new CloseSituationAction(this.SituationId).Execute(cancellationToken);
+                await new CloseSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
             }
 
             if (followupRecipeSolution?.EndOperation == true)
@@ -362,7 +367,7 @@ namespace AutoccultistNS.Brain
                 throw new OperationFailedException($"Error in operation {this.operation.Name} recipe {situationState.CurrentRecipe}: Cannot continue operation as cards are already slotted.");
             }
 
-            await new ExecuteRecipeAction(this.SituationId, recipe, $"{this.operation.Name} => {situationState.CurrentRecipe}").Execute(cancellationToken);
+            await new ExecuteRecipeAction(this.SituationId, recipe, $"{this.operation.Name} => {situationState.CurrentRecipe}").ExecuteAndWait(cancellationToken);
 
             if (recipe.EndOperation)
             {
@@ -382,7 +387,7 @@ namespace AutoccultistNS.Brain
 
         private async Task CompleteOperationCoroutine(CancellationToken cancellationToken)
         {
-            await new ConcludeSituationAction(this.SituationId).Execute(cancellationToken);
+            await new ConcludeSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
             this.End();
         }
 
@@ -413,9 +418,13 @@ namespace AutoccultistNS.Brain
                 this.currentCoroutineName = coroutineName;
                 this.cancelCurrentTask = new CancellationTokenSource();
 
-                this.currentCoroutine = AutoccultistActor.Perform(
+                this.currentCoroutine = Cerebellum.Coordinate(
                     async (innerToken) =>
                     {
+                        // Pausing used to be implemented by AutoccultistActor, but now we are responsible for it.
+                        // We may already be paused if we are starting, but we are responsible for tracking and updating our own situation,
+                        // so we still need to pause for ongoing coroutines.
+                        var pauseToken = GameAPI.Pause();
                         try
                         {
                             await coroutine(innerToken);
@@ -427,6 +436,10 @@ namespace AutoccultistNS.Brain
                         catch (Exception ex)
                         {
                             await this.OnErrorCoroutine(ex, innerToken);
+                        }
+                        finally
+                        {
+                            pauseToken.Dispose();
                         }
                     }, this.cancelCurrentTask.Token);
 
@@ -455,7 +468,7 @@ namespace AutoccultistNS.Brain
                 var situation = this.GetSituationState();
                 if (situation.State == StateEnum.Unstarted || situation.State == StateEnum.RequiringExecution || situation.State == StateEnum.Complete)
                 {
-                    await new ConcludeSituationAction(this.SituationId).Execute(cancellationToken);
+                    await new ConcludeSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
                 }
             }
             catch (Exception ex2)

@@ -1,0 +1,11 @@
+{
+  "elements": [
+    {
+      "id": "autoccultist_memory",
+      "label": "A Mechanical Memory",
+      "description": "A mechanical memory, a device for storing and retrieving information. It is a thing of brass and crystal, and it is hungry for knowledge.",
+      "icon": "playernote",
+      "unique": true
+    }
+  ]
+}

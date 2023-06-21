@@ -1,5 +1,7 @@
 namespace AutoccultistNS.Config
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.GameState;
@@ -10,12 +12,12 @@ namespace AutoccultistNS.Config
     /// An Impulse represents an action that cannot ever be truly satisfied.
     /// As long as the requirements of the Impulse allow for its execution, the task should execute.
     /// </summary>
-    public class LegacyImpulseConfig : NamedConfigObject, IImpulseConfig
+    public class ImpulseConfig : NamedConfigObject, IImpulseConfig
     {
         /// <summary>
         /// Gets or sets the impulse that this impulse inherits from.
         /// </summary>
-        public LegacyImpulseConfig Extends { get; set; }
+        public ImpulseConfig Extends { get; set; }
 
         /// <summary>
         /// Gets or sets the priority for this impulse.
@@ -36,7 +38,12 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets the operation to perform when this impulse is triggered.
         /// </summary>
-        public OperationConfig Operation { get; set; }
+        public OperationImpulseConfig Operation { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of reactions to perform when the conditions are met
+        /// </summary>
+        public List<IReactorConfig> Reactions { get; set; } = new();
 
         /// <inheritdoc/>
         TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
@@ -50,13 +57,9 @@ namespace AutoccultistNS.Config
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
             }
-
-            if (this.Operation == null && this.Extends?.Operation == null)
-            {
-                throw new InvalidConfigException($"Impulse {this.Name} must have an operation.");
-            }
         }
 
+        /// <inheritdoc/>
         public ConditionResult IsConditionMet(IGameState state)
         {
             var requirements = this.Requirements ?? this.Extends?.Requirements;
@@ -80,18 +83,36 @@ namespace AutoccultistNS.Config
                 }
             }
 
-            var operationState = (this.Operation ?? this.Extends.Operation).IsConditionMet(state);
-            if (!operationState)
+            var operation = this.Operation ?? this.Extends?.Operation;
+            if (operation != null)
             {
-                return AddendedConditionResult.Addend(operationState, "Operation condition not met.");
+                var operationState = operation.IsConditionMet(state);
+                if (!operationState)
+                {
+                    return AddendedConditionResult.Addend(operationState, "Operation condition not met.");
+                }
             }
 
             return ConditionResult.Success;
         }
 
-        public IReaction Execute()
+        /// <inheritdoc/>
+        public IReaction GetReaction()
         {
-            return (this.Operation ?? this.Extends.Operation).Execute();
+            var reactions = new List<IReaction>();
+
+            var operation = this.Operation ?? this.Extends?.Operation;
+            if (operation != null)
+            {
+                reactions.Add(operation.GetReaction());
+            }
+
+            if (this.Reactions != null)
+            {
+                reactions.AddRange(this.Reactions.Select(x => x.GetReaction()));
+            }
+
+            return new CompoundReaction(reactions);
         }
     }
 }

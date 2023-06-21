@@ -1,4 +1,4 @@
-namespace AutoccultistNS.Actor
+namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
@@ -8,15 +8,11 @@ namespace AutoccultistNS.Actor
 
     /// <summary>
     /// The actor, that performs game actions on our behalf.
-    /// <para>
-    /// Game actions are delayed slightly, to make the gameplay easier to follow.
     /// </summary>
-    public static class AutoccultistActor
+    public static class Cerebellum
     {
-        private static readonly Queue<DeferredTask<bool>> PendingActions = new();
-        private static DeferredTask<bool> currentAction;
-
-        private static GameAPI.PauseToken pauseToken;
+        private static readonly Queue<DeferredTask<object>> PendingActions = new();
+        private static DeferredTask<object> currentAction;
 
         private static bool isDrainingQueue = false;
 
@@ -26,10 +22,10 @@ namespace AutoccultistNS.Actor
         /// <param name="action">The action to perform.</param>
         /// <param name="cancellationToken">An optional CancellationToken used to cancel the action execution.</param>
         /// <returns>A task that will complete when all actions complete, or fail with an exception describing the action failure.</returns>
-        public static Task Perform(Func<CancellationToken, Task> action, CancellationToken? cancellationToken = null)
+        public static Task Coordinate(Func<CancellationToken, Task> action, CancellationToken? cancellationToken = null)
         {
-            var pendingAction = new DeferredTask<bool>(
-                (innerCancellationToken) => action(innerCancellationToken).ContinueWith(_ => true),
+            var pendingAction = new DeferredTask<object>(
+                (innerCancellationToken) => action(innerCancellationToken).ContinueWith(_ => (object)null),
                 cancellationToken ?? CancellationToken.None);
 
             PendingActions.Enqueue(pendingAction);
@@ -42,6 +38,22 @@ namespace AutoccultistNS.Actor
             return pendingAction.Task;
         }
 
+        public static Task<T> Coordinate<T>(Func<CancellationToken, Task<T>> func, CancellationToken? cancellationToken = null)
+        {
+            // Need to box our result, no matter what it is.
+            var pendingAction = new DeferredTask<object>((innerCancellationToken) => func(innerCancellationToken).ContinueWith(x => (object)x.Result), cancellationToken ?? CancellationToken.None);
+
+            PendingActions.Enqueue(pendingAction);
+
+            if (!isDrainingQueue)
+            {
+                DrainActions();
+            }
+
+            // Now we need to unbox it.  Sigh...
+            return pendingAction.Task.ContinueWith(x => (T)x.Result);
+        }
+
         /// <summary>
         /// Abort all ongoing actions.
         /// </summary>
@@ -50,13 +62,11 @@ namespace AutoccultistNS.Actor
             currentAction?.Cancel();
             currentAction = null;
 
-            DeferredTask<bool> queuedTask;
+            DeferredTask<object> queuedTask;
             while ((queuedTask = PendingActions.DequeueOrDefault()) != null)
             {
                 queuedTask.Cancel();
             }
-
-            PendingActions.Clear();
         }
 
         public static async void DrainActions()
@@ -66,14 +76,16 @@ namespace AutoccultistNS.Actor
                 return;
             }
 
-            OnActive();
-
             isDrainingQueue = true;
             try
             {
-                DeferredTask<bool> set;
+                OnActive();
+
+                DeferredTask<object> set;
                 while ((set = PendingActions.DequeueOrDefault()) != null)
                 {
+                    await MechanicalHeart.AwaitBeat(CancellationToken.None, TimeSpan.Zero);
+
                     currentAction = set;
                     try
                     {
@@ -88,7 +100,7 @@ namespace AutoccultistNS.Actor
                         currentAction = null;
                     }
 
-                    await MechanicalHeart.AwaitBeat(CancellationToken.None, AutoccultistSettings.ActionDelay);
+                    // AutoccultistActor used to wait an action delay here, but now we are being used to linearify tasks that are not specifically game actions.
                 }
             }
             finally
@@ -101,21 +113,10 @@ namespace AutoccultistNS.Actor
 
         private static void OnActive()
         {
-            if (pauseToken == null)
-            {
-                pauseToken = GameAPI.Pause();
-            }
         }
 
         private static void OnIdle()
         {
-            pauseToken?.Dispose();
-            pauseToken = null;
-
-            if (AutoccultistSettings.SortTableOnIdle)
-            {
-                GameAPI.SortTable();
-            }
         }
     }
 }

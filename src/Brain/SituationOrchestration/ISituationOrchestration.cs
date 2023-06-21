@@ -21,7 +21,7 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Start the orchestration operating.
         /// </summary>
-        Task Start();
+        void Start();
 
         // FIXME: Remove this and rely on internal updates
         /// <summary>

@@ -35,9 +35,14 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public Task Start()
+        public void Start()
         {
-            return this.DumpSituation();
+            if (this.cancellationToken != null)
+            {
+                throw new InvalidOperationException("Cannot execute a dump situation orchestration more than once.");
+            }
+
+            this.DumpSituation();
         }
 
         /// <inheritdoc/>
@@ -50,15 +55,14 @@ namespace AutoccultistNS.Brain
         public void Abort()
         {
             this.cancellationToken?.Cancel();
-            this.cancellationToken = null;
         }
 
-        private async Task DumpSituation()
+        private async void DumpSituation()
         {
             try
             {
                 this.cancellationToken = new CancellationTokenSource();
-                await AutoccultistActor.Perform(this.DumpSituationCoroutine, this.cancellationToken.Token);
+                await Cerebellum.Coordinate(this.DumpSituationCoroutine, this.cancellationToken.Token);
             }
             catch (Exception ex)
             {
@@ -66,14 +70,24 @@ namespace AutoccultistNS.Brain
             }
             finally
             {
-                this.cancellationToken = null;
                 this.Completed?.Invoke(this, EventArgs.Empty);
             }
         }
 
         private async Task DumpSituationCoroutine(CancellationToken cancellationToken)
         {
-            await new ConcludeSituationAction(this.SituationId).Execute(cancellationToken);
+            // While we don't technically need to be paused for this, we are taking time away from other
+            // Cerebellum actions, so we should pause to not let game state decay too badly.
+            var pauseToken = GameAPI.Pause();
+            try
+            {
+                await new ConcludeSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
+            }
+            finally
+            {
+                // Might get op cancelled exception.
+                pauseToken.Dispose();
+            }
         }
     }
 }

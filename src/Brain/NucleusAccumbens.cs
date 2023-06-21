@@ -4,6 +4,7 @@ namespace AutoccultistNS.Brain
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using AutoccultistNS.GameState;
 
     /// <summary>
@@ -23,7 +24,10 @@ namespace AutoccultistNS.Brain
         private static readonly Dictionary<IReaction, IImpulse> ImpulsesByReaction = new();
         private static readonly Dictionary<IImperative, HashSet<IReaction>> ActiveReactionsByImperative = new();
 
-        private static bool isCheckingReactions = false;
+        private static bool isInitialized = false;
+
+        private static bool isActive = false;
+
         private static GameAPI.PauseToken pauseToken;
 
         /// <summary>
@@ -44,7 +48,13 @@ namespace AutoccultistNS.Brain
 
         public static void Initialize()
         {
-            MechanicalHeart.OnBeat += OnBeat;
+            if (isInitialized)
+            {
+                return;
+            }
+
+            isInitialized = true;
+            InvokeImpulsesLoop();
         }
 
         /// <summary>
@@ -139,78 +149,112 @@ namespace AutoccultistNS.Brain
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Update and execute goals.
-        /// </summary>
-        private static void OnBeat(object sender, EventArgs e)
+        private static async void InvokeImpulsesLoop()
         {
-            // Might be a bit performance heavy to check these states every beat, but so far we don't have any slowdown.
-            TryInvokeReactions();
-            TryCompleteImperatives();
-        }
-
-        private static async void TryInvokeReactions()
-        {
-            if (isCheckingReactions)
+            while (true)
             {
-                return;
-            }
-
-            isCheckingReactions = true;
-
-            try
-            {
-                while (true)
+                // Note: We do not have to await beats or check if the bot is running as Cerebellum does that.
+                await Cerebellum.Coordinate(async (cancellationToken) =>
                 {
-                    // Scan through all possible reactions and invoke the highest priority one that can start
-                    var pairing = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
-                    if (pairing == null)
+                    if (!GameAPI.IsRunning)
                     {
                         return;
                     }
 
-                    if (pauseToken == null)
+                    EnumeratedImpulse chosenImpulse = null;
+                    try
                     {
-                        pauseToken = GameAPI.Pause();
+                        // Scan through all possible reactions and invoke the highest priority one that can start
+                        chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
+                    }
+                    catch (Exception ex)
+                    {
+                        Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
                     }
 
-                    var execution = pairing.Reaction.Execute();
+                    if (chosenImpulse == null)
+                    {
+                        OnIdle();
+                        return;
+                    }
 
-                    OnReactionStarted(pairing.Imperative, pairing.Reaction, execution);
+                    var shouldPause = false;
+                    try
+                    {
+                        // Note: at one point, we awaited the start of every impulse.
+                        // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
+                        // and our next attempt at starting impulses will wait for it to complete.
+                        shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
+                    }
+                    catch (Exception ex)
+                    {
+                        Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
+                    }
 
-                    await execution.AwaitStarted();
-                }
+                    if (shouldPause)
+                    {
+                        OnActive();
+                    }
+                });
             }
-            finally
+        }
+
+        private static void OnActive()
+        {
+            if (isActive)
             {
-                pauseToken?.Dispose();
+                return;
+            }
+
+            isActive = true;
+            if (pauseToken == null)
+            {
+                pauseToken = GameAPI.Pause();
+            }
+        }
+
+        private static void OnIdle()
+        {
+            if (!isActive)
+            {
+                return;
+            }
+
+            isActive = false;
+            if (pauseToken != null)
+            {
+                pauseToken.Dispose();
                 pauseToken = null;
-                isCheckingReactions = false;
+            }
+
+            if (AutoccultistSettings.SortTableOnIdle)
+            {
+                GameAPI.SortTable();
             }
         }
 
         /// <summary>
         /// Gets all reactions that are ready to be invoked, in order of priority.
         /// </summary>
-        private static IEnumerable<EnumeratedReaction> GetReadyImpulses()
+        private static IEnumerable<EnumeratedImpulse> GetReadyImpulses()
         {
             return from reaction in GetAllImpulses()
-                   where !RunningImpulses.Contains(reaction.Reaction)
-                   where reaction.Reaction.IsConditionMet(GameStateProvider.Current)
+                   where !RunningImpulses.Contains(reaction.Impulse)
+                   where reaction.Impulse.IsConditionMet(GameStateProvider.Current)
                    select reaction;
         }
 
         /// <summary>
         /// Gets all reactions that are currently active, in order of priority.
         /// </summary>
-        private static IEnumerable<EnumeratedReaction> GetAllImpulses()
+        private static IEnumerable<EnumeratedImpulse> GetAllImpulses()
         {
             // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
             return
                 from imperative in ActiveImperatives
                 from reaction in imperative.GetImpulses(GameStateProvider.Current).Distinct().Select((r, index) => new { Value = r, Index = index })
                 orderby reaction.Value.Priority descending, reaction.Index ascending
-                select new EnumeratedReaction { Imperative = imperative, Reaction = reaction.Value };
+                select new EnumeratedImpulse { Imperative = imperative, Impulse = reaction.Value };
         }
 
         private static void TryCompleteImperatives()
@@ -228,19 +272,19 @@ namespace AutoccultistNS.Brain
         {
             // Clean up our mess of tracking maps.
             // FIXME: This is disgusting.  Track these better.
-            if (ActiveReactionsByImperative.TryGetValue(imperative, out var executions))
+            if (ActiveReactionsByImperative.TryGetValue(imperative, out var reactions))
             {
-                foreach (var execution in executions.ToArray())
+                foreach (var reaction in reactions.ToArray())
                 {
-                    execution.Completed -= HandleReactionCompleted;
-                    execution.Abort();
+                    reaction.Completed -= HandleReactionCompleted;
+                    reaction.Abort();
 
-                    if (ImpulsesByReaction.TryGetValue(execution, out var reaction))
+                    if (ImpulsesByReaction.TryGetValue(reaction, out var impulse))
                     {
-                        RunningImpulses.Remove(reaction);
+                        RunningImpulses.Remove(impulse);
                     }
 
-                    ImpulsesByReaction.Remove(execution);
+                    ImpulsesByReaction.Remove(reaction);
                 }
 
                 ActiveReactionsByImperative.Remove(imperative);
@@ -254,50 +298,65 @@ namespace AutoccultistNS.Brain
             OnImperativeCompleted?.Invoke(null, new ImperativeEventArgs(imperative));
         }
 
-        private static void OnReactionStarted(IImperative imperative, IImpulse reaction, IReaction execution)
+        /// <summary>
+        /// Try to start an impulse
+        /// </summary>
+        /// <returns>true if the impulse starts and is ongoing, false if it did not start or completed synchronously.</returns>
+        private static bool StartImulse(IImperative imperative, IImpulse impulse)
         {
-            // FIXME: We keep so many variations of the same imperative => reaction => execution mapping.  Clean this up
-            RunningImpulses.Add(reaction);
-            ActiveReactionsByImperative[imperative].Add(execution);
-            ImpulsesByReaction.Add(execution, reaction);
+            if (!RunningImpulses.Add(impulse))
+            {
+                return false;
+            }
 
-            execution.Completed += HandleReactionCompleted;
+            var reaction = impulse.GetReaction();
+
+            // FIXME: We keep so many variations of the same imperative => reaction => execution mapping.  Clean this up
+            ActiveReactionsByImperative[imperative].Add(reaction);
+            ImpulsesByReaction.Add(reaction, impulse);
+
+            reaction.Completed += HandleReactionCompleted;
+
+            reaction.Start();
+
+            // The impulse might complete synchronously, so return false if it did.
+            return RunningImpulses.Contains(impulse);
         }
 
         private static void HandleReactionCompleted(object sender, EventArgs e)
         {
-            var execution = (IReaction)sender;
-            execution.Completed -= HandleReactionCompleted;
+            var reaction = (IReaction)sender;
+            reaction.Completed -= HandleReactionCompleted;
 
             // FIXME: More disgusting tracking maps.
-            if (ImpulsesByReaction.TryGetValue(execution, out var reaction))
+            if (ImpulsesByReaction.TryGetValue(reaction, out var impulse))
             {
-                RunningImpulses.Remove(reaction);
+                RunningImpulses.Remove(impulse);
             }
             else
             {
-                Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find reaction for execution {execution}");
+                Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find reaction for execution {reaction}");
             }
 
-            ImpulsesByReaction.Remove(execution);
+            ImpulsesByReaction.Remove(reaction);
 
             // Shame we don't know what imperative this was part of, but we shouldn't have very many parallel imperatives
             foreach (var executions in ActiveReactionsByImperative.Values)
             {
-                if (executions.Remove(execution))
+                if (executions.Remove(reaction))
                 {
                     return;
                 }
             }
 
-            Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find imperative for execution {execution}");
+            Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find imperative for execution {reaction}");
         }
 
-        private class EnumeratedReaction
+        private class EnumeratedImpulse
         {
             public IImperative Imperative { get; set; }
 
-            public IImpulse Reaction { get; set; }
+            public IImpulse Impulse { get; set; }
 
             public int Index { get; set; }
         }
