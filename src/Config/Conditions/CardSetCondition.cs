@@ -35,7 +35,7 @@ namespace AutoccultistNS.Config.Conditions
                 var choice = chooser.ChooseCard(remaining);
                 if (choice == null)
                 {
-                    return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(chooser), $"when looking for a set of {this.CardSet.Count} cards");
+                    return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(chooser), $"when looking for a set of {this.CardSet.Count} cards");
                 }
 
                 remaining.Remove(choice);

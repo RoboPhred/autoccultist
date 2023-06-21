@@ -7,12 +7,12 @@ namespace AutoccultistNS
 
     public static class PerfMonitor
     {
-        private static int Samples = 1000;
-        private static int AllocatedMsPerTask = 10;
+        private const int Samples = 1000;
+        private const int AllocatedMsPerTask = 10;
 
-        private static readonly Dictionary<string, PerfEntry> entries = new();
+        private static readonly Dictionary<string, PerfEntry> _Entries = new();
 
-        public static IReadOnlyDictionary<string, PerfEntry> Entries => entries;
+        public static IReadOnlyDictionary<string, PerfEntry> Entries => _Entries;
 
         public static T Monitor<T>(string key, Func<T> func)
         {
@@ -33,10 +33,10 @@ namespace AutoccultistNS
 
         private static void AddSample(string key, TimeSpan timeSpan)
         {
-            if (!entries.TryGetValue(key, out var entry))
+            if (!Entries.TryGetValue(key, out var entry))
             {
                 entry = new PerfEntry();
-                entries.Add(key, entry);
+                _Entries.Add(key, entry);
             }
 
             entry.AddSample(timeSpan);
@@ -44,22 +44,22 @@ namespace AutoccultistNS
 
         public class PerfEntry
         {
-            private Queue<Sample> samples = new(Samples);
+            private Queue<Sample> samples = new(PerfMonitor.Samples);
 
-            public double SecondsSinceFirstSample => ((DateTime.Now - this.samples.Peek()?.Timestamp)?.TotalSeconds ?? 1);
+            public double SecondsSinceFirstSample => (DateTime.Now - this.samples.Peek()?.Timestamp)?.TotalSeconds ?? 1;
 
-            public double SamplesPerSecond => this.samples.Count / SecondsSinceFirstSample;
+            public double SamplesPerSecond => this.samples.Count / this.SecondsSinceFirstSample;
 
             public double Average => this.samples.Select(x => x.Timespan.TotalMilliseconds).Sum() / this.samples.Count;
 
             public double Max => this.samples.Select(x => x.Timespan.TotalMilliseconds).Max();
 
             // Total outliers divided by the total seconds since the first sample.
-            public double GreaterThanAllocatedRate => this.samples.Select(x => x.Timespan.TotalMilliseconds).Count(x => x > AllocatedMsPerTask) / SecondsSinceFirstSample;
+            public double GreaterThanAllocatedRate => this.samples.Select(x => x.Timespan.TotalMilliseconds).Count(x => x > AllocatedMsPerTask) / this.SecondsSinceFirstSample;
 
             public void AddSample(TimeSpan timeSpan)
             {
-                if (this.samples.Count >= Samples)
+                if (this.samples.Count >= PerfMonitor.Samples)
                 {
                     this.samples.Dequeue();
                 }
@@ -74,8 +74,9 @@ namespace AutoccultistNS
 
         private class Sample
         {
-            public TimeSpan Timespan;
-            public DateTime Timestamp;
+            public TimeSpan Timespan { get; set; }
+
+            public DateTime Timestamp { get; set; }
         }
     }
 }

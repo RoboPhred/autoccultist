@@ -90,24 +90,24 @@ namespace AutoccultistNS.Config.Conditions
                     return ConditionResult.Success;
                 }
 
-                return new SituationConditionFailure(this.Situation, "is not missing");
+                return SituationConditionResult.ForFailure(this.Situation, "is not missing");
             }
 
             if (this.Recipe != null && situation.CurrentRecipe != this.Recipe)
             {
-                return new SituationConditionFailure(this.Situation, $"is not performing recipe {this.Recipe}");
+                return SituationConditionResult.ForFailure(this.Situation, $"is not performing recipe {this.Recipe}");
             }
 
             if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0)))
             {
-                return new SituationConditionFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
+                return SituationConditionResult.ForFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
             }
 
             if (this.State == SituationStateConfig.Idle || this.State == SituationStateConfig.Ongoing)
             {
                 if (situation.IsOccupied != (this.State == SituationStateConfig.Ongoing))
                 {
-                    return new SituationConditionFailure(this.Situation, $"is {(situation.IsOccupied ? "not " : string.Empty)}ongoing");
+                    return SituationConditionResult.ForFailure(this.Situation, $"is {(situation.IsOccupied ? "not " : string.Empty)}ongoing");
                 }
             }
 
@@ -117,7 +117,7 @@ namespace AutoccultistNS.Config.Conditions
                 var matchResult = this.StoredCardsMatch.CardsMatchSet(cards);
                 if (!matchResult)
                 {
-                    return new AddendedConditionFailure(matchResult, $"when looking at stored cards for situation {this.Situation}");
+                    return AddendedConditionResult.Addend(matchResult, $"when looking at stored cards for situation {this.Situation}");
                 }
             }
 
@@ -128,7 +128,7 @@ namespace AutoccultistNS.Config.Conditions
                 var matchResult = this.SlottedCardsMatch.CardsMatchSet(slottedCards);
                 if (!matchResult)
                 {
-                    return new AddendedConditionFailure(matchResult, $"when looking at slotted cards for situation {this.Situation}");
+                    return AddendedConditionResult.Addend(matchResult, $"when looking at slotted cards for situation {this.Situation}");
                 }
             }
 
@@ -138,7 +138,7 @@ namespace AutoccultistNS.Config.Conditions
                 var matchResult = this.ContainedCardsMatch.CardsMatchSet(cards);
                 if (!matchResult)
                 {
-                    return new AddendedConditionFailure(matchResult, $"when looking at all cards for situation {this.Situation}");
+                    return AddendedConditionResult.Addend(matchResult, $"when looking at all cards for situation {this.Situation}");
                 }
             }
 
@@ -152,7 +152,7 @@ namespace AutoccultistNS.Config.Conditions
                 if (!aspects.HasAspects(containedAspects))
                 {
                     // TODO: ConditionFailure for HasAspects / IValueCondition
-                    return new SituationConditionFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");
+                    return SituationConditionResult.ForFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");
                 }
             }
 

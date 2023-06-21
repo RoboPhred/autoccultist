@@ -80,7 +80,7 @@ namespace AutoccultistNS.Config.Conditions
                     case ConditionMode.NoneOf:
                         if (matched)
                         {
-                            return new GameStateConditionFailure(condition, matched);
+                            return GameStateConditionResult.ForFailure(condition, matched);
                         }
 
                         break;
@@ -89,7 +89,7 @@ namespace AutoccultistNS.Config.Conditions
 
             if (this.Mode == ConditionMode.AnyOf)
             {
-                return new CompoundConditionFailure(recordedFailures);
+                return CompoundConditionResult.ForFailure(recordedFailures);
             }
 
             return ConditionResult.Success;

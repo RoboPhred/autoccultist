@@ -110,7 +110,7 @@ namespace AutoccultistNS.Config
                 var result = goal.Value.IsSatisfied(state);
                 if (!result)
                 {
-                    return new AddendedConditionFailure(result, "Primary goal unsatisfied");
+                    return AddendedConditionResult.Addend(result, "Primary goal unsatisfied");
                 }
             }
 

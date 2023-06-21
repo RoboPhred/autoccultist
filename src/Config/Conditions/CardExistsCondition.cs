@@ -13,7 +13,7 @@ namespace AutoccultistNS.Config.Conditions
         {
             if (this.ChooseCard(state.GetAllCards()) == null)
             {
-                return new CardChoiceNotSatisfiedFailure(this);
+                return CardChoiceResult.ForFailure(this);
             }
 
             return ConditionResult.Success;
@@ -25,7 +25,7 @@ namespace AutoccultistNS.Config.Conditions
             var card = this.ChooseCard(cards);
             if (card == null)
             {
-                return new CardChoiceNotSatisfiedFailure(this);
+                return CardChoiceResult.ForFailure(this);
             }
 
             return ConditionResult.Success;

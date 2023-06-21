@@ -138,7 +138,7 @@ namespace AutoccultistNS.Config
             // NucleusAccumbens can no longer verify this.
             if (!SituationOrchestrator.IsSituationAvailable(this.Situation ?? this.Extends?.Situation))
             {
-                return new SituationConditionFailure(this.Situation ?? this.Extends?.Situation, "Situation is busy with another orchestration.");
+                return SituationConditionResult.ForFailure(this.Situation ?? this.Extends?.Situation, "Situation is busy with another orchestration.");
             }
 
             var situationId = this.Situation ?? this.Extends?.Situation;
@@ -151,12 +151,12 @@ namespace AutoccultistNS.Config
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
             if (situation == null)
             {
-                return new SituationConditionFailure(situationId, "Situation not found.");
+                return SituationConditionResult.ForFailure(situationId, "Situation not found.");
             }
 
             if (targetOngoing != situation.IsOccupied)
             {
-                return new SituationConditionFailure(situationId, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
+                return SituationConditionResult.ForFailure(situationId, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
             }
 
             if (startCondition == OperationStartCondition.AllRecipesSatisified)
@@ -178,7 +178,7 @@ namespace AutoccultistNS.Config
 
                 if (!state.CardsCanBeSatisfied(requiredCards.ToArray(), out var unsatisfiedChoice))
                 {
-                    return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
+                    return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
                 }
             }
             else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
@@ -186,12 +186,12 @@ namespace AutoccultistNS.Config
                 var recipeSolution = this.GetRecipeSolution(situation);
                 if (recipeSolution == null)
                 {
-                    return new SituationConditionFailure(situationId, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
+                    return SituationConditionResult.ForFailure(situationId, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
                 }
 
                 if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards(), out var unsatisfiedChoice))
                 {
-                    return new AddendedConditionFailure(new CardChoiceNotSatisfiedFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
+                    return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
                 }
             }
 

@@ -25,7 +25,7 @@ namespace AutoccultistNS.Config
         {
             if (!this.MatchIfCardsMissing && !state.CardsCanBeSatisfied(this.GetRequiredCards(), out var unsatisfiedChoice))
             {
-                return new CardChoiceNotSatisfiedFailure(unsatisfiedChoice);
+                return CardChoiceResult.ForFailure(unsatisfiedChoice);
             }
 
             if (this.Condition != null)

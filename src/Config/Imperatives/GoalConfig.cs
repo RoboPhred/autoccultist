@@ -48,7 +48,7 @@ namespace AutoccultistNS.Config
             var satsifiedMatch = this.IsSatisfied(state);
             if (satsifiedMatch)
             {
-                return new AddendedConditionFailure(new GameStateConditionFailure(this.CompletedWhen, satsifiedMatch), "Goal is already completed.");
+                return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(this.CompletedWhen, satsifiedMatch), "Goal is already completed.");
             }
 
             if (this.Requirements != null)
@@ -56,7 +56,7 @@ namespace AutoccultistNS.Config
                 var requirementsMatch = this.Requirements.IsConditionMet(state);
                 if (!requirementsMatch)
                 {
-                    return new AddendedConditionFailure(new GameStateConditionFailure(this.Requirements, requirementsMatch), "Goal requirements are not met.");
+                    return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(this.Requirements, requirementsMatch), "Goal requirements are not met.");
                 }
             }
 
@@ -73,7 +73,7 @@ namespace AutoccultistNS.Config
             if (this.CompletedWhen == null)
             {
                 // Never completes
-                return new GeneralConditionFailure("Goal has no completion condition.");
+                return GeneralConditionResult.ForFailure("Goal has no completion condition.");
             }
 
             return this.CompletedWhen.IsConditionMet(state);

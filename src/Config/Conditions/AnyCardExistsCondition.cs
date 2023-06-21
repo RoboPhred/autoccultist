@@ -33,11 +33,11 @@ namespace AutoccultistNS.Config.Conditions
                 }
                 else
                 {
-                    failures.Add(new CardChoiceNotSatisfiedFailure(chooser));
+                    failures.Add(CardChoiceResult.ForFailure(chooser));
                 }
             }
 
-            return new AddendedConditionFailure(new CompoundConditionFailure(failures), $"when looking for any of {this.AnyOf.Count} cards");
+            return AddendedConditionResult.Addend(CompoundConditionResult.ForFailure(failures), $"when looking for any of {this.AnyOf.Count} cards");
         }
 
         /// <inheritdoc/>

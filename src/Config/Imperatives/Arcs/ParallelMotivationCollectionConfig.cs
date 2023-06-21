@@ -285,7 +285,7 @@ namespace AutoccultistNS.Config
                     failures.Add(match);
                 }
 
-                return new CompoundConditionFailure(failures);
+                return CompoundConditionResult.ForFailure(failures);
             }
         }
     }

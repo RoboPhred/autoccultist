@@ -1,7 +1,6 @@
 namespace AutoccultistNS
 {
     using System;
-    using AutoccultistNS.Actor;
     using SecretHistories.Entities;
     using SecretHistories.Fucine;
     using SecretHistories.UI;

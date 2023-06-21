@@ -105,14 +105,14 @@ namespace AutoccultistNS.Brain
             {
                 sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
 
-                var canActivate = imperative.CanActivate(GameStateProvider.Current);
+                var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
                 sb.AppendFormat("- Can Activate: {0}\n", canActivate.IsConditionMet);
                 if (!canActivate)
                 {
                     sb.AppendFormat("- - Reason: {0}\n", canActivate.ToString());
                 }
 
-                var isSatisfied = imperative.IsSatisfied(GameStateProvider.Current);
+                var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
                 sb.AppendFormat("- Is Satisfied: {0}\n", isSatisfied.IsConditionMet);
                 if (!isSatisfied)
                 {
@@ -127,7 +127,7 @@ namespace AutoccultistNS.Brain
                 {
                     sb.AppendFormat("- - Reaction: {0}\n", reaction.ToString());
                     sb.AppendFormat("- - - Priority: {0}\n", reaction.Priority);
-                    var isConditionMet = reaction.IsConditionMet(GameStateProvider.Current);
+                    var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
                     sb.AppendFormat("- - - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
                     if (!isConditionMet)
                     {

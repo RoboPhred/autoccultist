@@ -67,7 +67,7 @@ namespace AutoccultistNS.Config
                 var reqsMet = requirements.IsConditionMet(state);
                 if (!reqsMet)
                 {
-                    return new AddendedConditionFailure(reqsMet, "Impulse requirements not met.");
+                    return AddendedConditionResult.Addend(reqsMet, "Impulse requirements not met.");
                 }
             }
 
@@ -76,14 +76,14 @@ namespace AutoccultistNS.Config
                 var forbidsMet = forbidders.IsConditionMet(state);
                 if (forbidsMet)
                 {
-                    return new AddendedConditionFailure(new GameStateConditionFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
+                    return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
                 }
             }
 
             var operationState = (this.Operation ?? this.Extends.Operation).IsConditionMet(state);
             if (!operationState)
             {
-                return new AddendedConditionFailure(operationState, "Operation condition not met.");
+                return AddendedConditionResult.Addend(operationState, "Operation condition not met.");
             }
 
             return ConditionResult.Success;
