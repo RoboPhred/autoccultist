@@ -40,7 +40,7 @@ namespace AutoccultistNS.Brain
         IEnumerable<string> DescribeCurrentGoals(IGameState state);
 
         /// <summary>
-        /// Gets the active reactions for this imperative.
+        /// Gets the active impulses for this imperative.
         /// </summary>
         IEnumerable<IImpulse> GetImpulses(IGameState state);
 

@@ -249,6 +249,7 @@ motivations:
     requires:
       - acquire_doors_and_fissive
       - begin_ascension
+      - find_recruits
       - recruit_everyone
     blocks:
       # Don't do any work motivations as we need the work verb free.
@@ -256,7 +257,7 @@ motivations:
       - work_labor
       # Time to start eating people, don't try to find them once they disappear
       # Note: We have no guarentee this has completed yet, so we just have to trust that we have enough people by now.
-      - find_recruits
+      # - find_recruits
     primaryGoals:
       # Use labor or glover here?  Probably doesn't matter at this point
       - victories/power/acquire-mark-power-7-labor

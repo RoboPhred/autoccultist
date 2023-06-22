@@ -154,11 +154,11 @@ namespace AutoccultistNS.Brain
             while (true)
             {
                 // Note: We do not have to await beats or check if the bot is running as Cerebellum does that.
-                await Cerebellum.Coordinate(async (cancellationToken) =>
+                await Cerebellum.Coordinate((cancellationToken) =>
                 {
                     if (!GameAPI.IsRunning)
                     {
-                        return;
+                        return Task.CompletedTask;
                     }
 
                     EnumeratedImpulse chosenImpulse = null;
@@ -175,7 +175,7 @@ namespace AutoccultistNS.Brain
                     if (chosenImpulse == null)
                     {
                         OnIdle();
-                        return;
+                        return Task.CompletedTask;
                     }
 
                     var shouldPause = false;
@@ -195,6 +195,8 @@ namespace AutoccultistNS.Brain
                     {
                         OnActive();
                     }
+
+                    return Task.CompletedTask;
                 });
             }
         }

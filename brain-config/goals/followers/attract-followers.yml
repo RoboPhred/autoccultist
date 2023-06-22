@@ -1,13 +1,20 @@
 name: Meet acquaintances and patrons
 completedWhen:
-  allOf:
-    - !import /conditions/has-all-patrons.yml
-    # Stop if we have all followers, but its possible for followers to die, so we also need to check if the deck is exhausted.
-    - anyOf:
-        - !import /conditions/has-all-followers.yml
-        - elementId: mistakenidentity
+  aspects: { autoccultist_memory: 1, autoccultist_memory_has_all_followers: 1 }
 
 impulses:
+  - name: Record our completion
+    priority: goal
+    requirements:
+      allOf:
+        - !import /conditions/has-all-patrons.yml
+        # Stop if we have all followers, but its possible for followers to die, so we also need to check if the deck is exhausted.
+        - anyOf:
+            - !import /conditions/has-all-followers.yml
+            - elementId: mistakenidentity
+    reactions:
+      - remember: has_all_followers
+        label: Has All Followers
   - name: Speak of esoteric matters
     # Leave this at normal so that indoctrinating members takes priority.
     priority: normal

@@ -1,16 +1,15 @@
 namespace AutoccultistNS.Config
 {
-    using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.Brain;
     using YamlDotNet.Core;
 
-    public class RememberConfig : NamedConfigObject, IReactor
+    public class RememberConfig : NamedConfigObject, IReactorConfig
     {
         /// <summary>
         /// Gets or sets the id of this memory.
         /// </summary>
-        public string SetMemory { get; set; }
+        public string Remember { get; set; }
 
         /// <summary>
         /// Gets or sets the label of the memory.
@@ -27,42 +26,34 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Set the memory value to a specific value.
         /// </summary>
-        public int? Set { get; set; }
+        public int? Value { get; set; }
 
         /// <summary>
-        /// Add a value to the memory.
+        /// Adds the value to the memory.
         /// </summary>
-        public int? Increment { get; set; }
+        public bool Increment { get; set; } = false;
 
         public override void AfterDeserialized(Mark start, Mark end)
         {
             base.AfterDeserialized(start, end);
 
-            if (string.IsNullOrEmpty(this.SetMemory))
+            if (string.IsNullOrEmpty(this.Remember))
             {
                 throw new YamlException(start, end, "Remember must specify a memory.");
             }
 
-            if (!this.SetMemory.All(c => char.IsLetterOrDigit(c) || c == '_'))
+            if (!this.Remember.All(c => char.IsLetterOrDigit(c) || c == '_'))
             {
                 throw new YamlException(start, end, "Memory must only contain letters, numbers, and underscores.");
             }
+
+            Hippocampus.RegisterMemory(this.Remember, this.Label, this.Description);
         }
 
         public IReaction GetReaction()
         {
-            if (this.Increment.HasValue)
-            {
-                return new MemoryReaction(this.SetMemory, this.Label, this.Description, this.Increment.Value, true);
-            }
-            else if (this.Set.HasValue)
-            {
-                return new MemoryReaction(this.SetMemory, this.Label, this.Description, this.Set.Value, false);
-            }
-            else
-            {
-                return new MemoryReaction(this.SetMemory, this.Label, this.Description, 1, false);
-            }
+            NoonUtility.LogWarning($"Remembering {this.Remember} with value {this.Value ?? 1}.");
+            return new MemoryReaction(this.Remember, this.Label, this.Description, this.Value ?? 1, this.Increment);
         }
     }
 }
