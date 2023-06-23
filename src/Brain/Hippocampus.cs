@@ -40,6 +40,7 @@ namespace AutoccultistNS
                     Description = description ?? string.Empty,
                     NoArtNeeded = true,
                     IsAspect = true,
+
                     // Fucine defaults
                     Comments = string.Empty,
                     Icon = string.Empty,

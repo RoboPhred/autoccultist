@@ -195,10 +195,17 @@ public class Autoccultist : MonoBehaviour
     {
         PerfMonitor.Monitor($"Global Update", () =>
         {
-            GameStateProvider.Invalidate();
-            MechanicalHeart.Update();
-            this.HandleHotkeys();
-            GlobalUpdate?.Invoke(this, EventArgs.Empty);
+            // We want all our await continuations to be handled on this frame.
+            // If we had continuations scheduled up outside of this from last frame, they will
+            // be executed before our action here gets executed.
+            ImmediateSynchronizationContext.Run(() =>
+            {
+                this.HandleHotkeys();
+
+                GameStateProvider.Invalidate();
+                MechanicalHeart.Update();
+                GlobalUpdate?.Invoke(this, EventArgs.Empty);
+            });
         });
     }
 

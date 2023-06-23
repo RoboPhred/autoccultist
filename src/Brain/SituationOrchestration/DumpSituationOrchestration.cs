@@ -76,18 +76,7 @@ namespace AutoccultistNS.Brain
 
         private async Task DumpSituationCoroutine(CancellationToken cancellationToken)
         {
-            // While we don't technically need to be paused for this, we are taking time away from other
-            // Cerebellum actions, so we should pause to not let game state decay too badly.
-            var pauseToken = GameAPI.Pause();
-            try
-            {
-                await new ConcludeSituationAction(this.SituationId).ExecuteAndWait(cancellationToken);
-            }
-            finally
-            {
-                // Might get op cancelled exception.
-                pauseToken.Dispose();
-            }
+            await GameAPI.WhilePaused(() => new ConcludeSituationAction(this.SituationId).ExecuteAndWait(cancellationToken), cancellationToken);
         }
     }
 }

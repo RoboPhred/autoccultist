@@ -4,6 +4,7 @@ namespace AutoccultistNS.Brain
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.GameState;
 
@@ -198,6 +199,15 @@ namespace AutoccultistNS.Brain
 
                     return Task.CompletedTask;
                 });
+
+                if (!isActive)
+                {
+                    // Not doing anything, wait a frame
+                    // Note: We used to not have this, which surely shoudl have meant an infinite loop deadlock.
+                    // This implies that unity is / was scheduling our continuations on the next frame.
+                    // We are now trying to eliminate that next-frame behavior, so this is important.
+                    await MechanicalHeart.AwaitBeat(CancellationToken.None);
+                }
             }
         }
 

@@ -80,11 +80,6 @@ namespace AutoccultistNS.Brain
             Finished,
         }
 
-        /// <summary>
-        /// Gets or sets the time delay to check if a situation is really completed, or just transitioning between two recipes.
-        /// </summary>
-        public static TimeSpan CompleteAwaitTime { get; set; } = TimeSpan.FromSeconds(0.2);
-
         /// <inheritdoc/>
         public string SituationId
         {
@@ -227,19 +222,7 @@ namespace AutoccultistNS.Brain
 
             if (clockState == StateEnum.Complete || clockState == StateEnum.Unstarted)
             {
-                if (this.completionDebounceTime == null)
-                {
-                    // Start the timer for waiting out to see if this is a real completion.
-                    // Situations may tenatively say Complete when they are transitioning to a continuation recipe,
-                    //  so we need to delay to make sure this is a full and final completion.
-                    this.completionDebounceTime = DateTime.Now + CompleteAwaitTime;
-                }
-                else if (this.completionDebounceTime <= DateTime.Now)
-                {
-                    // Enough time has passed that we can consider the operation completed.
-                    this.Complete();
-                }
-
+                this.Complete();
                 return;
             }
 

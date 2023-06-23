@@ -130,10 +130,10 @@ namespace AutoccultistNS.Actor.Actions
                 itinerary.WithDuration(0.1f).Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
 
                 // Would be nice if there was a way to subscribe to the itinerary, but whatever...
-                var awaitSphereFilled = new AwaitConditionTask(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
+                var awaitSphereFilled = AwaitConditionTask.From(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
 
                 // Increasing wait from 1 second to 3... Sometimes cards that are traveling from close by become very, very slow.
-                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(3000, cancellationToken)) != awaitSphereFilled.Task)
+                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(3000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.  Our token ended up in state {stack.Token.CurrentState} at sphere {stack.Token.Sphere.Id}.");
                 }

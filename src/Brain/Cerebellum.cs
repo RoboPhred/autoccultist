@@ -25,7 +25,11 @@ namespace AutoccultistNS.Brain
         public static Task Coordinate(Func<CancellationToken, Task> action, CancellationToken? cancellationToken = null)
         {
             var pendingAction = new DeferredTask<object>(
-                (innerCancellationToken) => action(innerCancellationToken).ContinueWith(_ => (object)null),
+                async (innerCancellationToken) =>
+                {
+                    await action(innerCancellationToken);
+                    return null;
+                },
                 cancellationToken ?? CancellationToken.None);
 
             PendingActions.Enqueue(pendingAction);
@@ -41,7 +45,12 @@ namespace AutoccultistNS.Brain
         public static Task<T> Coordinate<T>(Func<CancellationToken, Task<T>> func, CancellationToken? cancellationToken = null)
         {
             // Need to box our result, no matter what it is.
-            var pendingAction = new DeferredTask<object>((innerCancellationToken) => func(innerCancellationToken).ContinueWith(x => (object)x.Result), cancellationToken ?? CancellationToken.None);
+            var pendingAction = new DeferredTask<object>(
+                async (innerCancellationToken) =>
+                {
+                    var result = await func(innerCancellationToken);
+                    return result;
+                }, cancellationToken ?? CancellationToken.None);
 
             PendingActions.Enqueue(pendingAction);
 
@@ -84,6 +93,8 @@ namespace AutoccultistNS.Brain
                 DeferredTask<object> set;
                 while ((set = PendingActions.DequeueOrDefault()) != null)
                 {
+                    // If the heart is not running, wait for a beat.
+                    // If the heart is running, this no-ops.
                     await MechanicalHeart.AwaitBeat(CancellationToken.None, TimeSpan.Zero);
 
                     currentAction = set;

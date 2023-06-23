@@ -108,7 +108,7 @@ namespace AutoccultistNS
             }
 
             // Wait out the delay, then wait for the next beat
-            await Task.Delay(delay.Value, cancellationToken);
+            await UnityDelay.Of(delay.Value, cancellationToken);
             await AwaitBeat(cancellationToken);
         }
 

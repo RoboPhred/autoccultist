@@ -94,15 +94,15 @@ namespace AutoccultistNS.Actor.Actions
                 GameStateProvider.Invalidate();
 
                 // Would be nice if there was a way to subscribe to the itinerary, but whatever...
-                var awaitSphereFilled = new AwaitConditionTask(() => sphere.GetTokens().Contains(stack.Token), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
+                var awaitSphereFilled = AwaitConditionTask.From(() => sphere.GetTokens().Contains(stack.Token), cancellationToken);
+                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {this.SlotId} in situation {this.SituationId}.");
                 }
 
                 GameStateProvider.Invalidate();
 
-                await Task.Delay(postDelayDuration, cancellationToken);
+                await UnityDelay.Of(postDelayDuration, cancellationToken);
             }
             else
             {

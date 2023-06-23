@@ -66,8 +66,8 @@ namespace AutoccultistNS.Actor.Actions
 
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
-                var awaitSphereFilled = new AwaitConditionTask(() => thresholdTokens.TokensAreStable(), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
+                var awaitSphereFilled = AwaitConditionTask.From(() => thresholdTokens.TokensAreStable(), cancellationToken);
+                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for threshold cards to stabilize from the dumping of situation {this.SituationId}.");
                 }
@@ -100,8 +100,8 @@ namespace AutoccultistNS.Actor.Actions
 
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
-                var awaitSphereFilled = new AwaitConditionTask(() => outputTokens.TokensAreStable(), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled.Task, Task.Delay(1000, cancellationToken)) != awaitSphereFilled.Task)
+                var awaitSphereFilled = AwaitConditionTask.From(() => outputTokens.TokensAreStable(), cancellationToken);
+                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for output cards to stabilize from the conclusion of situation {this.SituationId}.");
                 }
@@ -117,7 +117,17 @@ namespace AutoccultistNS.Actor.Actions
                 // Wait on a heartbeat but dont use any delay, as we waited on the cards
                 await MechanicalHeart.AwaitBeat(cancellationToken, TimeSpan.Zero);
 
-                situation.Close();
+                // NOTE: Game crash here... probably on temporary / dissipating situations.
+                // The above doesn't seem enough to gate it.  Let's check again.
+                // Note: This is really weird, as AwaitBeat with TimeSpan.Zero should no-op and we shouldn't see any changes?
+                if (situation.Token.Defunct || !situation.IsOpen)
+                {
+                    Autoccultist.LogWarn($"Situation {this.SituationId} was closed while we were concluding it.  This is probably fine, but it means something is wonky with threading.");
+                }
+                else
+                {
+                    situation.Close();
+                }
             }
 
             return true;

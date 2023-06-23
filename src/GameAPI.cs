@@ -161,7 +161,7 @@ namespace AutoccultistNS
                 return Task.FromResult(true);
             }
 
-            return new AwaitConditionTask(() => IsInteractable, cancellationToken).Task;
+            return AwaitConditionTask.From(() => IsInteractable, cancellationToken);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace AutoccultistNS
                 return existingIngress;
             }
 
-            await new AwaitConditionTask(() => GetTabletopIngress() != null, cancellationToken).Task;
+            await AwaitConditionTask.From(() => GetTabletopIngress() != null, cancellationToken);
             return GetTabletopIngress();
         }
 
@@ -425,6 +425,14 @@ namespace AutoccultistNS
             pauseDepth++;
 
             return new PauseToken();
+        }
+
+        public static async Task WhilePaused(Func<Task> action, CancellationToken cancellationToken)
+        {
+            using (Pause())
+            {
+                await action();
+            }
         }
 
         /// <summary>

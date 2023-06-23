@@ -74,7 +74,10 @@ namespace AutoccultistNS.GUI
 
             if (GUILayout.Button("Heartbeat"))
             {
-                MechanicalHeart.Step();
+                ImmediateSynchronizationContext.Run(() =>
+                {
+                    MechanicalHeart.Step();
+                });
             }
 
             GUILayout.EndHorizontal();
