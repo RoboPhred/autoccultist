@@ -25,8 +25,6 @@ namespace AutoccultistNS.Brain
         private string ongoingRecipe;
         private float ongoingRecipeTimeRemaining;
 
-        private DateTime? completionDebounceTime = null;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationOrchestration"/> class.
         /// </summary>
