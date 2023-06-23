@@ -226,10 +226,6 @@ namespace AutoccultistNS.Brain
 
             if (clockState == StateEnum.Ongoing)
             {
-                // The situation is running its recipe.
-                //  Reset our state in case we were tracking a previous SituationClock.State == Complete.
-                this.completionDebounceTime = null;
-
                 // See if we need to slot new cards.
                 this.ContinueOperation();
                 return;

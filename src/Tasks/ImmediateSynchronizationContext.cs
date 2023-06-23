@@ -9,7 +9,6 @@ namespace AutoccultistNS
     /// </summary>
     public class ImmediateSynchronizationContext : SynchronizationContext
     {
-        private static SynchronizationContext fallback;
         private static ImmediateSynchronizationContext instance;
 
         private readonly int threadId = Thread.CurrentThread.ManagedThreadId;
@@ -39,7 +38,7 @@ namespace AutoccultistNS
                 return;
             }
 
-            fallback = Current;
+            var lastContext = Current;
             try
             {
                 SetSynchronizationContext(instance);
@@ -78,8 +77,8 @@ namespace AutoccultistNS
             }
             finally
             {
-                SetSynchronizationContext(fallback);
-                fallback = null;
+                SetSynchronizationContext(lastContext);
+                lastContext = null;
             }
         }
 
@@ -92,20 +91,19 @@ namespace AutoccultistNS
             }
 
             NoonUtility.LogWarning($"Sending action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
-            (fallback ?? Current).Send(d, state);
+            this.pendingActions.Enqueue((d, state));
         }
 
         public override void Post(SendOrPostCallback d, object state)
         {
-            if (Thread.CurrentThread.ManagedThreadId == this.threadId)
+            if (Thread.CurrentThread.ManagedThreadId != this.threadId)
             {
-                d(state);
+                NoonUtility.LogWarning($"Posting action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
                 return;
             }
 
-            NoonUtility.LogWarning($"Posting action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
 
-            (fallback ?? Current).Post(d, state);
+            this.pendingActions.Enqueue((d, state));
         }
     }
 }
