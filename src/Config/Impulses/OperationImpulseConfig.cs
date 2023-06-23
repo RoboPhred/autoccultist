@@ -17,14 +17,14 @@ namespace AutoccultistNS.Config
         {
             /// <summary>
             /// The operation can only start if both the starting and ongoing recipe solutions can be satisfied.
-            /// Note: conditionalOngoingRecipes are not included in this check.
+            /// Note: conditionalRecipes are not included in this check.
             /// This is the default option.
             /// </summary>
             AllRecipesSatisified,
 
             /// <summary>
             /// The operation can start if either the starting recipe (if the situation is idle) or a matched ongoing recipe can be satisfied.
-            /// Note: conditionalOngoingRecipes will be checked if no ongoingRecipe matches the current recipe.
+            /// Note: conditionalRecipes will be checked if no ongoingRecipe matches the current recipe.
             CurrentRecipeSatisfied,
         }
 

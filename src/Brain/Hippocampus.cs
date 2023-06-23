@@ -36,13 +36,30 @@ namespace AutoccultistNS
                 NoonUtility.LogWarning($"Memory {id} does not yet exist.");
                 attr = new Element
                 {
-                    IsAspect = true,
                     Label = label ?? id,
                     Description = description ?? string.Empty,
-                    Icon = "playernote"
-
+                    NoArtNeeded = true,
+                    IsAspect = true,
+                    // Fucine defaults
+                    Comments = string.Empty,
+                    Icon = string.Empty,
+                    VerbIcon = string.Empty,
+                    DecayTo = string.Empty,
+                    BurnTo = string.Empty,
+                    DrownTo = string.Empty,
+                    UniquenessGroup = string.Empty,
+                    Sort = "zzz.zzz",
+                    ManifestationType = "Card",
+                    Audio = "Card",
+                    Achievements = new(),
+                    Inherits = string.Empty,
+                    Aspects = new(),
+                    Commute = new(),
+                    Slots = new(),
+                    XTriggers = new(),
+                    Xexts = new(),
                 };
-                attr.SetId(GetMemoryId(id));
+                attr.SetId(id);
                 compendium.TryAddEntity(attr);
             }
         }

@@ -25,9 +25,9 @@ namespace AutoccultistNS.Config
         public Dictionary<string, RecipeSolutionConfig> OngoingRecipes { get; set; } = new();
 
         /// <summary>
-        /// Gets or sets a list of conditional recipes to use for ongoing operations.
+        /// Gets or sets a list of conditional recipes.  These can trigger at any time, for both starting and ongoing.
         /// </summary>
-        public List<ConditionalRecipeSolutionConfig> ConditionalOngoingRecipes { get; set; } = new();
+        public List<ConditionalRecipeSolutionConfig> ConditionalRecipes { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a list of reactions to perform when the operation starts.
@@ -121,12 +121,12 @@ namespace AutoccultistNS.Config
 
         protected virtual IReadOnlyList<IConditionalRecipeSolution> GetConditionalRecipes()
         {
-            if (this.ConditionalOngoingRecipes == null)
+            if (this.ConditionalRecipes == null)
             {
                 return new List<IConditionalRecipeSolution>();
             }
 
-            return this.ConditionalOngoingRecipes.Cast<IConditionalRecipeSolution>().ToList();
+            return this.ConditionalRecipes.Cast<IConditionalRecipeSolution>().ToList();
         }
     }
 }
