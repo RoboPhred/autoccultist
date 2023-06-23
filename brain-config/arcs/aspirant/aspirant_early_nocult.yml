@@ -103,7 +103,7 @@ motivations:
       # We need to have explore and talk
       - study_bequest_contents
     primaryGoals:
-      - followers/attract-followers
+      - followers/attract-followers-memory
 
   drain_morlands:
     name: Buy and read books from Morlands

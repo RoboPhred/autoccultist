@@ -2,7 +2,7 @@ name: Reenforce an expedition with a Heart follower
 situation: explore
 targetOngoing: true
 startCondition: currentRecipeSatisfied
-conditionalOngoingRecipes:
+conditionalRecipes:
   - endOperation: true
     slots:
       Assistance:

@@ -1,0 +1,170 @@
+allOf:
+  - anyOf:
+      - elementId: auclair_b
+      - elementId: auclair_c
+      - elementId: auclair_d
+      - elementId: auclair_p
+      - elementId: auclair_r
+  - anyOf:
+      - elementId: cat_b
+      - elementId: cat_c
+      - elementId: cat_d
+      - elementId: cat_p
+      - elementId: cat_r
+  - anyOf:
+      - elementId: clifton_b
+      - elementId: clifton_c
+      - elementId: clifton_d
+      - elementId: clifton_p
+      - elementId: clifton_r
+  - anyOf:
+      - elementId: clovette_b
+      - elementId: clovette_c
+      - elementId: clovette_d
+      - elementId: clovette_p
+      - elementId: clovette_r
+  - anyOf:
+      - elementId: dorothy_b
+      - elementId: dorothy_c
+      - elementId: dorothy_d
+      - elementId: dorothy_p
+      - elementId: dorothy_r
+  - anyOf:
+      - elementId: elridge_b
+      - elementId: elridge_c
+      - elementId: elridge_d
+      - elementId: elridge_p
+      - elementId: elridge_r
+  - anyOf:
+      - elementId: enid_b
+      - elementId: enid_c
+      - elementId: enid_d
+      - elementId: enid_p
+      - elementId: enid_r
+  - anyOf:
+      - elementId: generic_b_edge
+      - elementId: generic_c_edge
+      - elementId: generic_p_edge
+      - elementId: generic_r_edge
+  - anyOf:
+      - elementId: generic_b_forge
+      - elementId: generic_c_forge
+      - elementId: generic_p_forge
+      - elementId: generic_r_forge
+  - anyOf:
+      - elementId: generic_b_grail
+      - elementId: generic_c_grail
+      - elementId: generic_p_grail
+      - elementId: generic_r_grail
+  - anyOf:
+      - elementId: generic_b_heart
+      - elementId: generic_c_heart
+      - elementId: generic_p_heart
+      - elementId: generic_r_heart
+  - anyOf:
+      - elementId: generic_b_knock
+      - elementId: generic_c_knock
+      - elementId: generic_p_knock
+      - elementId: generic_r_knock
+  - anyOf:
+      - elementId: generic_b_lantern
+      - elementId: generic_c_lantern
+      - elementId: generic_p_lantern
+      - elementId: generic_r_lantern
+  - anyOf:
+      - elementId: generic_b_moth
+      - elementId: generic_c_moth
+      - elementId: generic_p_moth
+      - elementId: generic_r_moth
+      - elementId: poppycommission
+      - elementId: poppycommissionready
+      - elementId: poppyaway
+  - anyOf:
+      - elementId: generic_b_winter
+      - elementId: generic_c_winter
+      - elementId: generic_p_winter
+      - elementId: generic_r_winter
+  - anyOf:
+      - elementId: laidlaw_b
+      - elementId: laidlaw_c
+      - elementId: laidlaw_d
+      - elementId: laidlaw_p
+      - elementId: laidlaw_r
+  - anyOf:
+      - elementId: leo_b
+      - elementId: leo_c
+      - elementId: leo_d
+      - elementId: leo_p
+      - elementId: leo_r
+  - anyOf:
+      - elementId: neville_b
+      - elementId: neville_c
+      - elementId: neville_d
+      - elementId: neville_p
+      - elementId: neville_r
+  - anyOf:
+      - elementId: porter_b
+      - elementId: porter_c
+      - elementId: porter_d
+      - elementId: porter_p
+      - elementId: porter_r
+  - anyOf:
+      - elementId: renira_b
+      - elementId: renira_c
+      - elementId: renira_d
+      - elementId: renira_p
+      - elementId: renira_r
+  - anyOf:
+      - elementId: rose_b
+      - elementId: rose_c
+      - elementId: rose_d
+      - elementId: rose_p
+      - elementId: rose_r
+  - anyOf:
+      - elementId: saliba_b
+      - elementId: saliba_c
+      - elementId: saliba_d
+      - elementId: saliba_p
+      - elementId: saliba_r
+  - anyOf:
+      - elementId: slee_b
+      - elementId: slee_c
+      - elementId: slee_d
+      - elementId: slee_p
+      - elementId: slee_r
+  - anyOf:
+      - elementId: sylvia_b
+      - elementId: sylvia_c
+      - elementId: sylvia_d
+      - elementId: sylvia_p
+      - elementId: sylvia_r
+  - anyOf:
+      - elementId: tristan_b
+      - elementId: tristan_c
+      - elementId: tristan_d
+      - elementId: tristan_p
+      - elementId: tristan_r
+  - anyOf:
+      - elementId: valciane_b
+      - elementId: valciane_c
+      - elementId: valciane_d
+      - elementId: valciane_p
+      - elementId: valciane_r
+  - anyOf:
+      - elementId: victor_b
+      - elementId: victor_c
+      - elementId: victor_d
+      - elementId: victor_p
+      - elementId: victor_r
+  - anyOf:
+      - elementId: violet_b
+      - elementId: violet_c
+      - elementId: violet_d
+      - elementId: violet_p
+      - elementId: violet_r
+  - anyOf:
+      - elementId: ysabet_b
+      - elementId: ysabet_c
+      - elementId: ysabet_d
+      - elementId: ysabet_p
+      - elementId: ysabet_r

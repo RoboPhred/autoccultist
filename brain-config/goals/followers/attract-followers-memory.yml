@@ -15,6 +15,7 @@ impulses:
     reactions:
       - remember: has_all_followers
         label: Has All Followers
+        description: We have found everyone of any worth in this city.
   - name: Speak of esoteric matters
     # Leave this at normal so that indoctrinating members takes priority.
     priority: normal

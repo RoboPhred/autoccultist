@@ -1,0 +1,11 @@
+name: Satisfy Poppy
+requirements:
+  situation: poppytime
+completedWhen:
+  anyOf:
+    - elementId: poppycommission
+    - elementId: poppycommissionready
+    - elementId: poppyaway
+impulses:
+  - name: Feed Poppy
+    operation: !import /operations/patrons/feed-poppy.yml

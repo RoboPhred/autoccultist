@@ -2,7 +2,7 @@ name: Reenforce an expedition
 situation: explore
 targetOngoing: true
 startCondition: currentRecipeSatisfied
-conditionalOngoingRecipes:
+conditionalRecipes:
   # Funds
   - condition:
       allOf:

@@ -56,14 +56,14 @@ motivations:
       - reason/acquire-skillreasonc
     supportingGoals:
       - cult/form-cult-doctrine-secrethistories
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - survive
       - funds/work-labor
   - name: Establish Society of St. Hydra
     primaryGoals:
       - cult/form-cult-doctrine-secrethistories
     supportingGoals:
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - survive
       - funds/work-labor
   - name: Get swole, find people to recruit
@@ -73,9 +73,9 @@ motivations:
       - health/acquire-skillhealthd-power-with-work
     supportingGoals:
       - cult/recruit-away-influences
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - find-auctionhouse
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - survive
       - funds/work-labor
   - name: Finish up Morlands
@@ -86,7 +86,7 @@ motivations:
       - survive
       - find-auctionhouse
       - cult/recruit-away-influences
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - funds/work-labor
       - mansus/acquire-way-wood
       - mansus/acquire-way-whitedoor
@@ -99,7 +99,7 @@ motivations:
     supportingGoals:
       - survive
       - cult/recruit-away-influences
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - funds/work-labor
       - mansus/acquire-way-wood
       - mansus/acquire-way-whitedoor
@@ -112,7 +112,7 @@ motivations:
     supportingGoals:
       - survive
       - cult/recruit-away-influences
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - funds/work-labor
       - victories/power/acquire-dedication-power
       - victories/power/acquire-ascension-power
@@ -121,7 +121,7 @@ motivations:
       - victories/power/victory-temptation-power-lore-stag-spider
     supportingGoals:
       - cult/recruit-away-influences
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - survive
       - funds/work-labor
       - victories/power/acquire-dedication-power
@@ -132,7 +132,7 @@ motivations:
       - victories/power/acquire-ascension-power
     supportingGoals:
       - cult/recruit-away-influences
-      - followers/attract-followers
+      - followers/attract-followers-memory
       - survive
       - funds/work-labor
   - name: Acquire the Seventh mark of Power

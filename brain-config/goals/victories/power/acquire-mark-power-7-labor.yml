@@ -151,4 +151,18 @@ impulses:
 
   - name: Ascend
     priority: goal
-    operation: !import /operations/victories/power/ascend-followerconsumeinfluence.yml
+    operation:
+      name: Ascend
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            elementId: spirit_forgee_edge
+          Offering:
+            elementId: influenceforgeg
+          Desire:
+            elementId: ascensionpowerf

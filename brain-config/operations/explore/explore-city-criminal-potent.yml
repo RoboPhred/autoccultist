@@ -6,7 +6,7 @@ startingRecipe:
         - aspects: { follower: 1 }
         # Can hirelings explore the city too?
         - elementId: health
-conditionalOngoingRecipes:
+conditionalRecipes:
   - condition:
       anyOf:
         - situation: explore

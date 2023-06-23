@@ -38,7 +38,7 @@ motivations:
       - !import /goals/health/acquire-skillhealthb.yml
       - !import /goals/health/acquire-skillhealthc.yml
     supportingGoals:
-      - !import /goals/followers/attract-followers.yml
+      - !import /goals/followers/attract-followers-memory.yml
       - !import /goals/survive.yml
       - !import /goals/funds/work-labor.yml
   - name: Get smart
@@ -49,7 +49,7 @@ motivations:
       - !import /goals/reason/acquire-skillreasonb.yml
       - !import /goals/reason/acquire-skillreasonc.yml
     supportingGoals:
-      - !import /goals/followers/attract-followers.yml
+      - !import /goals/followers/attract-followers-memory.yml
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
   - name: Find grail lore, get passionate
@@ -65,13 +65,13 @@ motivations:
     primaryGoals:
       - !import /goals/cult/form-cult-doctrine-grail.yml
     supportingGoals:
-      - !import /goals/followers/attract-followers.yml
+      - !import /goals/followers/attract-followers-memory.yml
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
   - name: Find a Grail believer, meet Sulochana, explore the city
     primaryGoals:
       - !import /goals/followers/attract-grail-follower.yml
-      - !import /goals/followers/find-sulochana.yml
+      - !import /goals/patrons/find-sulochana.yml
       - !import /goals/find-auctionhouse.yml
       - !import /goals/find-cabaret.yml
     supportingGoals:
@@ -187,7 +187,7 @@ motivations:
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
+      - !import /goals/followers/attract-followers-memory.yml
   - name: Upgrade all Grail lore to the highest we can
     primaryGoals:
       - !import /goals/lore/upgrade-all-grail.yml
@@ -196,7 +196,7 @@ motivations:
       - !import /goals/glover/work-glover.yml
       - !import /goals/romance/maintain-relationships.yml
       - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers.yml
+      - !import /goals/followers/attract-followers-memory.yml
   - name: Promote Grail believers, dedicate to horny
     primaryGoals:
       - !import /goals/cult/promote-grail-with-grail.yml

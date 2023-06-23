@@ -139,7 +139,7 @@ motivations:
       # We don't really care though, as we don't need them in this arc.
       # - get_scholarship_minor
     primaryGoals:
-      - followers/attract-followers
+      - followers/attract-followers-memory
 
   recruit_when_needed:
     name: Recruit away restlessness
@@ -211,18 +211,25 @@ motivations:
       - victories/power/victory-temptation-power-lore-stag-spider
 
   recruit_everyone:
-    name: Recruit Everyone
     # Once we get close to ascending, go ham and make sure we have everyone recruited as fodder for the spider door.
+    name: Find and recruit everyone
     requires:
       - establish_cult
       # Don't start recruiting everyone until we have need of them for the spider door
-      # TODO: Recruit on demand during the spider door goal
       - find_recruits
       - acquire_doors_and_fissive
     blocks:
       - recruit_when_needed
     primaryGoals:
-      - cult/recruit-lore-forge
+      - cult/attract-recruit-poppyeat
+
+  satisfy_poppy:
+    # Need to have this active for whenever we feed poppy
+    name: Satisfy Poppy
+    requires:
+      - recruit_everyone
+    primaryGoals:
+      - patrons/satisfy-poppy
 
   # Notes on improving this:
   # Right now, we generate notoriety => evidence and sit there twiddling our thumbs for 10 minutes waiting for it to go away
@@ -249,15 +256,14 @@ motivations:
     requires:
       - acquire_doors_and_fissive
       - begin_ascension
-      - find_recruits
       - recruit_everyone
     blocks:
       # Don't do any work motivations as we need the work verb free.
       - work_gg
       - work_labor
-      # Time to start eating people, don't try to find them once they disappear
-      # Note: We have no guarentee this has completed yet, so we just have to trust that we have enough people by now.
-      # - find_recruits
+      # This is guarenteed not to be needed anymore, as we require recruit_everyone
+      # We need to block it, as it will try to activate once we start eating people with the spider door.
+      - find_recruits
     primaryGoals:
       # Use labor or glover here?  Probably doesn't matter at this point
       - victories/power/acquire-mark-power-7-labor

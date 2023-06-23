@@ -6,7 +6,7 @@ startingRecipe:
       oneOf:
         - aspects: { follower: 1 }
         - elementId: health
-conditionalOngoingRecipes:
+conditionalRecipes:
   - condition:
       situation: explore
       recipe: explorechoosepaycriminal

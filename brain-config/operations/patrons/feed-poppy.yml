@@ -1,0 +1,27 @@
+name: Feed Poppy
+situation: poppytime
+targetOngoing: true
+ongoingRecipes:
+  poppywantssoul:
+    slots:
+      Sacrifice:
+        oneOf:
+          # Try to sacrifice a generic follower, and start with the lower ranking ones.
+          - elementId: generic_b_edge
+          - elementId: generic_b_forge
+          - elementId: generic_b_grail
+          - elementId: generic_b_heart
+          - elementId: generic_b_knock
+          - elementId: generic_b_lantern
+          - elementId: generic_b_moth
+          - elementId: generic_b_winter
+          - elementId: generic_c_edge
+          - elementId: generic_c_forge
+          - elementId: generic_c_grail
+          - elementId: generic_c_heart
+          - elementId: generic_c_knock
+          - elementId: generic_c_lantern
+          - elementId: generic_c_moth
+          - elementId: generic_c_winter
+          # Fall back to whoever.  Anyone is better than us.
+          - aspects: { follower: 1, hireling: -1, summoned: -1 }
