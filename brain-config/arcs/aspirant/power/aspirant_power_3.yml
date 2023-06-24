@@ -134,12 +134,17 @@ motivations:
     requires:
       # We need to have explore and talk
       - study_bequest_contents
-      # We can miss patrons if establish_cult runs or completes soon before this runs
-      # This is because establish_cult exhausts our reason, preventing us meeting the patron challenge.
-      # We don't really care though, as we don't need them in this arc.
-      # - get_scholarship_minor
+      # We might want to wait until we get the second reason here, as we need at least one to talk to patrons.
+      # Apparently we can never permenantly miss patrons though, as we can with followers.
+    until:
+      # find_recruits will get stuck re-triggering when we loose followers to the spider door, so we need to
+      # halt ourself permenantly before that happens.
+      # We could use followers/attract-followers-memory for this purpose, but in the interest of avoiding state, we instead have
+      # another goal used by "recruit_everyone" that alters the game state via poppy to mark itself complete.
+      # (At least, up until poppy gets killed or driven insane, but that doesn't happen in this arc).
+      - recruit_everyone
     primaryGoals:
-      - followers/attract-followers-memory
+      - followers/attract-followers
 
   recruit_when_needed:
     name: Recruit away restlessness
@@ -215,8 +220,6 @@ motivations:
     name: Find and recruit everyone
     requires:
       - establish_cult
-      # Don't start recruiting everyone until we have need of them for the spider door
-      - find_recruits
       - acquire_doors_and_fissive
     blocks:
       - recruit_when_needed
@@ -250,6 +253,7 @@ motivations:
     primaryGoals:
       - victories/power/acquire-dedication-power
       - victories/power/acquire-ascension-power
+      - cult/promote-heart-with-forge
 
   ascend:
     name: Ascend
@@ -261,10 +265,7 @@ motivations:
       # Don't do any work motivations as we need the work verb free.
       - work_gg
       - work_labor
-      # This is guarenteed not to be needed anymore, as we require recruit_everyone
-      # We need to block it, as it will try to activate once we start eating people with the spider door.
-      - find_recruits
     primaryGoals:
       # Use labor or glover here?  Probably doesn't matter at this point
-      - victories/power/acquire-mark-power-7-labor
+      - victories/power/acquire-mark-power-7
   # End ascension

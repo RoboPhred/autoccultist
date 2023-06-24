@@ -137,7 +137,7 @@ motivations:
       - funds/work-labor
   - name: Acquire the Seventh mark of Power
     primaryGoals:
-      - victories/power/acquire-mark-power-7-labor
+      - victories/power/acquire-mark-power-7-old
     supportingGoals:
-      # Do not include work on this list, as acquire-mark-power-7-labor has its own rules for when work is performed.
+      # Do not include work on this list, as acquire-mark-power-7-old has its own rules for when work is performed.
       - survive

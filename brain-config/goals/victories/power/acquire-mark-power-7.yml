@@ -1,133 +1,32 @@
-name: Achieve the Seventh Mark of Power (using Glover)
+name: Achieve the Seventh Mark of Power
 requirements:
-  elementId: ascensionpowerc
+  allOf:
+    - elementId: ascensionpowerc
+    - elementId: wayspider
+    - elementId: waystag_after
+    - elementId: ritefollowerconsumeinfluence
+    - aspects: { lore: 1, forge: 10 }
+    - aspects: { follower: 1, lantern: 2 }
 completedWhen:
   aspects: { desire: 7 }
-impulses:
-  - name: Work a junior job at Glover & Glover
-    forbidders:
-      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
-    priority: maintenance
-    operation: !import /operations/glover/work-glover-junior.yml
-  - name: Work at Glover & Glover under Alden
-    forbidders:
-      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
-    priority: maintenance
-    operation: !import /operations/glover/work-glover-alden.yml
-  - name: Work at Glover & Glover with dilligence
-    forbidders:
-      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
-    priority: maintenance
-    operation: !import /operations/glover/work-glover-diligence.yml
-  - name: Work a senior job at Glover & Glover
-    forbidders:
-      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
-    priority: maintenance
-    operation: !import /operations/glover/work-glover-senior.yml
-  - name: Plead for job at Glover & Glover
-    forbidders:
-      # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
-      allOf:
-        - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
-    priority: maintenance
-    operation: !import /operations/glover/plead-glover.yml
 
-  - name: Mansus-Grind for Knock Influence
-    priority: goal
+impulses:
+  - name: Labor for Funds
     forbidders:
-      anyOf:
-        # Dont search if we already have king crucible, or the relevant Knock Influence
+      # Don't occupy the Work Verb when we're ready to ascend.
+      allOf:
+        - elementId: ascensionpowerf
         - elementId: spirit_forgee_edge
-        - elementId: pre.spirit_forgee_edge
-        - elementId: spirit_forgee_edge.defunct
-          lifetimeRemaining: 30
         - aspects:
             influence: 1
-            knock:
-              greaterThanOrEqualTo: 5
-        # We can't start spider door grinding, so don't bother summong crucible
-        # This is so we don't have him decay while we are waiting for the suspicion to decay
-        # In theory the bot should be frame perfect at sustaining crucible, but in practice
-        # gaps of time slip by between game frames and decay he does.
-        - !import /conditions/has-evidence.yml
-    operation: !import /operations/mansus/use-stag-normal.yml
-
-  - name: Summon King Crucible
-    priority: goal
-    forbidders:
-      # There Can Only Be One
-      anyOf:
-        - elementId: spirit_forgee_edge
-        - elementId: spirit_forgee_edge.defunct
-        - elementId: pre.spirit_forgee_edge
-        # We can't start spider door grinding, so don't bother summong crucible
-        # This is so we don't have him decay while we are waiting for the suspicion to decay
-        # In theory the bot should be frame perfect at sustaining crucible, but in practice
-        # gaps of time slip by between game frames and decay he does.
-        - !import /conditions/has-evidence.yml
-    operation:
-      name: Summon King Crucible
-      situation: work
-      startingRecipe:
-        slots:
-          work:
-            elementId: ritefollowerconsumeinfluence
-          Invocation:
-            aspects: { lore: 1, forge: 10 }
-          Assistant:
-            aspects: { follower: 1, lantern: 2 }
-          Offering:
-            aspects:
-              influence: 1
-              knock:
-                greaterThanOrEqualTo: 5
-            ageBias: oldest
-      ongoingRecipes:
-        summoninglosingcontrol:
-          # We aren't resource constrained, so dismiss and try again if needed
-          slots:
-            Effort:
-              elementId: reason
-
-  - name: Sustain King Crucible through Endless Banter
-    # Keep the king around until we need him
+            forge:
+              greaterThanOrEqualTo: 15
     priority: maintenance
-    forbidders:
-      anyOf:
-        - allOf:
-            # Dont keep crucible occupied if we are ready to ascend.
-            - elementId: ascensionpowerf
-            - elementId: influenceforgeg
-        # Don't prolong his death if we are unlikely to have the time to use him properly
-        - elementId: spirit_forgee_edge
-          lifetimeRemaining:
-            lessThan: 45
-    operation:
-      name: Sustain King Crucible through Endless Banter
-      situation: talk
-      startingRecipe:
-        slots:
-          talk:
-            elementId: spirit_forgee_edge
+    operation: !import /operations/work-skillhealth.yml
 
   - name: Get a prisoner
     requirements:
       allOf:
-        # Wait until King Crucible is ready
-        - elementId: spirit_forgee_edge
         # Wait until we are ready
         - elementId: ascensionpowerf
     forbidders:
@@ -151,8 +50,6 @@ impulses:
   - name: Enter the spider door
     requirements:
       allOf:
-        # Wait until King Crucible is ready
-        - elementId: spirit_forgee_edge
         # Wait until we are ready
         - elementId: ascensionpowerf
     forbidders:
@@ -173,6 +70,89 @@ impulses:
         dreamenterspider:
           mansusChoice:
             deck: mansus_spiderdoor1
+
+  - name: Counter Notariety
+    requirements:
+      - elementId: notoriety
+    operation:
+      name: Counter Notariety with Heart
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            aspects: { follower: 1, heart: 1 }
+            aspectWeightBias: highest
+      ongoingRecipes:
+        talktofollower:
+          slots:
+            Subject:
+              aspects: { society: 1 }
+
+  - name: Sustain the Forge Influence
+    priority: goal
+    forbidders:
+      allOf:
+        # Stop when we are ready to ascend
+        - elementId: ascensionpowerf
+        - aspects: { influence: 1, forge: 15 }
+        - elementId: spirit_forgee_edge
+    operation:
+      name: Talk to Sulochana about the Forge Influence
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: sulochana
+      ongoingRecipes:
+        sulochanachat:
+          slots:
+            Subject:
+              aspects: { influence: 1, forge: 15 }
+
+  - name: Mansus-Grind for Knock Influence
+    priority: goal
+    requirements:
+      allOf:
+        # Wait until we have the influence
+        - aspects: { influence: 1, forge: 15 }
+    forbidders:
+      anyOf:
+        # Dont search if we already have king crucible, or the relevant Knock Influence
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+        - elementId: spirit_forgee_edge.defunct
+          lifetimeRemaining: 30
+        - aspects: { influence: 1, knock: 5 }
+    operation: !import /operations/mansus/use-stag-normal.yml
+
+  - name: Summon King Crucible
+    priority: goal
+    forbidders:
+      # There Can Only Be One
+      anyOf:
+        - elementId: spirit_forgee_edge
+        - elementId: spirit_forgee_edge.defunct
+        - elementId: pre.spirit_forgee_edge
+    operation:
+      name: Summon King Crucible
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            aspects: { follower: 1, lantern: 2 }
+          Offering:
+            aspects: { influence: 1, knock: 5 }
+            ageBias: oldest
+      ongoingRecipes:
+        summoninglosingcontrol:
+          # We aren't resource constrained, so dismiss and try again if needed
+          slots:
+            Effort:
+              elementId: reason
 
   - name: Ascend
     priority: goal

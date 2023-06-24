@@ -18,7 +18,8 @@ conditionalRecipes:
         aspects: { acquaintance: 1 }
       Ceremony:
         optional: true
-        aspects: { lore: 1 }
+        # Oddly enough, the secret histories cult cannot use secret histories lore to induct.
+        aspects: { lore: 1, secrethistories: -1 }
       Trappings: &trappings
         optional: true
         oneOf:

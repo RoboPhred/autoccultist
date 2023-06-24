@@ -9,8 +9,8 @@ startingRecipe:
         - elementId: clovette_b
         - elementId: dorothy_b
         - elementId: leo_b
-        - aspects: { follower: 1, believer: 1, heart: 2 }
+        - aspects: { follower: 1, disciple: -1, heart: 2 }
     Ceremony:
-      aspects: { lore: 1, grail: 6}
+      aspects: { lore: 1, grail: 6 }
     Trappings:
       elementId: restlessness

@@ -1,0 +1,15 @@
+name: Promote Heart believers, by invoking Forge
+requirements:
+  aspects:
+    society: 1
+    venerationforge: 1
+completedWhen:
+  noneOf:
+    # Promote until we have no more Heart followers who are not promoted
+    - elementId: clovette_b
+    - elementId: dorothy_b
+    - elementId: leo_b
+impulses:
+  - name: Promote a Heart Believer, by invoking Forge
+    priority: goal
+    operation: !import /operations/cult/promote-heart-believer-forge.yml
