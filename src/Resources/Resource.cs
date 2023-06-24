@@ -1,26 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace AutoccultistNS.Resources
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class Resource
     {
-        private static readonly Dictionary<Type, object> resources = new();
+        private static readonly Dictionary<Type, object> Resources = new();
 
-        public static Resource<T> Of<T>() where T : class
+        public static Resource<T> Of<T>()
+            where T : class
         {
-            if (!resources.ContainsKey(typeof(T)))
+            if (!Resources.ContainsKey(typeof(T)))
             {
-                resources[typeof(T)] = new Resource<T>();
+                Resources[typeof(T)] = new Resource<T>();
             }
 
-            return (Resource<T>)resources[typeof(T)];
+            return (Resource<T>)Resources[typeof(T)];
         }
 
         public static void ClearAll()
         {
-            foreach (var resource in resources.Values)
+            foreach (var resource in Resources.Values)
             {
                 if (resource is IDisposable disposable)
                 {
@@ -28,22 +29,23 @@ namespace AutoccultistNS.Resources
                 }
             }
 
-            resources.Clear();
+            Resources.Clear();
         }
     }
 
-    public class Resource<T> : IDisposable where T : class
+    public class Resource<T> : IDisposable
+        where T : class
     {
         private readonly HashSet<IResourceConstraint<T>> constraints = new();
 
         public void AddConstraint(IResourceConstraint<T> constraint)
         {
-            if (constraints.Contains(constraint))
+            if (this.constraints.Contains(constraint))
             {
                 return;
             }
 
-            if (!TryAddConstraint(constraint))
+            if (!this.TryAddConstraint(constraint))
             {
                 throw new Exception("Constraint cannot be satisfied.");
             }
@@ -86,35 +88,6 @@ namespace AutoccultistNS.Resources
             return !this.GetConstrainedResources().Values.Contains(resource);
         }
 
-        private IReadOnlyDictionary<IResourceConstraint<T>, T> GetConstrainedResources()
-        {
-            return PerfMonitor.Monitor(nameof(GetConstrainedResources), () =>
-            {
-                var candidatesByConstraint = this.constraints.ToDictionary(c => c, c => new HashSet<T>(c.GetCandidates()));
-
-                var allCandidates = candidatesByConstraint.SelectMany(c => c.Value).Distinct();
-                var weightByCandidate = allCandidates.ToDictionary(c => c, c => candidatesByConstraint.Sum(p => p.Value.Contains(c) ? 1 : 0));
-
-                var choices = new Dictionary<IResourceConstraint<T>, T>();
-
-                foreach (var pair in candidatesByConstraint)
-                {
-                    var choice = pair.Value.Where(c => weightByCandidate.ContainsKey(c)).OrderBy(c => weightByCandidate[c]).FirstOrDefault();
-                    if (choice != null)
-                    {
-                        // Remove the choice from the options
-                        weightByCandidate.Remove(choice);
-
-                        // Mark the card as chosen
-                        choices.Add(pair.Key, choice);
-                    }
-
-                }
-
-                return choices;
-            });
-        }
-
         public void Dispose()
         {
             foreach (var constraint in this.constraints)
@@ -124,6 +97,38 @@ namespace AutoccultistNS.Resources
             }
 
             this.constraints.Clear();
+        }
+
+        private IReadOnlyDictionary<IResourceConstraint<T>, T> GetConstrainedResources()
+        {
+            return PerfMonitor.Monitor(nameof(this.GetConstrainedResources), () =>
+            {
+                // FIXME: We should preserve the order returned by GetCandidates, as that is the priority order.
+                // FIXME: This is largely the same logic as ICardChooserExtensions.ChooseAll.  This code can be made generic
+                // and called from both places.
+                var candidatesByConstraint = this.constraints.ToDictionary(c => c, c => new HashSet<T>(c.GetCandidates()));
+
+                var allCandidates = candidatesByConstraint.SelectMany(c => c.Value).Distinct();
+                var weightByCandidate = allCandidates.ToDictionary(c => c, c => candidatesByConstraint.Sum(p => p.Value.Contains(c) ? 1 : 0));
+
+                var choices = new Dictionary<IResourceConstraint<T>, T>();
+
+                foreach (var pair in candidatesByConstraint)
+                {
+                    // FIXME: Sort by priority of the constraint.
+                    var choice = pair.Value.Where(c => weightByCandidate.ContainsKey(c)).OrderBy(c => weightByCandidate[c]).FirstOrDefault();
+                    if (choice != null)
+                    {
+                        // Remove the choice from the options
+                        weightByCandidate.Remove(choice);
+
+                        // Mark the card as chosen
+                        choices.Add(pair.Key, choice);
+                    }
+                }
+
+                return choices;
+            });
         }
 
         private void OnConstraintDisposed(object sender, EventArgs e)
