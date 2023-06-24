@@ -1,4 +1,4 @@
-name: "Aspirant: Power Ascension (MK3)"
+name: "Aspirant: Power Ascension"
 legacy: aspirant
 selectionHint:
   anyOf:
@@ -233,16 +233,6 @@ motivations:
       - recruit_everyone
     primaryGoals:
       - patrons/satisfy-poppy
-
-  # Notes on improving this:
-  # Right now, we generate notoriety => evidence and sit there twiddling our thumbs for 10 minutes waiting for it to go away
-  # We should instead:
-  # - Get a heart follower as a disciple
-  # - Use the spider door to find our forge influence
-  #   -  Use heart follower to get rid of notoriety
-  # - When we have forge, keep it fresh with sulochana
-  # - Dive for knock to get crucible
-  # - Win
 
   # Begin ascension
   begin_ascension:

@@ -9,7 +9,7 @@
 # Note: Getting close to loosing games due to lack of money.  Multi tasking strategy seems to take longer to get out of junior position so it bleeds money.
 # As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
 # Should look into rushing high passion and using painting.
-name: "Aspirant: Power Ascension (MK2)"
+name: "Aspirant: Power Ascension (old)"
 legacy: aspirant
 selectionHint:
   anyOf:
