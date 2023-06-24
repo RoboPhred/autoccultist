@@ -46,33 +46,17 @@ namespace AutoccultistNS
                 (SendOrPostCallback, object) pending;
 
                 // Drain any pending actions that got scheduled after we last finished running
-                int count = 0;
                 while ((pending = instance.pendingActions.DequeueOrDefault()).Item1 != null)
                 {
-                    // We might queue up actions doing this, so count the actual number.
-                    count++;
-
                     pending.Item1(pending.Item2);
-                }
-
-                if (count > 0)
-                {
-                    NoonUtility.LogWarning($"Drained {count} pending actions before running current action.");
                 }
 
                 action();
 
-                // Drain all pending actions that got scheduled by our action.]
-                count = 0;
+                // Drain all pending actions that got scheduled by our action.
                 while ((pending = instance.pendingActions.DequeueOrDefault()).Item1 != null)
                 {
-                    count++;
                     pending.Item1(pending.Item2);
-                }
-
-                if (count > 0)
-                {
-                    NoonUtility.LogWarning($"Drained {count} followup actions after running current action.");
                 }
             }
             finally
@@ -99,9 +83,7 @@ namespace AutoccultistNS
             if (Thread.CurrentThread.ManagedThreadId != this.threadId)
             {
                 NoonUtility.LogWarning($"Posting action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
-                return;
             }
-
 
             this.pendingActions.Enqueue((d, state));
         }
