@@ -104,12 +104,8 @@ namespace AutoccultistNS.Config
         /// </summary>
         public List<CardChooserConfig> From { get; set; }
 
-        /// <summary>
-        /// Choose a card from the given card states based on this filter's rules.
-        /// </summary>
-        /// <param name="cards">The cards to choose from.</param>
-        /// <returns>The chosen card, or <c>null</c> if none were chosen.</returns>
-        public ICardState ChooseCard(IEnumerable<ICardState> cards)
+        /// <inheritdoc/>
+        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards)
         {
             var candidates = this.FilterCards(cards);
 
@@ -136,7 +132,7 @@ namespace AutoccultistNS.Config
                 candidates = candidates.OrderBy(card => card.Aspects.GetWeight());
             }
 
-            return candidates.FirstOrDefault();
+            return candidates;
         }
 
         public override string ToString()

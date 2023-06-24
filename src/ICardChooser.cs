@@ -12,7 +12,7 @@ namespace AutoccultistNS
         /// Choose a card from the given candidates.
         /// </summary>
         /// <param name="cards">An enumerable of candidate cards to choose from.</param>
-        /// <returns>The chosen card, or null if none are chosen.</returns>
-        ICardState ChooseCard(IEnumerable<ICardState> cards);
+        /// <returns>An enumerable of card that can be chosen in order of priority.</returns>
+        IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards);
     }
 }

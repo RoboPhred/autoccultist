@@ -30,8 +30,7 @@ namespace AutoccultistNS.GameState
 
         /// <summary>
         /// Determines if all card matchers can satisfy their cards.
-        /// This takes into account card matchers wanting to consume their cards, so once a matcher
-        /// chooses a card, other matchers may not consider that card for their choice.
+        /// Each card chooser to find a choice will remove that card from the pool that other choices can choose from.
         /// </summary>
         /// <param name="state">The game state to check.</param>
         /// <param name="choosers">A collection of card matchers to check cards against.</param>
@@ -39,22 +38,7 @@ namespace AutoccultistNS.GameState
         /// <returns>True if all card matchers can satisfy their matches, or False otherwise.</returns>
         public static bool CardsCanBeSatisfied(this IGameState state, IEnumerable<ICardChooser> choosers, out ICardChooser unsatisfiedChoice)
         {
-            var remainingCards = new HashSet<ICardState>(state.TabletopCards);
-            foreach (var chooser in choosers)
-            {
-                // Note: Some card choosers have a choice of multiple cards.  We should take that into account and check all combinations.
-                var choice = chooser.ChooseCard(remainingCards);
-                if (choice == null)
-                {
-                    unsatisfiedChoice = chooser;
-                    return false;
-                }
-
-                remainingCards.Remove(choice);
-            }
-
-            unsatisfiedChoice = null;
-            return true;
+            return choosers.ChooseAll(state.GetAllCards(), out unsatisfiedChoice) != null;
         }
     }
 }

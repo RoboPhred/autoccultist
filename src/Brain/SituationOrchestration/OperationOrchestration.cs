@@ -368,16 +368,6 @@ namespace AutoccultistNS.Brain
             this.End();
         }
 
-        private SlotCardAction GetSlotActionForRecipeSlotSpec(string specId, IRecipeSolution recipe)
-        {
-            if (!recipe.SlotSolutions.TryGetValue(specId, out var cardChoice))
-            {
-                return null;
-            }
-
-            return new SlotCardAction(this.SituationId, specId, cardChoice);
-        }
-
         private async void RunCoroutine(Func<CancellationToken, Task> coroutine, string coroutineName)
         {
             await this.AwaitCoroutine(coroutine, coroutineName);

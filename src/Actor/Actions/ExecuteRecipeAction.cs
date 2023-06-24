@@ -85,6 +85,8 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"Situation {this.SituationId} has no slots.");
             }
 
+            // TODO: Use ICardChooserExtensions.ChooseAll to find a solution to all the card matchers that allows for choosing lower
+            // priority cards if there are conflicts.
             if (!await this.FillSlot(firstSlot, cancellationToken))
             {
                 throw new ActionFailureException(this, $"Failed to fill first slot of recipe {this.RecipeName} in situation {this.SituationId}.");
@@ -105,7 +107,7 @@ namespace AutoccultistNS.Actor.Actions
                 return false;
             }
 
-            var card = CardManager.ChooseCard(cardMatcher);
+            var card = cardMatcher.ChooseCard(GameStateProvider.Current.TabletopCards);
             if (card == null)
             {
                 if (cardMatcher.Optional)
