@@ -67,7 +67,7 @@ namespace AutoccultistNS.Actor.Actions
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
                 var awaitSphereFilled = AwaitConditionTask.From(() => thresholdTokens.TokensAreStable(), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
+                if (await Task.WhenAny(awaitSphereFilled, RealtimeDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for threshold cards to stabilize from the dumping of situation {this.SituationId}.");
                 }
@@ -101,7 +101,7 @@ namespace AutoccultistNS.Actor.Actions
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
                 var awaitSphereFilled = AwaitConditionTask.From(() => outputTokens.TokensAreStable(), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
+                if (await Task.WhenAny(awaitSphereFilled, RealtimeDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for output cards to stabilize from the conclusion of situation {this.SituationId}.");
                 }

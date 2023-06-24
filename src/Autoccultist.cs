@@ -109,10 +109,6 @@ public class Autoccultist : MonoBehaviour
         SituationOrchestrator.Initialize();
 
         this.ReloadAll();
-        if (Library.ParseErrors.Count > 0)
-        {
-            ParseErrorsGUI.IsShowing = true;
-        }
 
         GameEventSource.GameStarted += (_, __) =>
         {
@@ -156,12 +152,20 @@ public class Autoccultist : MonoBehaviour
         Deserializer.ClearCache();
         Library.LoadAll();
 
-        if (GameAPI.IsRunning)
+        if (Library.ParseErrors.Count > 0)
         {
-            var arc = Library.Arcs.FirstOrDefault(a => a.Name == previousArc.Name);
-            if (arc != null)
+            ParseErrorsGUI.IsShowing = true;
+        }
+        else
+        {
+            ParseErrorsGUI.IsShowing = false;
+            if (GameAPI.IsRunning)
             {
-                NucleusAccumbens.AddImperative(arc);
+                var arc = Library.Arcs.FirstOrDefault(a => a.Name == previousArc.Name);
+                if (arc != null)
+                {
+                    NucleusAccumbens.AddImperative(arc);
+                }
             }
         }
     }
@@ -193,11 +197,14 @@ public class Autoccultist : MonoBehaviour
     /// </summary>
     public void Update()
     {
-        PerfMonitor.Monitor($"Global Update", () =>
+        PerfMonitor.Monitor($"Autoccultist Update", () =>
         {
             // We want all our await continuations to be handled on this frame.
             // If we had continuations scheduled up outside of this from last frame, they will
             // be executed before our action here gets executed.
+            // In practice, this is no longer needed as all our awaits are continuing from within GlobalUpdate,
+            // but this was previously useful when we awaited Task.Delay which resumes from another thread and was synchronized
+            // into unity's SynchronizationContext.
             ImmediateSynchronizationContext.Run(() =>
             {
                 this.HandleHotkeys();
@@ -260,8 +267,6 @@ public class Autoccultist : MonoBehaviour
     {
         if (scene.name == "S4Tabletop")
         {
-            // TODO: This was called from HandleSceneLoaded but was called too late on victory, and we crash from not finding any spheres in GameStateProvider.FromCurrentState
-            // Moved it to HandleSceneUnloaded... Does this fix the issue?
             GameEventSource.RaiseGameEnded();
         }
     }

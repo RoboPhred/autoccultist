@@ -51,14 +51,14 @@ namespace AutoccultistNS.Actor.Actions
         private async Task AwaitMansusReady(CancellationToken cancellationToken)
         {
             var awaitInteractable = GameAPI.AwaitInteractable(cancellationToken);
-            if (await Task.WhenAny(awaitInteractable, UnityDelay.Of(10000, cancellationToken)) != awaitInteractable)
+            if (await Task.WhenAny(awaitInteractable, RealtimeDelay.Of(10000, cancellationToken)) != awaitInteractable)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: Timed out waiting for game to become interactable.");
             }
 
             // Give the mansus some time to animate its cards into being.
             // FIXME: Should include this in the Interactable check.
-            await UnityDelay.Of(1000, cancellationToken);
+            await RealtimeDelay.Of(1000, cancellationToken);
         }
 
         private void ChooseCard()
@@ -93,7 +93,7 @@ namespace AutoccultistNS.Actor.Actions
         private async Task AcceptCard(CancellationToken cancellationToken)
         {
             var awaitIngress = GameAPI.AwaitTabletopIngress(cancellationToken);
-            if (await Task.WhenAny(awaitIngress, UnityDelay.Of(5000, cancellationToken)) != awaitIngress)
+            if (await Task.WhenAny(awaitIngress, RealtimeDelay.Of(5000, cancellationToken)) != awaitIngress)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: Timed out waiting for ingress to appear.");
             }

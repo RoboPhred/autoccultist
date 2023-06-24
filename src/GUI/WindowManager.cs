@@ -16,7 +16,7 @@ namespace AutoccultistNS.GUI
         /// <returns>The new window id.</returns>
         public static int GetNextWindowID()
         {
-            // GUIUtility.GetControlID(FocusType.Passive) seems to return the same value on occasions...
+            // GUIUtility.GetControlID(FocusType.Passive) seems to return the same value on occasion...
             return nextWindowId++;
         }
 

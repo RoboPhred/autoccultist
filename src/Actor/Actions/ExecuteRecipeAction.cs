@@ -133,7 +133,7 @@ namespace AutoccultistNS.Actor.Actions
                 var awaitSphereFilled = AwaitConditionTask.From(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
 
                 // Increasing wait from 1 second to 3... Sometimes cards that are traveling from close by become very, very slow.
-                if (await Task.WhenAny(awaitSphereFilled, UnityDelay.Of(3000, cancellationToken)) != awaitSphereFilled)
+                if (await Task.WhenAny(awaitSphereFilled, RealtimeDelay.Of(3000, cancellationToken)) != awaitSphereFilled)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.  Our token ended up in state {stack.Token.CurrentState} at sphere {stack.Token.Sphere.Id}.");
                 }

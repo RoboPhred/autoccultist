@@ -5,7 +5,7 @@ namespace AutoccultistNS
     using System.Threading.Tasks;
     using AutoccultistNS.Tasks;
 
-    public static class UnityDelay
+    public static class RealtimeDelay
     {
         public static Task Of(TimeSpan timeSpan, CancellationToken cancellationToken)
         {
