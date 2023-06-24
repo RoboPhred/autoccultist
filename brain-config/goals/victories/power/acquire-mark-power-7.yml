@@ -73,7 +73,7 @@ impulses:
 
   - name: Counter Notariety
     requirements:
-      - elementId: notoriety
+      elementId: notoriety
     operation:
       name: Counter Notariety with Heart
       situation: talk

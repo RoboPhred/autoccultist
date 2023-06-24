@@ -21,7 +21,7 @@ namespace AutoccultistNS.Config.CardChoices
         public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards)
         {
             var arrayOfCards = cards.ToArray();
-            return this.OneOf.Select(c => c.ChooseCard(cards));
+            return this.OneOf.SelectMany(c => c.SelectChoices(cards));
         }
 
         public override string ToString()
