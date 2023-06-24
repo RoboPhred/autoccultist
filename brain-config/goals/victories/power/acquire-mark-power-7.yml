@@ -31,6 +31,8 @@ impulses:
         - elementId: ascensionpowerf
     forbidders:
       anyOf:
+        - situation: work
+          recipe: minorforgevictory_overture
         - elementId: influenceforgeg
         - aspects: { prisoner: 1 }
         # Try to avoid notoriety game overs from this.
@@ -54,6 +56,8 @@ impulses:
         - elementId: ascensionpowerf
     forbidders:
       anyOf:
+        - situation: work
+          recipe: minorforgevictory_overture
         - aspects: { influence: 1, forge: 15 }
     operation:
       name: Enter the spider door
@@ -117,6 +121,8 @@ impulses:
         - aspects: { influence: 1, forge: 15 }
     forbidders:
       anyOf:
+        - situation: work
+          recipe: minorforgevictory_overture
         # Dont search if we already have king crucible, or the relevant Knock Influence
         - elementId: spirit_forgee_edge
         - elementId: pre.spirit_forgee_edge
