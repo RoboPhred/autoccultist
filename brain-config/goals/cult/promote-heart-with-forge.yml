@@ -6,9 +6,15 @@ requirements:
 completedWhen:
   noneOf:
     # Promote until we have no more Heart followers who are not promoted
-    - elementId: clovette_b
-    - elementId: dorothy_b
-    - elementId: leo_b
+    - anyOf:
+        - elementId: clovette_a
+        - elementId: clovette_b
+    - anyOf:
+        - elementId: dorothy_a
+        - elementId: dorothy_b
+    - anyOf:
+        - elementId: leo_a
+        - elementId: leo_b
 impulses:
   - name: Promote a Heart Believer, by invoking Forge
     priority: goal

@@ -26,19 +26,15 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards)
         {
-            var remaining = new HashSet<ICardState>(cards);
-            foreach (var chooser in this.CardSet)
+            var result = this.CardSet.ChooseAll(cards, out var unsatisfiedChooser);
+            if (unsatisfiedChooser != null)
             {
-                // TODO: Each chooser individually chooses a card, so its possible for a chooser
-                // to have multiple choices, but choose the one that is the only viable card for another chooser.
-                // We should get all candidates for all choosers and try to satisfy them all.
-                var choice = chooser.ChooseCard(remaining);
-                if (choice == null)
-                {
-                    return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(chooser), $"when looking for a set of {this.CardSet.Count} cards");
-                }
+                return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChooser), $"when looking for a set of {this.CardSet.Count} cards");
+            }
 
-                remaining.Remove(choice);
+            if (result == null)
+            {
+                return AddendedConditionResult.Addend(ConditionResult.Failure, $"when looking for a set of {this.CardSet.Count} cards");
             }
 
             return ConditionResult.Success;
