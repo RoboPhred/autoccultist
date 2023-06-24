@@ -33,8 +33,7 @@ namespace AutoccultistNS
 
             var choices = new Dictionary<ICardChooser, ICardState>();
 
-            // Start with the most restrictive choices first, and work our way down.
-            foreach (var pair in choicesByChooser.OrderBy(p => p.Value.Count))
+            foreach (var pair in choicesByChooser)
             {
                 var choice = pair.Value.Where(c => weightByCandidate.ContainsKey(c)).OrderBy(c => weightByCandidate[c]).FirstOrDefault();
                 if (choice == null)
