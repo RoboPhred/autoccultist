@@ -98,7 +98,8 @@ namespace AutoccultistNS
                 if (!IsRunning)
                 {
                     // Note: We used to also wait for Start, but that means once of our two AwaitEvent tasks were not being cancelled.
-                    // Rather than making a cancellation aware AwaitAll, just wait for the next beat, which will happen the next frame after Start()
+                    // Rather than making a cancellation aware AwaitAll, just wait for the next beat, which will either happen
+                    // from a manual step or from the next frame after Start()
                     await AwaitBeat(cancellationToken);
                     return;
                 }

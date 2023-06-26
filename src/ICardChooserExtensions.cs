@@ -20,7 +20,7 @@ namespace AutoccultistNS
         // FIXME: Does this actually work in all cases?  Is sorting cards by the number of choosers that want them sufficient?
         public static IReadOnlyDictionary<ICardChooser, ICardState> ChooseAll(this IEnumerable<ICardChooser> choosers, IEnumerable<ICardState> cards, out ICardChooser unsatisfiedChooser)
         {
-            var result = PerfMonitor.Monitor<(IReadOnlyDictionary<ICardChooser, ICardState>, ICardChooser)>("IcardChooserExtensions.ChooseAll", () =>
+            var result = PerfMonitor.Monitor<(IReadOnlyDictionary<ICardChooser, ICardState>, ICardChooser)>(nameof(ChooseAll), () =>
             {
                 var choicesByChooser = choosers.ToDictionary(c => c, c => new List<ICardState>(c.SelectChoices(cards)));
 

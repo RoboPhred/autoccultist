@@ -4,7 +4,6 @@ namespace AutoccultistNS.Actor.Actions
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using AutoccultistNS.GameState;
     using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
 
@@ -14,6 +13,8 @@ namespace AutoccultistNS.Actor.Actions
     /// </summary>
     public class ConcludeSituationAction : ActionBase
     {
+        private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(3);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcludeSituationAction"/> class.
         /// </summary>
@@ -66,8 +67,11 @@ namespace AutoccultistNS.Actor.Actions
 
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
-                var awaitSphereFilled = AwaitConditionTask.From(() => thresholdTokens.TokensAreStable(), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled, RealtimeDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
+                try
+                {
+                    await RealtimeDelay.Timeout(c => AwaitConditionTask.From(() => thresholdTokens.TokensAreStable(), c), Timeout, cancellationToken);
+                }
+                catch (TimeoutException)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for threshold cards to stabilize from the dumping of situation {this.SituationId}.");
                 }
@@ -100,8 +104,11 @@ namespace AutoccultistNS.Actor.Actions
 
                 // Wait for the tokens to finish moving.
                 // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
-                var awaitSphereFilled = AwaitConditionTask.From(() => outputTokens.TokensAreStable(), cancellationToken);
-                if (await Task.WhenAny(awaitSphereFilled, RealtimeDelay.Of(1000, cancellationToken)) != awaitSphereFilled)
+                try
+                {
+                    await RealtimeDelay.Timeout(c => AwaitConditionTask.From(() => outputTokens.TokensAreStable(), c), Timeout, cancellationToken);
+                }
+                catch (TimeoutException)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for output cards to stabilize from the conclusion of situation {this.SituationId}.");
                 }
@@ -112,19 +119,17 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             // Situation might go away when we Conclude
-            if (!situation.Token.Defunct && situation.IsOpen)
+            if (!situation.Verb.Spontaneous && !situation.Token.Defunct && situation.IsOpen)
             {
                 // Wait on a heartbeat but dont use any delay, as we waited on the cards
                 await MechanicalHeart.AwaitBeat(cancellationToken, TimeSpan.Zero);
 
-                // NOTE: Game crash here... probably on temporary / dissipating situations.
-                // The above doesn't seem enough to gate it.  Let's check again.
-                // Note: This is really weird, as AwaitBeat with TimeSpan.Zero should no-op and we shouldn't see any changes?
-                if (situation.Token.Defunct || !situation.IsOpen)
-                {
-                    Autoccultist.LogWarn($"Situation {this.SituationId} was closed while we were concluding it.  This is probably fine, but it means something is wonky with threading.");
-                }
-                else
+                // Note: We had a game exception here once.  But now we gate this behind situation.Verb.Spontanious so I think we are ok now?
+                // Just to be safe, check again.
+                // I'm not confident in this check though, as the above await passes through synchronously when we are not in step mode.
+                // We also have the interesting tidbit that .Conclude queues up a .Retire for spontanious verbs,
+                // but only in a command queue, and it might not have executed yet...
+                if (!situation.Token.Defunct && situation.IsOpen)
                 {
                     situation.Close();
                 }

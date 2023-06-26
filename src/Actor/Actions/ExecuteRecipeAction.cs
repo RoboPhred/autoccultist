@@ -13,6 +13,8 @@ namespace AutoccultistNS.Actor.Actions
 
     public class ExecuteRecipeAction : ActionBase
     {
+        private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(3);
+
         public ExecuteRecipeAction(string situationId, IRecipeSolution recipeSolution, string recipeName, bool leaveOpen = false)
         {
             this.SituationId = situationId;
@@ -131,11 +133,12 @@ namespace AutoccultistNS.Actor.Actions
 
                 itinerary.WithDuration(0.1f).Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
 
-                // Would be nice if there was a way to subscribe to the itinerary, but whatever...
-                var awaitSphereFilled = AwaitConditionTask.From(() => slotSphere.GetTokens().Contains(stack.Token), cancellationToken);
-
-                // Increasing wait from 1 second to 3... Sometimes cards that are traveling from close by become very, very slow.
-                if (await Task.WhenAny(awaitSphereFilled, RealtimeDelay.Of(3000, cancellationToken)) != awaitSphereFilled)
+                try
+                {
+                    // Would be nice if there was a way to subscribe to the itinerary, but whatever...
+                    await RealtimeDelay.Timeout((c) => AwaitConditionTask.From(() => slotSphere.GetTokens().Contains(stack.Token), c), Timeout, cancellationToken);
+                }
+                catch (TimeoutException)
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.  Our token ended up in state {stack.Token.CurrentState} at sphere {stack.Token.Sphere.Id}.");
                 }

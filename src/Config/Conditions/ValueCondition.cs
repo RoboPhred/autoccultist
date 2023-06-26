@@ -2,7 +2,6 @@ namespace AutoccultistNS.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
-    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;

@@ -104,6 +104,19 @@ namespace AutoccultistNS
             GameStateProvider.Invalidate();
         }
 
+        public static int GetMemory(string id)
+        {
+            if (!GameAPI.IsRunning)
+            {
+                throw new InvalidOperationException("Cannot get memory outside of game.");
+            }
+
+            id = GetMemoryId(id);
+
+            var memoryElement = GetMemoryElementStack();
+            return memoryElement.GetAspects().ValueOrDefault(id);
+        }
+
         private static ElementStack GetMemoryElementStack()
         {
             var tabletop = GameAPI.TabletopSphere;
