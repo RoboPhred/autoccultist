@@ -1,6 +1,7 @@
 name: Meet acquaintances and patrons
 completedWhen:
-  aspects: { autoccultist_memory: 1, autoccultist_memory_has_all_followers: 1 }
+  memory: has_all_followers
+  value: 1
 
 impulses:
   - name: Record our completion
