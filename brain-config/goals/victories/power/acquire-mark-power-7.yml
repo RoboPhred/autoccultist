@@ -16,7 +16,9 @@ impulses:
       # Don't occupy the Work Verb when we're ready to ascend.
       allOf:
         - elementId: ascensionpowerf
-        - elementId: spirit_forgee_edge
+        - anyOf:
+            - elementId: spirit_forgee_edge
+            - elementId: pre.spirit_forgee_edge
         - aspects:
             influence: 1
             forge:
