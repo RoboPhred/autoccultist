@@ -13,10 +13,11 @@ namespace AutoccultistNS
         /// Gets the total value of all aspect degrees.
         /// </summary>
         /// <param name="aspects">The dictionary of aspects.</param>
+        /// <param name="restrictTo">The list of aspects to restrict to.  If null, all aspects are included.</param>
         /// <returns>The total weight of all aspect degrees.</returns>
-        public static double GetWeight(this IReadOnlyDictionary<string, int> aspects)
+        public static double GetWeight(this IReadOnlyDictionary<string, int> aspects, ICollection<string> restrictTo = null)
         {
-            return Math.Sqrt(aspects.Values.Select(x => x * x).Sum());
+            return Math.Sqrt(aspects.Where(x => restrictTo == null || restrictTo.Contains(x.Key)).Select(x => x.Value * x.Value).Sum());
         }
 
         /// <summary>

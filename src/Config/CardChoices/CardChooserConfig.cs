@@ -81,7 +81,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets the aspect weight bias by which to choose cards.
         /// </summary>
-        public CardAspectWeightSelection AspectWeightBias { get; set; }
+        public CardAspectWeightSelection? AspectWeightBias { get; set; }
 
         /// <summary>
         /// Gets or sets a list of elements forbidden from being matched.
@@ -109,7 +109,7 @@ namespace AutoccultistNS.Config
         {
             var candidates = this.FilterCards(cards).OrderBy((_) => (int)0);
 
-            // Sort for age bias first, as it will have the most identical weights.
+            // Sort for weight bias first, as it will have the most identical hits.
             if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
             {
                 candidates = candidates.ThenByDescending(card => this.GetSortWeight(card));
@@ -129,10 +129,20 @@ namespace AutoccultistNS.Config
                 candidates = candidates.ThenByDescending(card => card.LifetimeRemaining);
             }
 
-            // Then sort by total weight.
-            candidates = candidates.ThenBy(card => card.Aspects.GetWeight());
+            // Then sort by total weight.  This is still desirable even with AspectWeightBias, but only if
+            // we had specific aspects we pre-sorted by
+            if (!this.AspectWeightBias.HasValue || this.Aspects != null)
+            {
+                candidates = candidates.ThenBy(card => card.Aspects.GetWeight());
+            }
 
-            // Finally, sort by signature, for determinism
+            // Then by lifetime remaining, lowest first, but only if that wasnt already decided above.
+            if (!this.AgeBias.HasValue)
+            {
+                candidates = candidates.ThenBy(card => card.LifetimeRemaining);
+            }
+
+            // Finally, sort by signature, so we get deterministic draws for the board state.
             candidates = candidates.ThenBy(card => card.Signature);
 
             return candidates;
@@ -244,14 +254,13 @@ namespace AutoccultistNS.Config
 
         private double GetSortWeight(ICardState card)
         {
-            if (this.Aspects == null)
+            if (this.Aspects == null || this.Aspects.Count == 0)
             {
                 return card.Aspects.GetWeight();
             }
             else
             {
-                var sortAspects = this.Aspects.ToDictionary(entry => entry.Key, entry => card.Aspects.ValueOrDefault(entry.Key));
-                return sortAspects.GetWeight();
+                return card.Aspects.GetWeight(this.Aspects.Keys);
             }
         }
     }
