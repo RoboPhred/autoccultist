@@ -13,7 +13,7 @@ namespace AutoccultistNS.Brain
     public static class Cerebellum
     {
         private const bool DebugAllTasks = false;
-        private const bool DebugTaskExecutions = false;
+        private const bool DebugTaskExecutions = true;
 
         private static readonly Queue<DeferredTask<object>> PendingActions = new();
         private static DeferredTask<object> currentAction;

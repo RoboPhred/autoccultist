@@ -74,7 +74,7 @@ namespace AutoccultistNS
                 return;
             }
 
-            NoonUtility.LogWarning($"Sending action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
+            Autoccultist.LogWarn($"Sending action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
             this.pendingActions.Enqueue((d, state));
         }
 
@@ -82,7 +82,7 @@ namespace AutoccultistNS
         {
             if (Thread.CurrentThread.ManagedThreadId != this.threadId)
             {
-                NoonUtility.LogWarning($"Posting action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
+                Autoccultist.LogWarn($"Posting action to thread {Thread.CurrentThread.ManagedThreadId} from thread {this.threadId}.");
             }
 
             this.pendingActions.Enqueue((d, state));

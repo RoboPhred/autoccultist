@@ -258,7 +258,12 @@ namespace AutoccultistNS.Brain
                     await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
 
                     await Cerebellum.Coordinate(
-                        (innerToken) => new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken),
+                        async (innerToken) =>
+                        {
+                            NoonUtility.LogWarning($"Completing {this.Operation.Name}: Executing situation conclusion.");
+                            await new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            NoonUtility.LogWarning($"Completing {this.Operation.Name}: Situation conclusion executed.");
+                        },
                         this.cancellationSource.Token);
                 },
                 this.cancellationSource.Token);
