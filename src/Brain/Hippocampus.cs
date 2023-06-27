@@ -19,7 +19,6 @@ namespace AutoccultistNS
             if (compendium.EntityExists<Element>(id))
             {
                 attr = compendium.GetEntityById<Element>(id);
-                NoonUtility.LogWarning($"Memory {id} already exists.");
 
                 if (!string.IsNullOrEmpty(label))
                 {
@@ -33,7 +32,6 @@ namespace AutoccultistNS
             }
             else
             {
-                NoonUtility.LogWarning($"Memory {id} does not yet exist.");
                 attr = new Element
                 {
                     Label = label ?? id,
@@ -80,8 +78,6 @@ namespace AutoccultistNS
             var memoryElement = GetMemoryElementStack();
             memoryElement.SetMutation(id, value, false);
 
-            NoonUtility.LogWarning($"Set memory {id} to {memoryElement.GetAspects()[id]}.");
-
             GameStateProvider.Invalidate();
         }
 
@@ -99,7 +95,6 @@ namespace AutoccultistNS
 
             var memoryElement = GetMemoryElementStack();
             memoryElement.SetMutation(id, value, false);
-            NoonUtility.LogWarning($"Set memory {id} to {memoryElement.GetAspects()[id]}.");
 
             GameStateProvider.Invalidate();
         }
@@ -125,7 +120,6 @@ namespace AutoccultistNS
             if (token == null)
             {
                 token = tabletop.ProvisionElementToken(MemoryElementId, 1);
-                NoonUtility.LogWarning($"Created memory token {token.PayloadEntityId} in sphere {token.Sphere.Id}.");
             }
 
             // I don't actually know if this is needed.  The bug turned out to be something else entirely.

@@ -10,18 +10,12 @@ namespace AutoccultistNS.Config.Conditions
 
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            // This is called when the game is not running???
             if (!GameAPI.IsRunning)
             {
-                try
-                {
-                    throw new System.Exception("debug");
-                }
-                catch (System.Exception ex)
-                {
-                    NoonUtility.LogWarning($"Ignoring attempt to check memory condition while game is not running: {ex.ToString()}");
-                    return ConditionResult.Failure;
-                }
+                // FIXME: This is needed because we do a dry run on conditions.
+                // - Do not do a dry run, instead check for cyclic motivations properly.
+                // - Get memory from IGameState
+                return ConditionResult.Failure;
             }
 
             // TODO: Bit awkward calling out to Hippocampus directly.  Should probably store memory values in IGameState

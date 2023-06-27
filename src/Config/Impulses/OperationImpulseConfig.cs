@@ -4,6 +4,7 @@ namespace AutoccultistNS.Config
     using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Resources;
 
     /// <summary>
     /// An operation is a series of tasks to complete a verb or situation.
@@ -59,13 +60,25 @@ namespace AutoccultistNS.Config
         public ConditionResult IsConditionMet(IGameState state)
         {
             var situationId = this.GetSituationId();
+            var situationState = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
+
+            if (situationState == null)
+            {
+                return SituationConditionResult.ForFailure(situationId, "Situation not found.");
+            }
 
             // This isn't really relative to game state, but we have to use this here, as IReaction is not specific to situations and
             // NucleusAccumbens can no longer verify this.
-            // FIXME: Do we even need this now that NucleusAccumbens no longer tries to run operations in parallel?
+            // Old way
             if (!SituationOrchestrator.IsSituationAvailable(situationId))
             {
                 return SituationConditionResult.ForFailure(situationId, "Situation is busy with another orchestration.");
+            }
+
+            // New way
+            if (!Resource.Of<ISituationState>().IsAvailable(situationState))
+            {
+                return SituationConditionResult.ForFailure(situationId, "Situation is busy with another resource.");
             }
 
             var startingRecipe = this.GetStartingRecipe();

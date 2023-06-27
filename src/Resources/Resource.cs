@@ -51,6 +51,11 @@ namespace AutoccultistNS.Resources
             }
         }
 
+        public IEnumerable<IResourceConstraint<T>> GetConstraints()
+        {
+            return this.constraints;
+        }
+
         public bool TryAddConstraint(IResourceConstraint<T> constraint)
         {
             // Verify that the constraint can be met given our other constraints.

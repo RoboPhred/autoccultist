@@ -35,30 +35,26 @@ namespace AutoccultistNS.Tasks
             }
         }
 
-        public async Task<T> Execute()
+        public async Task Execute()
         {
             if (this.innerTask != null)
             {
                 throw new InvalidOperationException("Task has already been executed.");
             }
 
-            this.innerTask = this.taskSource(this.cancellationToken);
-
             try
             {
+                this.innerTask = this.taskSource(this.cancellationToken);
                 T result = await this.innerTask;
                 this.source.SetResult(result);
-                return result;
             }
             catch (TaskCanceledException)
             {
                 this.source.SetCanceled();
-                throw;
             }
             catch (Exception ex)
             {
                 this.source.SetException(ex);
-                throw;
             }
         }
     }

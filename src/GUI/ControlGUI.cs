@@ -5,6 +5,7 @@ namespace AutoccultistNS.GUI
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Resources;
     using UnityEngine;
 
     /// <summary>
@@ -134,6 +135,11 @@ namespace AutoccultistNS.GUI
                 }
 
                 GUILayout.EndHorizontal();
+            }
+
+            foreach (var reaction in Resource.Of<ISituationState>().GetConstraints().OfType<OperationReaction>())
+            {
+                GUILayout.Label($"Reaction: {reaction}");
             }
         }
     }
