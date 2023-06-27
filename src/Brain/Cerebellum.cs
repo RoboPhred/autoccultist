@@ -43,7 +43,11 @@ namespace AutoccultistNS.Brain
             pendingAction.Name = taskName;
 
             PendingActions.Enqueue(pendingAction);
-            NoonUtility.Log($"Queued coordinated task {taskName}");
+
+            if (!string.IsNullOrEmpty(taskName))
+            {
+                NoonUtility.Log($"Queued coordinated task {taskName}");
+            }
 
             if (!isDrainingQueue)
             {
@@ -70,7 +74,11 @@ namespace AutoccultistNS.Brain
             pendingAction.Name = taskName;
 
             PendingActions.Enqueue(pendingAction);
-            NoonUtility.Log($"Queued coordinated task {taskName}");
+
+            if (!string.IsNullOrEmpty(taskName))
+            {
+                NoonUtility.Log($"Queued coordinated task {taskName}");
+            }
 
             if (!isDrainingQueue)
             {
@@ -131,7 +139,11 @@ namespace AutoccultistNS.Brain
                     currentAction = set;
                     try
                     {
-                        NoonUtility.Log($"Executing coordinated task {set.Name}");
+                        if (!string.IsNullOrEmpty(set.Name))
+                        {
+                            NoonUtility.Log($"Executing coordinated task {set.Name}");
+                        }
+
                         await set.Execute();
                     }
                     catch (Exception ex)
@@ -140,7 +152,11 @@ namespace AutoccultistNS.Brain
                     }
                     finally
                     {
-                        NoonUtility.Log($"Done executing coordinated task {set.Name}");
+                        if (!string.IsNullOrEmpty(set.Name))
+                        {
+                            NoonUtility.Log($"Done executing coordinated task {set.Name}");
+                        }
+
                         currentAction = null;
                     }
 
