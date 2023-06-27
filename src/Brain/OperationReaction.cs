@@ -153,14 +153,14 @@ namespace AutoccultistNS.Brain
             this.End();
         }
 
-        private async Task<bool> StartOperation()
+        private Task<bool> StartOperation()
         {
-            // Can't do this in Cerebellum or we could block the real mansus handler and deadlock.
-            await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
-
-            return await GameAPI.WhilePaused(
+            return GameAPI.WhilePaused(
                 async () =>
                 {
+                    // Can't do this in Cerebellum or we could block the real mansus handler and deadlock.
+                    await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
+
                     return await Cerebellum.Coordinate(
                         async (innerToken) =>
                         {
@@ -215,12 +215,12 @@ namespace AutoccultistNS.Brain
 
             var pinnedRecipe = state.CurrentRecipe;
 
-            // Can't do this in Cerebellum or we could deadlock.
-            await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
-
             return await GameAPI.WhilePaused(
                 async () =>
                 {
+                    // Can't do this in Cerebellum or we could deadlock.
+                    await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
+
                     return await Cerebellum.Coordinate(
                         async (innerToken) =>
                         {
