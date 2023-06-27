@@ -10,6 +10,7 @@ namespace AutoccultistNS.Config.Conditions
     [DuckTypeCandidate(typeof(CardSetCondition))]
     [DuckTypeCandidate(typeof(CardExistsCondition))]
     [DuckTypeCandidate(typeof(MemoryCondition))]
+    [DuckTypeCandidate(typeof(AspectValueCondition))]
     public interface IGameStateConditionConfig : INamedConfigObject, IGameStateCondition
     {
     }

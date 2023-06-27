@@ -23,10 +23,12 @@ namespace AutoccultistNS
             var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             var task = func(cts.Token);
+
             // Cancel token on task completion, so the timeout doesnt continue.
             task.ContinueWith(t => cts.Cancel());
 
             var timeoutTask = Of(timeout, cts.Token);
+
             // Cancel the token on timeout, so the origin task doesn't continue.
             timeoutTask = timeoutTask.ContinueWith(t =>
             {

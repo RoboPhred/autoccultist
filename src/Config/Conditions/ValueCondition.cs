@@ -93,7 +93,7 @@ namespace AutoccultistNS.Config.Conditions
                 content.Add($"< {this.LessThan.Value}");
             }
 
-            return $"ValueCondition({string.Join(", ", content)})";
+            return $"({string.Join(", ", content)})";
         }
 
         /// <inheritdoc/>

@@ -1,21 +1,5 @@
-cardSet:
+fromAll:
   - elementId: funds
     location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
-  - elementId: funds
-    location: tabletop
+aspect: funds
+value: 10
