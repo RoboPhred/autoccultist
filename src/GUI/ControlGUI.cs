@@ -83,10 +83,19 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Diagnostics"))
+            {
+                DiagnosticsGUI.IsShowing = !DiagnosticsGUI.IsShowing;
+            }
+
             if (GUILayout.Button("Performance"))
             {
                 PerformanceGUI.IsShowing = !PerformanceGUI.IsShowing;
             }
+
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
 
@@ -100,15 +109,10 @@ namespace AutoccultistNS.GUI
 
             GUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Diagnostics"))
-            {
-                DiagnosticsGUI.IsShowing = !DiagnosticsGUI.IsShowing;
-            }
-
             GUILayout.BeginHorizontal();
 
             GUILayout.Label("Current Goals:");
-            if (GUILayout.Button("Goals Menu"))
+            if (GUILayout.Button("Goals"))
             {
                 GoalsGUI.IsShowing = !GoalsGUI.IsShowing;
             }

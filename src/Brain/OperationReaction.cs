@@ -1,6 +1,7 @@
 namespace AutoccultistNS.Brain
 {
     using System;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.Actor;
@@ -14,6 +15,7 @@ namespace AutoccultistNS.Brain
     {
         private Task loopTask;
         private CancellationTokenSource cancellationSource = new();
+        private IRecipeSolution currentRecipeSolution;
 
         public OperationReaction(IOperation operation)
             : base(operation.Situation)
@@ -75,7 +77,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            // Loop through all remainming recipes.
+            // Loop through all remaining recipes.
             while (await this.AwaitRecipeChanged())
             {
                 if (!await this.TryExecuteCurrentRecipe())
@@ -118,6 +120,8 @@ namespace AutoccultistNS.Brain
             var state = this.GetSituationState();
             var currentRecipeRemaining = state.RecipeTimeRemaining ?? 0;
 
+            var populatedSlotCount = state.GetSlottedCards().Count();
+
             // Wait for the recipe to change, or for the situation to end.
             // Note: Do we want to re-check if someone unslots our cards?
             // Greedy slots can steal from us...
@@ -137,6 +141,14 @@ namespace AutoccultistNS.Brain
                         return true;
                     }
 
+                    // Note: ongoing recipes are always restricted to a single slot, so there is zero risk of re-slotting slots that have not emptied.
+                    // Even so, ExecuteRecipeAction should kick out slotted cards when re-executing.
+                    if (this.currentRecipeSolution != null && this.currentRecipeSolution.RerunOnTheft && newState.GetSlottedCards().Count() < populatedSlotCount)
+                    {
+                        // We lost a card, and we're allowed to re-run the recipe.
+                        return true;
+                    }
+
                     // Keep tracking the value as it drops.
                     // We want to trigger once it jumps up again.
                     currentRecipeRemaining = newState.RecipeTimeRemaining.Value;
@@ -145,6 +157,9 @@ namespace AutoccultistNS.Brain
                     return false;
                 },
                 this.cancellationSource.Token);
+
+            // Whatever we were doing is now done.
+            this.currentRecipeSolution = null;
 
             // Return if we have a recipe to handle
             return this.GetSituationState().State == StateEnum.Ongoing;
@@ -169,6 +184,7 @@ namespace AutoccultistNS.Brain
                                 throw new ReactionFailedException($"Error in operation {this.Operation.Name}: No starting recipe defined.");
                             }
 
+                            this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
 
                             if (recipeSolution.EndOperation)
@@ -187,6 +203,7 @@ namespace AutoccultistNS.Brain
                                 return true;
                             }
 
+                            this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
 
                             await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
@@ -240,6 +257,7 @@ namespace AutoccultistNS.Brain
                                 return true;
                             }
 
+                            this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
                             return !recipeSolution.EndOperation;

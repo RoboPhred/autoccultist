@@ -37,6 +37,11 @@ namespace AutoccultistNS.Config
         public MansusSolutionConfig MansusChoice { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this recipe should be re-run if a card is stolen from us while we're working on it.
+        /// </summary>
+        public bool RerunOnTheft { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets a value indicating whether this recipe should end the operation.
         /// This leaves the situation open for other operations to target it.
         /// </summary>

@@ -13,6 +13,11 @@ namespace AutoccultistNS.Brain
         IReadOnlyDictionary<string, ISlotCardChooser> SlotSolutions { get; }
 
         /// <summary>
+        /// Gets a value indicating whether we should re-run this solution if a card is stolen from us while we're working on it.
+        /// </summary>
+        bool RerunOnTheft { get; }
+
+        /// <summary>
         /// Gets the solution for the mansus choice of this recipe, if any.
         /// </summary>
         IMansusSolution MansusChoice { get; }
