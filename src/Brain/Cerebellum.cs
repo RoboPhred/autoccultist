@@ -13,6 +13,7 @@ namespace AutoccultistNS.Brain
     public static class Cerebellum
     {
         private const bool DebugAllTasks = false;
+        private const bool DebugTaskExecutions = false;
 
         private static readonly Queue<DeferredTask<object>> PendingActions = new();
         private static DeferredTask<object> currentAction;
@@ -44,7 +45,7 @@ namespace AutoccultistNS.Brain
 
             PendingActions.Enqueue(pendingAction);
 
-            if (!string.IsNullOrEmpty(taskName))
+            if (DebugTaskExecutions && !string.IsNullOrEmpty(taskName))
             {
                 NoonUtility.Log($"Queued coordinated task {taskName}");
             }
@@ -75,7 +76,7 @@ namespace AutoccultistNS.Brain
 
             PendingActions.Enqueue(pendingAction);
 
-            if (!string.IsNullOrEmpty(taskName))
+            if (DebugTaskExecutions && !string.IsNullOrEmpty(taskName))
             {
                 NoonUtility.Log($"Queued coordinated task {taskName}");
             }
@@ -139,7 +140,7 @@ namespace AutoccultistNS.Brain
                     currentAction = set;
                     try
                     {
-                        if (!string.IsNullOrEmpty(set.Name))
+                        if (DebugTaskExecutions && !string.IsNullOrEmpty(set.Name))
                         {
                             NoonUtility.Log($"Executing coordinated task {set.Name}");
                         }
@@ -152,7 +153,7 @@ namespace AutoccultistNS.Brain
                     }
                     finally
                     {
-                        if (!string.IsNullOrEmpty(set.Name))
+                        if (DebugTaskExecutions && !string.IsNullOrEmpty(set.Name))
                         {
                             NoonUtility.Log($"Done executing coordinated task {set.Name}");
                         }

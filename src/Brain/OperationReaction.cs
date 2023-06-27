@@ -96,11 +96,10 @@ namespace AutoccultistNS.Brain
                 }
             }
 
-            state = this.GetSituationState();
-
             // Loop through all the ongoing recipes.
             while (true)
             {
+                state = this.GetSituationState();
                 var currentRecipeRemaining = state.RecipeTimeRemaining ?? 0;
 
                 // Wait for the recipe to change, or for the situation to end.
