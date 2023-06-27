@@ -115,7 +115,8 @@ namespace AutoccultistNS.Config
                         select choice);
                 }
 
-                if (!state.CardsCanBeSatisfied(requiredCards.ToArray(), out var unsatisfiedChoice))
+                requiredCards.ToArray().ChooseAll(state.TabletopCards, out var unsatisfiedChoice);
+                if (unsatisfiedChoice != null)
                 {
                     return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
                 }
@@ -128,7 +129,8 @@ namespace AutoccultistNS.Config
                     return SituationConditionResult.ForFailure(situationId, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
                 }
 
-                if (!state.CardsCanBeSatisfied(recipeSolution.GetRequiredCards(), out var unsatisfiedChoice))
+                recipeSolution.GetRequiredCards().ChooseAll(state.TabletopCards, out var unsatisfiedChoice);
+                if (unsatisfiedChoice != null)
                 {
                     return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
                 }
