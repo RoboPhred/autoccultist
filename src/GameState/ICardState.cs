@@ -39,6 +39,14 @@ namespace AutoccultistNS.GameState
         IReadOnlyDictionary<string, int> Aspects { get; }
 
         /// <summary>
+        /// Gets a signature for this card.
+        /// </summary>
+        /// <remarks>
+        /// This is a string that reflects all attributes of this card, and can be used to find if two cards are effectively identical.
+        /// </remarks>
+        string Signature { get; }
+
+        /// <summary>
         /// Gets the element stack of this card.
         /// </summary>
         /// <returns>An element stack of this singular card.</returns>

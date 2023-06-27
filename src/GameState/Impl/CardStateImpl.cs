@@ -19,6 +19,7 @@ namespace AutoccultistNS.GameState.Impl
         private readonly CardLocation location;
         private readonly bool isSlottable;
         private readonly IReadOnlyDictionary<string, int> aspects;
+        private readonly string signature;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CardStateImpl"/> class.
@@ -47,6 +48,8 @@ namespace AutoccultistNS.GameState.Impl
             // This is included in the GetAspects() logic (with its default includeSelf true), and we relied on it in the past.
             calcAspects[this.elementId] = 1;
             this.aspects = calcAspects;
+
+            this.signature = sourceStack.GetSignature();
 
             this.location = location;
 
@@ -124,6 +127,16 @@ namespace AutoccultistNS.GameState.Impl
             {
                 this.VerifyAccess();
                 return this.aspects;
+            }
+        }
+
+        /// <inheritdoc/>
+        public string Signature
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.signature;
             }
         }
 

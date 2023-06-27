@@ -107,30 +107,33 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards)
         {
-            var candidates = this.FilterCards(cards);
+            var candidates = this.FilterCards(cards).OrderBy((_) => (int)0);
 
-            // Sort for age bias.
-            if (this.AgeBias == CardAgeSelection.Oldest)
+            // Sort for age bias first, as it will have the most identical weights.
+            if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
             {
-                candidates = candidates.OrderBy(card => card.LifetimeRemaining);
-            }
-            else if (this.AgeBias == CardAgeSelection.Youngest)
-            {
-                candidates = candidates.OrderByDescending(card => card.LifetimeRemaining);
-            }
-            else if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
-            {
-                candidates = candidates.OrderByDescending(card => this.GetSortWeight(card));
+                candidates = candidates.ThenByDescending(card => this.GetSortWeight(card));
             }
             else if (this.AspectWeightBias == CardAspectWeightSelection.Lowest)
             {
                 candidates = candidates.OrderBy(card => this.GetSortWeight(card));
             }
-            else
+
+            // Then sort by desired age.
+            if (this.AgeBias == CardAgeSelection.Oldest)
             {
-                // Don't care about aspects, so optimize for least important card across all aspects.
-                candidates = candidates.OrderBy(card => card.Aspects.GetWeight());
+                candidates = candidates.ThenBy(card => card.LifetimeRemaining);
             }
+            else if (this.AgeBias == CardAgeSelection.Youngest)
+            {
+                candidates = candidates.ThenByDescending(card => card.LifetimeRemaining);
+            }
+
+            // Then sort by total weight.
+            candidates = candidates.ThenBy(card => card.Aspects.GetWeight());
+
+            // Finally, sort by signature, for determinism
+            candidates = candidates.ThenBy(card => card.Signature);
 
             return candidates;
         }
