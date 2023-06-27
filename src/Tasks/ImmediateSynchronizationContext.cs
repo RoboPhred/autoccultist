@@ -9,6 +9,15 @@ namespace AutoccultistNS
     /// </summary>
     public class ImmediateSynchronizationContext : SynchronizationContext
     {
+        /// <summary>
+        /// The maximum number of actions we expect to take per frame.
+        /// If we exceed this, kill the game and log an exception.
+        /// </summary>
+        /// <remarks>
+        /// This is to guard against runaway infinite loops in our async code.
+        /// </remarks>
+        private const int MaxExpectedActionsPerFrame = 500;
+
         private static ImmediateSynchronizationContext instance;
 
         private readonly int threadId = Thread.CurrentThread.ManagedThreadId;
@@ -46,13 +55,11 @@ namespace AutoccultistNS
             {
                 SetSynchronizationContext(instance);
 
-                // Drain any pending actions that got scheduled after we last finished running
-                instance.DrainQueue();
+                // Queue up this action as a pending action.
+                // Note: There might be actions in here that were queued up outside of Run, they will run first.
+                instance.pendingActions.Enqueue(((SendOrPostCallback)((s) => action()), (object)null));
 
-                instance.hardLockGuard = 0;
-                action();
-
-                // Drain all pending actions that got scheduled by our action.
+                // Drain the queue until we run out of actions to do.
                 instance.DrainQueue();
             }
             finally
@@ -99,7 +106,7 @@ namespace AutoccultistNS
         private void HandleCallback(SendOrPostCallback d, object state)
         {
             this.hardLockGuard++;
-            if (this.hardLockGuard > 1000)
+            if (this.hardLockGuard > MaxExpectedActionsPerFrame)
             {
                 NoonUtility.LogException(new Exception("ImmediateSynchronizationContext hard lock detected."));
             }

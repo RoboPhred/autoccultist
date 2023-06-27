@@ -43,6 +43,13 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Cannot interact with situations when in the mansus.");
             }
 
+            if (this.RecipeSolution.SlotSolutions == null || this.RecipeSolution.SlotSolutions.Count == 0)
+            {
+                // Nothing to do.
+                // This is probably a mansus-only recipe.
+                return false;
+            }
+
             await this.PrepareSituation(cancellationToken);
 
             await this.FillSlots(cancellationToken);
@@ -84,7 +91,7 @@ namespace AutoccultistNS.Actor.Actions
             var firstSlot = situation.GetCurrentThresholdSpheres().FirstOrDefault();
             if (!firstSlot)
             {
-                throw new ActionFailureException(this, $"Situation {this.SituationId} has no slots.");
+                throw new ActionFailureException(this, $"Situation {this.SituationId} has no slots for recipe {situation.CurrentRecipe}.");
             }
 
             // TODO: Use ICardChooserExtensions.ChooseAll to find a solution to all the card matchers that allows for choosing lower

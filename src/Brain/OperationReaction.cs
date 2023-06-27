@@ -202,21 +202,40 @@ namespace AutoccultistNS.Brain
                 this.cancellationSource.Token);
         }
 
-        private Task<bool> TryExecuteCurrentRecipe()
+        private async Task<bool> TryExecuteCurrentRecipe()
         {
-            return GameAPI.WhilePaused(
+            // Do this ahead of time so we know not to pause if there is nothing to do.
+            var state = this.GetSituationState();
+            var recipeSolution = this.Operation.GetRecipeSolution(state);
+            if (recipeSolution == null)
+            {
+                // Don't know what this recipe is, let it continue.
+                return true;
+            }
+
+            var pinnedRecipe = state.CurrentRecipe;
+
+            // Can't do this in Cerebellum or we could deadlock.
+            await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
+
+            return await GameAPI.WhilePaused(
                 async () =>
                 {
-                    // Can't do this in Cerebellum or we could deadlock.
-                    await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
-
                     return await Cerebellum.Coordinate(
                         async (innerToken) =>
                         {
+                            // Re-check just in case we managed to change before it was our turn to run.
                             var state = this.GetSituationState();
+
+                            if (state.CurrentRecipe != pinnedRecipe)
+                            {
+                                Autoccultist.LogWarn($"Recipe changed while TryExecuteCurrentRecipe was waiting for our turn to run: {state.SituationId} {pinnedRecipe} => {state.CurrentRecipe}");
+                            }
+
                             var recipeSolution = this.Operation.GetRecipeSolution(state);
                             if (recipeSolution == null)
                             {
+                                Autoccultist.LogWarn($"TryExecuteCurrentRecipe had a recipe for {pinnedRecipe}, but the recipe changed to {state.CurrentRecipe} which we cannot handle");
                                 // Don't know what this recipe is, let it continue.
                                 return true;
                             }
