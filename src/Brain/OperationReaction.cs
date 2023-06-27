@@ -67,93 +67,90 @@ namespace AutoccultistNS.Brain
 
         private async Task OperationExecutionLoop()
         {
-            bool shouldContinue;
-            ISituationState state;
-
-            state = this.GetSituationState();
-            if (state.State == StateEnum.Unstarted)
+            // Start the operation.
+            // This involves either starting the verb, or slotting our first ongoing recipe.
+            if (!await this.StartOperation())
             {
-                shouldContinue = await this.StartOperation();
-                if (!shouldContinue)
-                {
-                    this.End();
-                    return;
-                }
+                this.End();
+                return;
             }
-            else if (state.State == StateEnum.Ongoing)
-            {
-                // We need to immediately handle this recipe.
-                // We cannot wait for the loop below as that will delay us by an update frame.
-                // It is critical that we take our first operation Cerebellum coordination before we exit our Start call
-                // so that NucleusAccumbens waits on us to consume the cards we depend on before it can start
-                // other operations with possible conflicts.
-                shouldContinue = await this.TryExecuteCurrentRecipe();
 
-                if (!shouldContinue)
+            // Loop through all remainming recipes.
+            while (await this.AwaitRecipeChanged())
+            {
+                if (!await this.TryExecuteCurrentRecipe())
                 {
                     this.End();
                     return;
                 }
             }
 
-            // Loop through all the ongoing recipes.
-            while (true)
-            {
-                state = this.GetSituationState();
-                var currentRecipeRemaining = state.RecipeTimeRemaining ?? 0;
-
-                // Wait for the recipe to change, or for the situation to end.
-                // Note: Do we want to re-check if someone unslots our cards?
-                // Greedy slots can steal from us...
-                await AwaitConditionTask.From(
-                    () =>
-                    {
-                        var newState = this.GetSituationState();
-                        if (newState.State != StateEnum.Ongoing)
-                        {
-                            // No longer ongoing, we must have finished.
-                            return true;
-                        }
-
-                        if (!newState.RecipeTimeRemaining.HasValue || newState.RecipeTimeRemaining > currentRecipeRemaining)
-                        {
-                            // The time remaining went up, we must have started a new recipe.
-                            return true;
-                        }
-
-                        // Keep tracking the value as it drops.
-                        // We want to trigger once it jumps up again.
-                        currentRecipeRemaining = newState.RecipeTimeRemaining.Value;
-
-                        // Recipe is still doing its thing.
-                        return false;
-                    },
-                    this.cancellationSource.Token);
-
-                // Re-fetch the state now that we waited some time.
-                state = this.GetSituationState();
-                if (state.State != StateEnum.Ongoing)
-                {
-                    // All done with recipes, move on to completion.
-                    break;
-                }
-
-                shouldContinue = await this.TryExecuteCurrentRecipe();
-
-                if (!shouldContinue)
-                {
-                    this.End();
-                    return;
-                }
-            }
-
-            // Whatever we are, we are no longer ongoing.
+            // Whatever state we ended up in, we are no longer ongoing.
+            // Try to complete the operation.
             await this.CompleteOperation();
 
             this.End();
         }
 
-        private Task<bool> StartOperation()
+        private async Task<bool> StartOperation()
+        {
+            var state = this.GetSituationState();
+            if (state.State == StateEnum.Unstarted)
+            {
+                if (!await this.StartSituation())
+                {
+                    return false;
+                }
+            }
+            else if (state.State == StateEnum.Ongoing)
+            {
+                if (!await this.TryExecuteCurrentRecipe())
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> AwaitRecipeChanged()
+        {
+            var state = this.GetSituationState();
+            var currentRecipeRemaining = state.RecipeTimeRemaining ?? 0;
+
+            // Wait for the recipe to change, or for the situation to end.
+            // Note: Do we want to re-check if someone unslots our cards?
+            // Greedy slots can steal from us...
+            await AwaitConditionTask.From(
+                () =>
+                {
+                    var newState = this.GetSituationState();
+                    if (newState.State != StateEnum.Ongoing)
+                    {
+                        // No longer ongoing, we must have finished.
+                        return true;
+                    }
+
+                    if (!newState.RecipeTimeRemaining.HasValue || newState.RecipeTimeRemaining > currentRecipeRemaining)
+                    {
+                        // The time remaining went up, we must have started a new recipe.
+                        return true;
+                    }
+
+                    // Keep tracking the value as it drops.
+                    // We want to trigger once it jumps up again.
+                    currentRecipeRemaining = newState.RecipeTimeRemaining.Value;
+
+                    // Recipe is still doing its thing.
+                    return false;
+                },
+                this.cancellationSource.Token);
+
+            // Return if we have a recipe to handle
+            return this.GetSituationState().State == StateEnum.Ongoing;
+        }
+
+        private Task<bool> StartSituation()
         {
             return GameAPI.WhilePaused(
                 async () =>
