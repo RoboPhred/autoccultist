@@ -137,9 +137,13 @@ namespace AutoccultistNS.GUI
                 GUILayout.EndHorizontal();
             }
 
-            foreach (var reaction in Resource.Of<ISituationState>().GetConstraints().OfType<OperationReaction>())
+            foreach (var reaction in NucleusAccumbens.CurrentReactions)
             {
-                GUILayout.Label($"Reaction: {reaction}");
+                GUILayout.Label(reaction.ToString(), GUILayout.ExpandWidth(true));
+                if (GUILayout.Button("Abort", GUILayout.ExpandWidth(false)))
+                {
+                    reaction.Abort();
+                }
             }
         }
     }

@@ -2,6 +2,7 @@ namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.Tasks;
@@ -11,6 +12,8 @@ namespace AutoccultistNS.Brain
     /// </summary>
     public static class Cerebellum
     {
+        private const bool DebugAllTasks = false;
+
         private static readonly Queue<DeferredTask<object>> PendingActions = new();
         private static DeferredTask<object> currentAction;
 
@@ -21,9 +24,15 @@ namespace AutoccultistNS.Brain
         /// </summary>
         /// <param name="action">The action to perform.</param>
         /// <param name="cancellationToken">An optional CancellationToken used to cancel the action execution.</param>
+        /// <param name="taskName">An optional name for the task.</param>
         /// <returns>A task that will complete when all actions complete, or fail with an exception describing the action failure.</returns>
-        public static Task Coordinate(Func<CancellationToken, Task> action, CancellationToken? cancellationToken = null)
+        public static Task Coordinate(Func<CancellationToken, Task> action, CancellationToken? cancellationToken = null, string taskName = null)
         {
+            if (DebugAllTasks && taskName == null)
+            {
+                taskName = new StackTrace().GetFrame(1).GetMethod().Name;
+            }
+
             var pendingAction = new DeferredTask<object>(
                 async (innerCancellationToken) =>
                 {
@@ -31,8 +40,10 @@ namespace AutoccultistNS.Brain
                     return null;
                 },
                 cancellationToken ?? CancellationToken.None);
+            pendingAction.Name = taskName;
 
             PendingActions.Enqueue(pendingAction);
+            NoonUtility.Log($"Queued coordinated task {taskName}");
 
             if (!isDrainingQueue)
             {
@@ -42,8 +53,13 @@ namespace AutoccultistNS.Brain
             return pendingAction.Task;
         }
 
-        public static Task<T> Coordinate<T>(Func<CancellationToken, Task<T>> func, CancellationToken? cancellationToken = null)
+        public static Task<T> Coordinate<T>(Func<CancellationToken, Task<T>> func, CancellationToken? cancellationToken = null, string taskName = null)
         {
+            if (DebugAllTasks && taskName == null)
+            {
+                taskName = new StackTrace().GetFrame(1).GetMethod().Name;
+            }
+
             // Need to box our result, no matter what it is.
             var pendingAction = new DeferredTask<object>(
                 async (innerCancellationToken) =>
@@ -51,8 +67,10 @@ namespace AutoccultistNS.Brain
                     var result = await func(innerCancellationToken);
                     return result;
                 }, cancellationToken ?? CancellationToken.None);
+            pendingAction.Name = taskName;
 
             PendingActions.Enqueue(pendingAction);
+            NoonUtility.Log($"Queued coordinated task {taskName}");
 
             if (!isDrainingQueue)
             {
@@ -60,7 +78,20 @@ namespace AutoccultistNS.Brain
             }
 
             // Now we need to unbox it.  Sigh...
-            return pendingAction.Task.ContinueWith(x => (T)x.Result);
+            return pendingAction.Task.ContinueWith<T>(
+                (task, state) =>
+                {
+                    // Throw this independently so we do not wrap it in another exception.
+                    // FIXME: Not working, we are still getting wrapped in what appears to be an AggregateException.
+                    if (task.Exception != null)
+                    {
+                        throw task.Exception;
+                    }
+
+                    return (T)task.Result;
+                },
+                null,
+                TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -100,6 +131,7 @@ namespace AutoccultistNS.Brain
                     currentAction = set;
                     try
                     {
+                        NoonUtility.Log($"Executing coordinated task {set.Name}");
                         await set.Execute();
                     }
                     catch (Exception ex)
@@ -108,6 +140,7 @@ namespace AutoccultistNS.Brain
                     }
                     finally
                     {
+                        NoonUtility.Log($"Done executing coordinated task {set.Name}");
                         currentAction = null;
                     }
 

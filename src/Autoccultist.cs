@@ -126,6 +126,7 @@ public class Autoccultist : MonoBehaviour
 
         GameEventSource.GameEnded += (_, __) =>
         {
+            LogTrace("Game ended, stopping Autoccultist.");
             this.StopAutoccultist();
         };
 
@@ -235,6 +236,10 @@ public class Autoccultist : MonoBehaviour
         if (provider != null)
         {
             LogTrace($"Starting a new game with arc {arc.Name}");
+
+            // FIXME: GameEnded should call this.  GameStarted starts us properly, so why does GameEnded not?
+            // If we reload the same scene do we never get SceneUnloaded?
+            this.StopAutoccultist();
             this.loadArcOnGameStart = arc;
             Watchman.Get<StageHand>().LoadGameOnTabletop(provider);
         }

@@ -133,7 +133,7 @@ namespace AutoccultistNS.Config
             catch (YamlFileException ex)
             {
                 LibraryParseErrors.Add(ex);
-                NoonUtility.LogWarning(ex.ToString());
+                Autoccultist.LogWarn(ex, $"Failed to load goal from file {filePath}");
             }
         }
 
@@ -153,7 +153,7 @@ namespace AutoccultistNS.Config
             catch (YamlFileException ex)
             {
                 LibraryParseErrors.Add(ex);
-                NoonUtility.LogWarning(ex.ToString());
+                Autoccultist.LogWarn(ex, $"Failed to load arc from file {filePath}");
             }
         }
     }

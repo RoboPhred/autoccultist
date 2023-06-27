@@ -21,7 +21,14 @@ namespace AutoccultistNS.Tasks
             cancellationToken.Register(() => this.Cancel());
         }
 
+        public string Name { get; set; }
+
         public Task<T> Task => this.source.Task;
+
+        public override string ToString()
+        {
+            return $"DeferredTask<{typeof(T).Name}>: {this.Name ?? "Unnamed"}";
+        }
 
         public void Cancel()
         {

@@ -131,6 +131,21 @@ namespace AutoccultistNS.Brain
                     return;
                 }
             }
+            else if (state.State == StateEnum.Ongoing)
+            {
+                // We need to immediately handle this recipe.
+                // We cannot wait for the loop below as that will delay us by an update frame.
+                // It is critical that we take our first operation Cerebellum coordination before we exit our Start call
+                // so that NucleusAccumbens waits on us to consume the cards we depend on before it can start
+                // other operations with possible conflicts.
+                shouldContinue = await this.TryExecuteCurrentRecipe();
+
+                if (!shouldContinue)
+                {
+                    this.End();
+                    return;
+                }
+            }
 
             state = this.GetSituationState();
 
@@ -196,41 +211,46 @@ namespace AutoccultistNS.Brain
             await GameAPI.AwaitNotInMansus(this.cancellationSource.Token);
 
             return await GameAPI.WhilePaused(
-                () => Cerebellum.Coordinate(
-                    async (innerToken) =>
-                    {
-                        var state = this.GetSituationState();
-                        var recipeSolution = this.Operation.GetRecipeSolution(state);
-
-                        if (recipeSolution == null)
+                async () =>
+                {
+                    return await Cerebellum.Coordinate(
+                        async (innerToken) =>
                         {
-                            throw new OperationFailedException($"Error in operation {this.Operation.Name}: No starting recipe defined.");
-                        }
+                            var state = this.GetSituationState();
+                            var recipeSolution = this.Operation.GetRecipeSolution(state);
 
-                        await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
+                            if (recipeSolution == null)
+                            {
+                                throw new OperationFailedException($"Error in operation {this.Operation.Name}: No starting recipe defined.");
+                            }
 
-                        if (recipeSolution.EndOperation)
-                        {
+                            await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
+
+                            if (recipeSolution.EndOperation)
+                            {
+                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                return false;
+                            }
+
+                            // Get and satisfy the first ongoing situation.
+                            state = this.GetSituationState();
+                            recipeSolution = this.Operation.GetRecipeSolution(state);
+                            if (recipeSolution == null)
+                            {
+                                // Don't know what this recipe is, let it continue.
+                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                return true;
+                            }
+
+                            await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
+
                             await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
-                            return false;
-                        }
 
-                        // Get and satisfy the first ongoing situation.
-                        state = this.GetSituationState();
-                        recipeSolution = this.Operation.GetRecipeSolution(state);
-                        if (recipeSolution == null)
-                        {
-                            // Don't know what this recipe is, let it continue.
-                            await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
-                            return true;
-                        }
-
-                        await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
-
-                        await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
-
-                        return !recipeSolution.EndOperation;
-                    }),
+                            return !recipeSolution.EndOperation;
+                        },
+                        this.cancellationSource.Token,
+                        $"StartOperation {this.Operation.Name}");
+                },
                 this.cancellationSource.Token);
         }
 
@@ -256,7 +276,9 @@ namespace AutoccultistNS.Brain
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
                             return !recipeSolution.EndOperation;
-                        });
+                        },
+                        this.cancellationSource.Token,
+                        $"TryExecuteCurrentRecipe {this.Operation.Name}");
                 },
                 this.cancellationSource.Token);
         }

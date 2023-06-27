@@ -39,11 +39,19 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets a list of the current active goals.
         /// </summary>
-        public static IReadOnlyList<IImperative> CurrentImperatives
+        public static IEnumerable<IImperative> CurrentImperatives
         {
             get
             {
-                return ActiveImperatives.ToArray();
+                return ActiveImperatives;
+            }
+        }
+
+        public static IEnumerable<IReaction> CurrentReactions
+        {
+            get
+            {
+                return ImpulsesByReaction.Keys;
             }
         }
 
@@ -155,50 +163,52 @@ namespace AutoccultistNS.Brain
             while (true)
             {
                 // Note: We do not have to await beats or check if the bot is running as Cerebellum does that.
-                await Cerebellum.Coordinate((cancellationToken) =>
-                {
-                    if (!GameAPI.IsRunning)
+                await Cerebellum.Coordinate(
+                    (cancellationToken) =>
                     {
+                        if (!GameAPI.IsRunning)
+                        {
+                            return Task.CompletedTask;
+                        }
+
+                        EnumeratedImpulse chosenImpulse = null;
+                        try
+                        {
+                            // Scan through all possible reactions and invoke the highest priority one that can start
+                            chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
+                        }
+                        catch (Exception ex)
+                        {
+                            Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
+                        }
+
+                        if (chosenImpulse == null)
+                        {
+                            OnIdle();
+                            return Task.CompletedTask;
+                        }
+
+                        var shouldPause = false;
+                        try
+                        {
+                            // Note: at one point, we awaited the start of every impulse.
+                            // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
+                            // and our next attempt at starting impulses will wait for it to complete.
+                            shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
+                        }
+                        catch (Exception ex)
+                        {
+                            Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
+                        }
+
+                        if (shouldPause)
+                        {
+                            OnActive();
+                        }
+
                         return Task.CompletedTask;
-                    }
-
-                    EnumeratedImpulse chosenImpulse = null;
-                    try
-                    {
-                        // Scan through all possible reactions and invoke the highest priority one that can start
-                        chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
-                    }
-                    catch (Exception ex)
-                    {
-                        Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
-                    }
-
-                    if (chosenImpulse == null)
-                    {
-                        OnIdle();
-                        return Task.CompletedTask;
-                    }
-
-                    var shouldPause = false;
-                    try
-                    {
-                        // Note: at one point, we awaited the start of every impulse.
-                        // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
-                        // and our next attempt at starting impulses will wait for it to complete.
-                        shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
-                    }
-                    catch (Exception ex)
-                    {
-                        Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
-                    }
-
-                    if (shouldPause)
-                    {
-                        OnActive();
-                    }
-
-                    return Task.CompletedTask;
-                });
+                    },
+                    CancellationToken.None);
 
                 if (!isActive)
                 {
