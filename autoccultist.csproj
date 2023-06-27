@@ -9,8 +9,8 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <CodeAnalysisRuleSet>./StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
-    <OutputPath>./build</OutputPath>
-    <BaseOutputPath>./build</BaseOutputPath>
+    <OutputPath>$(APPDATA)\..\LocalLow\Weather Factory\Cultist Simulator\mods\Autoccultist\dll</OutputPath>
+    <BaseOutputPath>$(APPDATA)\..\LocalLow\Weather Factory\Cultist Simulator\mods\Autoccultist\dll</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,47 +19,47 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>.\externals\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SecretHistories.Constants">
-      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\SecretHistories.Constants.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SecretHistories.Enums">
-      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\SecretHistories.Enums.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SecretHistories.Interfaces">
-      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\SecretHistories.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SecretHistories.Main">
-      <HintPath>.\externals\SecretHistories.Constants.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\SecretHistories.Main.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>.\externals\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>.\externals\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>.\externals\IMGUIModule.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>.\externals\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>.\externals\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.InputSystem">
-      <HintPath>.\externals\Unity.InputSystem.dll</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\Unity.InputSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
