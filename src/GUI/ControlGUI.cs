@@ -123,27 +123,19 @@ namespace AutoccultistNS.GUI
                 }
             }
 
-            GUILayout.Label("Current Orchestrations:");
-
-            foreach (var entry in SituationOrchestrator.CurrentOrchestrations)
-            {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"{entry.Key}: {entry.Value}", GUILayout.ExpandWidth(true));
-                if (GUILayout.Button("Abort", GUILayout.ExpandWidth(false)))
-                {
-                    entry.Value.Abort();
-                }
-
-                GUILayout.EndHorizontal();
-            }
+            GUILayout.Label("Current Reactions:");
 
             foreach (var reaction in NucleusAccumbens.CurrentReactions)
             {
+                GUILayout.BeginHorizontal();
+
                 GUILayout.Label(reaction.ToString(), GUILayout.ExpandWidth(true));
                 if (GUILayout.Button("Abort", GUILayout.ExpandWidth(false)))
                 {
                     reaction.Abort();
                 }
+
+                GUILayout.EndHorizontal();
             }
         }
     }

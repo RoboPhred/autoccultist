@@ -67,18 +67,9 @@ namespace AutoccultistNS.Config
                 return SituationConditionResult.ForFailure(situationId, "Situation not found.");
             }
 
-            // This isn't really relative to game state, but we have to use this here, as IReaction is not specific to situations and
-            // NucleusAccumbens can no longer verify this.
-            // Old way
-            if (!SituationOrchestrator.IsSituationAvailable(situationId))
-            {
-                return SituationConditionResult.ForFailure(situationId, "Situation is busy with another orchestration.");
-            }
-
-            // New way
             if (!Resource.Of<ISituationState>().IsAvailable(situationState))
             {
-                return SituationConditionResult.ForFailure(situationId, "Situation is busy with another resource.");
+                return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
             }
 
             var startingRecipe = this.GetStartingRecipe();

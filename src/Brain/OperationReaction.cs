@@ -1,8 +1,6 @@
 namespace AutoccultistNS.Brain
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using AutoccultistNS.Actor;
@@ -12,48 +10,26 @@ namespace AutoccultistNS.Brain
     using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
 
-    public class OperationReaction : IReaction, IResourceConstraint<ISituationState>
+    public class OperationReaction : SituationReaction
     {
-        private bool isDisposed;
-
         private Task loopTask;
         private CancellationTokenSource cancellationSource = new();
 
         public OperationReaction(IOperation operation)
+            : base(operation.Situation)
         {
             this.Operation = operation;
         }
 
-        /// <inheritdoc/>
-        public event EventHandler Completed;
-
-        /// <inheritdoc/>
-        public event EventHandler Disposed;
-
         public IOperation Operation { get; }
-
-        IEnumerable<ISituationState> IResourceConstraint<ISituationState>.GetCandidates()
-        {
-            return new[] { this.GetSituationState() };
-        }
 
         public override string ToString()
         {
             return $"OperationReaction({this.Operation})";
         }
 
-        public void Abort()
+        public override void Start()
         {
-            this.End(true);
-        }
-
-        public void Start()
-        {
-            if (this.isDisposed)
-            {
-                throw new ObjectDisposedException(nameof(OperationReaction));
-            }
-
             if (this.loopTask != null)
             {
                 throw new ReactionFailedException($"Cannot start OperationReaction more than once.");
@@ -64,39 +40,12 @@ namespace AutoccultistNS.Brain
                 throw new ReactionFailedException($"Cannot start operation {this.Operation} as situation resource is already busy.");
             }
 
-            // FIXME: There is a timing issue between this and NucleusAccumbens
-            // This should get a Cerebellum lock queued up before NucleusAccumbens completes
-            // the impulse execution.  In practice that is not happening and we are
-            // queuing up many reactions that should conflict.
             this.loopTask = this.ExecuteOperation();
         }
 
-        public async void Dispose()
+        protected override void OnAbort()
         {
-            if (this.isDisposed)
-            {
-                return;
-            }
-
-            this.isDisposed = true;
-
-            if (!this.cancellationSource.IsCancellationRequested)
-            {
-                this.cancellationSource.Cancel();
-            }
-
-            try
-            {
-                await this.loopTask;
-            }
-            catch (Exception ex)
-            {
-                Autoccultist.LogWarn(ex, $"Exception while waiting for op ${this.Operation.Name} to dispose.");
-            }
-
-            // The fact that we have two of these is a quirk of us implementing both IReaction and IResourceConstraint.
-            this.Completed?.Invoke(this, EventArgs.Empty);
-            this.Disposed?.Invoke(this, EventArgs.Empty);
+            this.End(true);
         }
 
         private async Task ExecuteOperation()
@@ -221,7 +170,7 @@ namespace AutoccultistNS.Brain
 
                             if (recipeSolution == null)
                             {
-                                throw new OperationFailedException($"Error in operation {this.Operation.Name}: No starting recipe defined.");
+                                throw new ReactionFailedException($"Error in operation {this.Operation.Name}: No starting recipe defined.");
                             }
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
@@ -346,9 +295,24 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private void End(bool aborted = false)
+        private async void End(bool aborted = false)
         {
-            this.Dispose();
+            if (!this.cancellationSource.IsCancellationRequested)
+            {
+                this.cancellationSource.Cancel();
+            }
+
+            try
+            {
+                await this.loopTask;
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.LogWarn(ex, $"Exception while waiting for op ${this.Operation.Name} to abort.");
+            }
 
             if (aborted)
             {
@@ -358,17 +322,8 @@ namespace AutoccultistNS.Brain
             {
                 BrainEventSink.OnOperationCompleted(this.Operation);
             }
-        }
 
-        private ISituationState GetSituationState()
-        {
-            var state = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.Operation.Situation);
-            if (state == null)
-            {
-                throw new ReactionFailedException($"Situation {this.Operation.Situation} does not exist.");
-            }
-
-            return state;
+            this.TryComplete();
         }
     }
 }

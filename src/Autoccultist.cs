@@ -107,7 +107,6 @@ public class Autoccultist : MonoBehaviour
 
         // The order is important for these initializers, so they take subscriptions to MechanicalHeart.OnBeat in the right order.
         NucleusAccumbens.Initialize();
-        SituationOrchestrator.Initialize();
 
         this.ReloadAll();
 
@@ -258,7 +257,6 @@ public class Autoccultist : MonoBehaviour
     {
         MechanicalHeart.Stop();
         NucleusAccumbens.Reset();
-        SituationOrchestrator.AbortAll();
         Resource.ClearAll();
     }
 
