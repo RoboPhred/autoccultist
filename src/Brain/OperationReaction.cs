@@ -25,7 +25,7 @@ namespace AutoccultistNS.Brain
 
         public override string ToString()
         {
-            return $"OperationReaction({this.Operation})";
+            return $"[{this.Operation.Situation}] {this.Operation.Name}";
         }
 
         public override void Start()

@@ -27,6 +27,11 @@ namespace AutoccultistNS.Brain
             this.task = this.Dump();
         }
 
+        public override string ToString()
+        {
+            return $"[{this.SituationId}] Empty Situation";
+        }
+
         protected override async void OnAbort()
         {
             this.cancellationTokenSource.Cancel();
