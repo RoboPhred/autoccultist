@@ -210,6 +210,7 @@ namespace AutoccultistNS.Brain
                 return true;
             }
 
+            // Remember what this was, in case it somehow ends up changing.
             var pinnedRecipe = state.CurrentRecipe;
 
             return await GameAPI.WhilePaused(
@@ -226,13 +227,15 @@ namespace AutoccultistNS.Brain
 
                             if (state.CurrentRecipe != pinnedRecipe)
                             {
-                                Autoccultist.LogWarn($"Recipe changed while TryExecuteCurrentRecipe was waiting for our turn to run: {state.SituationId} {pinnedRecipe} => {state.CurrentRecipe}");
+                                Autoccultist.LogWarn($"Situation {state.SituationId} recipe changed while TryExecuteCurrentRecipe was waiting for our turn to run: {pinnedRecipe} => {state.CurrentRecipe}");
                             }
 
                             var recipeSolution = this.Operation.GetRecipeSolution(state);
                             if (recipeSolution == null)
                             {
-                                Autoccultist.LogWarn($"TryExecuteCurrentRecipe had a recipe for {pinnedRecipe}, but the recipe changed to {state.CurrentRecipe} which we cannot handle");
+                                // This can happen either because the current recipe changed, or because the game state changed and a conditional recipe no longer applies.
+                                Autoccultist.LogWarn($"TryExecuteCurrentRecipe had a recipe for {pinnedRecipe}, but GetRecipeSolution can no longer find it.");
+
                                 // Don't know what this recipe is, let it continue.
                                 return true;
                             }
@@ -285,8 +288,7 @@ namespace AutoccultistNS.Brain
 
         private async Task HandleOperationError(Exception ex)
         {
-            Autoccultist.LogWarn($"Operation {this.Operation.Name} failed: {ex.Message}");
-            Autoccultist.LogWarn(ex.StackTrace);
+            Autoccultist.LogWarn(ex, $"Operation {this.Operation.Name} failed: {ex.Message}");
 
             var pause = GameAPI.Pause();
             try
@@ -301,14 +303,11 @@ namespace AutoccultistNS.Brain
             }
             catch (Exception ex2)
             {
-                Autoccultist.LogWarn($"Failed to clean up situation {this.Operation.Situation} after operation {this.Operation.Name} failed: {ex2.Message}");
-                Autoccultist.LogWarn(ex2.StackTrace);
+                Autoccultist.LogWarn(ex2, $"Failed to clean up situation {this.Operation.Situation} after operation {this.Operation.Name} failed: {ex2.Message}");
             }
             finally
             {
                 pause.Dispose();
-
-                // This will kill our cancellation token, which is fine as this is the last step.
                 this.Abort();
             }
         }
@@ -329,7 +328,7 @@ namespace AutoccultistNS.Brain
             }
             catch (Exception ex)
             {
-                Autoccultist.LogWarn(ex, $"Exception while waiting for op ${this.Operation.Name} to abort.");
+                Autoccultist.LogWarn(ex, $"Exception while waiting for op ${this.Operation.Name} to end.");
             }
 
             if (aborted)
