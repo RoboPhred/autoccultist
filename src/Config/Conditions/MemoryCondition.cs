@@ -1,10 +1,11 @@
-using AutoccultistNS.GameState;
-
 namespace AutoccultistNS.Config.Conditions
 {
+    using AutoccultistNS.GameState;
+
     public class MemoryCondition : ConditionConfig
     {
         public string Memory { get; set; }
+
         public ValueCondition Value { get; set; }
 
         public override ConditionResult IsConditionMet(IGameState state)
@@ -22,6 +23,7 @@ namespace AutoccultistNS.Config.Conditions
                     return ConditionResult.Failure;
                 }
             }
+
             // TODO: Bit awkward calling out to Hippocampus directly.  Should probably store memory values in IGameState
             // You know, for that unit testing i'm never going to do.
             if (!this.Value.IsConditionMet(Hippocampus.GetMemory(this.Memory)))
