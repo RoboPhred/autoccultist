@@ -2,6 +2,7 @@ namespace AutoccultistNS.Brain
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class CompoundReaction : IReaction
     {
@@ -13,6 +14,11 @@ namespace AutoccultistNS.Brain
         /// <param name="reactions">The list of reactions that make up this compound reaction.</param>
         public CompoundReaction(IReadOnlyCollection<IReaction> reactions)
         {
+            if (reactions.Count == 0)
+            {
+                throw new ArgumentException("Cannot create a CompoundReaction with no reactions.");
+            }
+
             this.Reactions = reactions;
         }
 
@@ -42,6 +48,17 @@ namespace AutoccultistNS.Brain
                 reaction.Completed += this.OnReactionComplete;
                 reaction.Start();
             }
+        }
+
+        public override string ToString()
+        {
+            var result = this.Reactions.First().ToString();
+            if (this.Reactions.Count > 1)
+            {
+                result += $" (plus {this.Reactions.Count - 1} more)";
+            }
+
+            return result;
         }
 
         private void OnReactionComplete(object sender, EventArgs e)

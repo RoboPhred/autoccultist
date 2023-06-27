@@ -52,6 +52,20 @@ namespace AutoccultistNS.Brain
             this.first.Start();
         }
 
+        public override string ToString()
+        {
+            switch (this.state)
+            {
+                default:
+                case FollowupState.Unstarted:
+                case FollowupState.First:
+                    return this.first.ToString();
+                case FollowupState.Followup:
+                case FollowupState.Complete:
+                    return this.followup.ToString();
+            }
+        }
+
         private void OnFirstCompleted(object sender, EventArgs e)
         {
             this.state = FollowupState.Followup;

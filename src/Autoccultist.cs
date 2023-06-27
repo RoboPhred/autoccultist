@@ -85,9 +85,18 @@ public class Autoccultist : MonoBehaviour
     /// </summary>
     /// <param name="ex">The exception to log.</param>
     /// <param name="message">The message.</param>
-    public static void LogWarn(Exception ex, string message)
+    public static void LogWarn(Exception ex, string message = null)
     {
-        NoonUtility.LogWarning($"{message}\n{ex.Message}\n{ex.ToString()}");
+        if (!string.IsNullOrEmpty(message))
+        {
+            message = $"{message}\n{ex.Message}\n{ex.ToString()}";
+        }
+        else
+        {
+            message = $"{ex.Message}\n{ex.ToString()}";
+        }
+
+        NoonUtility.LogWarning(message);
     }
 
     /// <summary>

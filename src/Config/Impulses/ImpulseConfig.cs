@@ -112,6 +112,11 @@ namespace AutoccultistNS.Config
                 reactions.AddRange(this.Reactions.Select(x => x.GetReaction()));
             }
 
+            if (reactions.Count == 1)
+            {
+                return reactions[0];
+            }
+
             return new CompoundReaction(reactions);
         }
     }

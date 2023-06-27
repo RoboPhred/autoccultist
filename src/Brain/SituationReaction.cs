@@ -34,7 +34,15 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         IEnumerable<ISituationState> IResourceConstraint<ISituationState>.GetCandidates()
         {
-            throw new NotImplementedException();
+            var state = this.TryGetSituationState();
+            if (state == null)
+            {
+                Autoccultist.LogWarn(new ReactionFailedException($"Situation {this.SituationId} does not exist for {this.ToString()} when checking candidates.  Disposing reaction."));
+                this.Dispose();
+                return Enumerable.Empty<ISituationState>();
+            }
+
+            return new[] { state };
         }
 
         /// <inheritdoc/>
@@ -83,13 +91,18 @@ namespace AutoccultistNS.Brain
         /// </summary>
         protected ISituationState GetSituationState()
         {
-            var state = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.SituationId);
+            var state = this.TryGetSituationState();
             if (state == null)
             {
                 throw new ReactionFailedException($"Situation {this.SituationId} does not exist.");
             }
 
             return state;
+        }
+
+        protected ISituationState TryGetSituationState()
+        {
+            return GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.SituationId);
         }
     }
 }
