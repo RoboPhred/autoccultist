@@ -106,27 +106,37 @@ namespace AutoccultistNS
                 throw new InvalidOperationException("Cannot get memory outside of game.");
             }
 
-            id = GetMemoryId(id);
+            var memoryElement = TryGetElementStack();
+            if (memoryElement == null)
+            {
+                return 0;
+            }
 
-            var memoryElement = GetMemoryElementStack();
+            id = GetMemoryId(id);
             return memoryElement.GetAspects().ValueOrDefault(id);
+        }
+
+        private static ElementStack TryGetElementStack()
+        {
+            var token = GameAPI.TabletopSphere.GetTokens().FirstOrDefault(t => t.PayloadEntityId == MemoryElementId);
+            if (token == null)
+            {
+                return null;
+            }
+
+            return token.Payload as ElementStack;
         }
 
         private static ElementStack GetMemoryElementStack()
         {
-            var tabletop = GameAPI.TabletopSphere;
-
-            var token = tabletop.GetTokens().FirstOrDefault(t => t.PayloadEntityId == MemoryElementId);
-            if (token == null)
+            var stack = TryGetElementStack();
+            if (stack == null)
             {
-                token = tabletop.ProvisionElementToken(MemoryElementId, 1);
+                var token = GameAPI.TabletopSphere.ProvisionElementToken(MemoryElementId, 1);
+                stack = token.Payload as ElementStack;
             }
 
-            // I don't actually know if this is needed.  The bug turned out to be something else entirely.
-            // But it works with it, so meh.
-            token.Manifest();
-
-            return token.Payload as ElementStack;
+            return stack;
         }
 
         private static string GetMemoryId(string id)
