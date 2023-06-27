@@ -14,6 +14,8 @@ namespace AutoccultistNS
         private readonly int threadId = Thread.CurrentThread.ManagedThreadId;
         private readonly Queue<(SendOrPostCallback, object)> pendingActions = new();
 
+        private int hardLockGuard = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImmediateSynchronizationContext"/> class.
         /// </summary>
@@ -39,25 +41,19 @@ namespace AutoccultistNS
             }
 
             var lastContext = Current;
+            instance.hardLockGuard = 0;
             try
             {
                 SetSynchronizationContext(instance);
 
-                (SendOrPostCallback, object) pending;
-
                 // Drain any pending actions that got scheduled after we last finished running
-                while ((pending = instance.pendingActions.DequeueOrDefault()).Item1 != null)
-                {
-                    pending.Item1(pending.Item2);
-                }
+                instance.DrainQueue();
 
+                instance.hardLockGuard = 0;
                 action();
 
                 // Drain all pending actions that got scheduled by our action.
-                while ((pending = instance.pendingActions.DequeueOrDefault()).Item1 != null)
-                {
-                    pending.Item1(pending.Item2);
-                }
+                instance.DrainQueue();
             }
             finally
             {
@@ -70,7 +66,7 @@ namespace AutoccultistNS
         {
             if (Thread.CurrentThread.ManagedThreadId == this.threadId)
             {
-                d(state);
+                this.HandleCallback(d, state);
                 return;
             }
 
@@ -86,6 +82,29 @@ namespace AutoccultistNS
             }
 
             this.pendingActions.Enqueue((d, state));
+        }
+
+        private void DrainQueue()
+        {
+            this.hardLockGuard = 0;
+
+            (SendOrPostCallback, object) pending;
+
+            while ((pending = instance.pendingActions.DequeueOrDefault()).Item1 != null)
+            {
+                this.HandleCallback(pending.Item1, pending.Item2);
+            }
+        }
+
+        private void HandleCallback(SendOrPostCallback d, object state)
+        {
+            this.hardLockGuard++;
+            if (this.hardLockGuard > 1000)
+            {
+                NoonUtility.LogException(new Exception("ImmediateSynchronizationContext hard lock detected."));
+            }
+
+            d(state);
         }
     }
 }

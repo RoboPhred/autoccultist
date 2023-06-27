@@ -260,9 +260,7 @@ namespace AutoccultistNS.Brain
                     await Cerebellum.Coordinate(
                         async (innerToken) =>
                         {
-                            NoonUtility.LogWarning($"Completing {this.Operation.Name}: Executing situation conclusion.");
                             await new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
-                            NoonUtility.LogWarning($"Completing {this.Operation.Name}: Situation conclusion executed.");
                         },
                         this.cancellationSource.Token);
                 },
