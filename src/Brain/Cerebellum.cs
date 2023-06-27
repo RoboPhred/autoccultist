@@ -58,7 +58,7 @@ namespace AutoccultistNS.Brain
             return pendingAction.Task;
         }
 
-        public static Task<T> Coordinate<T>(Func<CancellationToken, Task<T>> func, CancellationToken? cancellationToken = null, string taskName = null)
+        public static async Task<T> Coordinate<T>(Func<CancellationToken, Task<T>> func, CancellationToken? cancellationToken = null, string taskName = null)
         {
             if (DebugAllTasks && taskName == null)
             {
@@ -86,21 +86,8 @@ namespace AutoccultistNS.Brain
                 DrainActions();
             }
 
-            // Now we need to unbox it.  Sigh...
-            return pendingAction.Task.ContinueWith<T>(
-                (task, state) =>
-                {
-                    // Throw this independently so we do not wrap it in another exception.
-                    // FIXME: Not working, we are still getting wrapped in what appears to be an AggregateException.
-                    if (task.Exception != null)
-                    {
-                        throw task.Exception;
-                    }
-
-                    return (T)task.Result;
-                },
-                null,
-                TaskContinuationOptions.ExecuteSynchronously);
+            var result = (T)await pendingAction.Task;
+            return result;
         }
 
         /// <summary>
