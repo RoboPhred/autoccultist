@@ -64,6 +64,10 @@ namespace AutoccultistNS.Brain
                 throw new ReactionFailedException($"Cannot start operation {this.Operation} as situation resource is already busy.");
             }
 
+            // FIXME: There is a timing issue between this and NucleusAccumbens
+            // This should get a Cerebellum lock queued up before NucleusAccumbens completes
+            // the impulse execution.  In practice that is not happening and we are
+            // queuing up many reactions that should conflict.
             this.loopTask = this.ExecuteOperation();
         }
 
