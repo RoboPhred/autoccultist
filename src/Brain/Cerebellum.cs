@@ -104,7 +104,7 @@ namespace AutoccultistNS.Brain
                     }
                     catch (Exception ex)
                     {
-                        Autoccultist.LogWarn("Failed to perform action: " + ex.ToString());
+                        NoonUtility.LogException(new Exception("Failed running a cerebellum action: " + ex.Message, ex));
                     }
                     finally
                     {

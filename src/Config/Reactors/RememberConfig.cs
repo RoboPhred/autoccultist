@@ -52,7 +52,6 @@ namespace AutoccultistNS.Config
 
         public IReaction GetReaction()
         {
-            NoonUtility.LogWarning($"Remembering {this.Remember} with value {this.Value ?? 1}.");
             return new MemoryReaction(this.Remember, this.Label, this.Description, this.Value ?? 1, this.Increment);
         }
     }

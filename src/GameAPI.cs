@@ -388,6 +388,16 @@ namespace AutoccultistNS
             return output;
         }
 
+        public static Task AwaitNotInMansus(CancellationToken cancellationToken)
+        {
+            if (!IsInMansus)
+            {
+                return Task.CompletedTask;
+            }
+
+            return AwaitConditionTask.From(() => !IsInMansus, cancellationToken);
+        }
+
         /// <summary>
         /// Marks the user speed level as being unpaused.
         /// </summary>
@@ -432,6 +442,14 @@ namespace AutoccultistNS
             using (Pause())
             {
                 await action();
+            }
+        }
+
+        public static async Task<T> WhilePaused<T>(Func<Task<T>> action, CancellationToken cancellationToken)
+        {
+            using (Pause())
+            {
+                return await action();
             }
         }
 

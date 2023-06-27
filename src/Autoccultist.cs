@@ -7,6 +7,7 @@ using AutoccultistNS.Brain;
 using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
+using AutoccultistNS.Resources;
 using AutoccultistNS.Yaml;
 using SecretHistories.Services;
 using SecretHistories.UI;
@@ -253,6 +254,7 @@ public class Autoccultist : MonoBehaviour
         MechanicalHeart.Stop();
         NucleusAccumbens.Reset();
         SituationOrchestrator.AbortAll();
+        Resource.ClearAll();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
