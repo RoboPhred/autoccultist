@@ -97,13 +97,13 @@ namespace AutoccultistNS.Brain
         /// <param name="imperative">The imperative to remove.</param>
         public static void RemoveImperative(IImperative imperative)
         {
-            ActiveImperatives.Remove(imperative);
-
             foreach (var execution in ActiveReactionsByImperative[imperative])
             {
+                execution.Completed -= HandleReactionCompleted;
                 execution.Abort();
             }
 
+            ActiveImperatives.Remove(imperative);
             ActiveReactionsByImperative.Remove(imperative);
         }
 
@@ -114,6 +114,7 @@ namespace AutoccultistNS.Brain
         {
             foreach (var execution in ActiveReactionsByImperative.Values.SelectMany(r => r).ToArray())
             {
+                execution.Completed -= HandleReactionCompleted;
                 execution.Abort();
             }
 

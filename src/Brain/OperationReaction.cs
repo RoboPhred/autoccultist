@@ -16,6 +16,7 @@ namespace AutoccultistNS.Brain
         private Task loopTask;
         private CancellationTokenSource cancellationSource = new();
         private IRecipeSolution currentRecipeSolution;
+        private bool isEnding = false;
 
         public OperationReaction(IOperation operation)
             : base(operation.Situation)
@@ -337,10 +338,15 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            if (!this.cancellationSource.IsCancellationRequested)
+            // Gate End behind its own flag, as cancelling the cancellationSource may cause End to be called again.
+            if (this.isEnding)
             {
-                this.cancellationSource.Cancel();
+                return;
             }
+
+            this.isEnding = true;
+
+            this.cancellationSource.Cancel();
 
             try
             {
