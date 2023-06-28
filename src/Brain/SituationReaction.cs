@@ -8,7 +8,18 @@ namespace AutoccultistNS.Brain
 
     public abstract class SituationReaction : IReaction, IResourceConstraint<ISituationState>
     {
+        /// <summary>
+        /// A value indicating whether this reaction has been disposed.
+        /// A reaction will be marked as disposed immediately, but it will not raise Completed or Disposed
+        /// until it is truely complete.
+        /// </summary>
         private bool isDisposed = false;
+
+        /// <summary>
+        /// A value indicating whether this reaction has been completed.
+        /// This can happen some time after Dispose/Abort, as the reaction may wait
+        /// to wind down its async tasks.
+        /// </summary>
         private bool isCompleted = false;
 
         /// <summary>
@@ -50,12 +61,25 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         public abstract void Start();
 
+        /// <summary>
+        /// Aborts this reaction.
+        /// This is identical to Dispose().
+        /// <para/>
+        /// Note that the reaction may not end immediately.
+        /// The Completed event may be listened to for when the reaction is actually aborted.
+        /// </summary>
         public void Abort()
         {
             this.Dispose();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Disposes this reaction.
+        /// This is identical to Abort().
+        /// <para/>
+        /// Note that the reaction may not end immediately.
+        /// The Disposed event may be listened to for when the reaction is actually disposed.
+        /// </summary>
         public void Dispose()
         {
             if (this.isDisposed)
