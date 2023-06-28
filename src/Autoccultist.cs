@@ -266,6 +266,7 @@ public class Autoccultist : MonoBehaviour
     {
         MechanicalHeart.Stop();
         NucleusAccumbens.Reset();
+        Cerebellum.AbortAllActions();
         Resource.ClearAll();
         CacheUtils.ClearStatistics();
         PerfMonitor.ClearStatistics();

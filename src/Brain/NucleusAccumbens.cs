@@ -119,6 +119,7 @@ namespace AutoccultistNS.Brain
                 execution.Abort();
             }
 
+            RunningImpulses.Clear();
             ImpulsesByReaction.Clear();
             ActiveImperatives.Clear();
             ActiveReactionsByImperative.Clear();
@@ -182,88 +183,102 @@ namespace AutoccultistNS.Brain
         private static async void InvokeImpulsesLoop()
         {
             var lastHash = 0;
+            var foundImpulseLastLoop = false;
+
             while (true)
             {
-                if (!GameAPI.IsRunning)
+                try
                 {
-                    OnIdle();
-
-                    // Reset our loop state, just in case the new board state is identical, as it may be for rapid
-                    // restarts of the same legacy.
-                    // Note: This was an attempt to fix a bug where impulses just stop on rapid new games.
-                    // It does not fix the issue...
-                    lastHash = 0;
-
-                    // Wait until it is time to run.
-                    await MechanicalHeart.AwaitStart(CancellationToken.None);
-                }
-
-                if (!isActive)
-                {
-                    // Not doing anything, wait a beat
-                    await MechanicalHeart.AwaitBeat(CancellationToken.None);
-                }
-
-                var currentHash = GameStateProvider.Current.GetHashCode();
-                if (!isActive && currentHash == lastHash)
-                {
-                    // Not doing anything and nothing has changed, continue.
-                    // This is much more effective than shoving a cache in all the impulses.
-                    // Note: Funnily enough, this makes the GetFirstReadyImpulse performance monitor show a higher average time since
-                    // its called less but doing more work when it is called.
-                    continue;
-                }
-
-                lastHash = currentHash;
-
-                TryCompleteImperatives();
-
-                // Note: We do not have to await beats or check if the bot is running as Cerebellum does that.
-                await Cerebellum.Coordinate(
-                    (cancellationToken) =>
+                    if (!GameAPI.IsRunning)
                     {
-                        EnumeratedImpulse chosenImpulse = null;
-                        try
-                        {
-                            // Scan through all possible reactions and invoke the highest priority one that can start
-                            chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
-                        }
-                        catch (Exception ex)
-                        {
-                            Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
-                        }
+                        TryIdle();
 
-                        if (chosenImpulse == null)
+                        // Reset our loop state, just in case the new board state is identical, as it may be for rapid
+                        // restarts of the same legacy.
+                        lastHash = 0;
+
+                        // Wait until it is time to run.
+                        await MechanicalHeart.AwaitStart(CancellationToken.None);
+                        continue;
+                    }
+                    else if (!foundImpulseLastLoop)
+                    {
+                        // We didn't find anything to do, wait a beat.
+                        // Note: We cannot use isActive as that is for pause/unpause behavior and might be false if the impulse
+                        // reaction completed synchronously.
+                        await MechanicalHeart.AwaitBeat(CancellationToken.None);
+                    }
+
+                    var currentHash = GameStateProvider.Current.GetHashCode();
+                    if (!isActive && currentHash == lastHash)
+                    {
+                        // Not doing anything and nothing has changed, continue.
+                        // This is much more effective than shoving a cache in all the impulses.
+                        // Note: Funnily enough, this makes the GetFirstReadyImpulse performance monitor show a higher average time since
+                        // its called less but doing more work when it is called.
+                        continue;
+                    }
+
+                    lastHash = currentHash;
+                    TryCompleteImperatives();
+
+                    // Note that this task is synchronous.
+                    // We still coordinate as we do not want to start a new impulse until all ops are idle, in case
+                    // we start an impulse that wants a card that is going to be used in another already running impulse.
+                    await Cerebellum.Coordinate(
+                        (cancellationToken) =>
                         {
-                            OnIdle();
+                            EnumeratedImpulse chosenImpulse = null;
+                            try
+                            {
+                                // Scan through all possible reactions and invoke the highest priority one that can start
+                                chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
+                            }
+                            catch (Exception ex)
+                            {
+                                Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
+                            }
+
+                            if (chosenImpulse == null)
+                            {
+                                foundImpulseLastLoop = false;
+                                TryIdle();
+                                return Task.CompletedTask;
+                            }
+
+                            foundImpulseLastLoop = true;
+
+                            var shouldPause = false;
+                            try
+                            {
+                                // Note: at one point, we awaited the start of every impulse.
+                                // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
+                                // and our next attempt at starting impulses will wait for it to complete.
+                                shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
+                            }
+                            catch (Exception ex)
+                            {
+                                Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
+                            }
+
+                            if (shouldPause)
+                            {
+                                TryActive();
+                            }
+
                             return Task.CompletedTask;
-                        }
+                        },
+                        CancellationToken.None);
 
-                        var shouldPause = false;
-                        try
-                        {
-                            // Note: at one point, we awaited the start of every impulse.
-                            // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
-                            // and our next attempt at starting impulses will wait for it to complete.
-                            shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
-                        }
-                        catch (Exception ex)
-                        {
-                            Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
-                        }
-
-                        if (shouldPause)
-                        {
-                            OnActive();
-                        }
-
-                        return Task.CompletedTask;
-                    },
-                    CancellationToken.None);
+                    NoonUtility.LogWarning($"NucleusAccumbens done looking for new impulses");
+                }
+                catch (TaskCanceledException)
+                {
+                }
             }
         }
 
-        private static void OnActive()
+        private static void TryActive()
         {
             if (isActive)
             {
@@ -277,7 +292,7 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private static void OnIdle()
+        private static void TryIdle()
         {
             if (!isActive)
             {
