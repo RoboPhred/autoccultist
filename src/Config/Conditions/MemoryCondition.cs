@@ -10,9 +10,10 @@ namespace AutoccultistNS.Config.Conditions
 
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            if (!this.Value.IsConditionMet(Hippocampus.GetMemory(this.Memory, state)))
+            var value = Hippocampus.GetMemory(this.Memory, state);
+            if (!this.Value.IsConditionMet(value))
             {
-                return AddendedConditionResult.Addend(ConditionResult.Failure, $"for memory {this.Memory} against {this.Value}");
+                return AddendedConditionResult.Addend(ConditionResult.Failure, $"for memory {this.Memory} value {value} {this.Value}");
             }
 
             return ConditionResult.Success;
