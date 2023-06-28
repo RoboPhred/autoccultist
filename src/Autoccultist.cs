@@ -267,6 +267,7 @@ public class Autoccultist : MonoBehaviour
         MechanicalHeart.Stop();
         NucleusAccumbens.Reset();
         Resource.ClearAll();
+        CacheUtils.ClearStatistics();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)

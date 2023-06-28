@@ -10,9 +10,14 @@ namespace AutoccultistNS
         private const int Samples = 1000;
         private const int AllocatedMsPerTask = 10;
 
-        private static readonly Dictionary<string, PerfEntry> _Entries = new();
+        private static readonly Dictionary<string, PerfEntry> EntriesByKey = new();
 
-        public static IReadOnlyDictionary<string, PerfEntry> Entries => _Entries;
+        public static IReadOnlyDictionary<string, PerfEntry> Entries => EntriesByKey;
+
+        public static void ClearStatistics()
+        {
+            EntriesByKey.Clear();
+        }
 
         public static T Monitor<T>(string key, Func<T> func)
         {
@@ -36,7 +41,7 @@ namespace AutoccultistNS
             if (!Entries.TryGetValue(key, out var entry))
             {
                 entry = new PerfEntry();
-                _Entries.Add(key, entry);
+                EntriesByKey.Add(key, entry);
             }
 
             entry.AddSample(timeSpan);

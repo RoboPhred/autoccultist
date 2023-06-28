@@ -1,5 +1,6 @@
 namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using SecretHistories.Tokens.Payloads;
@@ -10,6 +11,8 @@ namespace AutoccultistNS.GameState.Impl
     /// </summary>
     internal class PortalStateImpl : IPortalState
     {
+        private readonly Lazy<int> hashCode;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PortalStateImpl"/> class.
         /// </summary>
@@ -23,6 +26,7 @@ namespace AutoccultistNS.GameState.Impl
                 this.DeckCards = new Dictionary<string, ICardState>();
                 this.FaceUpDeck = null;
                 this.FaceUpCard = null;
+                this.hashCode = new(() => 0);
                 return;
             }
 
@@ -32,6 +36,11 @@ namespace AutoccultistNS.GameState.Impl
             if (output == null)
             {
                 Autoccultist.LogWarn($"Open ingress {ingress.EntityId} has no output sphere.");
+                this.State = PortalActiveState.Closed;
+                this.DeckCards = new Dictionary<string, ICardState>();
+                this.FaceUpDeck = null;
+                this.FaceUpCard = null;
+                this.hashCode = new(() => 0);
                 return;
             }
 
@@ -44,24 +53,31 @@ namespace AutoccultistNS.GameState.Impl
                 this.FaceUpDeck = null;
                 this.FaceUpCard = null;
                 this.OutputCard = CardStateImpl.CardStatesFromStack(outputStacks.First(), CardLocation.Mansus).First();
-                return;
-            }
-
-            var deckStacks = GameAPI.GetMansusChoices(out var faceUpDeckName);
-            if (deckStacks != null)
-            {
-                this.State = PortalActiveState.AwaitingSelection;
-                this.FaceUpDeck = faceUpDeckName;
-                this.DeckCards = (IReadOnlyDictionary<string, ICardState>)deckStacks.ToDictionary(x => x.Key, x => (ICardState)CardStateImpl.CardStatesFromStack(x.Value, CardLocation.Mansus).First());
-                this.FaceUpCard = this.DeckCards[faceUpDeckName];
             }
             else
             {
-                this.State = PortalActiveState.Transitioning;
-                this.FaceUpDeck = null;
-                this.DeckCards = null;
-                this.FaceUpCard = null;
+                var deckStacks = GameAPI.GetMansusChoices(out var faceUpDeckName);
+                if (deckStacks != null)
+                {
+                    this.State = PortalActiveState.AwaitingSelection;
+                    this.FaceUpDeck = faceUpDeckName;
+                    this.DeckCards = (IReadOnlyDictionary<string, ICardState>)deckStacks.ToDictionary(x => x.Key, x => (ICardState)CardStateImpl.CardStatesFromStack(x.Value, CardLocation.Mansus).First());
+                    this.FaceUpCard = this.DeckCards[faceUpDeckName];
+                }
+                else
+                {
+                    this.State = PortalActiveState.Transitioning;
+                    this.FaceUpDeck = null;
+                    this.DeckCards = null;
+                    this.FaceUpCard = null;
+                }
             }
+
+            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
+                this.State,
+                this.PortalId,
+                HashUtils.HashAllUnordered(this.DeckCards.Select(x => x.Key + x.Value)),
+                this.OutputCard));
         }
 
         /// <inheritdoc/>
@@ -81,6 +97,11 @@ namespace AutoccultistNS.GameState.Impl
 
         /// <inheritdoc/>
         public ICardState OutputCard { get; }
+
+        public override int GetHashCode()
+        {
+            return this.hashCode.Value;
+        }
 
         internal static IPortalState FromCurrentState()
         {

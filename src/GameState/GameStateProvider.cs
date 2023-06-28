@@ -3,11 +3,6 @@ namespace AutoccultistNS.GameState
     using System;
     using System.Linq;
     using AutoccultistNS.GameState.Impl;
-    using SecretHistories.Assets.Scripts.Application.UI;
-    using SecretHistories.Entities;
-    using SecretHistories.Enums;
-    using SecretHistories.Spheres;
-    using SecretHistories.UI;
 
     /// <summary>
     /// A static class for producing <see cref="IGameState"/> states.
@@ -94,10 +89,10 @@ namespace AutoccultistNS.GameState
                     select state;
 
                 return new GameStateImpl(
-                    tabletopCards.ToArray(),
-                    enRouteCards.ToArray(),
+                    tabletopCards,
+                    enRouteCards,
                     new ICardState[0],
-                    situations.ToArray(),
+                    situations,
                     PortalStateImpl.FromCurrentState());
             }
             catch (Exception ex)

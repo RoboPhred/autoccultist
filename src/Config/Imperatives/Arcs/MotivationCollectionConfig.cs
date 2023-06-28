@@ -27,15 +27,21 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public virtual IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            var reactions = from motivation in this.GetCurrentMotivations(state)
-                            let primaryGoals = motivation.PrimaryGoals
-                            let secondaryGoals = motivation.SupportingGoals
-                            let goals = primaryGoals.Concat(secondaryGoals)
-                            from goal in goals
-                            where !goal.IsSatisfied(state)
-                            from impulse in goal.GetImpulses(state)
-                            select impulse;
-            return reactions.Distinct().Cast<IImpulse>();
+            // Note: Each motivation has a GetImpulses too, but we want to rearrange the primary and supporting goals.
+            return CacheUtils.Compute(this, state, state =>
+            {
+                var reactions = from motivation in this.GetCurrentMotivations(state)
+                                let primaryGoals = motivation.PrimaryGoals.Select(g => (g, 1))
+                                let secondaryGoals = motivation.SupportingGoals.Select(g => (g, 0))
+                                let goals = primaryGoals.Concat(secondaryGoals).OrderByDescending(x => x.Item2).Select(x => x.Item1)
+                                from goal in goals
+                                where !goal.IsSatisfied(state)
+                                from impulse in goal.GetImpulses(state)
+                                select impulse;
+
+                // Actualize the collection so the cache value can be enumerated multiple times without issue.
+                return reactions.Distinct().Cast<IImpulse>().ToArray();
+            });
         }
 
         /// <inheritdoc/>

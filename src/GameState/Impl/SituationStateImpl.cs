@@ -1,5 +1,6 @@
 namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using SecretHistories.Entities;
@@ -19,6 +20,7 @@ namespace AutoccultistNS.GameState.Impl
         private readonly IReadOnlyCollection<ISituationSlot> recipeSlots;
         private readonly IReadOnlyCollection<ICardState> storedCards;
         private readonly IReadOnlyCollection<ICardState> outputCards;
+        private readonly Lazy<int> hashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationStateImpl"/> class.
@@ -73,9 +75,23 @@ namespace AutoccultistNS.GameState.Impl
                 from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
                 select card;
 
-            this.recipeSlots = slots.ToArray();
-            this.storedCards = stored.ToArray();
-            this.outputCards = output.ToArray();
+            this.recipeSlots = new HashCalculatingCollection<ISituationSlot>(slots);
+            this.storedCards = new HashCalculatingCollection<ICardState>(stored);
+            this.outputCards = new HashCalculatingCollection<ICardState>(output);
+
+            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
+                this.situationId,
+                this.state,
+                this.isOccupied,
+                this.currentRecipe,
+
+                // Like card state lifetime, we want to make this bust the cache less.
+                // However, zero is a critical value here, and we don't want to mask it by latching it when we are at 0.4
+                (int)Math.Ceiling(this.recipeTimeRemaining ?? 0),
+
+                this.recipeSlots,
+                this.storedCards,
+                this.outputCards));
         }
 
         /// <inheritdoc/>

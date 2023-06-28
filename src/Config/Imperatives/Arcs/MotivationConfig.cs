@@ -75,15 +75,29 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            foreach (var goal in this.PrimaryGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetImpulses(state)))
+            return CacheUtils.Compute(this, state, state =>
             {
-                yield return goal;
-            }
+                var primaryImpulses =
+                    from goalEntry in this.PrimaryGoals
+                    let goal = goalEntry.Value
+                    where !goal.IsSatisfied(state)
+                    from impulse in goal.GetImpulses(state)
+                    select impulse;
 
-            foreach (var goal in this.SupportingGoals.Select(x => x.Value).Where(g => !g.IsSatisfied(state)).SelectMany(x => x.GetImpulses(state)))
-            {
-                yield return goal;
-            }
+                var supportingImpulses =
+                    from goalEntry in this.SupportingGoals
+                    let goal = goalEntry.Value
+                    where !goal.IsSatisfied(state)
+                    from impulse in goal.GetImpulses(state)
+                    select impulse;
+
+                // We must make this an array, as the cache might make it be enumerated several times.
+                var result = primaryImpulses.Concat(supportingImpulses).ToArray();
+
+                NoonUtility.LogWarning($"MotivationConfig.GetImpulses cached {result.Length} impulses");
+
+                return result;
+            });
         }
 
         /// <inheritdoc/>
@@ -105,16 +119,19 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            foreach (var goal in this.PrimaryGoals)
+            return CacheUtils.Compute(this, state, state =>
             {
-                var result = goal.Value.IsSatisfied(state);
-                if (!result)
+                foreach (var goal in this.PrimaryGoals)
                 {
-                    return AddendedConditionResult.Addend(result, "Primary goal unsatisfied");
+                    var result = goal.Value.IsSatisfied(state);
+                    if (!result)
+                    {
+                        return AddendedConditionResult.Addend(result, "Primary goal unsatisfied");
+                    }
                 }
-            }
 
-            return ConditionResult.Success;
+                return ConditionResult.Success;
+            });
         }
     }
 }

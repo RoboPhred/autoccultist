@@ -1,12 +1,14 @@
 namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Linq;
     using SecretHistories.Spheres;
 
     internal class SituationSlotImpl : GameStateObject, ISituationSlot
     {
-        private Sphere sphere;
-        private ICardState card;
+        private readonly string sphereId;
+        private readonly ICardState card;
+        private readonly Lazy<int> hashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationSlotImpl"/> class.
@@ -14,7 +16,7 @@ namespace AutoccultistNS.GameState.Impl
         /// <param name="sphere">The sphere to represent.</param>
         public SituationSlotImpl(Sphere sphere)
         {
-            this.sphere = sphere;
+            this.sphereId = sphere.GoverningSphereSpec.Id;
 
             var elementStack = sphere.GetElementStacks().FirstOrDefault();
             if (elementStack != null)
@@ -25,6 +27,8 @@ namespace AutoccultistNS.GameState.Impl
             {
                 this.card = null;
             }
+
+            this.hashCode = new Lazy<int>(() => HashUtils.Hash(this.sphereId, this.card));
         }
 
         public string SpecId
@@ -32,7 +36,7 @@ namespace AutoccultistNS.GameState.Impl
             get
             {
                 this.VerifyAccess();
-                return this.sphere.GoverningSphereSpec.Id;
+                return this.sphereId;
             }
         }
 
@@ -43,6 +47,11 @@ namespace AutoccultistNS.GameState.Impl
                 this.VerifyAccess();
                 return this.card;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return this.hashCode.Value;
         }
     }
 }

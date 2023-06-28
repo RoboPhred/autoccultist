@@ -30,6 +30,8 @@ namespace AutoccultistNS.GUI
 
         private static void PerformanceWindow(int id)
         {
+            GUILayout.Label($"Cache misses {CacheUtils.MissesPerSecond:0.000}ps hits {CacheUtils.HitsPerSecond:0.000}ps");
+
             foreach (var entry in PerfMonitor.Entries)
             {
                 GUILayout.Label($"{entry.Key}: {entry.Value.Average:0.000}ms {entry.Value.SamplesPerSecond:0}cps (max {entry.Value.Max:0.000}ms, >10 {entry.Value.GreaterThanAllocatedRate:0.000} per second)");

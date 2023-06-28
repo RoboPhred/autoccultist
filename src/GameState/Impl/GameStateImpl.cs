@@ -1,7 +1,7 @@
 namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Provides the base implementation of a game state.
@@ -12,8 +12,8 @@ namespace AutoccultistNS.GameState.Impl
         private readonly IReadOnlyCollection<ICardState> enRouteCards;
         private readonly IReadOnlyCollection<ICardState> codexCards;
         private readonly IReadOnlyCollection<ISituationState> situations;
-
         private readonly IPortalState mansus;
+        private readonly Lazy<int> hashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameStateImpl"/> class.
@@ -23,13 +23,25 @@ namespace AutoccultistNS.GameState.Impl
         /// <param name="codexCards">The codex cards in this state.</param>
         /// <param name="situations">The situations in this state.</param>
         /// <param name="mansus">The mansus state.</param>
-        public GameStateImpl(IReadOnlyCollection<ICardState> tabletopCards, IReadOnlyCollection<ICardState> enRouteCards, IReadOnlyCollection<ICardState> codexCards, IReadOnlyCollection<ISituationState> situations, IPortalState mansus)
+        public GameStateImpl(
+            IEnumerable<ICardState> tabletopCards,
+            IEnumerable<ICardState> enRouteCards,
+            IEnumerable<ICardState> codexCards,
+            IEnumerable<ISituationState> situations,
+            IPortalState mansus)
         {
-            this.tabletopCards = tabletopCards;
-            this.enRouteCards = enRouteCards;
-            this.situations = situations;
-            this.codexCards = codexCards;
+            this.tabletopCards = new HashCalculatingCollection<ICardState>(tabletopCards);
+            this.enRouteCards = new HashCalculatingCollection<ICardState>(enRouteCards);
+            this.codexCards = new HashCalculatingCollection<ICardState>(codexCards);
+            this.situations = new HashCalculatingCollection<ISituationState>(situations);
             this.mansus = mansus;
+
+            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
+                this.tabletopCards,
+                this.enRouteCards,
+                this.codexCards,
+                this.situations,
+                this.mansus));
         }
 
         /// <inheritdoc/>
@@ -80,6 +92,11 @@ namespace AutoccultistNS.GameState.Impl
                 this.VerifyAccess();
                 return this.mansus;
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return this.hashCode.Value;
         }
     }
 }

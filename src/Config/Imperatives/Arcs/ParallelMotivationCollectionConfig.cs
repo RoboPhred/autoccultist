@@ -273,19 +273,22 @@ namespace AutoccultistNS.Config
 
                 // ParallelMotivations wait to activate until at least one primary goal can activate.
                 // This is different from LinearMotivationCollectionConfig, which runs motivations as long as the previous motivations are satisfied.
-                var failures = new List<ConditionResult>();
-                foreach (var goal in this.PrimaryGoals)
+                return CacheUtils.Compute(this, state, state =>
                 {
-                    var match = goal.Value.CanActivate(state);
-                    if (match)
+                    var failures = new List<ConditionResult>();
+                    foreach (var goal in this.PrimaryGoals)
                     {
-                        return ConditionResult.Success;
+                        var match = goal.Value.CanActivate(state);
+                        if (match)
+                        {
+                            return ConditionResult.Success;
+                        }
+
+                        failures.Add(match);
                     }
 
-                    failures.Add(match);
-                }
-
-                return CompoundConditionResult.ForFailure(failures);
+                    return CompoundConditionResult.ForFailure(failures);
+                });
             }
         }
     }
