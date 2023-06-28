@@ -97,10 +97,11 @@ namespace AutoccultistNS.Brain
         /// <param name="imperative">The imperative to remove.</param>
         public static void RemoveImperative(IImperative imperative)
         {
-            foreach (var execution in ActiveReactionsByImperative[imperative])
+            foreach (var reaction in ActiveReactionsByImperative[imperative])
             {
-                execution.Completed -= HandleReactionCompleted;
-                execution.Abort();
+                ImpulsesByReaction.Remove(reaction);
+                reaction.Completed -= HandleReactionCompleted;
+                reaction.Abort();
             }
 
             ActiveImperatives.Remove(imperative);
@@ -118,6 +119,7 @@ namespace AutoccultistNS.Brain
                 execution.Abort();
             }
 
+            ImpulsesByReaction.Clear();
             ActiveImperatives.Clear();
             ActiveReactionsByImperative.Clear();
         }
@@ -182,9 +184,23 @@ namespace AutoccultistNS.Brain
             var lastHash = 0;
             while (true)
             {
-                if (!isActive || !GameAPI.IsRunning)
+                if (!GameAPI.IsRunning)
                 {
-                    // Not doing anything, wait a frame
+                    OnIdle();
+
+                    // Reset our loop state, just in case the new board state is identical, as it may be for rapid
+                    // restarts of the same legacy.
+                    // Note: This was an attempt to fix a bug where impulses just stop on rapid new games.
+                    // It does not fix the issue...
+                    lastHash = 0;
+
+                    // Wait until it is time to run.
+                    await MechanicalHeart.AwaitStart(CancellationToken.None);
+                }
+
+                if (!isActive)
+                {
+                    // Not doing anything, wait a beat
                     await MechanicalHeart.AwaitBeat(CancellationToken.None);
                 }
 
