@@ -178,6 +178,7 @@ namespace AutoccultistNS.Brain
 
         private static async void InvokeImpulsesLoop()
         {
+            var lastHash = 0;
             while (true)
             {
                 if (!isActive || !GameAPI.IsRunning)
@@ -185,6 +186,18 @@ namespace AutoccultistNS.Brain
                     // Not doing anything, wait a frame
                     await MechanicalHeart.AwaitBeat(CancellationToken.None);
                 }
+
+                var currentHash = GameStateProvider.Current.GetHashCode();
+                if (!isActive && currentHash == lastHash)
+                {
+                    // Not doing anything and nothing has changed, continue.
+                    // This is much more effective than shoving a cache in all the impulses.
+                    // Note: Funnily enough, this makes the GetFirstReadyImpulse performance monitor show a higher average time since
+                    // its called less but doing more work when it is called.
+                    continue;
+                }
+
+                lastHash = currentHash;
 
                 TryCompleteImperatives();
 
