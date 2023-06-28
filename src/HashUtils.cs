@@ -17,26 +17,11 @@ namespace AutoccultistNS
             }
         }
 
-        public static int HashAll<T>(IEnumerable<T> objects)
-        {
-            unchecked
-            {
-                // This is called a Berstein hash.  I don't understand it.  Nobody understands it.  Just live with it.
-                int hash = 17;
-                foreach (var obj in objects)
-                {
-                    hash = hash * 23 + HashOrDefault(obj);
-                }
-                return hash;
-            }
-        }
-
         public static int HashAllUnordered<T>(IEnumerable<T> objects)
         {
             unchecked
             {
-                var codes = objects.Select(o => HashOrDefault(o)).OrderBy(c => c);
-                return HashAllUnordered(codes);
+                return HashAllUnordered(objects.Select(HashOrDefault));
             }
         }
 
@@ -44,26 +29,36 @@ namespace AutoccultistNS
         {
             unchecked
             {
+                return HashAll(codes.OrderBy(c => c));
+            }
+        }
+
+        public static int HashAll<T>(IEnumerable<T> objects)
+        {
+            unchecked
+            {
+                return HashAll(objects.Select(HashOrDefault));
+            }
+        }
+
+        public static int HashAll(IEnumerable<int> codes)
+        {
+            unchecked
+            {
+                // This is called a Berstein hash.  I don't understand it.  Nobody understands it.  Just live with it.
                 int hash = 17;
                 foreach (var code in codes)
                 {
-                    hash = hash * 23 + code;
+                    hash = (hash * 23) + code;
                 }
+
                 return hash;
             }
         }
 
-        public static int HashOrDefault(object obj)
+        public static int HashOrDefault<T>(T obj)
         {
-            // WARN: The unity engine has something against `obj?.GetHashCode() ?? 0`.
-            // It crashes with null refs in Roost, and it crashes with null refs here.
-
-            if (obj == null)
-            {
-                return 0;
-            }
-
-            return obj.GetHashCode();
+            return obj?.GetHashCode() ?? 0;
         }
     }
 }

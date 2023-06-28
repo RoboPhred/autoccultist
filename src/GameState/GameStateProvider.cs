@@ -63,37 +63,40 @@ namespace AutoccultistNS.GameState
 
             try
             {
-                var tabletopCards =
-                    from stack in GameAPI.TabletopSphere.GetElementStacks()
-                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
-                    select cardState;
+                return PerfMonitor.Monitor("GameStateProvider.FromCurrentState", () =>
+                {
+                    var tabletopCards =
+                        from stack in GameAPI.TabletopSphere.GetElementStacks()
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                        select cardState;
 
-                // Things whizzing around.
-                var enRouteCards =
-                    from enroute in GameAPI.GetEnRouteSpheres()
-                    from stack in enroute.GetElementStacks()
-                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
-                    select cardState;
+                    // Things whizzing around.
+                    var enRouteCards =
+                        from enroute in GameAPI.GetEnRouteSpheres()
+                        from stack in enroute.GetElementStacks()
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
+                        select cardState;
 
-                // FIXME: Spams the console with errors when not present.
-                /*
-                var codexCards =
-                    from stack in GameAPI.CodexSphere.GetElementStacks()
-                    from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Codex)
-                    select cardState;
-                */
+                    // FIXME: Spams the console with errors when not present.
+                    /*
+                    var codexCards =
+                        from stack in GameAPI.CodexSphere.GetElementStacks()
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Codex)
+                        select cardState;
+                    */
 
-                var situations =
-                    from situation in GameAPI.GetSituations()
-                    let state = new SituationStateImpl(situation)
-                    select state;
+                    var situations =
+                        from situation in GameAPI.GetSituations()
+                        let state = new SituationStateImpl(situation)
+                        select state;
 
-                return new GameStateImpl(
-                    tabletopCards,
-                    enRouteCards,
-                    new ICardState[0],
-                    situations,
-                    PortalStateImpl.FromCurrentState());
+                    return new GameStateImpl(
+                        tabletopCards,
+                        enRouteCards,
+                        new ICardState[0],
+                        situations,
+                        PortalStateImpl.FromCurrentState());
+                });
             }
             catch (Exception ex)
             {

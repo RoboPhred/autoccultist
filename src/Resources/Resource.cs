@@ -106,34 +106,31 @@ namespace AutoccultistNS.Resources
 
         private IReadOnlyDictionary<IResourceConstraint<T>, T> GetConstrainedResources()
         {
-            return PerfMonitor.Monitor(nameof(this.GetConstrainedResources), () =>
+            // FIXME: We should preserve the order returned by GetCandidates, as that is the priority order.
+            // FIXME: This is largely the same logic as ICardChooserExtensions.ChooseAll.  This code can be made generic
+            // and called from both places.
+            var candidatesByConstraint = this.constraints.ToDictionary(c => c, c => new HashSet<T>(c.GetCandidates()));
+
+            var allCandidates = candidatesByConstraint.SelectMany(c => c.Value).Distinct();
+            var weightByCandidate = allCandidates.ToDictionary(c => c, c => candidatesByConstraint.Sum(p => p.Value.Contains(c) ? 1 : 0));
+
+            var choices = new Dictionary<IResourceConstraint<T>, T>();
+
+            foreach (var pair in candidatesByConstraint)
             {
-                // FIXME: We should preserve the order returned by GetCandidates, as that is the priority order.
-                // FIXME: This is largely the same logic as ICardChooserExtensions.ChooseAll.  This code can be made generic
-                // and called from both places.
-                var candidatesByConstraint = this.constraints.ToDictionary(c => c, c => new HashSet<T>(c.GetCandidates()));
-
-                var allCandidates = candidatesByConstraint.SelectMany(c => c.Value).Distinct();
-                var weightByCandidate = allCandidates.ToDictionary(c => c, c => candidatesByConstraint.Sum(p => p.Value.Contains(c) ? 1 : 0));
-
-                var choices = new Dictionary<IResourceConstraint<T>, T>();
-
-                foreach (var pair in candidatesByConstraint)
+                // FIXME: Sort by priority of the constraint.
+                var choice = pair.Value.Where(c => weightByCandidate.ContainsKey(c)).OrderBy(c => weightByCandidate[c]).FirstOrDefault();
+                if (choice != null)
                 {
-                    // FIXME: Sort by priority of the constraint.
-                    var choice = pair.Value.Where(c => weightByCandidate.ContainsKey(c)).OrderBy(c => weightByCandidate[c]).FirstOrDefault();
-                    if (choice != null)
-                    {
-                        // Remove the choice from the options
-                        weightByCandidate.Remove(choice);
+                    // Remove the choice from the options
+                    weightByCandidate.Remove(choice);
 
-                        // Mark the card as chosen
-                        choices.Add(pair.Key, choice);
-                    }
+                    // Mark the card as chosen
+                    choices.Add(pair.Key, choice);
                 }
+            }
 
-                return choices;
-            });
+            return choices;
         }
 
         private void OnConstraintDisposed(object sender, EventArgs e)

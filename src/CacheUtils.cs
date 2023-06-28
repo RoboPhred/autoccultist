@@ -1,41 +1,43 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
 namespace AutoccultistNS
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+
     public static class CacheUtils
     {
         private const int MaxQueueLength = 1000;
 
-        private static Queue<(int, DateTime)> cacheMisses = new();
+        private static readonly ConditionalWeakTable<object, CacheData> Values = new();
 
-        private static Queue<(int, DateTime)> cacheHits = new();
+        private static readonly Queue<(int, DateTime)> CacheMisses = new();
 
-        private static readonly ConditionalWeakTable<object, CacheData> values = new();
+        private static readonly Queue<(int, DateTime)> CacheHits = new();
 
-        public static double MissesPerSecond => cacheMisses.Count / (DateTime.UtcNow - cacheMisses.PeekOrDefault().Item2).TotalSeconds;
+        public static double MissesPerSecond => CacheMisses.Count / (DateTime.UtcNow - CacheMisses.PeekOrDefault().Item2).TotalSeconds;
 
-        public static double HitsPerSecond => cacheHits.Count / (DateTime.UtcNow - cacheHits.PeekOrDefault().Item2).TotalSeconds;
+        public static double HitsPerSecond => CacheHits.Count / (DateTime.UtcNow - CacheHits.PeekOrDefault().Item2).TotalSeconds;
 
         public static void ClearStatistics()
         {
-            cacheMisses.Clear();
-            cacheHits.Clear();
+            CacheMisses.Clear();
+            CacheHits.Clear();
         }
 
         public static TOutput Compute<TOutput>(object cacheKey, object input, Func<TOutput> func)
         {
             var hashCode = input.GetHashCode();
-            var data = values.GetOrCreateValue(cacheKey);
+            var data = Values.GetOrCreateValue(cacheKey);
+
             if (data.InputHashCode != hashCode)
             {
-                if (cacheMisses.Count >= MaxQueueLength)
+                if (CacheMisses.Count >= MaxQueueLength)
                 {
-                    cacheMisses.Dequeue();
+                    CacheMisses.Dequeue();
                 }
-                cacheMisses.Enqueue((hashCode, DateTime.UtcNow));
+
+                CacheMisses.Enqueue((hashCode, DateTime.UtcNow));
 
                 data.InputHashCode = hashCode;
                 data.Value = func();
@@ -48,12 +50,12 @@ namespace AutoccultistNS
             }
             else
             {
-                if (cacheHits.Count >= MaxQueueLength)
+                if (CacheHits.Count >= MaxQueueLength)
                 {
-                    cacheHits.Dequeue();
+                    CacheHits.Dequeue();
                 }
 
-                cacheHits.Enqueue((hashCode, DateTime.UtcNow));
+                CacheHits.Enqueue((hashCode, DateTime.UtcNow));
             }
 
             return (TOutput)data.Value;
@@ -62,6 +64,7 @@ namespace AutoccultistNS
         private class CacheData
         {
             public int InputHashCode { get; set; }
+
             public object Value { get; set; }
         }
     }

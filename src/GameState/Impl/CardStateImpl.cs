@@ -73,14 +73,11 @@ namespace AutoccultistNS.GameState.Impl
                 && sourceStack.Token.Sphere.IsExteriorSphere;
 
             this.hashCode = new Lazy<int>(() => HashUtils.Hash(
-
                 // Signature makes up for both elementId and aspects
                 this.signature,
-
                 // This changes every frame and is a bastard of a cache buster.
                 // Round it to the nearest second, since we don't support fractional lifetime comparisons
                 (int)Math.Round(this.lifetimeRemaining),
-
                 this.isUnique,
                 this.location,
                 this.isSlottable));

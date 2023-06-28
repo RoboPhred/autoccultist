@@ -8,6 +8,8 @@ namespace AutoccultistNS.GameState.Impl
     /// </summary>
     internal class GameStateImpl : GameStateObject, IGameState
     {
+        private static int prevHash = 0;
+
         private readonly IReadOnlyCollection<ICardState> tabletopCards;
         private readonly IReadOnlyCollection<ICardState> enRouteCards;
         private readonly IReadOnlyCollection<ICardState> codexCards;
@@ -36,12 +38,26 @@ namespace AutoccultistNS.GameState.Impl
             this.situations = new HashCalculatingCollection<ISituationState>(situations);
             this.mansus = mansus;
 
-            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
-                this.tabletopCards,
-                this.enRouteCards,
-                this.codexCards,
-                this.situations,
-                this.mansus));
+            this.hashCode = new Lazy<int>(
+                () => PerfMonitor.Monitor(
+                    "GameStateImpl Hash",
+                    () =>
+                    {
+                        var hash = HashUtils.Hash(
+                            this.tabletopCards,
+                            this.enRouteCards,
+                            this.codexCards,
+                            this.situations,
+                            this.mansus);
+
+                        if (hash != prevHash)
+                        {
+                            PerfMonitor.AddCount("GameStateImpl New Hash");
+                            prevHash = hash;
+                        }
+
+                        return hash;
+                    }));
         }
 
         /// <inheritdoc/>
