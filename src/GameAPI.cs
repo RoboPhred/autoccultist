@@ -24,6 +24,7 @@ namespace AutoccultistNS
     public static class GameAPI
     {
         private static int pauseDepth = 0;
+        private static bool isPaused = false;
 
         /// <summary>
         /// Gets a value indicating whether the game is running.
@@ -134,23 +135,41 @@ namespace AutoccultistNS
         /// </summary>
         public static void Initialize()
         {
-            GameEventSource.GameStarted += OnGameStarted;
-            GameEventSource.GameEnded += OnGameEnded;
+            GameEventSource.GameStarted += (_, __) =>
+            {
+                IsRunning = true;
+            };
+
+            GameEventSource.GameEnded += (_, __) =>
+            {
+                // What do we do about all our pause tokens?
+                IsRunning = false;
+            };
 
             // Unlock the game if the heart is stopped.  Re-lock on start.
             MechanicalHeart.OnStart += (_, __) =>
             {
-                if (pauseDepth > 0)
+                if (isPaused)
                 {
                     Watchman.Get<LocalNexus>().ForcePauseGame(false);
                 }
             };
             MechanicalHeart.OnStop += (_, __) =>
             {
-                if (pauseDepth > 0)
+                if (isPaused)
                 {
                     Watchman.Get<LocalNexus>().PauseGame(false);
                     Watchman.Get<LocalNexus>().UnForcePauseGame(false);
+                }
+            };
+
+            // We wait until the next frame to unpause, in case anything re-pauses us on the same frame.
+            Autoccultist.GlobalUpdate += (_, __) =>
+            {
+                if (isPaused && pauseDepth == 0)
+                {
+                    Watchman.Get<LocalNexus>().UnForcePauseGame(true);
+                    isPaused = false;
                 }
             };
         }
@@ -412,7 +431,7 @@ namespace AutoccultistNS
         /// </summary>
         public static void ReassertPause()
         {
-            if (pauseDepth > 0)
+            if (isPaused)
             {
                 // FIXME: Use a higher level pause depth (probably 4) so we don't have to fight the mansus for control.
                 Watchman.Get<LocalNexus>().ForcePauseGame(false);
@@ -430,6 +449,7 @@ namespace AutoccultistNS
                 if (IsRunning)
                 {
                     Watchman.Get<LocalNexus>().ForcePauseGame(true);
+                    isPaused = true;
                 }
             }
 
@@ -530,16 +550,6 @@ namespace AutoccultistNS
             };
         }
 
-        private static void OnGameStarted(object sender, EventArgs e)
-        {
-            IsRunning = true;
-        }
-
-        private static void OnGameEnded(object sender, EventArgs e)
-        {
-            IsRunning = false;
-        }
-
         /// <summary>
         /// A token representing a pause.
         /// </summary>
@@ -565,10 +575,9 @@ namespace AutoccultistNS
 
                 this.isDisposed = true;
                 GC.SuppressFinalize(this);
-                pauseDepth--;
-                if (pauseDepth == 0)
+                if (pauseDepth > 0)
                 {
-                    Watchman.Get<LocalNexus>().UnForcePauseGame(true);
+                    pauseDepth--;
                 }
             }
         }
