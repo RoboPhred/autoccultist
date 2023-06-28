@@ -76,7 +76,7 @@ namespace AutoccultistNS.GameState.Impl
             this.hashCode = new Lazy<int>(() => HashUtils.Hash(
                 this.State,
                 this.PortalId,
-                HashUtils.HashAllUnordered(this.DeckCards.Select(x => x.Key + x.Value)),
+                HashUtils.HashAllUnordered(this.DeckCards?.Select(x => x.Key + x.Value) ?? Enumerable.Empty<string>()),
                 this.OutputCard));
         }
 

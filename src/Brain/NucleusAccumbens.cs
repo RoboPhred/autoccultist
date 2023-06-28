@@ -125,45 +125,55 @@ namespace AutoccultistNS.Brain
         {
             var sb = new StringBuilder();
 
-            foreach (var imperative in ActiveImperatives.SelectMany(x => x.Flatten()))
+            // Disable the cache while we do this, so that our ConditionResult.Trace is effective for cached checks.
+            var cacheWasEnabled = CacheUtils.Enabled;
+            CacheUtils.Enabled = false;
+            try
             {
-                sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
-
-                var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
-                sb.AppendFormat("- Can Activate: {0}\n", canActivate.IsConditionMet);
-                if (!canActivate)
+                foreach (var imperative in ActiveImperatives.SelectMany(x => x.Flatten()))
                 {
-                    sb.AppendFormat("- - Reason: {0}\n", canActivate.ToString());
-                }
+                    sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
 
-                var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
-                sb.AppendFormat("- Is Satisfied: {0}\n", isSatisfied.IsConditionMet);
-                if (!isSatisfied)
-                {
-                    sb.AppendFormat("- - Reason: {0}\n", isSatisfied.ToString());
-                }
-            }
-
-            sb.AppendLine("Reactions");
-            foreach (var imperative in ActiveImperatives)
-            {
-                var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
-                                orderby pair.Reaction.Priority descending, pair.Index ascending
-                                select pair.Reaction;
-                foreach (var reaction in reactions)
-                {
-                    sb.AppendFormat("- Reaction: {0}\n", reaction.ToString());
-                    sb.AppendFormat("- - Priority: {0}\n", reaction.Priority);
-                    var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
-                    sb.AppendFormat("- - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
-                    if (!isConditionMet)
+                    var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
+                    sb.AppendFormat("- Can Activate: {0}\n", canActivate.IsConditionMet);
+                    if (!canActivate)
                     {
-                        sb.AppendFormat("- - - Reason: {0}\n", isConditionMet.ToString());
+                        sb.AppendFormat("- - Reason: {0}\n", canActivate.ToString());
+                    }
+
+                    var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
+                    sb.AppendFormat("- Is Satisfied: {0}\n", isSatisfied.IsConditionMet);
+                    if (!isSatisfied)
+                    {
+                        sb.AppendFormat("- - Reason: {0}\n", isSatisfied.ToString());
                     }
                 }
-            }
 
-            return sb.ToString();
+                sb.AppendLine("Reactions");
+                foreach (var imperative in ActiveImperatives)
+                {
+                    var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
+                                    orderby pair.Reaction.Priority descending, pair.Index ascending
+                                    select pair.Reaction;
+                    foreach (var reaction in reactions)
+                    {
+                        sb.AppendFormat("- Reaction: {0}\n", reaction.ToString());
+                        sb.AppendFormat("- - Priority: {0}\n", reaction.Priority);
+                        var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
+                        sb.AppendFormat("- - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
+                        if (!isConditionMet)
+                        {
+                            sb.AppendFormat("- - - Reason: {0}\n", isConditionMet.ToString());
+                        }
+                    }
+                }
+
+                return sb.ToString();
+            }
+            finally
+            {
+                CacheUtils.Enabled = cacheWasEnabled;
+            }
         }
 
         private static async void InvokeImpulsesLoop()

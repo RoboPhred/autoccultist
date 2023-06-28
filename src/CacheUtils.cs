@@ -19,6 +19,8 @@ namespace AutoccultistNS
 
         public static double HitsPerSecond => CacheHits.Count / (DateTime.UtcNow - CacheHits.PeekOrDefault().Item2).TotalSeconds;
 
+        public static bool Enabled { get; set; } = true;
+
         public static void ClearStatistics()
         {
             CacheMisses.Clear();
