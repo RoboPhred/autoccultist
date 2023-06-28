@@ -9,6 +9,9 @@ namespace AutoccultistNS.Config
     [CustomDeserializer(typeof(MotivationCollectionConfigDeserializer))]
     public abstract class MotivationCollectionConfig : NamedConfigObject, IImperativeConfig, IImperative
     {
+        private readonly object impulseCacheKey = new();
+        private readonly object isSatisfiedCacheKey = new();
+
         /// <summary>
         /// Gets the total number of motivations in this config
         /// </summary>
@@ -25,10 +28,10 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<IImpulse> GetImpulses(IGameState state)
+        public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             // Note: Each motivation has a GetImpulses too, but we want to rearrange the primary and supporting goals.
-            return CacheUtils.Compute(this, state, state =>
+            return CacheUtils.Compute(this.impulseCacheKey, state, state =>
             {
                 var reactions = from motivation in this.GetCurrentMotivations(state)
                                 let primaryGoals = motivation.PrimaryGoals.Select(g => (g, 1))
@@ -45,23 +48,26 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        public virtual ConditionResult IsSatisfied(IGameState state)
+        public ConditionResult IsSatisfied(IGameState state)
         {
-            var primaryGoals =
-                from motivation in this.GetCurrentMotivations(state)
-                from goal in motivation.PrimaryGoals
-                select goal;
-
-            foreach (var goal in primaryGoals)
+            return CacheUtils.Compute(this.isSatisfiedCacheKey, state, state =>
             {
-                var result = goal.IsSatisfied(state);
-                if (!result)
-                {
-                    return result;
-                }
-            }
+                var primaryGoals =
+                    from motivation in this.GetCurrentMotivations(state)
+                    from goal in motivation.PrimaryGoals
+                    select goal;
 
-            return ConditionResult.Success;
+                foreach (var goal in primaryGoals)
+                {
+                    var result = goal.IsSatisfied(state);
+                    if (!result)
+                    {
+                        return result;
+                    }
+                }
+
+                return ConditionResult.Success;
+            });
         }
 
         /// <inheritdoc/>

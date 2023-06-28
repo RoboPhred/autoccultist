@@ -162,15 +162,18 @@ namespace AutoccultistNS.Brain
         {
             while (true)
             {
+                if (!isActive || !GameAPI.IsRunning)
+                {
+                    // Not doing anything, wait a frame
+                    await MechanicalHeart.AwaitBeat(CancellationToken.None);
+                }
+
+                TryCompleteImperatives();
+
                 // Note: We do not have to await beats or check if the bot is running as Cerebellum does that.
                 await Cerebellum.Coordinate(
                     (cancellationToken) =>
                     {
-                        if (!GameAPI.IsRunning)
-                        {
-                            return Task.CompletedTask;
-                        }
-
                         EnumeratedImpulse chosenImpulse = null;
                         try
                         {
@@ -209,15 +212,6 @@ namespace AutoccultistNS.Brain
                         return Task.CompletedTask;
                     },
                     CancellationToken.None);
-
-                if (!isActive)
-                {
-                    // Not doing anything, wait a frame
-                    // Note: We used to not have this, which surely shoudl have meant an infinite loop deadlock.
-                    // This implies that unity is / was scheduling our continuations on the next frame.
-                    // We are now trying to eliminate that next-frame behavior, so this is important.
-                    await MechanicalHeart.AwaitBeat(CancellationToken.None);
-                }
             }
         }
 

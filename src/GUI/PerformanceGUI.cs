@@ -30,6 +30,12 @@ namespace AutoccultistNS.GUI
 
         private static void PerformanceWindow(int id)
         {
+            if (GUILayout.Button("Clear"))
+            {
+                PerfMonitor.ClearStatistics();
+                CacheUtils.ClearStatistics();
+            }
+
             GUILayout.Label($"Cache misses {CacheUtils.MissesPerSecond:0.000}ps hits {CacheUtils.HitsPerSecond:0.000}ps");
 
             foreach (var entry in PerfMonitor.Entries)

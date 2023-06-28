@@ -137,6 +137,7 @@ namespace AutoccultistNS.Config
             }
 
             // Do a test run to find circular dependencies.
+            // FIXME: This is terrible, check it directly.
             var cache = new Dictionary<string, MotivationStatus>();
             foreach (var key in this.motivations.Keys)
             {
@@ -224,6 +225,8 @@ namespace AutoccultistNS.Config
 
         public class ParallelMotivationConfig : MotivationConfig
         {
+            private readonly object canActivateCacheKey = new object();
+
             /// <summary>
             /// Gets or sets a value indicating whether this motivation can only run if at least one primary goal can activate.
             /// </summary>
@@ -273,7 +276,7 @@ namespace AutoccultistNS.Config
 
                 // ParallelMotivations wait to activate until at least one primary goal can activate.
                 // This is different from LinearMotivationCollectionConfig, which runs motivations as long as the previous motivations are satisfied.
-                return CacheUtils.Compute(this, state, state =>
+                return CacheUtils.Compute(this.canActivateCacheKey, state, state =>
                 {
                     var failures = new List<ConditionResult>();
                     foreach (var goal in this.PrimaryGoals)

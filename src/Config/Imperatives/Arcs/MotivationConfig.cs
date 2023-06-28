@@ -15,6 +15,9 @@ namespace AutoccultistNS.Config
     /// </summary>
     public class MotivationConfig : NamedConfigObject, IMotivationConfig
     {
+        private readonly object impulseCacheKey = new();
+        private readonly object isSatisfiedCacheKey = new();
+
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
@@ -75,7 +78,7 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            return CacheUtils.Compute(this, state, state =>
+            return CacheUtils.Compute(this.impulseCacheKey, state, state =>
             {
                 var primaryImpulses =
                     from goalEntry in this.PrimaryGoals
@@ -119,7 +122,7 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            return CacheUtils.Compute(this, state, state =>
+            return CacheUtils.Compute(this.isSatisfiedCacheKey, state, state =>
             {
                 foreach (var goal in this.PrimaryGoals)
                 {
