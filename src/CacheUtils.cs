@@ -24,7 +24,7 @@ namespace AutoccultistNS
             cacheHits.Clear();
         }
 
-        public static TOutput Compute<TInput, TOutput>(object cacheKey, TInput input, Func<TInput, TOutput> func)
+        public static TOutput Compute<TOutput>(object cacheKey, object input, Func<TOutput> func)
         {
             var hashCode = input.GetHashCode();
             var data = values.GetOrCreateValue(cacheKey);
@@ -37,7 +37,7 @@ namespace AutoccultistNS
                 cacheMisses.Enqueue((hashCode, DateTime.UtcNow));
 
                 data.InputHashCode = hashCode;
-                data.Value = func(input);
+                data.Value = func();
             }
             else
             {

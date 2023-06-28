@@ -8,6 +8,8 @@ namespace AutoccultistNS.Config
 
     public class LinearMotivationCollectionConfig : MotivationCollectionConfig, IList<MotivationConfig>
     {
+        private readonly object currentMotivationsKey = new();
+
         private readonly List<MotivationConfig> motivations = new();
 
         public bool IsReadOnly => false;
@@ -89,11 +91,16 @@ namespace AutoccultistNS.Config
 
         protected override IEnumerable<IMotivationConfig> GetCurrentMotivations(IGameState state)
         {
-            var activeMotivation = this.motivations.FirstOrDefault(x => !x.IsSatisfied(state));
-            if (activeMotivation != null)
+            return CacheUtils.Compute(this.currentMotivationsKey, state, () =>
             {
-                yield return activeMotivation;
-            }
+                var activeMotivation = this.motivations.FirstOrDefault(x => !x.IsSatisfied(state));
+                if (activeMotivation == null)
+                {
+                    return new IMotivationConfig[0];
+                }
+
+                return new[] { activeMotivation };
+            });
         }
     }
 }

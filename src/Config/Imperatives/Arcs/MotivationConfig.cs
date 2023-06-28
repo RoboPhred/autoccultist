@@ -78,7 +78,7 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            return CacheUtils.Compute(this.impulseCacheKey, state, state =>
+            return CacheUtils.Compute(this.impulseCacheKey, state, () =>
             {
                 var primaryImpulses =
                     from goalEntry in this.PrimaryGoals
@@ -122,7 +122,7 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            return CacheUtils.Compute(this.isSatisfiedCacheKey, state, state =>
+            return CacheUtils.Compute(this.isSatisfiedCacheKey, state, () =>
             {
                 foreach (var goal in this.PrimaryGoals)
                 {

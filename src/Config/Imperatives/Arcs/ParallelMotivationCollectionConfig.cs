@@ -10,6 +10,8 @@ namespace AutoccultistNS.Config
 
     public class ParallelMotivationCollectionConfig : MotivationCollectionConfig, IDictionary<string, ParallelMotivationCollectionConfig.ParallelMotivationConfig>
     {
+        private readonly object currentMotivationsKey = new();
+
         private readonly Dictionary<string, ParallelMotivationConfig> motivations = new();
 
         public ParallelMotivationCollectionConfig()
@@ -147,8 +149,11 @@ namespace AutoccultistNS.Config
 
         protected override IEnumerable<IMotivationConfig> GetCurrentMotivations(IGameState state)
         {
-            var cache = new Dictionary<string, MotivationStatus>();
-            return this.motivations.Where(pair => this.ResolveMotivationStatus(pair.Key, state, cache) == MotivationStatus.CanRun).Select(pair => pair.Value);
+            return CacheUtils.Compute(this.currentMotivationsKey, state, () =>
+            {
+                var cache = new Dictionary<string, MotivationStatus>();
+                return this.motivations.Where(pair => this.ResolveMotivationStatus(pair.Key, state, cache) == MotivationStatus.CanRun).Select(pair => pair.Value);
+            });
         }
 
         private MotivationStatus ResolveMotivationStatus(string key, IGameState state, Dictionary<string, MotivationStatus> cache)
@@ -276,7 +281,7 @@ namespace AutoccultistNS.Config
 
                 // ParallelMotivations wait to activate until at least one primary goal can activate.
                 // This is different from LinearMotivationCollectionConfig, which runs motivations as long as the previous motivations are satisfied.
-                return CacheUtils.Compute(this.canActivateCacheKey, state, state =>
+                return CacheUtils.Compute(this.canActivateCacheKey, state, () =>
                 {
                     var failures = new List<ConditionResult>();
                     foreach (var goal in this.PrimaryGoals)

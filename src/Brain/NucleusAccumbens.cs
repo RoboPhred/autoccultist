@@ -120,7 +120,7 @@ namespace AutoccultistNS.Brain
         {
             var sb = new StringBuilder();
 
-            foreach (var imperative in ActiveImperatives)
+            foreach (var imperative in ActiveImperatives.SelectMany(x => x.Flatten()))
             {
                 sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
 
@@ -137,20 +137,23 @@ namespace AutoccultistNS.Brain
                 {
                     sb.AppendFormat("- - Reason: {0}\n", isSatisfied.ToString());
                 }
+            }
 
-                sb.AppendLine("- Reactions");
+            sb.AppendLine("Reactions");
+            foreach (var imperative in ActiveImperatives)
+            {
                 var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
                                 orderby pair.Reaction.Priority descending, pair.Index ascending
                                 select pair.Reaction;
                 foreach (var reaction in reactions)
                 {
-                    sb.AppendFormat("- - Reaction: {0}\n", reaction.ToString());
-                    sb.AppendFormat("- - - Priority: {0}\n", reaction.Priority);
+                    sb.AppendFormat("- Reaction: {0}\n", reaction.ToString());
+                    sb.AppendFormat("- - Priority: {0}\n", reaction.Priority);
                     var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
-                    sb.AppendFormat("- - - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
+                    sb.AppendFormat("- - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
                     if (!isConditionMet)
                     {
-                        sb.AppendFormat("- - - - Reason: {0}\n", isConditionMet.ToString());
+                        sb.AppendFormat("- - - Reason: {0}\n", isConditionMet.ToString());
                     }
                 }
             }
