@@ -99,21 +99,22 @@ namespace AutoccultistNS
             GameStateProvider.Invalidate();
         }
 
-        public static int GetMemory(string id)
+        public static int GetMemory(string id, IGameState state = null)
         {
-            if (!GameAPI.IsRunning)
+            if (state == null)
             {
-                throw new InvalidOperationException("Cannot get memory outside of game.");
+                state = GameStateProvider.Current;
             }
 
-            var memoryElement = TryGetElementStack();
-            if (memoryElement == null)
+            var card = state.TabletopCards.FirstOrDefault(x => x.ElementId == MemoryElementId);
+            if (card == null)
             {
                 return 0;
             }
 
             id = GetMemoryId(id);
-            return memoryElement.GetAspects().ValueOrDefault(id);
+
+            return card.Aspects.ValueOrDefault(id);
         }
 
         private static ElementStack TryGetElementStack()

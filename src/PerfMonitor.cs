@@ -111,12 +111,14 @@ namespace AutoccultistNS
             {
                 get
                 {
-                    if (this.samples.Count == 0)
+                    // Nonfrequent monitors can cause this to mantain lots of outliers, so restrict it to recent samples.
+                    var recentSamples = this.samples.Where(x => (DateTime.Now - x.Timestamp) <= SamplesPerSecondPeriod).ToArray();
+                    if (recentSamples.Length == 0)
                     {
                         return 0;
                     }
 
-                    return this.samples.Select(x => x.Timespan.TotalMilliseconds).Count(x => x > AllocatedMsPerTask) / this.SecondsSinceFirstSample;
+                    return recentSamples.Select(x => x.Timespan.TotalMilliseconds).Count(x => x > AllocatedMsPerTask) / SamplesPerSecondPeriod.TotalSeconds;
                 }
             }
 
