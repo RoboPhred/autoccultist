@@ -1,6 +1,7 @@
 namespace AutoccultistNS.GUI
 {
     using System;
+    using AutoccultistNS.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -37,6 +38,14 @@ namespace AutoccultistNS.GUI
             }
 
             GUILayout.Label($"Cache misses {CacheUtils.MissesPerSecond:0.000}ps hits {CacheUtils.HitsPerSecond:0.000}ps");
+
+            var state = GameStateProvider.Current;
+            GUILayout.Label($"GameState {state.GetHashCode()}");
+            GUILayout.Label($"TabletopCards Hash {state.TabletopCards.GetHashCode()}");
+            GUILayout.Label($"EnRouteCards Hash {state.EnRouteCards.GetHashCode()}");
+            GUILayout.Label($"CodexCards Hash {state.CodexCards.GetHashCode()}");
+            GUILayout.Label($"Situations Hash {state.Situations.GetHashCode()}");
+            GUILayout.Label($"Mansus Hash {state.Mansus.GetHashCode()}");
 
             foreach (var entry in PerfMonitor.Entries)
             {

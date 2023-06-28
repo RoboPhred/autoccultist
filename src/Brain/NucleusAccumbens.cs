@@ -72,6 +72,11 @@ namespace AutoccultistNS.Brain
         /// <param name="imperative">The imperative to add.</param>
         public static void AddImperative(IImperative imperative)
         {
+            if (imperative == null)
+            {
+                throw new ArgumentNullException(nameof(imperative));
+            }
+
             if (ActiveImperatives.Contains(imperative))
             {
                 return;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -14,9 +15,9 @@ namespace AutoccultistNS
 
         private static readonly ConditionalWeakTable<object, CacheData> values = new();
 
-        public static double MissesPerSecond => cacheMisses.Count / (DateTime.UtcNow - cacheMisses.Peek().Item2).TotalSeconds;
+        public static double MissesPerSecond => cacheMisses.Count / (DateTime.UtcNow - cacheMisses.PeekOrDefault().Item2).TotalSeconds;
 
-        public static double HitsPerSecond => cacheHits.Count / (DateTime.UtcNow - cacheHits.Peek().Item2).TotalSeconds;
+        public static double HitsPerSecond => cacheHits.Count / (DateTime.UtcNow - cacheHits.PeekOrDefault().Item2).TotalSeconds;
 
         public static void ClearStatistics()
         {
@@ -38,6 +39,12 @@ namespace AutoccultistNS
 
                 data.InputHashCode = hashCode;
                 data.Value = func();
+
+                // Sanity check
+                if (data.Value is IEnumerable && !(data.Value is ICollection))
+                {
+                    throw new InvalidOperationException("CacheUtils.Compute returned an IEnumerable that is not an ICollection. This will likely cause crashes for re-enumeration.");
+                }
             }
             else
             {

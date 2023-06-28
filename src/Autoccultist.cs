@@ -268,6 +268,7 @@ public class Autoccultist : MonoBehaviour
         NucleusAccumbens.Reset();
         Resource.ClearAll();
         CacheUtils.ClearStatistics();
+        PerfMonitor.ClearStatistics();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)

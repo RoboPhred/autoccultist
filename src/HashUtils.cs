@@ -25,7 +25,7 @@ namespace AutoccultistNS
                 int hash = 17;
                 foreach (var obj in objects)
                 {
-                    hash = hash * 23 + obj?.GetHashCode() ?? 0;
+                    hash = hash * 23 + HashOrDefault(obj);
                 }
                 return hash;
             }
@@ -35,7 +35,7 @@ namespace AutoccultistNS
         {
             unchecked
             {
-                var codes = objects.Select(o => o?.GetHashCode() ?? 0).OrderBy(c => c);
+                var codes = objects.Select(o => HashOrDefault(o)).OrderBy(c => c);
                 return HashAllUnordered(codes);
             }
         }
@@ -51,6 +51,19 @@ namespace AutoccultistNS
                 }
                 return hash;
             }
+        }
+
+        public static int HashOrDefault(object obj)
+        {
+            // WARN: The unity engine has something against `obj?.GetHashCode() ?? 0`.
+            // It crashes with null refs in Roost, and it crashes with null refs here.
+
+            if (obj == null)
+            {
+                return 0;
+            }
+
+            return obj.GetHashCode();
         }
     }
 }

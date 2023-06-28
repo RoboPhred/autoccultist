@@ -190,5 +190,10 @@ namespace AutoccultistNS.GameState.Impl
                 return this.outputCards;
             }
         }
+
+        public override int GetHashCode()
+        {
+            return this.hashCode.Value;
+        }
     }
 }

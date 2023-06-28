@@ -95,11 +95,7 @@ namespace AutoccultistNS.Config
                     select impulse;
 
                 // We must make this an array, as the cache might make it be enumerated several times.
-                var result = primaryImpulses.Concat(supportingImpulses).ToArray();
-
-                NoonUtility.LogWarning($"MotivationConfig.GetImpulses cached {result.Length} impulses");
-
-                return result;
+                return primaryImpulses.Concat(supportingImpulses).ToArray();
             });
         }
 

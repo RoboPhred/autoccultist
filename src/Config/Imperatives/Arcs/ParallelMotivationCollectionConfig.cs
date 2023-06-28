@@ -152,7 +152,7 @@ namespace AutoccultistNS.Config
             return CacheUtils.Compute(this.currentMotivationsKey, state, () =>
             {
                 var cache = new Dictionary<string, MotivationStatus>();
-                return this.motivations.Where(pair => this.ResolveMotivationStatus(pair.Key, state, cache) == MotivationStatus.CanRun).Select(pair => pair.Value);
+                return this.motivations.Where(pair => this.ResolveMotivationStatus(pair.Key, state, cache) == MotivationStatus.CanRun).Select(pair => pair.Value).ToArray();
             });
         }
 
