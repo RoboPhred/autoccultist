@@ -10,8 +10,6 @@ namespace AutoccultistNS.Config
 
     public class ParallelMotivationCollectionConfig : MotivationCollectionConfig, IDictionary<string, ParallelMotivationCollectionConfig.ParallelMotivationConfig>
     {
-        private readonly object currentMotivationsKey = new();
-
         private readonly Dictionary<string, ParallelMotivationConfig> motivations = new();
 
         public ParallelMotivationCollectionConfig()
@@ -149,7 +147,7 @@ namespace AutoccultistNS.Config
 
         protected override IEnumerable<IMotivationConfig> GetCurrentMotivations(IGameState state)
         {
-            return CacheUtils.Compute(this.currentMotivationsKey, state, () =>
+            return CacheUtils.Compute(this, nameof(this.GetCurrentMotivations), state, () =>
             {
                 var cache = new Dictionary<string, MotivationStatus>();
                 return this.motivations.Where(pair => this.ResolveMotivationStatus(pair.Key, state, cache) == MotivationStatus.CanRun).Select(pair => pair.Value).ToArray();
@@ -230,8 +228,6 @@ namespace AutoccultistNS.Config
 
         public class ParallelMotivationConfig : MotivationConfig
         {
-            private readonly object canActivateCacheKey = new object();
-
             /// <summary>
             /// Gets or sets a value indicating whether this motivation can only run if at least one primary goal can activate.
             /// </summary>
@@ -281,7 +277,7 @@ namespace AutoccultistNS.Config
 
                 // ParallelMotivations wait to activate until at least one primary goal can activate.
                 // This is different from LinearMotivationCollectionConfig, which runs motivations as long as the previous motivations are satisfied.
-                return CacheUtils.Compute(this.canActivateCacheKey, state, () =>
+                return CacheUtils.Compute(this, nameof(this.CanActivate), state, () =>
                 {
                     var failures = new List<ConditionResult>();
                     foreach (var goal in this.PrimaryGoals)

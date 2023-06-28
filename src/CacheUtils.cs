@@ -9,7 +9,7 @@ namespace AutoccultistNS
     {
         private const int MaxQueueLength = 1000;
 
-        private static readonly ConditionalWeakTable<object, CacheData> Values = new();
+        private static readonly ConditionalWeakTable<object, Dictionary<string, CacheData>> Values = new();
 
         private static readonly Queue<(int, DateTime)> CacheMisses = new();
 
@@ -27,10 +27,16 @@ namespace AutoccultistNS
             CacheHits.Clear();
         }
 
-        public static TOutput Compute<TOutput>(object cacheKey, object input, Func<TOutput> func)
+        public static TOutput Compute<TOutput>(object reference, string key, object input, Func<TOutput> func)
         {
+            var cache = Values.GetOrCreateValue(reference);
+            if (!cache.TryGetValue(key, out var data))
+            {
+                data = new CacheData();
+                cache.Add(key, data);
+            }
+
             var hashCode = input.GetHashCode();
-            var data = Values.GetOrCreateValue(cacheKey);
 
             if (data.InputHashCode != hashCode)
             {

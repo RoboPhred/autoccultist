@@ -26,6 +26,8 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         public event EventHandler Disposed;
 
+        public bool IsCompleted => this.isCompleted;
+
         /// <summary>
         /// Gets the ID of the situation this reaction is for.
         /// </summary>
@@ -81,6 +83,7 @@ namespace AutoccultistNS.Brain
             }
 
             this.isCompleted = true;
+            this.isDisposed = true;
 
             this.Completed?.Invoke(this, EventArgs.Empty);
             this.Disposed?.Invoke(this, EventArgs.Empty);

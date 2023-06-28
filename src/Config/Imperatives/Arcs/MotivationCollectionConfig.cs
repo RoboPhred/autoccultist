@@ -9,10 +9,6 @@ namespace AutoccultistNS.Config
     [CustomDeserializer(typeof(MotivationCollectionConfigDeserializer))]
     public abstract class MotivationCollectionConfig : NamedConfigObject, IImperativeConfig, IImperative
     {
-        private readonly object currentGoalsCacheKey = new();
-        private readonly object impulseCacheKey = new();
-        private readonly object isSatisfiedCacheKey = new();
-
         /// <summary>
         /// Gets the total number of motivations in this config
         /// </summary>
@@ -24,7 +20,7 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public virtual IEnumerable<string> DescribeCurrentGoals(IGameState state)
         {
-            return CacheUtils.Compute(this.currentGoalsCacheKey, state, () =>
+            return CacheUtils.Compute(this, nameof(this.DescribeCurrentGoals), state, () =>
             {
                 var motivations = this.GetCurrentMotivations(state);
                 return motivations.SelectMany(x => x.DescribeCurrentGoals(state)).ToArray();
@@ -35,7 +31,7 @@ namespace AutoccultistNS.Config
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             // Note: Each motivation has a GetImpulses too, but we want to rearrange the primary and supporting goals.
-            return CacheUtils.Compute(this.impulseCacheKey, state, () =>
+            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () =>
             {
                 var impulses = from motivation in this.GetCurrentMotivations(state)
                                let primaryGoals = motivation.PrimaryGoals.Select(g => (g, 1))
@@ -54,7 +50,7 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            return CacheUtils.Compute(this.isSatisfiedCacheKey, state, () =>
+            return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
             {
                 var primaryGoals =
                     from motivation in this.GetCurrentMotivations(state)

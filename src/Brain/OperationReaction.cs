@@ -332,6 +332,11 @@ namespace AutoccultistNS.Brain
 
         private async void End(bool aborted = false)
         {
+            if (this.IsCompleted)
+            {
+                return;
+            }
+
             if (!this.cancellationSource.IsCancellationRequested)
             {
                 this.cancellationSource.Cancel();
