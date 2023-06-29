@@ -241,6 +241,12 @@ namespace AutoccultistNS.Brain
                 return true;
             }
 
+            if (state.RecipeSlots.Count == 0)
+            {
+                // Nothing to slot, no need to coordinate anything.
+                return !recipeSolution.EndOperation;
+            }
+
             // Remember what this was, in case it somehow ends up changing.
             var pinnedRecipe = state.CurrentRecipe;
 
