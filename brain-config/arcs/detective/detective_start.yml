@@ -6,6 +6,4 @@ selectionHint:
 motivations:
   - name: Begin the Game
     primaryGoals:
-      - !import /goals/legacy/detective/work-station.yml
-    supportingGoals:
-      - !import /goals/survive.yml
+      - legacy/detective/begin
