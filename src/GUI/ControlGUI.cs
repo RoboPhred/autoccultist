@@ -139,6 +139,16 @@ namespace AutoccultistNS.GUI
                     reaction.Abort();
                 }
 
+                if (reaction is OperationReaction operationReaction)
+                {
+                    if (GUILayout.Button("Debug", GUILayout.ExpandWidth(false)))
+                    {
+                        var debug = operationReaction.DebugCurrentRecipe();
+                        var state = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == operationReaction.Operation.Situation);
+                        DiagnosticsGUI.Show(debug + "\n\n" + operationReaction.Operation.DebugRecipes(state));
+                    }
+                }
+
                 GUILayout.EndHorizontal();
             }
         }

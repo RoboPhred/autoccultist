@@ -1,6 +1,7 @@
 namespace AutoccultistNS
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.GameState;
     using SecretHistories.Entities;
@@ -99,25 +100,18 @@ namespace AutoccultistNS
             GameStateProvider.Invalidate();
         }
 
-        public static int GetMemory(string id, IGameState state = null)
+        internal static IReadOnlyDictionary<string, int> GetAllMemoriesFromGame()
         {
-            if (state == null)
-            {
-                state = GameStateProvider.Current;
-            }
-
-            var card = state.TabletopCards.FirstOrDefault(x => x.ElementId == MemoryElementId);
+            var card = TryGetMemoryElementStack();
             if (card == null)
             {
-                return 0;
+                return new Dictionary<string, int>();
             }
 
-            id = GetMemoryId(id);
-
-            return card.Aspects.ValueOrDefault(id);
+            return card.GetAspects().Where(x => x.Key.StartsWith(MemoryElementId)).ToDictionary(x => x.Key.Substring(MemoryElementId.Length), x => x.Value);
         }
 
-        private static ElementStack TryGetElementStack()
+        private static ElementStack TryGetMemoryElementStack()
         {
             var token = GameAPI.GetTokens().FirstOrDefault(t => t.PayloadEntityId == MemoryElementId);
             if (token == null)
@@ -130,7 +124,7 @@ namespace AutoccultistNS
 
         private static ElementStack GetMemoryElementStack()
         {
-            var stack = TryGetElementStack();
+            var stack = TryGetMemoryElementStack();
             if (stack == null)
             {
                 var token = GameAPI.TabletopSphere.ProvisionElementToken(MemoryElementId, 1);

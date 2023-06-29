@@ -33,6 +33,12 @@ namespace AutoccultistNS.GUI
             GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(350, 1000), DiagnosticsWindow, "Autoccultist Diagnostics");
         }
 
+        public static void Show(string content)
+        {
+            IsShowing = true;
+            DiagnosticsGUI.content = content;
+        }
+
         private static void DiagnosticsWindow(int id)
         {
             // FIXME: Reimplement this

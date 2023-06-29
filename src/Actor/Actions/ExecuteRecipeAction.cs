@@ -10,7 +10,6 @@ namespace AutoccultistNS.Actor.Actions
     using SecretHistories.Entities;
     using SecretHistories.Enums;
     using SecretHistories.Spheres;
-    using SecretHistories.UI;
 
     public class ExecuteRecipeAction : ActionBase
     {
@@ -92,7 +91,10 @@ namespace AutoccultistNS.Actor.Actions
             var firstSlot = situation.GetCurrentThresholdSpheres().FirstOrDefault();
             if (!firstSlot)
             {
-                throw new ActionFailureException(this, $"Situation {this.SituationId} has no slots for recipe {situation.CurrentRecipe}.");
+                // There are ongoing recipes without slots.
+                // ...we might try to execute recipe solutions for them if these solutions have side effects like mansus interactions
+                // or orphaning the operation.
+                return;
             }
 
             // TODO: Use ICardChooserExtensions.ChooseAll to find a solution to all the card matchers that allows for choosing lower

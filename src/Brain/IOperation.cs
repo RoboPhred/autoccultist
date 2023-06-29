@@ -21,5 +21,7 @@ namespace AutoccultistNS.Brain
         /// Gets the recipe solution for the current situation state.
         /// </summary>
         IRecipeSolution GetRecipeSolution(ISituationState situationState, IGameState gameState = null);
+
+        string DebugRecipes(ISituationState situationState, IGameState gameState = null);
     }
 }

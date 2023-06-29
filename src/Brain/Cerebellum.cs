@@ -136,7 +136,8 @@ namespace AutoccultistNS.Brain
                     }
                     catch (Exception ex)
                     {
-                        NoonUtility.LogException(new Exception("Failed running a cerebellum action: " + ex.Message, ex));
+                        NoonUtility.LogWarning("Failed to run coordinated task.");
+                        NoonUtility.LogException(ex);
                     }
                     finally
                     {

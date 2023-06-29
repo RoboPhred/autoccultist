@@ -8,7 +8,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// Configuration for a solution to a situation recipe.
     /// </summary>
-    public class RecipeSolutionConfig : IRecipeSolution
+    public class RecipeSolutionConfig : NamedConfigObject, IRecipeSolution
     {
         /// <summary>
         /// A cached read only dictionary of slot names to card choices.
@@ -70,6 +70,11 @@ namespace AutoccultistNS.Config
             var explicitRequirements = (IEnumerable<ISlottableCardChoiceConfig>)this.CardRequirements ?? new ISlottableCardChoiceConfig[0];
             var implicitRequirements = this.RequireSlotCards ? this.Slots.Values.Select(x => x) : new ISlottableCardChoiceConfig[0];
             return explicitRequirements.Concat(implicitRequirements).Where(x => !x.Optional).ToArray();
+        }
+
+        public override string ToString()
+        {
+            return $"RecipeSolution(Name = {this.Name})";
         }
     }
 }

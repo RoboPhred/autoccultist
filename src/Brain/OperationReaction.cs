@@ -46,6 +46,18 @@ namespace AutoccultistNS.Brain
             this.loopTask = this.ExecuteOperation();
         }
 
+        public string DebugCurrentRecipe()
+        {
+            var state = this.GetSituationState();
+            var recipeSolution = this.Operation.GetRecipeSolution(state);
+            if (recipeSolution == null)
+            {
+                return "No recipe";
+            }
+
+            return recipeSolution.ToString();
+        }
+
         protected override void OnAbort()
         {
             this.End(true);
@@ -221,6 +233,7 @@ namespace AutoccultistNS.Brain
         {
             // Do this ahead of time so we know not to pause if there is nothing to do.
             var state = this.GetSituationState();
+
             var recipeSolution = this.Operation.GetRecipeSolution(state);
             if (recipeSolution == null)
             {

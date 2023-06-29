@@ -183,7 +183,6 @@ namespace AutoccultistNS.Brain
         private static async void InvokeImpulsesLoop()
         {
             var lastHash = 0;
-            var foundImpulseLastLoop = false;
 
             while (true)
             {
@@ -196,17 +195,17 @@ namespace AutoccultistNS.Brain
                         // Reset our loop state, just in case the new board state is identical, as it may be for rapid
                         // restarts of the same legacy.
                         lastHash = 0;
-                        foundImpulseLastLoop = false;
 
                         // Wait until it is time to run.
                         await MechanicalHeart.AwaitStart(CancellationToken.None);
                         continue;
                     }
-                    else if (!foundImpulseLastLoop)
+                    else
                     {
-                        // We didn't find anything to do, wait a beat.
-                        // Note: We cannot use isActive as that is for pause/unpause behavior and might be false if the impulse
-                        // reaction completed synchronously.
+                        // Always wait between impulses.
+                        // We used to drain all impulses in one frame, but that opens the door to infinite loops
+                        // with zero-time reactions (such as memory set).
+                        // TODO: Detect runaway every-beat impulses and log a warning.
                         await MechanicalHeart.AwaitBeat(CancellationToken.None);
                     }
 
@@ -242,12 +241,9 @@ namespace AutoccultistNS.Brain
 
                             if (chosenImpulse == null)
                             {
-                                foundImpulseLastLoop = false;
                                 TryIdle();
                                 return Task.CompletedTask;
                             }
-
-                            foundImpulseLastLoop = true;
 
                             var shouldPause = false;
                             try

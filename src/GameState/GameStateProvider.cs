@@ -1,6 +1,7 @@
 namespace AutoccultistNS.GameState
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.GameState.Impl;
 
@@ -36,6 +37,7 @@ namespace AutoccultistNS.GameState
                     new ICardState[0],
                     new ICardState[0],
                     new ISituationState[0],
+                    new Dictionary<string, int>(),
                     PortalStateImpl.FromCurrentState());
             }
         }
@@ -95,6 +97,7 @@ namespace AutoccultistNS.GameState
                         enRouteCards,
                         new ICardState[0],
                         situations,
+                        Hippocampus.GetAllMemoriesFromGame(),
                         PortalStateImpl.FromCurrentState());
                 });
             }

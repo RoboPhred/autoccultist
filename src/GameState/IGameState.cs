@@ -28,6 +28,11 @@ namespace AutoccultistNS.GameState
         IReadOnlyCollection<ISituationState> Situations { get; }
 
         /// <summary>
+        /// Gets the bot's memories.
+        /// </summary>
+        IReadOnlyDictionary<string, int> Memories { get; }
+
+        /// <summary>
         /// Gets the mansus state.
         /// </summary>
         IPortalState Mansus { get; }

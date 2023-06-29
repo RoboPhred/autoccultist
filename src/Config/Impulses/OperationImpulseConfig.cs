@@ -71,10 +71,6 @@ namespace AutoccultistNS.Config
             {
                 return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
             }
-            else
-            {
-                NoonUtility.LogWarning($"OperationImpulseConfig: Situation {situationId} is available.");
-            }
 
             var startingRecipe = this.GetStartingRecipe();
             var ongoingRecipes = this.GetOngoingRecipes();

@@ -2,6 +2,7 @@ namespace AutoccultistNS.GameState.Impl
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Provides the base implementation of a game state.
@@ -14,6 +15,7 @@ namespace AutoccultistNS.GameState.Impl
         private readonly IReadOnlyCollection<ICardState> enRouteCards;
         private readonly IReadOnlyCollection<ICardState> codexCards;
         private readonly IReadOnlyCollection<ISituationState> situations;
+        private readonly IReadOnlyDictionary<string, int> memories;
         private readonly IPortalState mansus;
         private readonly Lazy<int> hashCode;
 
@@ -30,12 +32,14 @@ namespace AutoccultistNS.GameState.Impl
             IEnumerable<ICardState> enRouteCards,
             IEnumerable<ICardState> codexCards,
             IEnumerable<ISituationState> situations,
+            IReadOnlyDictionary<string, int> memories,
             IPortalState mansus)
         {
             this.tabletopCards = new HashCalculatingCollection<ICardState>(tabletopCards);
             this.enRouteCards = new HashCalculatingCollection<ICardState>(enRouteCards);
             this.codexCards = new HashCalculatingCollection<ICardState>(codexCards);
             this.situations = new HashCalculatingCollection<ISituationState>(situations);
+            this.memories = memories;
             this.mansus = mansus;
 
             this.hashCode = new Lazy<int>(
@@ -48,6 +52,7 @@ namespace AutoccultistNS.GameState.Impl
                             this.enRouteCards,
                             this.codexCards,
                             this.situations,
+                            HashUtils.HashAllUnordered(this.memories.Select(x => $"{x.Key}={x.Value}")),
                             this.mansus);
 
                         if (hash != prevHash)
@@ -97,6 +102,16 @@ namespace AutoccultistNS.GameState.Impl
             {
                 this.VerifyAccess();
                 return this.situations;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyDictionary<string, int> Memories
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.memories;
             }
         }
 

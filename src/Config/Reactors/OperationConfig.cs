@@ -2,6 +2,7 @@ namespace AutoccultistNS.Config
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
     using SecretHistories.Enums;
@@ -87,6 +88,43 @@ namespace AutoccultistNS.Config
             return this.GetConditionalRecipes().FirstOrDefault(x => x.IsConditionMet(gameState));
         }
 
+        public string DebugRecipes(ISituationState situationState, IGameState gameState = null)
+        {
+            if (gameState == null)
+            {
+                gameState = GameStateProvider.Current;
+            }
+
+            if (situationState.State == StateEnum.Unstarted)
+            {
+                return (this.StartingRecipe != null) ? "Starting Recipe" : "No starting recipe.";
+            }
+
+            if (situationState.CurrentRecipe == null)
+            {
+                return "Situation has no current recipe, no recipes can target it.";
+            }
+
+            if (this.OngoingRecipes != null && this.GetOngoingRecipes().TryGetValue(situationState.CurrentRecipe, out var recipe))
+            {
+                return $"Ongoing Recipe: {situationState.CurrentRecipe}";
+            }
+
+            var sb = new StringBuilder();
+            foreach (var conditional in this.GetConditionalRecipes())
+            {
+                var asConfig = conditional as ConditionalRecipeSolutionConfig;
+                var canExecute = ConditionResult.Trace(() => conditional.IsConditionMet(gameState));
+                sb.AppendLine($"Conditional Recipe: {asConfig?.Name ?? "Unknown"} ({canExecute})");
+                if (!canExecute)
+                {
+                    sb.AppendLine($"- {canExecute.ToString()}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
         public override void AfterDeserialized(Mark start, Mark end)
         {
             base.AfterDeserialized(start, end);
@@ -99,7 +137,7 @@ namespace AutoccultistNS.Config
 
         public override string ToString()
         {
-            return $"OperationConfig(Name = {this.Name}, Situation = {this.Situation})";
+            return $"OperationConfig(Name = {this.Name}, File = {this.FilePath}, Situation = {this.Situation})";
         }
 
         protected virtual string GetSituationId()
