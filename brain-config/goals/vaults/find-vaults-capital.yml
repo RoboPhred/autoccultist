@@ -7,9 +7,18 @@ requirements:
     - elementId: waywood
 
 completedWhen:
-  elementId: vaultcapitaldefault
+  memory: has_all_vaults_capital
+  value: 1
 
 impulses:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultcapitaldefault
+    reactions:
+      - remember: has_all_vaults_capital
+        label: Has All Vaults in Capital
+        description: We have found everything of interest at the Capital.
+
   - name: Collect Secret Histories lore
     forbidders:
       anyOf:

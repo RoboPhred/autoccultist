@@ -111,3 +111,5 @@ impulses:
             aspects: { follower: 1, forge: 2 }
           expeditionfunds:
             elementId: funds
+          expeditionfunds2:
+            elementId: funds

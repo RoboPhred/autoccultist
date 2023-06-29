@@ -21,3 +21,9 @@ Bot does not attempt to start the intro.
 If the intro is manually started, bot recovers just fine.
 
 Result of caching? Issue happens even if we start manually and wait for all the caches to bust.
+
+## BUG: Hard lockup when a reaction tries to run every frame but ends on that frame
+
+Happens when targeting ongoing situations but the situation has no ongoing slots.
+
+- Sub-bug: Crash when the situation has no ongoing slots when we start it.

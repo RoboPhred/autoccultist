@@ -22,39 +22,6 @@ conditionalRecipes:
               storedCardsMatch:
                 cardSet:
                   - elementId: funds
-                  - elementId: funds
-                  - elementId: funds
-                  - elementId: funds
-            - situation: explore
-              containsAspects:
-                peril:
-                  lessThanOrEqualTo: 0
-              storedCardsMatch:
-                cardSet:
-                  - elementId: funds
-                  - elementId: funds
-                  - elementId: funds
-            - situation: explore
-              containsAspects:
-                guardian:
-                  lessThanOrEqualTo: 0
-                peril:
-                  lessThanOrEqualTo: 0
-              storedCardsMatch:
-                cardSet:
-                  - elementId: funds
-                  - elementId: funds
-            - situation: explore
-              containsAspects:
-                guardian:
-                  lessThanOrEqualTo: 0
-                peril:
-                  lessThanOrEqualTo: 0
-                seal:
-                  lessThanOrEqualTo: 0
-              storedCardsMatch:
-                cardSet:
-                  - elementId: funds
     slots:
       Assistance:
         elementId: funds

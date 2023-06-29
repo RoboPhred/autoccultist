@@ -1,4 +1,5 @@
 name: Meet acquaintances and patrons
+
 completedWhen:
   memory: has_all_followers
   value: 1
