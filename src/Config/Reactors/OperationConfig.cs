@@ -39,6 +39,9 @@ namespace AutoccultistNS.Config
         /// </summary>
         public List<IReactorConfig> OnComplete { get; set; } = new();
 
+        // Explicitly implement IOperation to get whatever our overriden situationId may be.
+        string IOperation.Situation => this.GetSituationId();
+
         /// <inheritdoc/>
         public IReaction GetReaction()
         {

@@ -51,7 +51,7 @@ namespace AutoccultistNS.Config
         public OperationStartCondition? StartCondition { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this operation should target an ongoign situation.
+        /// Gets or sets a value indicating whether this operation should target an ongoing situation.
         /// </summary>
         public bool? TargetOngoing { get; set; }
 
@@ -70,6 +70,10 @@ namespace AutoccultistNS.Config
             if (!Resource.Of<ISituationState>().IsAvailable(situationState))
             {
                 return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
+            }
+            else
+            {
+                NoonUtility.LogWarning($"OperationImpulseConfig: Situation {situationId} is available.");
             }
 
             var startingRecipe = this.GetStartingRecipe();
