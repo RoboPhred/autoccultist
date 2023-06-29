@@ -36,7 +36,7 @@ namespace AutoccultistNS.Tasks
 
             // Only cancel the source if we have not yet executed.
             // If we have started executing, let the cancellation propogate.
-            if (this.taskSource == null)
+            if (this.innerTask == null)
             {
                 this.source.SetCanceled();
             }
