@@ -5,10 +5,10 @@ startingRecipe:
     talk:
       aspects: { society: 1, venerationforge: 1 }
     Associate:
-      oneOf:
-        - elementId: renira_b
-        - elementId: saliba_b
-        - aspects: { follower: 1, disciple: -1, grail: 2 }
+      aspects: { follower: 1, disciple: -1 }
+      forbiddenElementIds:
+        # These go insane
+        - generic_b_moth
     Ceremony:
       aspects: { lore: 1, forge: 6 }
     Trappings:

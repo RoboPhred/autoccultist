@@ -8,6 +8,6 @@ startingRecipe:
       oneOf:
         - elementId: renira_b
         - elementId: saliba_b
-        - aspects: { follower: 1, believer: 1, grail: 2 }
+        - aspects: { follower: 1, disciple: -1, grail: 2 }
     Ceremony:
-      aspects: { lore: 1, forge: 8}
+      aspects: { lore: 1, forge: 8 }

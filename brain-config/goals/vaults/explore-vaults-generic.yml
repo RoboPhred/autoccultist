@@ -4,5 +4,3 @@ completedWhen:
     - aspects: { vault: 1 }
 impulses:
   - !import /impulse-sets/explore-vaults.yml
-  # Not needed now that vault continuation is embedded in the starter ops.
-  # - !import /impulse-sets/maintain-vault-exploration.yml

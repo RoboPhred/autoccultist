@@ -41,6 +41,8 @@ motivations:
     requires:
       - begin_game
     primaryGoals:
+      # Still need to keep our detective job alive
+      - legacy/detective/mantain-job
       - funds/work-labor
   # End jobs
 
@@ -53,8 +55,6 @@ motivations:
       - work_detective
     primaryGoals:
       - reason/acquire-skillreasona
-    supportingGoals:
-      - legacy/detective/mantain-job
 
   get_scholarship_major:
     name: Get a profound scholarship
@@ -63,8 +63,6 @@ motivations:
     primaryGoals:
       - reason/acquire-skillreasonb
       - reason/acquire-skillreasonc
-    supportingGoals:
-      - legacy/detective/mantain-job
 
   ascend:
     name: Complete the Ambition

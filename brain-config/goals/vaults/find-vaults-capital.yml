@@ -1,0 +1,24 @@
+name: Find Vaults in the Capital
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywood
+
+completedWhen:
+  elementId: vaultcapitaldefault
+
+impulses:
+  - name: Collect Secret Histories lore
+    forbidders:
+      anyOf:
+        - elementId: fragmentsecrethistories
+        - elementId: fragmentsecrethistoriesb
+    operation: !import /operations/mansus/use-wood-secrethistories.yml
+
+  - name: Break down A Furtive Truth into Occult Scraps
+    operation: !import /operations/lore/secrethistories/lore-breakdown-secrethistories-b.yml
+
+  - name: Explore the Capital
+    operation: !import /operations/vaults/find-vaults-capital.yml

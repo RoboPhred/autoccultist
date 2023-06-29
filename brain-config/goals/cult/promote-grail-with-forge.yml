@@ -9,6 +9,6 @@ impulses:
   - name: Promote a Believer, while burning Restlessness
     priority: goal
     operation: !import /operations/cult/promote-grail-believer-forge-restlessness.yml
-  - name: Promote a Believer, by invoking Grail
+  - name: Promote a Believer, by invoking Forge
     priority: goal
     operation: !import /operations/cult/promote-grail-believer-forge.yml

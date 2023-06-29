@@ -1,0 +1,113 @@
+name: Explore Vaults in the Capital
+completedWhen:
+  noneOf:
+    - aspects: { vaultcapital: 1 }
+impulses:
+  - name: Explore Cater & Hero Limited
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Cater & Hero Limited
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcapital3
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+  - name: Explore St Felix of Schuren
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore St Felix of Schuren
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcapital5
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, edge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, edge: 2 }
+          expeditionfunds:
+            elementId: funds
+  - name: Explore Forgotten Mithraeum
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Forgotten Mithraeum
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcapital2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, knock: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, knock: 2 }
+          expeditionfunds:
+            elementId: funds
+  - name: Explore St Agnes Hospital
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore St Agnes Hospital
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcapital4
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, heart: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, heart: 2 }
+          expeditionfunds:
+            elementId: funds
+  - name: Explore Strathcoyne's Residence
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Strathcoyne's Residence
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcapital1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, edge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, edge: 2 }
+          expeditionfunds:
+            elementId: funds
+  - name: Explore The Forsaken Reach
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore The Forsaken Reach
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcapitaldefault
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds

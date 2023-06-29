@@ -96,7 +96,8 @@ conditionalRecipes:
                 - situation: explore
                   storedCardsMatch:
                     cardSet:
-                      - elementId: peril_treacherousg
+                      - elementId: peril_treacherousground
+                  containsAspects: { lantern: 10 }
     slots:
       Assistance:
         aspectWeightBias: highest
@@ -244,9 +245,6 @@ conditionalRecipes:
             - noneOf:
                 - allOf:
                     - situation: explore
-                      storedCardsMatch:
-                        cardSet:
-                          - elementId: curse_nowhere
                       containsAspects: { lantern: 10 }
                 - allOf:
                     - situation: explore
@@ -262,15 +260,11 @@ conditionalRecipes:
             - noneOf:
                 - allOf:
                     - situation: explore
-                      storedCardsMatch:
-                        cardSet:
-                          - elementId: guardian_long
                       containsAspects: { grail: 10 }
                 - allOf:
                     - situation: explore
                       storedCardsMatch:
-                        cardSet:
-                          - elementId: guardian_soucouyants
+                        elementId: guardian_soucouyants
                       containsAspects: { lantern: 10 }
                 - allOf:
                     - situation: explore

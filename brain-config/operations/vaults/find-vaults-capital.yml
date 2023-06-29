@@ -1,0 +1,6 @@
+name: Find Capital vaults
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: fragmentsecrethistories

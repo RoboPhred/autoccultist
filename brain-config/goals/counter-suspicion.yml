@@ -1,0 +1,7 @@
+name: Counter Suspicion
+impulses:
+  - name: Counter Notariety with Heart
+    priority: maintenance
+    requirements:
+      elementId: notoriety
+    operation: !import /operations/cult-business/counter-notariety.yml
