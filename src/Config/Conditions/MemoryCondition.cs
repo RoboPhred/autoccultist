@@ -1,5 +1,6 @@
 namespace AutoccultistNS.Config.Conditions
 {
+    using System.Linq;
     using AutoccultistNS.GameState;
 
     public class MemoryCondition : ConditionConfig
@@ -10,6 +11,7 @@ namespace AutoccultistNS.Config.Conditions
 
         public override ConditionResult IsConditionMet(IGameState state)
         {
+            NoonUtility.LogWarning($"Memories in state: {string.Join(", ", state.Memories.Select(x => $"{x.Key}={x.Value}"))}");
             state.Memories.TryGetValue(this.Memory, out var value);
             if (!this.Value.IsConditionMet(value))
             {

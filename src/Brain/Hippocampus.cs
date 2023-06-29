@@ -108,7 +108,7 @@ namespace AutoccultistNS
                 return new Dictionary<string, int>();
             }
 
-            return card.GetAspects().Where(x => x.Key.StartsWith(MemoryElementId)).ToDictionary(x => x.Key.Substring(MemoryElementId.Length), x => x.Value);
+            return card.GetAspects().Where(x => x.Key.StartsWith(MemoryElementId + "_")).ToDictionary(x => x.Key.Substring(MemoryElementId.Length + 1), x => x.Value);
         }
 
         private static ElementStack TryGetMemoryElementStack()
