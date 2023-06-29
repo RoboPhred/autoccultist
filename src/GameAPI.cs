@@ -289,16 +289,6 @@ namespace AutoccultistNS
             return Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
         }
 
-        public static void SortTable()
-        {
-            if (!IsRunning)
-            {
-                return;
-            }
-
-            (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
-        }
-
         /// <summary>
         /// Gets the various card choices available in the mansus, if any
         /// </summary>
@@ -472,6 +462,21 @@ namespace AutoccultistNS
             {
                 return await action();
             }
+        }
+
+        public static void SortTable()
+        {
+            if (!IsRunning)
+            {
+                return;
+            }
+
+    (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
+        }
+
+        public static IEnumerable<Token> GetTokens()
+        {
+            return Watchman.Get<HornedAxe>().GetSpheres().SelectMany(x => x.GetTokens());
         }
 
         /// <summary>

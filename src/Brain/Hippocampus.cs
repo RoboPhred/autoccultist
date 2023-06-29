@@ -119,7 +119,7 @@ namespace AutoccultistNS
 
         private static ElementStack TryGetElementStack()
         {
-            var token = GameAPI.TabletopSphere.GetTokens().FirstOrDefault(t => t.PayloadEntityId == MemoryElementId);
+            var token = GameAPI.GetTokens().FirstOrDefault(t => t.PayloadEntityId == MemoryElementId);
             if (token == null)
             {
                 return null;
