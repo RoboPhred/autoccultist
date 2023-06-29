@@ -1,0 +1,73 @@
+name: "Detective: Ambition's Tide"
+legacy: detective
+
+selectionHint:
+  anyOf:
+    - elementId: legacydetectivejob
+
+motivations:
+  survive_forever:
+    name: Survive
+    primaryGoals:
+      - survive
+
+  begin_game:
+    name: Begin the Legacy
+    primaryGoals:
+      - legacy/detective/begin
+
+  # Begin jobs
+  work_detective:
+    name: Work as a Detective
+    requires:
+      - begin_game
+    blocks:
+      - work_labor
+    primaryGoals:
+      - legacy/detective/work-station
+
+  work_detective_singleminded:
+    name: Work as a Detective (singleminded)
+    requires:
+      - get_scholarship_major
+    blocks:
+      - work_labor
+      - work_detective
+    primaryGoals:
+      - legacy/detective/work-station-singleminded
+
+  work_labor:
+    name: Work with physical labor
+    requires:
+      - begin_game
+    primaryGoals:
+      - funds/work-labor
+  # End jobs
+
+  get_scholarship_minor:
+    name: Get a scholarship
+    requires:
+      - begin_game
+    blocks:
+      # Detective exhausts our reason, hold off until we get more
+      - work_detective
+    primaryGoals:
+      - reason/acquire-skillreasona
+    supportingGoals:
+      - legacy/detective/mantain-job
+
+  get_scholarship_major:
+    name: Get a profound scholarship
+    requires:
+      - get_scholarship_minor
+    primaryGoals:
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+    supportingGoals:
+      - legacy/detective/mantain-job
+
+  ascend:
+    name: Complete the Ambition
+    requirePrimaryGoals: true
+    primaryGoals:
+      - legacy/detective/victory_ambitions_tide

@@ -1,7 +1,0 @@
-name: "Detective: Collect Everything"
-legacy: detective
-
-motivations:
-  - name: Survive
-    primaryGoals:
-      - !import /goals/survive.yml

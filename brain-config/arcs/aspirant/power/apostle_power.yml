@@ -1,6 +1,7 @@
 name: "Aspirant: Aestuant Victory"
 legacy: apostleforge
 startFromSave: ./.saves/apostle_power.json
+
 motivations:
   - name: Perpetual survival
     primaryGoals:

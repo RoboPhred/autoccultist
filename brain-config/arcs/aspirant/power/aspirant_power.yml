@@ -1,5 +1,6 @@
 name: "Aspirant: Power Ascension"
 legacy: aspirant
+
 selectionHint:
   anyOf:
     - elementId: introjob
@@ -10,6 +11,7 @@ selectionHint:
     - elementId: ascensionpowerd
     - elementId: ascensionpowere
     - elementId: ascensionpowerf
+
 motivations:
   survive_forever:
     name: Survive

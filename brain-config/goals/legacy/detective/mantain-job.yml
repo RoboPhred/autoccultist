@@ -1,0 +1,21 @@
+name: Mantain our position as a Detective
+requirements:
+  anyOf:
+    - elementId: legacydetectivejob_matured
+
+impulses:
+  - name: Build up some evidence
+    requirements:
+      elementId: legacydetectivejob_matured
+      lifetimeRemaining: -65
+    priority: critical
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob_matured
+          target:
+            aspects: { suspicious: 1, independent: 1 }
+          meticulous:
+            elementId: reason

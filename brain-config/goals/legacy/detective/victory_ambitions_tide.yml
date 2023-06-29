@@ -1,0 +1,17 @@
+name: Get a Bureau Promotion
+requirements:
+  anyOf:
+    - elementId: legacydetectivejob_matured
+    - elementId: favour
+
+impulses:
+  - name: Accept the promotion
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob_matured
+          target:
+            elementId: favour

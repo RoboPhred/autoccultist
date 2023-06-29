@@ -1,15 +1,24 @@
-name: Work at the Station
+name: Start the Detective Legacy
 requirements:
-  anyOf:
-    - elementId: legacydetectivejob
+  elementId: legacydetectivejob
+completedWhen:
+  allOf:
     - elementId: legacydetectivejob_matured
-
+    - situation: dream
+    - situation: study
 impulses:
+  - name: Work at the Station (the first time)
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob
+
   - name: Build up some evidence
     forbidders:
-      anyOf:
-        - elementId: myevidence
-        - elementId: myevidenceb
+      elementId: myevidence
     operation:
       situation: work
       startingRecipe:
@@ -29,8 +38,6 @@ impulses:
           work:
             elementId: legacydetectivejob_matured
           target:
-            oneOf:
-              - elementId: myevidenceb
-              - elementId: myevidence
+            elementId: myevidence
           meticulous:
             elementId: reason

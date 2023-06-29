@@ -1,4 +1,4 @@
-name: Work at the Station
+name: Work at the Station with all Reason
 requirements:
   anyOf:
     - elementId: legacydetectivejob
@@ -33,4 +33,10 @@ impulses:
               - elementId: myevidenceb
               - elementId: myevidence
           meticulous:
+            elementId: reason
+          vigilant:
+            optional: true
+            elementId: reason
+          singleminded:
+            optional: true
             elementId: reason
