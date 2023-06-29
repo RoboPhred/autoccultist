@@ -196,9 +196,12 @@ namespace AutoccultistNS.Brain
                         // Reset our loop state, just in case the new board state is identical, as it may be for rapid
                         // restarts of the same legacy.
                         lastHash = 0;
+                        foundImpulseLastLoop = false;
 
                         // Wait until it is time to run.
+                        NoonUtility.LogWarning($"NucleusAccumbens: Waiting for game to start.");
                         await MechanicalHeart.AwaitStart(CancellationToken.None);
+                        NoonUtility.LogWarning($"NucleusAccumbens: Game started.");
                         continue;
                     }
                     else if (!foundImpulseLastLoop)
@@ -269,8 +272,6 @@ namespace AutoccultistNS.Brain
                             return Task.CompletedTask;
                         },
                         CancellationToken.None);
-
-                    NoonUtility.LogWarning($"NucleusAccumbens done looking for new impulses");
                 }
                 catch (TaskCanceledException)
                 {

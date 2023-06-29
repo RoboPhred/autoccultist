@@ -99,6 +99,11 @@ namespace AutoccultistNS.Config
         {
             var candidates = new List<IConfigObject>();
 
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             candidates.AddRange(LibraryGoals.Where(x => type.IsAssignableFrom(x.GetType())));
             candidates.AddRange(LibraryArcs.Where(x => type.IsAssignableFrom(x.GetType())));
 
