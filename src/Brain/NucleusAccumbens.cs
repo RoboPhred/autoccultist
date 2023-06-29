@@ -189,7 +189,7 @@ namespace AutoccultistNS.Brain
             {
                 try
                 {
-                    if (!GameAPI.IsRunning)
+                    if (!GameAPI.IsRunning || !MechanicalHeart.IsRunning)
                     {
                         TryIdle();
 
@@ -199,9 +199,7 @@ namespace AutoccultistNS.Brain
                         foundImpulseLastLoop = false;
 
                         // Wait until it is time to run.
-                        NoonUtility.LogWarning($"NucleusAccumbens: Waiting for game to start.");
                         await MechanicalHeart.AwaitStart(CancellationToken.None);
-                        NoonUtility.LogWarning($"NucleusAccumbens: Game started.");
                         continue;
                     }
                     else if (!foundImpulseLastLoop)
