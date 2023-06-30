@@ -6,7 +6,7 @@ operation:
   startingRecipe:
     slots:
       talk:
-        aspects: { follower: 1, follower_wound: 1 }
+        aspects: { follower_wound: 1 }
   ongoingRecipes:
     talktofollower_attemptheal:
       slots:
