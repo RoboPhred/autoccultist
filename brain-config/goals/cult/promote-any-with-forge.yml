@@ -1,11 +1,11 @@
 name: Promote a believer, by invoking Forge
 requirements:
-  aspects:
-    society: 1
-    venerationforge: 1
+  aspects: { society: 1, venerationforge: 1 }
 completedWhen:
   noneOf:
     - aspects: { follower: 1, disciple: -1 }
+      forbiddenElementIds:
+        - generic_b_moth
 impulses:
   - name: Promote a Believer with Forge, while burning Restlessness
     priority: goal

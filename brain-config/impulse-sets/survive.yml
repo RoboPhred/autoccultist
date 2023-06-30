@@ -20,6 +20,7 @@
 - !import /impulses/survive/crit-dispose-fascination-reminders.yml
 - !import /impulses/survive/crit-visions-get-dread.yml
 - !import /impulses/survive/crit-affliction-emergency-vitality.yml
+- !import /impulses/survive/crit-heal-follower.yml
 
 # Lesser priority survival instincts.
 - !import /impulses/survive/maint-heal-dread-contentment.yml

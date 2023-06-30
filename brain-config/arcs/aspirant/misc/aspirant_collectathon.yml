@@ -228,6 +228,20 @@ motivations:
     primaryGoals:
       - vaults/find-vaults-capital
 
+  find_vaults_shires:
+    name: Find locations in the Shires
+    requires:
+      - find_vaults_capital
+    primaryGoals:
+      - vaults/find-vaults-shires
+
+  find_vaults_continent:
+    name: Find locations on the Continent
+    requires:
+      - find_vaults_shires
+    primaryGoals:
+      - vaults/find-vaults-continent
+
   explore_vaults:
     name: Explore Vaults
     requires:
@@ -235,3 +249,5 @@ motivations:
       - disciple_all_followers
     primaryGoals:
       - vaults/explore-vaults-capital
+      - vaults/explore-vaults-shires
+      - vaults/explore-vaults-continent

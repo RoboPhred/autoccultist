@@ -1,0 +1,35 @@
+name: Find Vaults in the Shires
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywood
+
+completedWhen:
+  memory: has_all_vaults_shires
+  value: 1
+
+impulses:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultshiresdefault
+    reactions:
+      - remember: has_all_vaults_shires
+        label: Has All Vaults in the Shires
+        description: We have found everything of interest in the Shires.
+
+  - name: Collect Secret Histories from the Wood
+    operation: !import /operations/mansus/use-wood-secrethistories.yml
+
+  - name: Combine Occult Scraps into Furtive Truths
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+
+  - name: Explore the Shires
+    operation:
+      name: Find Shire vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesb
