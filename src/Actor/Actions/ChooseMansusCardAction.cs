@@ -66,21 +66,21 @@ namespace AutoccultistNS.Actor.Actions
 
         private void ChooseCard()
         {
-            var gameState = GameStateProvider.Current;
+            var state = GameStateProvider.Current;
 
-            if (gameState.Mansus.State != PortalActiveState.AwaitingSelection)
+            if (state.Mansus.State != PortalActiveState.AwaitingSelection)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: Mansus is not awaiting selection.");
             }
 
-            if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
+            if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { state.Mansus.FaceUpCard }, state) != null)
             {
                 Autoccultist.LogTrace("Choosing face up card from mansus.");
 
                 // This is the card we want.
-                GameAPI.ChooseMansusDeck(gameState.Mansus.FaceUpDeck);
+                GameAPI.ChooseMansusDeck(state.Mansus.FaceUpDeck);
             }
-            else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
+            else if (state.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
             {
                 Autoccultist.LogTrace($"Choosing deck {this.MansusSolution.Deck} from mansus.");
 
@@ -89,7 +89,7 @@ namespace AutoccultistNS.Actor.Actions
             }
             else
             {
-                throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", gameState.Mansus.DeckCards.Keys)}");
+                throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", state.Mansus.DeckCards.Keys)}");
             }
         }
 

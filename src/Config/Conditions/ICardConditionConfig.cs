@@ -16,7 +16,8 @@
         /// Determine if the given cards match against the card set.
         /// </summary>
         /// <param name="cards">The cards to match against the card set.</param>
+        /// <param name="state">The current game state.</param>
         /// <returns>True if the card set is satsified by the cards in the given list, False otherwise.</returns>
-        ConditionResult CardsMatchSet(IEnumerable<ICardState> cards);
+        ConditionResult CardsMatchSet(IEnumerable<ICardState> cards, IGameState state);
     }
 }

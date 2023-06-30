@@ -2,6 +2,8 @@ namespace AutoccultistNS.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
+    using AutoccultistNS.Config.Values;
+    using AutoccultistNS.GameState;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -14,7 +16,7 @@ namespace AutoccultistNS.Config.Conditions
         /// <summary>
         /// Gets or sets a value indicating that the target value must be greater than this amount.
         /// </summary>
-        public float? GreaterThan { get; set; }
+        public IValueProviderConfig GreaterThan { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating that the target value must be greater or equal to this amount.
@@ -22,24 +24,24 @@ namespace AutoccultistNS.Config.Conditions
         /// <remarks>
         /// This exists mainly for the shorthand number assignment.
         /// </remarks>
-        public float? GreaterThanOrEqualTo { get; set; }
+        public IValueProviderConfig GreaterThanOrEqualTo { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating that the target value must be less than this amount.
         /// </summary>
-        public float? LessThan { get; set; }
+        public IValueProviderConfig LessThan { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating that the target value must be less than or equal to this amount.
         /// </summary>
-        public float? LessThanOrEqualTo { get; set; }
+        public IValueProviderConfig LessThanOrEqualTo { get; set; }
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)
         {
             base.AfterDeserialized(start, end);
 
-            if (!this.GreaterThan.HasValue && !this.LessThan.HasValue && !this.GreaterThanOrEqualTo.HasValue && !this.LessThanOrEqualTo.HasValue)
+            if (this.GreaterThan == null && this.LessThan == null && this.GreaterThanOrEqualTo == null && this.LessThanOrEqualTo == null)
             {
                 throw new InvalidConfigException("Value condition must specify at least one of: greaterThan, greaterThanOrEqualTo, lessThan, lessThanOrEqualTo");
             }
@@ -50,24 +52,24 @@ namespace AutoccultistNS.Config.Conditions
         /// </summary>
         /// <param name="value">The value to run the comparison against.</param>
         /// <returns>True if the comparison is true for the given value, or False otherwise.</returns>
-        public bool IsConditionMet(float value)
+        public bool IsConditionMet(float value, IGameState state)
         {
-            if (this.GreaterThan.HasValue && value <= this.GreaterThan.Value)
+            if (this.GreaterThan != null && value <= this.GreaterThan.GetValue(state))
             {
                 return false;
             }
 
-            if (this.GreaterThanOrEqualTo.HasValue && value < this.GreaterThanOrEqualTo.Value)
+            if (this.GreaterThanOrEqualTo != null && value < this.GreaterThanOrEqualTo.GetValue(state))
             {
                 return false;
             }
 
-            if (this.LessThan.HasValue && value >= this.LessThan.Value)
+            if (this.LessThan != null && value >= this.LessThan.GetValue(state))
             {
                 return false;
             }
 
-            if (this.LessThanOrEqualTo.HasValue && value > this.LessThanOrEqualTo.Value)
+            if (this.LessThanOrEqualTo != null && value > this.LessThanOrEqualTo.GetValue(state))
             {
                 return false;
             }
@@ -78,19 +80,24 @@ namespace AutoccultistNS.Config.Conditions
         public override string ToString()
         {
             var content = new List<string>();
-            if (this.GreaterThan.HasValue)
+            if (this.GreaterThan != null)
             {
-                content.Add($"> {this.GreaterThan.Value}");
+                content.Add($"> {this.GreaterThan.ToString()}");
             }
 
-            if (this.GreaterThanOrEqualTo.HasValue)
+            if (this.GreaterThanOrEqualTo != null)
             {
-                content.Add($">= {this.GreaterThanOrEqualTo.Value}");
+                content.Add($">= {this.GreaterThanOrEqualTo.ToString()}");
             }
 
-            if (this.LessThan.HasValue)
+            if (this.LessThan != null)
             {
-                content.Add($"< {this.LessThan.Value}");
+                content.Add($"< {this.LessThan.ToString()}");
+            }
+
+            if (this.LessThanOrEqualTo != null)
+            {
+                content.Add($"<= {this.LessThanOrEqualTo.ToString()}");
             }
 
             return $"({string.Join(", ", content)})";
@@ -108,16 +115,16 @@ namespace AutoccultistNS.Config.Conditions
 
                 if (value > 0)
                 {
-                    this.GreaterThanOrEqualTo = value;
+                    this.GreaterThanOrEqualTo = new StaticValueProviderConfig(value);
                 }
                 else if (value == 0)
                 {
-                    this.GreaterThanOrEqualTo = 0;
-                    this.LessThanOrEqualTo = 0;
+                    this.GreaterThanOrEqualTo = new StaticValueProviderConfig(0);
+                    this.LessThanOrEqualTo = new StaticValueProviderConfig(0);
                 }
                 else
                 {
-                    this.LessThan = -value;
+                    this.LessThan = new StaticValueProviderConfig(-value);
                 }
             }
             else
@@ -135,7 +142,7 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
         {
-            nestedObjectSerializer(this, this.GetType());
+            throw new NotSupportedException();
         }
 
         /// <summary>
@@ -145,22 +152,22 @@ namespace AutoccultistNS.Config.Conditions
         {
             /// <summary>
             /// Gets or sets a value indicating that the target value must be greater than this amount.
-            public float? GreaterThan { get; set; }
+            public IValueProviderConfig GreaterThan { get; set; }
 
             /// <summary>
             /// Gets or sets a value indicating that the target value must be greater or equal to this amount.
             /// </summary>
-            public float? GreaterThanOrEqualTo { get; set; }
+            public IValueProviderConfig GreaterThanOrEqualTo { get; set; }
 
             /// <summary>
             /// Gets or sets a value indicating that the target value must be less than this amount.
             /// </summary>
-            public float? LessThan { get; set; }
+            public IValueProviderConfig LessThan { get; set; }
 
             /// <summary>
             /// Gets or sets a value indicating that the target value must be less than or equal to this amount.
             /// </summary>
-            public float? LessThanOrEqualTo { get; set; }
+            public IValueProviderConfig LessThanOrEqualTo { get; set; }
         }
     }
 }

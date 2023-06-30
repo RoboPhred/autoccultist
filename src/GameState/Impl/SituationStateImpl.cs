@@ -79,16 +79,13 @@ namespace AutoccultistNS.GameState.Impl
             this.storedCards = new HashCalculatingCollection<ICardState>(stored);
             this.outputCards = new HashCalculatingCollection<ICardState>(output);
 
+            // Like card state lifetime, we want to make recipe time remaining bust the cache less.
             this.hashCode = new Lazy<int>(() => HashUtils.Hash(
                 this.situationId,
                 this.state,
                 this.isOccupied,
                 this.currentRecipe,
-
-                // Like card state lifetime, we want to make this bust the cache less.
-                // However, zero is a critical value here, and we don't want to mask it by latching it when we are at 0.4
-                (int)Math.Ceiling(this.recipeTimeRemaining ?? 0),
-
+                (int)Math.Round(this.recipeTimeRemaining ?? 0),
                 this.recipeSlots,
                 this.storedCards,
                 this.outputCards));

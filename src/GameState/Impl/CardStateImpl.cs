@@ -72,11 +72,10 @@ namespace AutoccultistNS.GameState.Impl
                 && !tokenState.InSystemDrivenMotion()
                 && sourceStack.Token.Sphere.IsExteriorSphere;
 
+            // Signature makes up for both elementId and aspects, so we dont need to include either in this.
+            // Lifetime remaining changes every frame and is a bastard of a cache buster.
             this.hashCode = new Lazy<int>(() => HashUtils.Hash(
-                // Signature makes up for both elementId and aspects
                 this.signature,
-                // This changes every frame and is a bastard of a cache buster.
-                // Round it to the nearest second, since we don't support fractional lifetime comparisons
                 (int)Math.Round(this.lifetimeRemaining),
                 this.isUnique,
                 this.location,

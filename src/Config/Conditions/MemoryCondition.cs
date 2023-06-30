@@ -12,7 +12,7 @@ namespace AutoccultistNS.Config.Conditions
         public override ConditionResult IsConditionMet(IGameState state)
         {
             state.Memories.TryGetValue(this.Memory, out var value);
-            if (!this.Value.IsConditionMet(value))
+            if (!this.Value.IsConditionMet(value, state))
             {
                 return AddendedConditionResult.Addend(ConditionResult.Failure, $"for memory {this.Memory} value {value} {this.Value}");
             }

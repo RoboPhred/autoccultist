@@ -105,9 +105,9 @@ namespace AutoccultistNS.Config
         public List<CardChooserConfig> From { get; set; }
 
         /// <inheritdoc/>
-        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards)
+        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state)
         {
-            var candidates = this.FilterCards(cards).OrderBy((_) => (int)0);
+            var candidates = this.FilterCards(cards, state).OrderBy((_) => (int)0);
 
             // Sort for weight bias first, as it will have the most identical hits.
             if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
@@ -218,11 +218,16 @@ namespace AutoccultistNS.Config
             }
         }
 
-        protected virtual IEnumerable<ICardState> FilterCards(IEnumerable<ICardState> cards)
+        /// <summary>
+        /// Filters the given cards by the conditions specified in this config.
+        /// </summary>
+        /// <param name="cards">The cards to filter.</param>
+        /// <returns>The filtered cards.</returns>
+        protected virtual IEnumerable<ICardState> FilterCards(IEnumerable<ICardState> cards, IGameState state)
         {
             if (this.From != null && this.From.Count > 0)
             {
-                cards = new HashSet<ICardState>(this.From.Select(x => x.ChooseCard(cards)));
+                cards = new HashSet<ICardState>(this.From.Select(x => x.ChooseCard(cards, state)));
             }
 
             // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
@@ -232,10 +237,10 @@ namespace AutoccultistNS.Config
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
                 where this.Location == null || card.Location == this.Location
-                where this.LifetimeRemaining?.IsConditionMet(card.LifetimeRemaining) != false
+                where this.LifetimeRemaining?.IsConditionMet(card.LifetimeRemaining, state) != false
                 where this.AllowedElementIds?.Contains(card.ElementId) != false
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true
-                where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition)
+                where aspectsAsCondition == null || card.Aspects.HasAspects(aspectsAsCondition, state)
                 where this.ForbiddenAspects?.Intersect(card.Aspects.Keys).Any() != true
                 where !this.Unique.HasValue || card.IsUnique == this.Unique.Value
                 where this.AdditionalFilter(card)

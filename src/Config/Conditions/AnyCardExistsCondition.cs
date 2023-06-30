@@ -17,16 +17,16 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            return this.CardsMatchSet(state.GetAllCards());
+            return this.CardsMatchSet(state.GetAllCards(), state);
         }
 
         /// <inheritdoc/>
-        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards)
+        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards, IGameState state)
         {
             var failures = new List<ConditionResult>();
             foreach (var chooser in this.AnyOf)
             {
-                var choice = chooser.ChooseCard(cards);
+                var choice = chooser.ChooseCard(cards, state);
                 if (choice != null)
                 {
                     return ConditionResult.Success;

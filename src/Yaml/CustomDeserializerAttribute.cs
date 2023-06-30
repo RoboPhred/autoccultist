@@ -4,7 +4,7 @@ namespace AutoccultistNS.Yaml
     using System.Reflection;
     using YamlDotNet.Serialization;
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
     public class CustomDeserializerAttribute : Attribute
     {
         private readonly Type deserializer;

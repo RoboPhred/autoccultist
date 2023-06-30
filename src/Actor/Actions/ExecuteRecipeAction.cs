@@ -119,7 +119,7 @@ namespace AutoccultistNS.Actor.Actions
                 return false;
             }
 
-            var card = cardMatcher.ChooseCard(GameStateProvider.Current.TabletopCards);
+            var card = cardMatcher.ChooseCard(GameStateProvider.Current.TabletopCards, GameStateProvider.Current);
             if (card == null)
             {
                 if (cardMatcher.Optional)

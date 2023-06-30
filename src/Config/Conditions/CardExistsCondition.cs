@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         public ConditionResult IsConditionMet(IGameState state)
         {
-            if (this.ChooseCard(state.GetAllCards()) == null)
+            if (this.ChooseCard(state.GetAllCards(), state) == null)
             {
                 return CardChoiceResult.ForFailure(this);
             }
@@ -20,9 +20,9 @@ namespace AutoccultistNS.Config.Conditions
         }
 
         /// <inheritdoc/>
-        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards)
+        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards, IGameState state)
         {
-            var card = this.ChooseCard(cards);
+            var card = this.ChooseCard(cards, state);
             if (card == null)
             {
                 return CardChoiceResult.ForFailure(this);

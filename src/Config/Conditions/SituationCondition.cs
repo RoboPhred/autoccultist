@@ -98,7 +98,7 @@ namespace AutoccultistNS.Config.Conditions
                 return SituationConditionResult.ForFailure(this.Situation, $"is not performing recipe {this.Recipe}");
             }
 
-            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0)))
+            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0, state)))
             {
                 return SituationConditionResult.ForFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
             }
@@ -114,7 +114,7 @@ namespace AutoccultistNS.Config.Conditions
             if (this.StoredCardsMatch != null)
             {
                 var cards = situation.StoredCards;
-                var matchResult = this.StoredCardsMatch.CardsMatchSet(cards);
+                var matchResult = this.StoredCardsMatch.CardsMatchSet(cards, state);
                 if (!matchResult)
                 {
                     return AddendedConditionResult.Addend(matchResult, $"when looking at stored cards for situation {this.Situation}");
@@ -125,7 +125,7 @@ namespace AutoccultistNS.Config.Conditions
 
             if (this.SlottedCardsMatch != null)
             {
-                var matchResult = this.SlottedCardsMatch.CardsMatchSet(slottedCards);
+                var matchResult = this.SlottedCardsMatch.CardsMatchSet(slottedCards, state);
                 if (!matchResult)
                 {
                     return AddendedConditionResult.Addend(matchResult, $"when looking at slotted cards for situation {this.Situation}");
@@ -135,7 +135,7 @@ namespace AutoccultistNS.Config.Conditions
             if (this.ContainedCardsMatch != null)
             {
                 var cards = situation.StoredCards.Concat(slottedCards);
-                var matchResult = this.ContainedCardsMatch.CardsMatchSet(cards);
+                var matchResult = this.ContainedCardsMatch.CardsMatchSet(cards, state);
                 if (!matchResult)
                 {
                     return AddendedConditionResult.Addend(matchResult, $"when looking at all cards for situation {this.Situation}");
@@ -149,7 +149,7 @@ namespace AutoccultistNS.Config.Conditions
                 // Damned lack of covariance on IReadOnlyDictionary
                 var containedAspects = this.ContainsAspects.ToDictionary(entry => entry.Key, entry => (IValueCondition)entry.Value);
 
-                if (!aspects.HasAspects(containedAspects))
+                if (!aspects.HasAspects(containedAspects, state))
                 {
                     // TODO: ConditionFailure for HasAspects / IValueCondition
                     return SituationConditionResult.ForFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");

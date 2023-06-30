@@ -20,11 +20,11 @@ namespace AutoccultistNS.Config.Conditions
             IEnumerable<ICardState> cards = Enumerable.Empty<ICardState>();
             if (this.FromAll.Count > 0)
             {
-                cards = this.FromAll.SelectMany(c => c.SelectChoices(state.GetAllCards()));
+                cards = this.FromAll.SelectMany(c => c.SelectChoices(state.GetAllCards(), state));
             }
             else if (this.FromEach.Count > 0)
             {
-                cards = this.FromEach.Select(c => c.SelectChoices(state.GetAllCards()).FirstOrDefault()).Where(x => x != null);
+                cards = this.FromEach.Select(c => c.SelectChoices(state.GetAllCards(), state).FirstOrDefault()).Where(x => x != null);
             }
 
             int aspectValue = 0;
@@ -41,7 +41,7 @@ namespace AutoccultistNS.Config.Conditions
                 }
             }
 
-            if (this.Value.IsConditionMet(aspectValue))
+            if (this.Value.IsConditionMet(aspectValue, state))
             {
                 return ConditionResult.Success;
             }

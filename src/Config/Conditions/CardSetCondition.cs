@@ -20,13 +20,13 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            return this.CardsMatchSet(state.GetAllCards());
+            return this.CardsMatchSet(state.GetAllCards(), state);
         }
 
         /// <inheritdoc/>
-        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards)
+        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards, IGameState state)
         {
-            var result = this.CardSet.ChooseAll(cards, out var unsatisfiedChooser);
+            var result = this.CardSet.ChooseAll(cards, state, out var unsatisfiedChooser);
             if (unsatisfiedChooser != null)
             {
                 return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChooser), $"when looking for a set of {this.CardSet.Count} cards");

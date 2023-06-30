@@ -471,7 +471,7 @@ namespace AutoccultistNS
                 return;
             }
 
-    (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
+            (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
         }
 
         public static IEnumerable<Token> GetTokens()
