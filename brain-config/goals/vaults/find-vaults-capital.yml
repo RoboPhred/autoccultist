@@ -20,9 +20,18 @@ impulses:
         description: We have found everything of interest at the Capital.
 
   - name: Collect Secret Histories from the Wood
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistories
+              - aspects: { vaultcapital: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
     operation: !import /operations/mansus/use-wood-secrethistories.yml
 
   - name: Break down Furtive Truths into Occult Scraps
+    requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-breakdown-secrethistories-b.yml
 
   - name: Explore the Capital

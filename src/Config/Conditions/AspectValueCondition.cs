@@ -17,7 +17,7 @@ namespace AutoccultistNS.Config.Conditions
 
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            IEnumerable<ICardState> cards = Enumerable.Empty<ICardState>();
+            var cards = Enumerable.Empty<ICardState>();
 
             if (this.FromAll.Count > 0)
             {

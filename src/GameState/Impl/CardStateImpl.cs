@@ -17,9 +17,9 @@ namespace AutoccultistNS.GameState.Impl
         /// by this will be conditions that want to count that type of card.
         /// </summary>
         private const int CardsInStackLimit = 50;
-        private static HashSet<string> warnedCardLimitByElement = new();
-
         private const int LifetimeHashLatchSeconds = 1;
+
+        private static HashSet<string> warnedCardLimitByElement = new();
 
         private readonly Lazy<ElementStack> consumed;
 

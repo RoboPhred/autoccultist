@@ -20,12 +20,22 @@ impulses:
         description: We have found everything of interest on the Continent.
 
   - name: Collect Secret Histories from the White Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesc
+              - aspects: { vaultcontinent: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
     operation: !import /operations/mansus/use-white-secrethistories.yml
 
   - name: Combine Occult Scraps into Furtive Truths
+    requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 
   - name: Combine Furtive Truths into Forgotten Chronicles
+    requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
 
   - name: Explore the Continent

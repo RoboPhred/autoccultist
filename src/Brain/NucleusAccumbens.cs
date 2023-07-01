@@ -313,6 +313,7 @@ namespace AutoccultistNS.Brain
         private static IEnumerable<EnumeratedImpulse> GetReadyImpulses()
         {
             var impulses = GetAllImpulses().ToArray();
+
             // Note: Added a ToArray to force it to resolve in the performance monitor.
             var ready = PerfMonitor.Monitor(
                 nameof(GetReadyImpulses),

@@ -301,7 +301,14 @@ namespace AutoccultistNS
             try
             {
                 var spheres = GetMansusSpheres(out faceUpDeckName);
+
+                if (spheres == null)
+                {
+                    return null;
+                }
+
                 var value = new Dictionary<string, ElementStack>();
+
                 foreach (var sphere in spheres)
                 {
                     var token = sphere.Value.GetTokens().FirstOrDefault();

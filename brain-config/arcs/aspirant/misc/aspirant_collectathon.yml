@@ -253,6 +253,13 @@ motivations:
     primaryGoals:
       - vaults/find-vaults-continent
 
+  find_vaults_beyondforest:
+    name: Find locations beyond the Forest
+    requires:
+      - find_vaults_continent
+    primaryGoals:
+      - vaults/find-vaults-beyondforest
+
   explore_vaults:
     name: Explore Vaults
     requires:
@@ -262,3 +269,4 @@ motivations:
       - vaults/explore-vaults-capital
       - vaults/explore-vaults-shires
       - vaults/explore-vaults-continent
+      - vaults/explore-vaults-beyondforest

@@ -3,7 +3,7 @@ situation: explore
 targetOngoing: true
 startCondition: currentRecipeSatisfied
 conditionalRecipes:
-  # Funds
+  # Funds (emergency)
   - condition:
       allOf:
         # Must have stuff left to do
@@ -16,7 +16,7 @@ conditionalRecipes:
               containsAspects: { seal: 1 }
             - situation: explore
               containsAspects: { curse: 1 }
-        # Must need money.
+        # Must need money right now.
         - noneOf:
             - situation: explore
               storedCardsMatch:
@@ -243,3 +243,25 @@ conditionalRecipes:
           follower: 1
           moth:
             greaterThanOrEqualTo: 2
+  # Funds (idle)
+  - condition:
+      value:
+        fromAll:
+          # TODO: Specify the explore verb specifically
+          - location: stored
+            aspects: { peril: 1 }
+          - location: stored
+            aspects: { guardian: 1 }
+          - location: stored
+            aspects: { seal: 1 }
+          - location: stored
+            aspects: { curse: 1 }
+        aspect: "@count"
+      greaterThan:
+        fromAll:
+          - elementId: funds
+            location: tabletop
+        aspect: "@count"
+    slots:
+      Assistance:
+        elementId: funds

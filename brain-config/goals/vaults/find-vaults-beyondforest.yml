@@ -1,0 +1,63 @@
+name: Find Vaults beyond the Forest
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywhite
+
+completedWhen:
+  memory: has_all_vaults_beyondforest
+  value: 1
+
+impulses:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultlandbeyondforestdefault
+    reactions:
+      - remember: has_all_vaults_beyondforest
+        label: Has All Vaults beyond the Forest
+        description: We have found everything of interest beyond the Forest.
+
+  - name: Collect Secret Histories from the Stag Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesd
+              - aspects: { vaultlandbeyondforest: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
+    operation: !import /operations/mansus/use-stag-secrethistories.yml
+
+  - name: Combine Occult Scraps into Furtive Truths
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+
+  # Get a glimmering so we can combine secret histories c
+  - extends: !import /impulses/norm-glimmering-from-passion.yml
+    requirements:
+      allOf:
+        - *has-needed-secret-histories
+        - cardSet:
+            - elementId: fragmentsecrethistoriesc
+            - elementId: fragmentsecrethistoriesc
+    forbidders:
+      elementId: glimmering
+
+  - name: Combine Forgotten Chronicles into Forbidden Epics
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
+
+  - name: Explore the Continent
+    operation:
+      name: Find Continent vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesd

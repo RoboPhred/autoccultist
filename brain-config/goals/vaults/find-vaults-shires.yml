@@ -20,9 +20,18 @@ impulses:
         description: We have found everything of interest in the Shires.
 
   - name: Collect Secret Histories from the Wood
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesb
+              - aspects: { vaultshires: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
     operation: !import /operations/mansus/use-wood-secrethistories.yml
 
   - name: Combine Occult Scraps into Furtive Truths
+    requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 
   - name: Explore the Shires

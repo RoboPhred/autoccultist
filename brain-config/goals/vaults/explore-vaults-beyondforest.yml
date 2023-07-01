@@ -1,0 +1,131 @@
+name: Explore Vaults beyond the Forest
+completedWhen:
+  noneOf:
+    - aspects: { vaultlandbeyondforest: 1 }
+impulses:
+  - name: Explore the Cave of Candles
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Cave of Candles
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultlandbeyondforest1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Grunewald's Permanent Circus
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Grunewald's Permanent Circus
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultlandbeyondforest3
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, moth: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, moth: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Kusnetsov Endowment
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Kusnetsov Endowment
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultlandbeyondforest5
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Tower Revek
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Tower Revek
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultlandbeyondforest4
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Voivode's Citadel
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Voivode's Citadel
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultlandbeyondforest2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Foxlily Meadows
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Foxlily Meadows
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultlandbeyondforestdefault
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, winter: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, winter: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
