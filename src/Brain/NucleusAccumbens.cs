@@ -313,11 +313,12 @@ namespace AutoccultistNS.Brain
         private static IEnumerable<EnumeratedImpulse> GetReadyImpulses()
         {
             var impulses = GetAllImpulses().ToArray();
+            // Note: Added a ToArray to force it to resolve in the performance monitor.
             var ready = PerfMonitor.Monitor(
                 nameof(GetReadyImpulses),
                 () => (from impulse in impulses
                        where !RunningImpulses.Contains(impulse.Impulse)
-                       where PerfMonitor.Monitor($"GetReadyImpulses.${(impulse.Impulse as AutoccultistNS.Config.INamedConfigObject)?.Name ?? "<??>"}", () => impulse.Impulse.IsConditionMet(GameStateProvider.Current))
+                       where impulse.Impulse.IsConditionMet(GameStateProvider.Current)
                        select impulse).ToArray());
             return ready;
         }
