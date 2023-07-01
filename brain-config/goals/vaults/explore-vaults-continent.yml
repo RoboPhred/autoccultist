@@ -4,7 +4,7 @@ completedWhen:
     - aspects: { vaultcontinent: 1 }
 impulses:
   - name: Explore Chateau Raveline
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Chateau Raveline
@@ -25,7 +25,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Fermier Abbey
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Fermier Abbey
@@ -46,7 +46,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Forman House
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Forman House
@@ -67,7 +67,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Key-Hunter's Garret
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Key-Hunter's Garret
@@ -88,7 +88,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Orthos Woods
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Orthos Woods
@@ -109,7 +109,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore The Vanderschaaf Collection
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore The Vanderschaaf Collection
@@ -130,7 +130,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore The Unnumbered Stones
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore The Unnumbered Stones

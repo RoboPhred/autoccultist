@@ -4,7 +4,7 @@ completedWhen:
     - aspects: { vaultcapital: 1 }
 impulses:
   - name: Explore Cater & Hero Limited
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Cater & Hero Limited
@@ -23,7 +23,7 @@ impulses:
           expeditionfunds:
             elementId: funds
   - name: Explore St Felix of Schuren
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore St Felix of Schuren
@@ -42,7 +42,7 @@ impulses:
           expeditionfunds:
             elementId: funds
   - name: Explore Forgotten Mithraeum
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Forgotten Mithraeum
@@ -61,7 +61,7 @@ impulses:
           expeditionfunds:
             elementId: funds
   - name: Explore St Agnes Hospital
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore St Agnes Hospital
@@ -80,7 +80,7 @@ impulses:
           expeditionfunds:
             elementId: funds
   - name: Explore Strathcoyne's Residence
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Strathcoyne's Residence
@@ -99,7 +99,7 @@ impulses:
           expeditionfunds:
             elementId: funds
   - name: Explore The Forsaken Reach
-    requirements: !import /conditions/has-flushfund-major.yml
+    requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore The Forsaken Reach

@@ -3,9 +3,15 @@ situation: work
 startingRecipe:
   slots:
     work:
-      elementId: gloverandgloverjuniorjob
+      oneOf:
+        - elementId: gloverandgloverjuniorjob
+        - elementId: gloverandgloverjuniorjob_nodifficultbossa
 ongoingRecipes:
   gloverandgloverjuniorwork:
+    slots:
+      Diligence:
+        elementId: reason
+  gloverandgloverjuniorwork_again:
     slots:
       Diligence:
         elementId: reason
