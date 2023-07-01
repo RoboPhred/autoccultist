@@ -19,5 +19,10 @@ namespace AutoccultistNS.Config.Values
         {
             return this.Value;
         }
+
+        public override string ToString()
+        {
+            return this.Value.ToString();
+        }
     }
 }

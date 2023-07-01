@@ -134,10 +134,17 @@ namespace AutoccultistNS.Brain
 
                         await set.Execute();
                     }
+                    catch (TaskCanceledException)
+                    {
+                        // Ignore
+                    }
                     catch (Exception ex)
                     {
-                        NoonUtility.LogWarning("Failed to run coordinated task.");
-                        NoonUtility.LogException(ex);
+                        if (!ex.WrappedExceptionsContain<TaskCanceledException>())
+                        {
+                            NoonUtility.LogWarning($"Failed to run coordinated task {set.Name}.");
+                            NoonUtility.LogException(ex.GetInterestingException());
+                        }
                     }
                     finally
                     {

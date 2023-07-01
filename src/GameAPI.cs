@@ -2,7 +2,6 @@ namespace AutoccultistNS
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -166,7 +165,9 @@ namespace AutoccultistNS
             // We wait until the next frame to unpause, in case anything re-pauses us on the same frame.
             Autoccultist.GlobalUpdate += (_, __) =>
             {
-                if (isPaused && pauseDepth == 0)
+                // Only unpause if the bot itself is running.
+                // We might be getting unpause requests from steps.
+                if (isPaused && pauseDepth == 0 && MechanicalHeart.IsRunning)
                 {
                     Watchman.Get<LocalNexus>().UnForcePauseGame(true);
                     isPaused = false;
