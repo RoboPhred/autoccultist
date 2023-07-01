@@ -32,14 +32,6 @@ impulses:
           greaterThanOrEqualTo: 5
     operation: !import /operations/mansus/use-stag-secrethistories.yml
 
-  - name: Combine Occult Scraps into Furtive Truths
-    requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
-
-  - name: Combine Furtive Truths into Forgotten Chronicles
-    requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
-
   # Get a glimmering so we can combine secret histories c and d
   - extends: !import /impulses/norm-glimmering-from-passion.yml
     requirements:
@@ -58,17 +50,25 @@ impulses:
     forbidders:
       elementId: glimmering
 
-  - name: Combine Forgotten Chronicles into Forbidden Epics
+  - name: Combine Unresolved Ambiguities into Vagabond's Maps
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-e.yml
 
   - name: Combine Forbidden Epics into Unresolved Ambiguities
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-d.yml
 
-  - name: Combine Unresolved Ambiguities into Vagabond's Maps
+  - name: Combine Forgotten Chronicles into Forbidden Epics
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-e.yml
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+
+  - name: Combine Occult Scraps into Furtive Truths
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 
   - name: Explore the Lone and Level Sands
     operation:
