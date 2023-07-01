@@ -57,6 +57,11 @@ namespace AutoccultistNS.Config
         public CardLocation? Location { get; set; }
 
         /// <summary>
+        /// Gets or sets the situation the card should be in.
+        /// </summary>
+        public string Situation { get; set; }
+
+        /// <summary>
         /// Gets or sets the list of element ids from which to choose a card.
         /// </summary>
         public List<string> AllowedElementIds { get; set; }
@@ -213,6 +218,7 @@ namespace AutoccultistNS.Config
                 from card in cards
                 where this.ElementId == null || card.ElementId == this.ElementId
                 where this.Location == null || card.Location == this.Location
+                where this.Situation == null || card.Situation == this.Situation
                 where this.LifetimeRemaining?.IsConditionMet(card.LifetimeRemaining, state) != false
                 where this.AllowedElementIds?.Contains(card.ElementId) != false
                 where this.ForbiddenElementIds?.Contains(card.ElementId) != true

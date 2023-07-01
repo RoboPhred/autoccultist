@@ -14,14 +14,15 @@ namespace AutoccultistNS.GameState.Impl
         /// Initializes a new instance of the <see cref="SituationSlotImpl"/> class.
         /// </summary>
         /// <param name="sphere">The sphere to represent.</param>
-        public SituationSlotImpl(Sphere sphere)
+        /// <param name="situation">The situation the sphere is in.</param>
+        public SituationSlotImpl(Sphere sphere, string situation)
         {
             this.sphereId = sphere.GoverningSphereSpec.Id;
 
             var elementStack = sphere.GetElementStacks().FirstOrDefault();
             if (elementStack != null)
             {
-                this.card = CardStateImpl.CardStatesFromStack(elementStack, CardLocation.Slotted).First();
+                this.card = CardStateImpl.CardStatesFromStack(elementStack, CardLocation.Slotted, situation).First();
             }
             else
             {

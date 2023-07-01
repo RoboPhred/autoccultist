@@ -29,6 +29,11 @@ namespace AutoccultistNS.GameState
         CardLocation Location { get; }
 
         /// <summary>
+        /// Gets the situation this card is stored or slotted in.
+        /// </summary>
+        string Situation { get; }
+
+        /// <summary>
         /// Gets a value indicating whether this card can be slotted.
         /// </summary>
         bool IsSlottable { get; }

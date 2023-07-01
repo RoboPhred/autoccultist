@@ -69,14 +69,14 @@ namespace AutoccultistNS.GameState
                 {
                     var tabletopCards =
                         from stack in GameAPI.TabletopSphere.GetElementStacks()
-                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop, null)
                         select cardState;
 
                     // Things whizzing around.
                     var enRouteCards =
                         from enroute in GameAPI.GetEnRouteSpheres()
                         from stack in enroute.GetElementStacks()
-                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute)
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute, null)
                         select cardState;
 
                     // FIXME: Spams the console with errors when not present.

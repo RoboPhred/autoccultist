@@ -59,20 +59,20 @@ namespace AutoccultistNS.GameState.Impl
 
             var slots =
                 from sphere in situation.GetCurrentThresholdSpheres()
-                select new SituationSlotImpl(sphere);
+                select new SituationSlotImpl(sphere, this.situationId);
 
             // We can create new ICardState states here, as IGameState only creates states for tabled cards, of which these are not.
             var stored =
                 from sphere in situation.GetSpheresByCategory(SphereCategory.SituationStorage)
                 from stack in sphere.GetElementStacks()
-                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Stored)
+                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Stored, this.situationId)
                 select card;
 
             // Consider output stacks to be tabletop, as they are immediately grabbable.
             var output =
                 from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
                 from stack in spheres.GetElementStacks()
-                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop, null)
                 select card;
 
             this.recipeSlots = new HashCalculatingCollection<ISituationSlot>(slots);

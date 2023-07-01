@@ -52,7 +52,7 @@ namespace AutoccultistNS.GameState.Impl
                 this.DeckCards = new Dictionary<string, ICardState>();
                 this.FaceUpDeck = null;
                 this.FaceUpCard = null;
-                this.OutputCard = CardStateImpl.CardStatesFromStack(outputStacks.First(), CardLocation.Mansus).First();
+                this.OutputCard = CardStateImpl.CardStatesFromStack(outputStacks.First(), CardLocation.Mansus, null).First();
             }
             else
             {
@@ -61,7 +61,7 @@ namespace AutoccultistNS.GameState.Impl
                 {
                     this.State = PortalActiveState.AwaitingSelection;
                     this.FaceUpDeck = faceUpDeckName;
-                    this.DeckCards = (IReadOnlyDictionary<string, ICardState>)deckStacks.ToDictionary(x => x.Key, x => (ICardState)CardStateImpl.CardStatesFromStack(x.Value, CardLocation.Mansus).First());
+                    this.DeckCards = (IReadOnlyDictionary<string, ICardState>)deckStacks.ToDictionary(x => x.Key, x => (ICardState)CardStateImpl.CardStatesFromStack(x.Value, CardLocation.Mansus, null).First());
                     this.FaceUpCard = this.DeckCards[faceUpDeckName];
                 }
                 else

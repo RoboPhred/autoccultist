@@ -249,18 +249,23 @@ conditionalRecipes:
         fromAll:
           # TODO: Specify the explore verb specifically
           - location: stored
+            situation: explore
             aspects: { peril: 1 }
           - location: stored
+            situation: explore
             aspects: { guardian: 1 }
           - location: stored
+            situation: explore
             aspects: { seal: 1 }
           - location: stored
+            situation: explore
             aspects: { curse: 1 }
         aspect: "@count"
       greaterThan:
         fromAll:
           - elementId: funds
-            location: tabletop
+            location: stored
+            situation: explore
         aspect: "@count"
     slots:
       Assistance:

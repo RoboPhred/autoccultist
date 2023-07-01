@@ -27,6 +27,7 @@ namespace AutoccultistNS.GameState.Impl
         private readonly float lifetimeRemaining;
         private readonly bool isUnique;
         private readonly CardLocation location;
+        private readonly string situation;
         private readonly bool isSlottable;
         private readonly IReadOnlyDictionary<string, int> aspects;
         private readonly string signature;
@@ -37,10 +38,11 @@ namespace AutoccultistNS.GameState.Impl
         /// </summary>
         /// <param name="sourceStack">The source stack to represent a card of.</param>
         /// <param name="location">The location of the card.</param>
+        /// <param name="situation">The situation the card is in.</param>
         /// <param name="aspects">The precomputed aspects of the card.</param>
         /// <param name="slottable">Whether the card is slottable.</param>
         /// <param name="hashCode">The precomputed hash code of the card.</param>
-        private CardStateImpl(ElementStack sourceStack, CardLocation location, IReadOnlyDictionary<string, int> aspects, bool slottable, int hashCode)
+        private CardStateImpl(ElementStack sourceStack, CardLocation location, string situation, IReadOnlyDictionary<string, int> aspects, bool slottable, int hashCode)
         {
             this.consumed = new Lazy<ElementStack>(() => CardStateImpl.TakeOneFromStack(sourceStack));
 
@@ -53,6 +55,7 @@ namespace AutoccultistNS.GameState.Impl
             this.signature = sourceStack.GetSignature();
 
             this.location = location;
+            this.situation = situation;
             this.isSlottable = slottable;
 
             // Signature makes up for both elementId and aspects, so we dont need to include either in this.
@@ -101,6 +104,16 @@ namespace AutoccultistNS.GameState.Impl
         }
 
         /// <inheritdoc/>
+        public string Situation
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.situation;
+            }
+        }
+
+        /// <inheritdoc/>
         public bool IsSlottable
         {
             get
@@ -135,8 +148,9 @@ namespace AutoccultistNS.GameState.Impl
         /// </summary>
         /// <param name="stack">The stack to derive card states from.</param>
         /// <param name="location">The location of the card stack.</param>
+        /// <param name="situation">The situation the card stack is in.</param>
         /// <returns>An enumerable of card states representing cards in the given stack.</returns>
-        public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStack stack, CardLocation location)
+        public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStack stack, CardLocation location, string situation)
         {
             var count = stack.Quantity;
             if (count > CardsInStackLimit)
@@ -185,7 +199,7 @@ namespace AutoccultistNS.GameState.Impl
             for (var i = 0; i < count; i++)
             {
                 // Large stacks share the same values for all properties, so we can precompute most of this.
-                yield return new CardStateImpl(stack, location, aspects, slottable, hashCode);
+                yield return new CardStateImpl(stack, location, situation, aspects, slottable, hashCode);
             }
         }
 
