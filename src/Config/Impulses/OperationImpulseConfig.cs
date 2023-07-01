@@ -59,75 +59,78 @@ namespace AutoccultistNS.Config
 
         public ConditionResult IsConditionMet(IGameState state)
         {
-            var situationId = this.GetSituationId();
-            var situationState = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
-
-            if (situationState == null)
+            return CacheUtils.Compute(this, nameof(this.IsConditionMet), state, () =>
             {
-                return SituationConditionResult.ForFailure(situationId, "Situation not found.");
-            }
+                var situationId = this.GetSituationId();
+                var situationState = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
 
-            if (!Resource.Of<ISituationState>().IsAvailable(situationState))
-            {
-                return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
-            }
-
-            var startingRecipe = this.GetStartingRecipe();
-            var ongoingRecipes = this.GetOngoingRecipes();
-
-            var targetOngoing = this.TargetOngoing ?? this.Extends?.TargetOngoing ?? false;
-            var startCondition = this.StartCondition ?? this.Extends?.StartCondition ?? OperationStartCondition.AllRecipesSatisified;
-
-            var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
-            if (situation == null)
-            {
-                return SituationConditionResult.ForFailure(situationId, "Situation not found.");
-            }
-
-            if (targetOngoing != situation.IsOccupied)
-            {
-                return SituationConditionResult.ForFailure(situationId, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
-            }
-
-            if (startCondition == OperationStartCondition.AllRecipesSatisified)
-            {
-                IEnumerable<ICardChooser> requiredCards = new ICardChooser[0];
-
-                if (!targetOngoing && startingRecipe != null)
+                if (situationState == null)
                 {
-                    requiredCards = requiredCards.Concat(startingRecipe.GetRequiredCards());
+                    return SituationConditionResult.ForFailure(situationId, "Situation not found.");
                 }
 
-                if (ongoingRecipes != null)
+                if (!Resource.Of<ISituationState>().IsAvailable(situationState))
                 {
-                    requiredCards = requiredCards.Concat(
-                        from ongoing in ongoingRecipes.Values
-                        from choice in ongoing.GetRequiredCards()
-                        select choice);
+                    return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
                 }
 
-                requiredCards.ToArray().ChooseAll(state.TabletopCards, state, out var unsatisfiedChoice);
-                if (unsatisfiedChoice != null)
+                var startingRecipe = this.GetStartingRecipe();
+                var ongoingRecipes = this.GetOngoingRecipes();
+
+                var targetOngoing = this.TargetOngoing ?? this.Extends?.TargetOngoing ?? false;
+                var startCondition = this.StartCondition ?? this.Extends?.StartCondition ?? OperationStartCondition.AllRecipesSatisified;
+
+                var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
+                if (situation == null)
                 {
-                    return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
-                }
-            }
-            else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
-            {
-                var recipeSolution = this.GetRecipeSolution(situation);
-                if (recipeSolution == null)
-                {
-                    return SituationConditionResult.ForFailure(situationId, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
+                    return SituationConditionResult.ForFailure(situationId, "Situation not found.");
                 }
 
-                recipeSolution.GetRequiredCards().ChooseAll(state.TabletopCards, state, out var unsatisfiedChoice);
-                if (unsatisfiedChoice != null)
+                if (targetOngoing != situation.IsOccupied)
                 {
-                    return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
+                    return SituationConditionResult.ForFailure(situationId, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
                 }
-            }
 
-            return ConditionResult.Success;
+                if (startCondition == OperationStartCondition.AllRecipesSatisified)
+                {
+                    IEnumerable<ICardChooser> requiredCards = new ICardChooser[0];
+
+                    if (!targetOngoing && startingRecipe != null)
+                    {
+                        requiredCards = requiredCards.Concat(startingRecipe.GetRequiredCards());
+                    }
+
+                    if (ongoingRecipes != null)
+                    {
+                        requiredCards = requiredCards.Concat(
+                            from ongoing in ongoingRecipes.Values
+                            from choice in ongoing.GetRequiredCards()
+                            select choice);
+                    }
+
+                    requiredCards.ToArray().ChooseAll(state.TabletopCards, state, out var unsatisfiedChoice);
+                    if (unsatisfiedChoice != null)
+                    {
+                        return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
+                    }
+                }
+                else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
+                {
+                    var recipeSolution = this.GetRecipeSolution(situation);
+                    if (recipeSolution == null)
+                    {
+                        return SituationConditionResult.ForFailure(situationId, $"Can not handle the current recipe {situation.CurrentRecipe ?? "<start>"}");
+                    }
+
+                    recipeSolution.GetRequiredCards().ChooseAll(state.TabletopCards, state, out var unsatisfiedChoice);
+                    if (unsatisfiedChoice != null)
+                    {
+                        return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring current recipe can start");
+                    }
+                }
+
+                return ConditionResult.Success;
+            });
         }
 
         protected override string GetSituationId()

@@ -47,6 +47,7 @@ namespace AutoccultistNS
 
             foreach (var pair in choicesByChooser)
             {
+                // Choose the least contested card that is still the highest priority
                 // FIXME: Value.IndexOf is inefficient.  Use SortedSet
                 var choice = pair.Value.Where(c => weightByCandidate.ContainsKey(c)).OrderBy(c => weightByCandidate[c]).ThenBy(c => pair.Value.IndexOf(c)).FirstOrDefault();
                 if (choice == null)

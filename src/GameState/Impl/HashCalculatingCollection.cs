@@ -5,7 +5,7 @@ namespace AutoccultistNS.GameState.Impl
     using System.Collections.Generic;
     using System.Linq;
 
-    internal class HashCalculatingCollection<T> : IReadOnlyCollection<T>
+    internal class HashCalculatingCollection<T> : IReadOnlyCollection<T>, IContentHashingEnumerable
     {
         private readonly IReadOnlyCollection<T> innerCollection;
         private readonly Lazy<int> hashCode;
@@ -29,6 +29,11 @@ namespace AutoccultistNS.GameState.Impl
         }
 
         public override int GetHashCode()
+        {
+            return this.hashCode.Value;
+        }
+
+        public int GetUnorderedContentHash()
         {
             return this.hashCode.Value;
         }

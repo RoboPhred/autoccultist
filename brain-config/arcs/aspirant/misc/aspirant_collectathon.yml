@@ -99,6 +99,15 @@ motivations:
       - reason/acquire-skillreasonb
       - reason/acquire-skillreasonc
 
+  get_passion:
+    name: Get passionate
+    requires:
+      # Wait until we finish leveling up reason so we don't conflict with study.
+      - get_scholarship_minor
+    primaryGoals:
+      - passion/acquire-skillpassiona
+      - passion/acquire-skillpassionb
+
   get_rarefied_mind:
     name: Get a Rarefied Mind
     # Do this whenever we end up with the right amount of textbooks
@@ -109,7 +118,9 @@ motivations:
     # If this is unreliable, remove this, and require read_all_lore and drain_morland instead
     requirePrimaryGoals: true
     requires:
+      # Wait until things that use study are done so we don't conflict with them.
       - get_scholarship_major
+      - get_passion
     blocks:
       # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
       - read_all_lore

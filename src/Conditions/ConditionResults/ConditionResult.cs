@@ -35,6 +35,8 @@ namespace AutoccultistNS
         /// </summary>
         public static ConditionResult Trace(Func<ConditionResult> func)
         {
+            var cacheWasEnabled = CacheUtils.Enabled;
+            CacheUtils.Enabled = false;
             traceDepth++;
             try
             {
@@ -43,6 +45,7 @@ namespace AutoccultistNS
             finally
             {
                 traceDepth--;
+                CacheUtils.Enabled = cacheWasEnabled;
             }
         }
 

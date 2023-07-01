@@ -20,7 +20,7 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            return this.CardsMatchSet(state.GetAllCards(), state);
+            return this.CardsMatchSet(state.AllCards, state);
         }
 
         /// <inheritdoc/>

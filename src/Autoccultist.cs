@@ -108,9 +108,13 @@ public class Autoccultist : MonoBehaviour
 
         this.mainThread = Thread.CurrentThread;
 
+        GameEventSource.GameStarted += this.HandleGameStarted;
+        GameEventSource.GameEnded += this.HandleGameEnded;
+
         SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(this.HandleSceneLoaded);
         SceneManager.sceneUnloaded += new UnityAction<Scene>(this.HandleSceneUnloaded);
 
+        // Run initializations inside a sync context to capture created threads.
         AutoccultistSettings.Initialize();
         GameAPI.Initialize();
 
@@ -118,25 +122,6 @@ public class Autoccultist : MonoBehaviour
         NucleusAccumbens.Initialize();
 
         this.ReloadAll();
-
-        GameEventSource.GameStarted += (_, __) =>
-        {
-            if (this.loadArcOnGameStart != null)
-            {
-                LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
-                NucleusAccumbens.AddImperative(this.loadArcOnGameStart);
-                this.loadArcOnGameStart = null;
-                this.StartAutoccultist();
-            }
-
-            // TODO: Autoselect an arc.
-        };
-
-        GameEventSource.GameEnded += (_, __) =>
-        {
-            LogTrace("Game ended, stopping Autoccultist.");
-            this.StopAutoccultist();
-        };
 
         LogInfo("Autoccultist initialized.");
     }
@@ -270,6 +255,25 @@ public class Autoccultist : MonoBehaviour
         Resource.ClearAll();
         CacheUtils.ClearStatistics();
         PerfMonitor.ClearStatistics();
+    }
+
+    private void HandleGameStarted(object sender, EventArgs e)
+    {
+        if (this.loadArcOnGameStart != null)
+        {
+            LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
+            NucleusAccumbens.AddImperative(this.loadArcOnGameStart);
+            this.loadArcOnGameStart = null;
+            this.StartAutoccultist();
+        }
+
+        // TODO: Autoselect an arc.
+    }
+
+    private void HandleGameEnded(object sender, EventArgs e)
+    {
+        LogTrace("Game ended, stopping Autoccultist.");
+        this.StopAutoccultist();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)

@@ -11,6 +11,7 @@ namespace AutoccultistNS.GameState.Impl
     {
         private static int prevHash = 0;
 
+        private readonly Lazy<IReadOnlyCollection<ICardState>> allCards;
         private readonly IReadOnlyCollection<ICardState> tabletopCards;
         private readonly IReadOnlyCollection<ICardState> enRouteCards;
         private readonly IReadOnlyCollection<ICardState> codexCards;
@@ -39,6 +40,23 @@ namespace AutoccultistNS.GameState.Impl
             this.enRouteCards = new HashCalculatingCollection<ICardState>(enRouteCards);
             this.codexCards = new HashCalculatingCollection<ICardState>(codexCards);
             this.situations = new HashCalculatingCollection<ISituationState>(situations);
+
+            this.allCards = new Lazy<IReadOnlyCollection<ICardState>>(() =>
+            {
+                var allCards = this.TabletopCards.Concat(this.EnRouteCards).Concat(this.Situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards))).Concat(this.CodexCards);
+                switch (this.Mansus.State)
+                {
+                    case PortalActiveState.AwaitingCollection:
+                        allCards = allCards.Concat(new[] { this.Mansus.OutputCard });
+                        break;
+                    case PortalActiveState.AwaitingSelection:
+                        allCards = allCards.Concat(this.Mansus.DeckCards.Values);
+                        break;
+                }
+
+                return new HashCalculatingCollection<ICardState>(allCards);
+            });
+
             this.memories = memories;
             this.mansus = mansus;
 
@@ -63,6 +81,16 @@ namespace AutoccultistNS.GameState.Impl
 
                         return hash;
                     }));
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<ICardState> AllCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.allCards.Value;
+            }
         }
 
         /// <inheritdoc/>

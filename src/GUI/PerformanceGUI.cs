@@ -39,24 +39,9 @@ namespace AutoccultistNS.GUI
 
             GUILayout.Label($"Cache misses {CacheUtils.MissesPerSecond:0.000}ps hits {CacheUtils.HitsPerSecond:0.000}ps");
 
-            var state = GameStateProvider.Current;
-            GUILayout.Label($"GameState Hashes: All {Animate(state.GetHashCode())} Tabletop {Animate(state.TabletopCards.GetHashCode())} Situations {Animate(state.Situations.GetHashCode())}");
-
             foreach (var entry in PerfMonitor.Entries)
             {
                 GUILayout.Label($"{entry.Key}: {entry.Value.Average:0.000}ms {entry.Value.SamplesPerSecond:0}cps (max {entry.Value.Max:0.000}ms, >10 {entry.Value.GreaterThanAllocatedRate:0.000} per second)");
-            }
-        }
-
-        private static string Animate(int value)
-        {
-            switch (Math.Abs(value) % 4)
-            {
-                default:
-                case 0: return "-";
-                case 1: return "\\";
-                case 2: return "|";
-                case 3: return "/";
             }
         }
     }

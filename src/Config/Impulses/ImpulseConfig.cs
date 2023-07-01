@@ -62,38 +62,41 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public ConditionResult IsConditionMet(IGameState state)
         {
-            var requirements = this.Requirements ?? this.Extends?.Requirements;
-            var forbidders = this.Forbidders ?? this.Extends?.Forbidders;
-
-            if (requirements != null)
+            return CacheUtils.Compute(this, nameof(this.IsConditionMet), state, () =>
             {
-                var reqsMet = requirements.IsConditionMet(state);
-                if (!reqsMet)
-                {
-                    return AddendedConditionResult.Addend(reqsMet, "Impulse requirements not met.");
-                }
-            }
+                var requirements = this.Requirements ?? this.Extends?.Requirements;
+                var forbidders = this.Forbidders ?? this.Extends?.Forbidders;
 
-            if (forbidders != null)
-            {
-                var forbidsMet = forbidders.IsConditionMet(state);
-                if (forbidsMet)
+                if (requirements != null)
                 {
-                    return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
+                    var reqsMet = requirements.IsConditionMet(state);
+                    if (!reqsMet)
+                    {
+                        return AddendedConditionResult.Addend(reqsMet, "Impulse requirements not met.");
+                    }
                 }
-            }
 
-            var operation = this.Operation ?? this.Extends?.Operation;
-            if (operation != null)
-            {
-                var operationState = operation.IsConditionMet(state);
-                if (!operationState)
+                if (forbidders != null)
                 {
-                    return AddendedConditionResult.Addend(operationState, "Operation condition not met.");
+                    var forbidsMet = forbidders.IsConditionMet(state);
+                    if (forbidsMet)
+                    {
+                        return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(forbidders, forbidsMet), "Impulse forbidders are present.");
+                    }
                 }
-            }
 
-            return ConditionResult.Success;
+                var operation = this.Operation ?? this.Extends?.Operation;
+                if (operation != null)
+                {
+                    var operationState = operation.IsConditionMet(state);
+                    if (!operationState)
+                    {
+                        return AddendedConditionResult.Addend(operationState, "Operation condition not met.");
+                    }
+                }
+
+                return ConditionResult.Success;
+            });
         }
 
         /// <inheritdoc/>

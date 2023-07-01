@@ -19,7 +19,7 @@ impulses:
         - fromAll:
             - elementId: funds
               location: tabletop
-          aspect: funds
+          aspect: "@count"
           value: 10
         # Don't occupy the Work Verb when we're ready to ascend.
         - allOf:

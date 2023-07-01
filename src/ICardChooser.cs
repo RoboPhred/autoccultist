@@ -13,7 +13,8 @@ namespace AutoccultistNS
         /// </summary>
         /// <param name="cards">An enumerable of candidate cards to choose from.</param>
         /// <param name="state">The current game state.</param>
+        /// <param name="hints">Hints about how the consumer will use the result.</param>
         /// <returns>An enumerable of card that can be chosen in order of priority.</returns>
-        IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state);
+        IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state, CardChooserHints hints = CardChooserHints.None);
     }
 }

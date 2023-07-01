@@ -23,7 +23,7 @@ namespace AutoccultistNS.Config
 
         ConditionResult IGameStateCondition.IsConditionMet(IGameState state)
         {
-            if (!this.MatchIfCardsMissing && this.GetRequiredCards().ChooseAll(state.GetAllCards(), state, out var unsatisfiedChoice) == null)
+            if (!this.MatchIfCardsMissing && this.GetRequiredCards().ChooseAll(state.AllCards, state, out var unsatisfiedChoice) == null)
             {
                 return CardChoiceResult.ForFailure(unsatisfiedChoice);
             }

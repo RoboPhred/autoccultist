@@ -11,6 +11,9 @@ namespace AutoccultistNS.GameState.Impl
     /// </summary>
     internal class CardStateImpl : GameStateObject, ICardState
     {
+        private const int CardLimit = 100;
+        private static HashSet<string> warnedCardLimitByElement = new();
+
         private const int LifetimeHashLatchSeconds = 1;
 
         private readonly Lazy<ElementStack> consumed;
@@ -160,7 +163,19 @@ namespace AutoccultistNS.GameState.Impl
         /// <returns>An enumerable of card states representing cards in the given stack.</returns>
         public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStack stack, CardLocation location)
         {
-            for (var i = 0; i < stack.Quantity; i++)
+            var count = stack.Quantity;
+            if (count > CardLimit)
+            {
+                if (!warnedCardLimitByElement.Contains(stack.EntityId))
+                {
+                    warnedCardLimitByElement.Add(stack.EntityId);
+                    Autoccultist.LogWarn($"Card limit exceeded for element {stack.EntityId}: {count} > {CardLimit}");
+                }
+
+                count = CardLimit;
+            }
+
+            for (var i = 0; i < count; i++)
             {
                 yield return new CardStateImpl(stack, location);
             }

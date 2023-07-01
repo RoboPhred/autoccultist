@@ -70,13 +70,16 @@ namespace AutoccultistNS.Config
         /// <returns>True if the goal is completed, False otherwise.</returns>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            if (this.CompletedWhen == null)
+            return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
             {
-                // Never completes
-                return GeneralConditionResult.ForFailure("Goal has no completion condition.");
-            }
+                if (this.CompletedWhen == null)
+                {
+                    // Never completes
+                    return GeneralConditionResult.ForFailure("Goal has no completion condition.");
+                }
 
-            return this.CompletedWhen.IsConditionMet(state);
+                return this.CompletedWhen.IsConditionMet(state);
+            });
         }
 
         public IEnumerable<string> DescribeCurrentGoals(IGameState gameState)

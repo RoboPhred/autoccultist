@@ -18,10 +18,10 @@ namespace AutoccultistNS.Config.CardChoices
         public List<SlottableCardChooserConfig> OneOf { get; set; } = new();
 
         /// <inheritdoc/>
-        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state)
+        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state, CardChooserHints hints = CardChooserHints.None)
         {
             var arrayOfCards = cards.ToArray();
-            return this.OneOf.SelectMany(c => c.SelectChoices(cards, state));
+            return this.OneOf.SelectMany(c => c.SelectChoices(cards, state, hints));
         }
 
         public override string ToString()

@@ -8,6 +8,11 @@ namespace AutoccultistNS.GameState
     public interface IGameState
     {
         /// <summary>
+        /// Gets a collection of all cards known to the game.
+        /// </summary>
+        IReadOnlyCollection<ICardState> AllCards { get; }
+
+        /// <summary>
         /// Gets a collection of cards on the tabletop.
         /// </summary>
         IReadOnlyCollection<ICardState> TabletopCards { get; }

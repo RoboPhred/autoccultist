@@ -105,47 +105,23 @@ namespace AutoccultistNS.Config
         public List<CardChooserConfig> From { get; set; }
 
         /// <inheritdoc/>
-        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state)
+        public IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state, CardChooserHints hints = CardChooserHints.None)
         {
-            var candidates = this.FilterCards(cards, state).OrderBy((_) => (int)0);
+            // We are often called with the same `cards` input, usually IGameState.GetAllCards or IGameState.TabletopCards.
+            // We should make an effort to cache these.
+            // Since these choosers are often used in the same context, this cache should be decently effective, especially for shared conditions
+            // (such as has-slushfund-major)
+            // Note: This is a good idea but breaking the bot somehow.
+            // var hash = HashUtils.Hash(state, HashUtils.HashAllUnordered(cards));
+            // var candidates = CacheUtils.Compute(this, nameof(this.SelectChoices), hash, () => this.FilterCards(cards, state).ToArray());
+            var candidates = this.FilterCards(cards, state);
 
-            // Sort for weight bias first, as it will have the most identical hits.
-            if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
+            if (hints.HasFlag(CardChooserHints.IgnorePriority))
             {
-                candidates = candidates.ThenByDescending(card => this.GetSortWeight(card));
-            }
-            else if (this.AspectWeightBias == CardAspectWeightSelection.Lowest)
-            {
-                candidates = candidates.OrderBy(card => this.GetSortWeight(card));
-            }
-
-            // Then sort by desired age.
-            if (this.AgeBias == CardAgeSelection.Oldest)
-            {
-                candidates = candidates.ThenBy(card => card.LifetimeRemaining);
-            }
-            else if (this.AgeBias == CardAgeSelection.Youngest)
-            {
-                candidates = candidates.ThenByDescending(card => card.LifetimeRemaining);
+                return candidates;
             }
 
-            // Then sort by total weight.  This is still desirable even with AspectWeightBias, but only if
-            // we had specific aspects we pre-sorted by
-            if (!this.AspectWeightBias.HasValue || this.Aspects != null)
-            {
-                candidates = candidates.ThenBy(card => card.Aspects.GetWeight());
-            }
-
-            // Then by lifetime remaining, lowest first, but only if that wasnt already decided above.
-            if (!this.AgeBias.HasValue)
-            {
-                candidates = candidates.ThenBy(card => card.LifetimeRemaining);
-            }
-
-            // Finally, sort by signature, so we get deterministic draws for the board state.
-            candidates = candidates.ThenBy(card => card.Signature);
-
-            return candidates;
+            return this.OrderCards(candidates, state);
         }
 
         public override string ToString()
@@ -255,6 +231,50 @@ namespace AutoccultistNS.Config
         protected virtual bool AdditionalFilter(ICardState card)
         {
             return true;
+        }
+
+        protected virtual IEnumerable<ICardState> OrderCards(IEnumerable<ICardState> cards, IGameState state)
+        {
+            // This is a bit silly, but we need it as we are unsure what the first ordering is going to be, and want to use ThenBy.
+            var ordering = cards.OrderBy((_) => (int)0);
+
+            // Sort for weight bias first, as it will have the most identical hits.
+            if (this.AspectWeightBias == CardAspectWeightSelection.Highest)
+            {
+                ordering = ordering.ThenByDescending(card => this.GetSortWeight(card));
+            }
+            else if (this.AspectWeightBias == CardAspectWeightSelection.Lowest)
+            {
+                ordering = ordering.ThenBy(card => this.GetSortWeight(card));
+            }
+
+            // Then sort by desired age.
+            if (this.AgeBias == CardAgeSelection.Oldest)
+            {
+                ordering = ordering.ThenBy(card => card.LifetimeRemaining);
+            }
+            else if (this.AgeBias == CardAgeSelection.Youngest)
+            {
+                ordering = ordering.ThenByDescending(card => card.LifetimeRemaining);
+            }
+
+            // Then sort by total weight.  This is still desirable even with AspectWeightBias, but only if
+            // we had specific aspects we pre-sorted by
+            if (!this.AspectWeightBias.HasValue || this.Aspects != null)
+            {
+                ordering = ordering.ThenBy(card => card.Aspects.GetWeight());
+            }
+
+            // Then by lifetime remaining, lowest first, but only if that wasnt already decided above.
+            if (!this.AgeBias.HasValue)
+            {
+                ordering = ordering.ThenBy(card => card.LifetimeRemaining);
+            }
+
+            // Finally, sort by signature, so we get deterministic draws for the board state.
+            ordering = ordering.ThenBy(card => card.Signature);
+
+            return ordering;
         }
 
         private double GetSortWeight(ICardState card)

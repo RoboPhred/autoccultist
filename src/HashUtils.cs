@@ -21,6 +21,11 @@ namespace AutoccultistNS
         {
             unchecked
             {
+                if (objects is IContentHashingEnumerable contentHasher)
+                {
+                    return contentHasher.GetUnorderedContentHash();
+                }
+
                 return HashAllUnordered(objects.Select(HashOrDefault));
             }
         }

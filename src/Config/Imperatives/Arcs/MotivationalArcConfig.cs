@@ -161,12 +161,7 @@ namespace AutoccultistNS.Config
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             // Arcs always dump completed situations, so as to keep the cards on the tabletop.
-            yield return DumpCompletedSituationImpulse.Instance;
-
-            foreach (var impulse in this.Motivations.GetImpulses(state))
-            {
-                yield return impulse;
-            }
+            return (new IImpulse[] { DumpCompletedSituationImpulse.Instance }).Concat(this.Motivations.GetImpulses(state));
         }
 
         public IEnumerable<IImperative> Flatten()

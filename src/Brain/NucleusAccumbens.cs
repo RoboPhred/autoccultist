@@ -63,7 +63,12 @@ namespace AutoccultistNS.Brain
             }
 
             isInitialized = true;
-            InvokeImpulsesLoop();
+
+            ImmediateSynchronizationContext.Run(() =>
+            {
+                // Capture the loop in the sync context.
+                InvokeImpulsesLoop();
+            });
         }
 
         /// <summary>
@@ -129,55 +134,45 @@ namespace AutoccultistNS.Brain
         {
             var sb = new StringBuilder();
 
-            // Disable the cache while we do this, so that our ConditionResult.Trace is effective for cached checks.
-            var cacheWasEnabled = CacheUtils.Enabled;
-            CacheUtils.Enabled = false;
-            try
+            foreach (var imperative in ActiveImperatives.SelectMany(x => x.Flatten()))
             {
-                foreach (var imperative in ActiveImperatives.SelectMany(x => x.Flatten()))
+                sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
+
+                var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
+                sb.AppendFormat("- Can Activate: {0}\n", canActivate.IsConditionMet);
+                if (!canActivate)
                 {
-                    sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
-
-                    var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
-                    sb.AppendFormat("- Can Activate: {0}\n", canActivate.IsConditionMet);
-                    if (!canActivate)
-                    {
-                        sb.AppendFormat("- - Reason: {0}\n", canActivate.ToString());
-                    }
-
-                    var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
-                    sb.AppendFormat("- Is Satisfied: {0}\n", isSatisfied.IsConditionMet);
-                    if (!isSatisfied)
-                    {
-                        sb.AppendFormat("- - Reason: {0}\n", isSatisfied.ToString());
-                    }
+                    sb.AppendFormat("- - Reason: {0}\n", canActivate.ToString());
                 }
 
-                sb.AppendLine("Reactions");
-                foreach (var imperative in ActiveImperatives)
+                var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
+                sb.AppendFormat("- Is Satisfied: {0}\n", isSatisfied.IsConditionMet);
+                if (!isSatisfied)
                 {
-                    var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
-                                    orderby pair.Reaction.Priority descending, pair.Index ascending
-                                    select pair.Reaction;
-                    foreach (var reaction in reactions)
+                    sb.AppendFormat("- - Reason: {0}\n", isSatisfied.ToString());
+                }
+            }
+
+            sb.AppendLine("Reactions");
+            foreach (var imperative in ActiveImperatives)
+            {
+                var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
+                                orderby pair.Reaction.Priority descending, pair.Index ascending
+                                select pair.Reaction;
+                foreach (var reaction in reactions)
+                {
+                    sb.AppendFormat("- Reaction: {0}\n", reaction.ToString());
+                    sb.AppendFormat("- - Priority: {0}\n", reaction.Priority);
+                    var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
+                    sb.AppendFormat("- - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
+                    if (!isConditionMet)
                     {
-                        sb.AppendFormat("- Reaction: {0}\n", reaction.ToString());
-                        sb.AppendFormat("- - Priority: {0}\n", reaction.Priority);
-                        var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
-                        sb.AppendFormat("- - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
-                        if (!isConditionMet)
-                        {
-                            sb.AppendFormat("- - - Reason: {0}\n", isConditionMet.ToString());
-                        }
+                        sb.AppendFormat("- - - Reason: {0}\n", isConditionMet.ToString());
                     }
                 }
+            }
 
-                return sb.ToString();
-            }
-            finally
-            {
-                CacheUtils.Enabled = cacheWasEnabled;
-            }
+            return sb.ToString();
         }
 
         private static async void InvokeImpulsesLoop()
@@ -186,90 +181,95 @@ namespace AutoccultistNS.Brain
 
             while (true)
             {
-                try
+                if (!GameAPI.IsRunning || !MechanicalHeart.IsRunning)
                 {
-                    if (!GameAPI.IsRunning || !MechanicalHeart.IsRunning)
+                    TryIdle();
+
+                    // Reset our loop state, just in case the new board state is identical, as it may be for rapid
+                    // restarts of the same legacy.
+                    lastHash = 0;
+
+                    // Wait until it is time to run.
+                    await MechanicalHeart.AwaitStart(CancellationToken.None);
+                    continue;
+                }
+                else
+                {
+                    // Always wait between impulses.
+                    // We used to drain all impulses in one frame, but that opens the door to infinite loops
+                    // with zero-time reactions (such as memory set).
+                    // TODO: Detect runaway every-beat impulses and log a warning.
+                    await MechanicalHeart.AwaitBeat(CancellationToken.None);
+                }
+
+                var currentHash = GameStateProvider.Current.GetHashCode();
+                if (!isActive && currentHash == lastHash)
+                {
+                    // Not doing anything and nothing has changed, continue.
+                    // This is much more effective than shoving a cache in all the impulses.
+                    // Note: Funnily enough, this makes the GetFirstReadyImpulse performance monitor show a higher average time since
+                    // its called less but doing more work when it is called.
+                    continue;
+                }
+
+                lastHash = currentHash;
+                TryCompleteImperatives();
+
+                await InvokeNextImpulse();
+            }
+        }
+
+        private static async Task InvokeNextImpulse()
+        {
+            try
+            {
+                // Note that this task is synchronous.
+                // We still coordinate as we do not want to start a new impulse until all ops are idle, in case
+                // we start an impulse that wants a card that is going to be used in another already running impulse.
+                await Cerebellum.Coordinate(
+                    (cancellationToken) =>
                     {
-                        TryIdle();
-
-                        // Reset our loop state, just in case the new board state is identical, as it may be for rapid
-                        // restarts of the same legacy.
-                        lastHash = 0;
-
-                        // Wait until it is time to run.
-                        await MechanicalHeart.AwaitStart(CancellationToken.None);
-                        continue;
-                    }
-                    else
-                    {
-                        // Always wait between impulses.
-                        // We used to drain all impulses in one frame, but that opens the door to infinite loops
-                        // with zero-time reactions (such as memory set).
-                        // TODO: Detect runaway every-beat impulses and log a warning.
-                        await MechanicalHeart.AwaitBeat(CancellationToken.None);
-                    }
-
-                    var currentHash = GameStateProvider.Current.GetHashCode();
-                    if (!isActive && currentHash == lastHash)
-                    {
-                        // Not doing anything and nothing has changed, continue.
-                        // This is much more effective than shoving a cache in all the impulses.
-                        // Note: Funnily enough, this makes the GetFirstReadyImpulse performance monitor show a higher average time since
-                        // its called less but doing more work when it is called.
-                        continue;
-                    }
-
-                    lastHash = currentHash;
-                    TryCompleteImperatives();
-
-                    // Note that this task is synchronous.
-                    // We still coordinate as we do not want to start a new impulse until all ops are idle, in case
-                    // we start an impulse that wants a card that is going to be used in another already running impulse.
-                    await Cerebellum.Coordinate(
-                        (cancellationToken) =>
+                        EnumeratedImpulse chosenImpulse = null;
+                        try
                         {
-                            EnumeratedImpulse chosenImpulse = null;
-                            try
-                            {
-                                // Scan through all possible reactions and invoke the highest priority one that can start
-                                chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
-                            }
-                            catch (Exception ex)
-                            {
-                                Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
-                            }
+                            // Scan through all possible reactions and invoke the highest priority one that can start
+                            chosenImpulse = PerfMonitor.Monitor($"GetFirstReadyImpulse", () => GetReadyImpulses().FirstOrDefault());
+                        }
+                        catch (Exception ex)
+                        {
+                            Autoccultist.LogWarn(ex, "NucleusAccumbens failed when finding an impulse to execute.");
+                        }
 
-                            if (chosenImpulse == null)
-                            {
-                                TryIdle();
-                                return Task.CompletedTask;
-                            }
-
-                            var shouldPause = false;
-                            try
-                            {
-                                // Note: at one point, we awaited the start of every impulse.
-                                // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
-                                // and our next attempt at starting impulses will wait for it to complete.
-                                shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
-                            }
-                            catch (Exception ex)
-                            {
-                                Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
-                            }
-
-                            if (shouldPause)
-                            {
-                                TryActive();
-                            }
-
+                        if (chosenImpulse == null)
+                        {
+                            TryIdle();
                             return Task.CompletedTask;
-                        },
-                        CancellationToken.None);
-                }
-                catch (TaskCanceledException)
-                {
-                }
+                        }
+
+                        var shouldPause = false;
+                        try
+                        {
+                            // Note: at one point, we awaited the start of every impulse.
+                            // That is no longer required, as if this impulse wants to coordinate, it will schedule with the Cerebellum
+                            // and our next attempt at starting impulses will wait for it to complete.
+                            shouldPause = StartImulse(chosenImpulse.Imperative, chosenImpulse.Impulse);
+                        }
+                        catch (Exception ex)
+                        {
+                            Autoccultist.LogWarn(ex, "NucleusAccumbens failed when starting an impulse.");
+                        }
+
+                        if (shouldPause)
+                        {
+                            TryActive();
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    CancellationToken.None);
+            }
+            catch (TaskCanceledException)
+            {
             }
         }
 
@@ -312,10 +312,14 @@ namespace AutoccultistNS.Brain
         /// </summary>
         private static IEnumerable<EnumeratedImpulse> GetReadyImpulses()
         {
-            return from reaction in GetAllImpulses()
-                   where !RunningImpulses.Contains(reaction.Impulse)
-                   where reaction.Impulse.IsConditionMet(GameStateProvider.Current)
-                   select reaction;
+            var impulses = GetAllImpulses().ToArray();
+            var ready = PerfMonitor.Monitor(
+                nameof(GetReadyImpulses),
+                () => (from impulse in impulses
+                       where !RunningImpulses.Contains(impulse.Impulse)
+                       where PerfMonitor.Monitor($"GetReadyImpulses.${(impulse.Impulse as AutoccultistNS.Config.IConfigObject)?.FilePath ?? "<??>"}", () => impulse.Impulse.IsConditionMet(GameStateProvider.Current))
+                       select impulse).ToArray());
+            return ready;
         }
 
         /// <summary>
@@ -324,11 +328,14 @@ namespace AutoccultistNS.Brain
         private static IEnumerable<EnumeratedImpulse> GetAllImpulses()
         {
             // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
-            return
-                from imperative in ActiveImperatives
-                from reaction in imperative.GetImpulses(GameStateProvider.Current).Distinct().Select((r, index) => new { Value = r, Index = index })
-                orderby reaction.Value.Priority descending, reaction.Index ascending
-                select new EnumeratedImpulse { Imperative = imperative, Impulse = reaction.Value };
+            // Note: Added a ToArray to force it to resolve in the performance monitor.
+            return PerfMonitor.Monitor(
+                nameof(GetAllImpulses),
+                () =>
+                (from imperative in ActiveImperatives
+                 from impulse in imperative.GetImpulses(GameStateProvider.Current).Distinct()
+                 orderby impulse.Priority descending
+                 select new EnumeratedImpulse { Imperative = imperative, Impulse = impulse }).ToArray());
         }
 
         private static void TryCompleteImperatives()

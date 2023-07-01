@@ -18,13 +18,16 @@ namespace AutoccultistNS.Config.Conditions
         public override ConditionResult IsConditionMet(IGameState state)
         {
             IEnumerable<ICardState> cards = Enumerable.Empty<ICardState>();
+
             if (this.FromAll.Count > 0)
             {
-                cards = this.FromAll.SelectMany(c => c.SelectChoices(state.GetAllCards(), state));
+                // Do not bother sorting the cards as we are going to process all of them.
+                cards = this.FromAll.SelectMany(c => c.SelectChoices(state.AllCards, state, CardChooserHints.IgnorePriority));
             }
             else if (this.FromEach.Count > 0)
             {
-                cards = this.FromEach.Select(c => c.SelectChoices(state.GetAllCards(), state).FirstOrDefault()).Where(x => x != null);
+                // Still need to sort these cards, as we want the highest priority of each.
+                cards = this.FromEach.Select(c => c.SelectChoices(state.AllCards, state).FirstOrDefault()).Where(x => x != null);
             }
 
             int aspectValue = 0;

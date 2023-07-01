@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         public ConditionResult IsConditionMet(IGameState state)
         {
-            if (this.ChooseCard(state.GetAllCards(), state) == null)
+            if (this.ChooseCard(state.AllCards, state) == null)
             {
                 return CardChoiceResult.ForFailure(this);
             }

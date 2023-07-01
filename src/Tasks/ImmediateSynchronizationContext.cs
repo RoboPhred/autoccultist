@@ -32,6 +32,8 @@ namespace AutoccultistNS
         {
         }
 
+        public static ImmediateSynchronizationContext Instance => instance;
+
         /// <summary>
         /// Runs the given action on the current thread, and complete all posted actions before returning.
         /// Actions scheduled by continuations outside of this function will be ran when this function is next called.
