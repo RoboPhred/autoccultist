@@ -30,6 +30,14 @@ impulses:
               - aspects: { vaultloneandlevelsands: 1 }
             aspect: "@count"
           greaterThanOrEqualTo: 5
+    # Stag door stops at c, so don't bother going past that.
+    # We will re-activate if these are combined, and we have plenty of time to find more
+    forbidders:
+      cardSet:
+        - elementId: fragmentsecrethistoriesc
+        - elementId: fragmentsecrethistoriesc
+        - elementId: fragmentsecrethistoriesc
+        - elementId: fragmentsecrethistoriesc
     operation: !import /operations/mansus/use-stag-secrethistories.yml
 
   # Get a glimmering so we can combine secret histories c and d
