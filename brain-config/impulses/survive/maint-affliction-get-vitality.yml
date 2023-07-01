@@ -4,6 +4,8 @@ requirements:
   allOf:
     - noneOf:
         - elementId: vitality
+        # Don't bother if we can just spend money to fix it
+        - !import /conditions/has-slushfund-major.yml
     - anyOf:
         - situation: illhealth
         - elementId: affliction
