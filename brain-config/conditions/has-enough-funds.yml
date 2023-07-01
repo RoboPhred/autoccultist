@@ -1,0 +1,8 @@
+# This is not capitalism simulator, we can stop working if we have enough.
+# Note that the bot performance drops when we have too many cards, and its not uncommon
+# for an unrestricted work impulse to get thousands of funds on the board.
+fromAll:
+  - elementId: funds
+    location: tabletop
+aspect: "@count"
+value: 50

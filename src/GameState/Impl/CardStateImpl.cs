@@ -11,7 +11,7 @@ namespace AutoccultistNS.GameState.Impl
     /// </summary>
     internal class CardStateImpl : GameStateObject, ICardState
     {
-        private const int CardLimit = 100;
+        private const int CardLimit = 200;
         private static HashSet<string> warnedCardLimitByElement = new();
 
         private const int LifetimeHashLatchSeconds = 1;
@@ -25,14 +25,17 @@ namespace AutoccultistNS.GameState.Impl
         private readonly bool isSlottable;
         private readonly IReadOnlyDictionary<string, int> aspects;
         private readonly string signature;
-        private readonly Lazy<int> hashCode;
+        private readonly int hashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CardStateImpl"/> class.
         /// </summary>
         /// <param name="sourceStack">The source stack to represent a card of.</param>
         /// <param name="location">The location of the card.</param>
-        public CardStateImpl(ElementStack sourceStack, CardLocation location)
+        /// <param name="aspects">The precomputed aspects of the card.</param>
+        /// <param name="slottable">Whether the card is slottable.</param>
+        /// <param name="hashCode">The precomputed hash code of the card.</param>
+        private CardStateImpl(ElementStack sourceStack, CardLocation location, IReadOnlyDictionary<string, int> aspects, bool slottable, int hashCode)
         {
             this.consumed = new Lazy<ElementStack>(() => CardStateImpl.TakeOneFromStack(sourceStack));
 
@@ -40,49 +43,16 @@ namespace AutoccultistNS.GameState.Impl
             this.lifetimeRemaining = sourceStack.LifetimeRemaining;
             this.isUnique = sourceStack.Unique;
 
-            var calcAspects = new AspectsDictionary();
-
-            // We want the aspects of an individual card, not the sum total of the entire stack
-            // GetAspects() will do this, but then also multiply the result by the stack quantity
-            // Note: The game seems inclined to cache this data.  Is this a performance problem?
-            calcAspects.CombineAspects(sourceStack.Element.Aspects);
-
-            // Note: As far as I can tell, it is expected that any stack that has mutations will have a quantity of 1.
-            // Mutated cards don't stack.
-            calcAspects.ApplyMutations(sourceStack.Mutations);
-
-            // This is included in the GetAspects() logic (with its default includeSelf true), and we relied on it in the past.
-            calcAspects[this.elementId] = 1;
-            this.aspects = calcAspects;
+            this.aspects = aspects;
 
             this.signature = sourceStack.GetSignature();
 
             this.location = location;
-
-            // I have no idea which of these conditions are actually necessary.
-            var enRoute = sourceStack.Token.Sphere is EnRouteSphere;
-            var tokenState = sourceStack.Token.CurrentState;
-
-            // isSlottable should be true if we can yoink this card, even if it is not on the tabletop.
-            // This allows a SlotCardAction to concievably target cards in verbs that are still in their warmup period.
-            // This is useful in several "pro" strategies where sulochana is used in the talk verb to pauase the timer on influences.
-            // Note: In practice, SlottableCardChooser still looks for tabletop only.
-            // WARN: tokenState.InPlayerDrivenMotion and tokenState.InSystemDrivenMotion are unreliable, token
-            //  states tend to randomly not be updated. See: UnknownState cards sitting on the board.
-            this.isSlottable = !enRoute
-                && !sourceStack.Defunct
-                && !tokenState.InPlayerDrivenMotion()
-                && !tokenState.InSystemDrivenMotion()
-                && sourceStack.Token.Sphere.IsExteriorSphere;
+            this.isSlottable = slottable;
 
             // Signature makes up for both elementId and aspects, so we dont need to include either in this.
             // Lifetime remaining changes every frame and is a bastard of a cache buster.
-            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
-                this.signature,
-                (int)Math.Round(this.lifetimeRemaining),
-                this.isUnique,
-                this.location,
-                this.isSlottable));
+            this.hashCode = hashCode;
         }
 
         /// <inheritdoc/>
@@ -175,15 +145,47 @@ namespace AutoccultistNS.GameState.Impl
                 count = CardLimit;
             }
 
+            var aspects = new AspectsDictionary();
+
+            // We want the aspects of an individual card, not the sum total of the entire stack
+            // GetAspects() will do this, but then also multiply the result by the stack quantity
+            // Note: The game seems inclined to cache this data.  Is this a performance problem?
+            aspects.CombineAspects(stack.Element.Aspects);
+
+            // Note: As far as I can tell, it is expected that any stack that has mutations will have a quantity of 1.
+            // Mutated cards don't stack.
+            aspects.ApplyMutations(stack.Mutations);
+
+            // This is included in the GetAspects() logic (with its default includeSelf true), and we relied on it in the past.
+            aspects[stack.Element.Id] = 1;
+
+            // isSlottable should be true if we can yoink this card, even if it is not on the tabletop.
+            // This allows a SlotCardAction to concievably target cards in verbs that are still in their warmup period.
+            // This is useful in several "pro" strategies where sulochana is used in the talk verb to pauase the timer on influences.
+            // Note: In practice, SlottableCardChooser still looks for tabletop only.
+            // WARN: tokenState.InPlayerDrivenMotion and tokenState.InSystemDrivenMotion are unreliable, token
+            //  states tend to randomly not be updated. See: UnknownState cards sitting on the board.
+            var enRoute = stack.Token.Sphere is EnRouteSphere;
+            var tokenState = stack.Token.CurrentState;
+            var slottable = !enRoute
+                && !stack.Defunct
+                && !tokenState.InPlayerDrivenMotion()
+                && !tokenState.InSystemDrivenMotion()
+                && stack.Token.Sphere.IsExteriorSphere;
+
+            var hashCode = MakeHashCode(stack, location, slottable);
+
+            // Hash codes will be the same for every entry, so we can save some time here.
             for (var i = 0; i < count; i++)
             {
-                yield return new CardStateImpl(stack, location);
+                // Large stacks share the same values for all properties, so we can precompute most of this.
+                yield return new CardStateImpl(stack, location, aspects, slottable, hashCode);
             }
         }
 
         public override int GetHashCode()
         {
-            return this.hashCode.Value;
+            return this.hashCode;
         }
 
         /// <inheritdoc/>
@@ -207,6 +209,16 @@ namespace AutoccultistNS.GameState.Impl
 
             stack.Token.RequestHomeLocationFromCurrentSphere();
             return stack;
+        }
+
+        private static int MakeHashCode(ElementStack stack, CardLocation location, bool isSlottable)
+        {
+            return HashUtils.Hash(
+                stack.GetSignature(),
+                (int)Math.Round(stack.LifetimeRemaining),
+                stack.Unique,
+                location,
+                isSlottable);
         }
     }
 }

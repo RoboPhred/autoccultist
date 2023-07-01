@@ -317,7 +317,7 @@ namespace AutoccultistNS.Brain
                 nameof(GetReadyImpulses),
                 () => (from impulse in impulses
                        where !RunningImpulses.Contains(impulse.Impulse)
-                       where PerfMonitor.Monitor($"GetReadyImpulses.${(impulse.Impulse as AutoccultistNS.Config.IConfigObject)?.FilePath ?? "<??>"}", () => impulse.Impulse.IsConditionMet(GameStateProvider.Current))
+                       where PerfMonitor.Monitor($"GetReadyImpulses.${(impulse.Impulse as AutoccultistNS.Config.INamedConfigObject)?.Name ?? "<??>"}", () => impulse.Impulse.IsConditionMet(GameStateProvider.Current))
                        select impulse).ToArray());
             return ready;
         }

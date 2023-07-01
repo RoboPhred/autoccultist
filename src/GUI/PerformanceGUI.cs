@@ -1,7 +1,7 @@
 namespace AutoccultistNS.GUI
 {
     using System;
-    using AutoccultistNS.GameState;
+    using System.Linq;
     using UnityEngine;
 
     /// <summary>
@@ -10,6 +10,8 @@ namespace AutoccultistNS.GUI
     public static class PerformanceGUI
     {
         private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
+
+        private static bool sortAverageTime = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether the window is being shown.
@@ -39,7 +41,9 @@ namespace AutoccultistNS.GUI
 
             GUILayout.Label($"Cache misses {CacheUtils.MissesPerSecond:0.000}ps hits {CacheUtils.HitsPerSecond:0.000}ps");
 
-            foreach (var entry in PerfMonitor.Entries)
+            sortAverageTime = GUILayout.Toggle(sortAverageTime, "Sort by average time");
+
+            foreach (var entry in PerfMonitor.Entries.OrderByDescending(x => sortAverageTime ? x.Value.Average : 0))
             {
                 GUILayout.Label($"{entry.Key}: {entry.Value.Average:0.000}ms {entry.Value.SamplesPerSecond:0}cps (max {entry.Value.Max:0.000}ms, >10 {entry.Value.GreaterThanAllocatedRate:0.000} per second)");
             }

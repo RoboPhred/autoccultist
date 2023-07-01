@@ -11,6 +11,7 @@ requirements:
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
     - elementId: gloverandglovertopjob_tainted
+completedWhen: !import /conditions/has-enough-funds.yml
 impulses:
   - name: Work diligently at junior job at Glover & Glover
     priority: maintenance
