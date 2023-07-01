@@ -131,7 +131,33 @@ conditionalRecipes:
           follower: 1
           edge:
             greaterThanOrEqualTo: 2
-
+  # Soucouyants => Moth
+  - condition:
+      allOf:
+        - anyOf:
+            - situation: explore
+              storedCardsMatch:
+                elementId: guardian_soucouyants
+            - situation: explore
+              storedCardsMatch:
+                elementId: guardian_long
+        - noneOf:
+            - allOf:
+                - situation: explore
+                  containsAspects: { grail: 10 }
+            - allOf:
+                - situation: explore
+                  containsAspects: { lantern: 10 }
+            - allOf:
+                - situation: explore
+                  containsAspects: { moth: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          moth:
+            greaterThanOrEqualTo: 2
   # Curse => Heart
   - condition:
       allOf:
@@ -212,26 +238,6 @@ conditionalRecipes:
             - noneOf:
                 - allOf:
                     - situation: explore
-                      containsAspects: { lantern: 10 }
-                - allOf:
-                    - situation: explore
-                      containsAspects: { moth: 10 }
-        # Edge-immune Guardians
-        - allOf:
-            - situation: explore
-              storedCardsMatch:
-                elementId: guardian_soucouyants
-            - situation: explore
-              storedCardsMatch:
-                elementId: guardian_long
-            - noneOf:
-                - allOf:
-                    - situation: explore
-                      containsAspects: { grail: 10 }
-                - allOf:
-                    - situation: explore
-                      storedCardsMatch:
-                        elementId: guardian_soucouyants
                       containsAspects: { lantern: 10 }
                 - allOf:
                     - situation: explore
