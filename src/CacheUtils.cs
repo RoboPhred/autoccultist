@@ -29,6 +29,11 @@ namespace AutoccultistNS
 
         public static TOutput Compute<TOutput>(object reference, string key, object input, Func<TOutput> func)
         {
+            if (!Enabled)
+            {
+                return func();
+            }
+
             var cache = Values.GetOrCreateValue(reference);
             if (!cache.TryGetValue(key, out var data))
             {

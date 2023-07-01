@@ -247,7 +247,6 @@ conditionalRecipes:
   - condition:
       value:
         fromAll:
-          # TODO: Specify the explore verb specifically
           - location: stored
             situation: explore
             aspects: { peril: 1 }

@@ -1,0 +1,110 @@
+name: Explore Vaults in the Evening Isles
+completedWhen:
+  noneOf:
+    - aspects: { vaulteveningisles: 1 }
+impulses:
+  - name: Explore Fort Geryk
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Fort Geryk
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaulteveningisles2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Raven Isle
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Raven Isle
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaulteveningisles1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, heart: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, heart: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore St Tentreto of the Deep Door
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore St Tentreto of the Deep Door
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaulteveningisles4
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Wreck of the Christabel
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Wreck of the Christabel
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaulteveningisles3
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, heart: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, heart: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Port Noon
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Port Noon
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaulteveningislesdefault
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds

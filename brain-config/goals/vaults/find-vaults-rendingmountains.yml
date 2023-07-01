@@ -1,4 +1,4 @@
-name: Find Vaults beyond the Forest
+name: Find Vaults in the Rending Mountains
 
 requirements:
   allOf:
@@ -7,27 +7,29 @@ requirements:
     - elementId: waystag_after
 
 completedWhen:
-  memory: has_all_vaults_beyondforest
+  memory: has_all_vaults_rendingmountains
   value: 1
 
 impulses:
   - name: Remember our discovery
     requirements:
-      elementId: vaultlandbeyondforestdefault
+      elementId: vaultrendingmountainsdefault
     reactions:
-      - remember: has_all_vaults_beyondforest
-        label: Has All Vaults beyond the Forest
-        description: We have found everything of interest beyond the Forest.
+      - remember: has_all_vaults_rendingmountains
+        label: Has All Vaults in the Rending Mountains
+        description: We have found everything of interest in the Rending Mountains.
 
+  # TODO: Peacock door would be a perfect source, but we have to implement the mirror and commission loop
+  # There is the spider door, but sacrifices are more limiting than bronze spintra
   - name: Collect Secret Histories from the Stag Door
     requirements: &has-needed-secret-histories
       noneOf:
         - value:
             fromAll:
-              - elementId: fragmentsecrethistoriesd
-              - aspects: { vaultlandbeyondforest: 1 }
+              - elementId: fragmentsecrethistoriese
+              - aspects: { vaultrendingmountains: 1 }
             aspect: "@count"
-          greaterThanOrEqualTo: 6 # 6 total locations
+          greaterThanOrEqualTo: 5
     operation: !import /operations/mansus/use-stag-secrethistories.yml
 
   - name: Combine Occult Scraps into Furtive Truths
@@ -38,14 +40,18 @@ impulses:
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
 
-  # Get a glimmering so we can combine secret histories c
+  # Get a glimmering so we can combine secret histories c and d
   - extends: !import /impulses/norm-glimmering-from-passion.yml
     requirements:
       allOf:
         - *has-needed-secret-histories
-        - cardSet:
-            - elementId: fragmentsecrethistoriesc
-            - elementId: fragmentsecrethistoriesc
+        - anyOf:
+            - cardSet:
+                - elementId: fragmentsecrethistoriesc
+                - elementId: fragmentsecrethistoriesc
+            - cardSet:
+                - elementId: fragmentsecrethistoriesd
+                - elementId: fragmentsecrethistoriesd
     forbidders:
       elementId: glimmering
 
@@ -53,11 +59,15 @@ impulses:
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
 
-  - name: Explore Beyond the Forest
+  - name: Combine Forbidden Epics into Unresolved Ambiguities
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-d.yml
+
+  - name: Explore the Rending Mountains
     operation:
-      name: Find vaults Beyond the Forest
+      name: Find Rending Mountain Vaults
       situation: explore
       startingRecipe:
         slots:
           explore:
-            elementId: fragmentsecrethistoriesd
+            elementId: fragmentsecrethistoriese

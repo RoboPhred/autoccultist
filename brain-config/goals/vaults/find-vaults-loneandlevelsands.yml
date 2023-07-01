@@ -1,0 +1,80 @@
+name: Find Vaults in the Lone and Level Sands
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waystag_after
+
+completedWhen:
+  memory: has_all_vaults_loneandlevelsands
+  value: 1
+
+impulses:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultloneandlevelsandsdefault
+    reactions:
+      - remember: has_all_vaults_loneandlevelsands
+        label: Has All Vaults in the Lone and Level Sands
+        description: We have found everything of interest in the Lone and Level Sands.
+
+  # TODO: Peacock door would be a perfect source, but we have to implement the mirror and commission loop
+  # There is the spider door, but sacrifices are more limiting than bronze spintra
+  - name: Collect Secret Histories from the Stag Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesf
+              - aspects: { vaultloneandlevelsands: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 5
+    operation: !import /operations/mansus/use-stag-secrethistories.yml
+
+  - name: Combine Occult Scraps into Furtive Truths
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+
+  # Get a glimmering so we can combine secret histories c and d
+  - extends: !import /impulses/norm-glimmering-from-passion.yml
+    requirements:
+      allOf:
+        - *has-needed-secret-histories
+        - anyOf:
+            - cardSet:
+                - elementId: fragmentsecrethistoriesc
+                - elementId: fragmentsecrethistoriesc
+            - cardSet:
+                - elementId: fragmentsecrethistoriesd
+                - elementId: fragmentsecrethistoriesd
+            - cardSet:
+                - elementId: fragmentsecrethistoriese
+                - elementId: fragmentsecrethistoriese
+    forbidders:
+      elementId: glimmering
+
+  - name: Combine Forgotten Chronicles into Forbidden Epics
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
+
+  - name: Combine Forbidden Epics into Unresolved Ambiguities
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-d.yml
+
+  - name: Combine Unresolved Ambiguities into Vagabond's Maps
+    requirements: *has-needed-secret-histories
+    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-e.yml
+
+  - name: Explore the Lone and Level Sands
+    operation:
+      name: Find vaults in the Lone and Level Sands
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesf

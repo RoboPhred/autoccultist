@@ -1,0 +1,110 @@
+name: Explore Vaults in the Lone and Level Sands
+completedWhen:
+  noneOf:
+    - aspects: { vaultloneandlevelsands: 1 }
+impulses:
+  - name: Explore Lagun's Tomb
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Lagun's Tomb
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultloneandlevelsands2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Messana
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Messana
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultloneandlevelsands3
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, grail: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, grail: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Star-Shattered Fane
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Star-Shattered Fane
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultloneandlevelsands1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Temple of the Seven Coils
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Temple of the Seven Coils
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultloneandlevelsands4
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Miah
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Miah
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultloneandlevelsandsdefault
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, grail: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, grail: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds

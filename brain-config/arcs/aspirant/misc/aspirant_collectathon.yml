@@ -260,6 +260,20 @@ motivations:
     primaryGoals:
       - vaults/find-vaults-beyondforest
 
+  find_vaults_loneandlevelsands:
+    name: Find locations in the Lone and Level Sands
+    requires:
+      - find_vaults_beyondforest
+    primaryGoals:
+      - vaults/find-vaults-loneandlevelsands
+
+  find_vaults_eveningisles:
+    name: Find locations in the Evening Isles
+    requires:
+      - find_vaults_loneandlevelsands
+    primaryGoals:
+      - vaults/find-vaults-eveningisles
+
   explore_vaults:
     name: Explore Vaults
     requires:
@@ -270,3 +284,5 @@ motivations:
       - vaults/explore-vaults-shires
       - vaults/explore-vaults-continent
       - vaults/explore-vaults-beyondforest
+      - vaults/explore-vaults-loneandlevelsands
+      - vaults/explore-vaults-eveningisles
