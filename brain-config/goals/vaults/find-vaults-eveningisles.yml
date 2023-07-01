@@ -13,7 +13,7 @@ completedWhen:
 impulses:
   - name: Remember our discovery
     requirements:
-      elementId: vaultloneandlevelsandsdefault
+      elementId: vaulteveningislesdefault
     reactions:
       - remember: has_all_vaults_eveningisles
         label: Has All Vaults in the Evening Isles
@@ -42,6 +42,7 @@ impulses:
 
   # Get a glimmering so we can combine secret histories c and d
   - extends: !import /impulses/norm-glimmering-from-passion.yml
+    priority: maintenance
     requirements:
       allOf:
         - *has-needed-secret-histories
@@ -62,26 +63,32 @@ impulses:
       elementId: glimmering
 
   - name: Combine Vagabond's Maps into Port Noon Anecdotes
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-f.yml
 
   - name: Combine Unresolved Ambiguities into Vagabond's Maps
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-e.yml
 
   - name: Combine Forbidden Epics into Unresolved Ambiguities
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-d.yml
 
   - name: Combine Forgotten Chronicles into Forbidden Epics
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
 
   - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
 
   - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 

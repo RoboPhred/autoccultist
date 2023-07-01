@@ -31,6 +31,7 @@ impulses:
     operation: !import /operations/mansus/use-wood-secrethistories.yml
 
   - name: Break down Furtive Truths into Occult Scraps
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-breakdown-secrethistories-b.yml
 

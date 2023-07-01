@@ -77,12 +77,12 @@ anyOf:
           - noneOf:
               - elementId: scholarlatin
       - allOf:
-          - elementId: textbookmandaic
+          - elementId: textbookmandaicaramaic
             location: tabletop
           - noneOf:
               - elementId: scholarmandaic
       - allOf:
-          - elementId: textbookfucine
+          - elementId: textbookfucinelatin
             location: tabletop
           - noneOf:
               - elementId: scholarfucine

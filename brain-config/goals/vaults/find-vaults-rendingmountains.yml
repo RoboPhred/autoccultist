@@ -42,6 +42,7 @@ impulses:
 
   # Get a glimmering so we can combine secret histories c and d
   - extends: !import /impulses/norm-glimmering-from-passion.yml
+    priority: maintenance
     requirements:
       allOf:
         - *has-needed-secret-histories
@@ -56,18 +57,22 @@ impulses:
       elementId: glimmering
 
   - name: Combine Forbidden Epics into Unresolved Ambiguities
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-d.yml
 
   - name: Combine Forgotten Chronicles into Forbidden Epics
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
 
   - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
 
   - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 

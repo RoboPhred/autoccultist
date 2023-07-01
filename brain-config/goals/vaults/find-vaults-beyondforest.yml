@@ -31,10 +31,12 @@ impulses:
     operation: !import /operations/mansus/use-stag-secrethistories.yml
 
   - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 
   - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
 
@@ -50,6 +52,7 @@ impulses:
       elementId: glimmering
 
   - name: Combine Forgotten Chronicles into Forbidden Epics
+    priority: maintenance
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
 
