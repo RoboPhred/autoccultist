@@ -11,7 +11,12 @@ namespace AutoccultistNS.GameState.Impl
     /// </summary>
     internal class CardStateImpl : GameStateObject, ICardState
     {
-        private const int CardLimit = 200;
+        /// <summary>
+        /// To avoid bogging down the condition logic, we limit how many cards we are willing to produce from a single stack.
+        /// We can do this as each card in a stack is guarenteed to be identical to all other cards, so the only thing affected
+        /// by this will be conditions that want to count that type of card.
+        /// </summary>
+        private const int CardsInStackLimit = 50;
         private static HashSet<string> warnedCardLimitByElement = new();
 
         private const int LifetimeHashLatchSeconds = 1;
@@ -134,15 +139,16 @@ namespace AutoccultistNS.GameState.Impl
         public static IEnumerable<CardStateImpl> CardStatesFromStack(ElementStack stack, CardLocation location)
         {
             var count = stack.Quantity;
-            if (count > CardLimit)
+            if (count > CardsInStackLimit)
             {
                 if (!warnedCardLimitByElement.Contains(stack.EntityId))
                 {
                     warnedCardLimitByElement.Add(stack.EntityId);
-                    Autoccultist.LogWarn($"Card limit exceeded for element {stack.EntityId}: {count} > {CardLimit}");
+                    Autoccultist.LogWarn($"Card limit exceeded for element {stack.EntityId}: {count} > {CardsInStackLimit}");
+                    GameAPI.Notify("Autoccultist Warning", $"Card limit exceeded for element {stack.EntityId}: {count} > {CardsInStackLimit}.  Ignoring remaining cards.");
                 }
 
-                count = CardLimit;
+                count = CardsInStackLimit;
             }
 
             var aspects = new AspectsDictionary();

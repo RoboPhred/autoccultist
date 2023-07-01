@@ -5,4 +5,4 @@ fromAll:
   - elementId: funds
     location: tabletop
 aspect: "@count"
-value: 50
+value: 30

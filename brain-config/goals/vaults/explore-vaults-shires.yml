@@ -4,6 +4,7 @@ completedWhen:
     - aspects: { vaultshires: 1 }
 impulses:
   - name: Explore Crowkiss Hill
+    requirements: !import /conditions/has-flushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Crowkiss Hill
@@ -24,6 +25,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Gladwyn Lake
+    requirements: !import /conditions/has-flushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Gladwyn Lake
@@ -44,6 +46,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Gwaer Inn
+    requirements: !import /conditions/has-flushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Gwaer Inn
@@ -64,6 +67,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Keglin's Scratch
+    requirements: !import /conditions/has-flushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Keglin's Scratch
@@ -84,6 +88,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Lockwood Fen
+    requirements: !import /conditions/has-flushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Lockwood Fen
@@ -104,6 +109,7 @@ impulses:
           expeditionfunds2:
             elementId: funds
   - name: Explore Kerisham
+    requirements: !import /conditions/has-flushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml
     operation:
       name: Explore Kerisham
