@@ -208,7 +208,7 @@ namespace AutoccultistNS.Config
         {
             if (this.From != null && this.From.Count > 0)
             {
-                cards = new HashSet<ICardState>(this.From.Select(x => x.ChooseCard(cards, state)));
+                cards = new HashSet<ICardState>(this.From.SelectMany(x => x.SelectChoices(cards, state)));
             }
 
             // Once again, the lack of covariance in IReadOnlyDictionary comes back to bite us
