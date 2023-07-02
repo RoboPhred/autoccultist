@@ -18,25 +18,48 @@ namespace AutoccultistNS
             return AwaitConditionTask.From(() => DateTime.Now >= then, cancellationToken);
         }
 
-        public static Task Timeout(Func<CancellationToken, Task> func, TimeSpan timeout, CancellationToken cancellationToken)
+        public static async Task<T> Timeout<T>(Func<CancellationToken, Task<T>> func, TimeSpan timeout, CancellationToken cancellationToken)
         {
             var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             var task = func(cts.Token);
-
-            // Cancel token on task completion, so the timeout doesnt continue.
-            task.ContinueWith(t => cts.Cancel());
-
             var timeoutTask = Of(timeout, cts.Token);
 
-            // Cancel the token on timeout, so the origin task doesn't continue.
-            timeoutTask = timeoutTask.ContinueWith(t =>
-            {
-                cts.Cancel();
-                throw new TimeoutException();
-            });
+            var completedTask = await Task.WhenAny(task, timeoutTask);
 
-            return Task.WhenAny(task, timeoutTask);
+            // Cancel whatever task didn't complete.
+            cts.Cancel();
+
+            if (completedTask == task)
+            {
+                return await task;
+            }
+            else
+            {
+                throw new TimeoutException();
+            }
+        }
+
+        public static async Task Timeout(Func<CancellationToken, Task> func, TimeSpan timeout, CancellationToken cancellationToken)
+        {
+            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+            var task = func(cts.Token);
+            var timeoutTask = Of(timeout, cts.Token);
+
+            var completedTask = await Task.WhenAny(task, timeoutTask);
+
+            // Cancel whatever task didn't complete.
+            cts.Cancel();
+
+            if (completedTask == task)
+            {
+                await task;
+            }
+            else
+            {
+                throw new TimeoutException();
+            }
         }
     }
 }

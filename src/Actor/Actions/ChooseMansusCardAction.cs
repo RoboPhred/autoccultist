@@ -6,6 +6,8 @@ namespace AutoccultistNS.Actor.Actions
     using System.Threading.Tasks;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Tasks;
+    using SecretHistories.Tokens.Payloads;
 
     /// <summary>
     /// An action that closes a situation window.
@@ -95,13 +97,19 @@ namespace AutoccultistNS.Actor.Actions
 
         private async Task AcceptCard(CancellationToken cancellationToken)
         {
+            Ingress ingress;
             try
             {
-                await RealtimeDelay.Timeout(c => GameAPI.AwaitTabletopIngress(c), TimeSpan.FromSeconds(5), cancellationToken);
+                ingress = await RealtimeDelay.Timeout(c => GameAPI.AwaitTabletopIngress(c), TimeSpan.FromSeconds(5), cancellationToken);
             }
             catch (TimeoutException)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: Timed out waiting for ingress to appear.");
+            }
+
+            if (ingress == null)
+            {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Failed to find ingress.");
             }
 
             var sphere = GameAPI.GetMansusEgressSphere();
@@ -110,6 +118,9 @@ namespace AutoccultistNS.Actor.Actions
             {
                 throw new ActionFailureException(this, "Failed to find mansus egress sphere.");
             }
+
+            // Force some more waits, as the egress is getting stuck open / not closing when the card is chosen
+            await RealtimeDelay.Of(TimeSpan.FromSeconds(2), cancellationToken);
 
             if (sphere.Tokens.Count > 0 && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
@@ -125,6 +136,18 @@ namespace AutoccultistNS.Actor.Actions
                 }
 
                 sphere.EvictAllTokens(new Context(Context.ActionSource.PlayerDumpAll));
+            }
+
+            // Wait to see if the ingress properly closes.
+            // In theory we should be Defunct immediately on evicting the token.
+            try
+            {
+                await RealtimeDelay.Timeout(token => AwaitConditionTask.From(() => ingress.Defunct, token), TimeSpan.FromSeconds(1), cancellationToken);
+            }
+            catch (TimeoutException)
+            {
+                Autoccultist.LogWarn("ChooseMansusCardAction: Timed out waiting for ingress to close.  Force closing.");
+                ingress.Conclude();
             }
 
             // Seems we get a lvl 3 unpause when the mansus completes.  Let's reassert the pause

@@ -1,9 +1,9 @@
-using System;
-using AutoccultistNS.Yaml;
-using YamlDotNet.Core;
-
 namespace AutoccultistNS
 {
+    using System;
+    using AutoccultistNS.Yaml;
+    using YamlDotNet.Core;
+
     public static class ExceptionExtensions
     {
         public static bool WrappedExceptionsContain<T>(this Exception exception)
