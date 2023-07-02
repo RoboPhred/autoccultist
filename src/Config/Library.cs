@@ -104,6 +104,11 @@ namespace AutoccultistNS.Config
                 throw new ArgumentNullException(nameof(type));
             }
 
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
             candidates.AddRange(LibraryGoals.Where(x => type.IsAssignableFrom(x.GetType())));
             candidates.AddRange(LibraryArcs.Where(x => type.IsAssignableFrom(x.GetType())));
 
@@ -133,6 +138,12 @@ namespace AutoccultistNS.Config
             try
             {
                 var goal = Deserializer.Deserialize<GoalConfig>(filePath);
+                if (goal == null)
+                {
+                    Autoccultist.LogWarn($"Goal at {filePath} returned a null object.");
+                    return;
+                }
+
                 LibraryGoals.Add(goal);
             }
             catch (YamlFileException ex)
@@ -153,6 +164,12 @@ namespace AutoccultistNS.Config
             try
             {
                 var arc = Deserializer.Deserialize<MotivationalArcConfig>(filePath);
+                if (arc == null)
+                {
+                    Autoccultist.LogWarn($"Arc at {filePath} returned a null object.");
+                    return;
+                }
+
                 LibraryArcs.Add(arc);
             }
             catch (YamlFileException ex)

@@ -1,4 +1,4 @@
-name: Meet acquaintances and patrons
+name: Find all acquaintances and patrons
 
 completedWhen:
   memory: has_all_followers

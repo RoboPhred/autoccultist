@@ -120,6 +120,11 @@ namespace AutoccultistNS.Brain
                 DeferredTask<object> set;
                 while ((set = PendingActions.DequeueOrDefault()) != null)
                 {
+                    if (set.IsCancelled)
+                    {
+                        continue;
+                    }
+
                     // If the heart is not running, wait for a beat.
                     // If the heart is running, this no-ops.
                     await MechanicalHeart.AwaitBeatIfStopped(CancellationToken.None);
@@ -142,7 +147,8 @@ namespace AutoccultistNS.Brain
                     {
                         if (!ex.WrappedExceptionsContain<TaskCanceledException>())
                         {
-                            NoonUtility.LogWarning($"Failed to run coordinated task {set.Name}.");
+                            // Logging the name because we keep getting exceptions with no name or message.
+                            NoonUtility.LogWarning($"Failed to run coordinated task {set.Name} due to {ex.GetType().Name}.");
                             NoonUtility.LogException(ex.GetInterestingException());
                         }
                     }

@@ -48,8 +48,6 @@ namespace AutoccultistNS.GUI
             {
                 GUILayout.BeginHorizontal();
 
-                GUILayout.Label(arc.Name);
-
                 if (GUILayout.Button("Activate", GUILayout.ExpandWidth(false)))
                 {
                     if (currentArc != null)
@@ -59,6 +57,8 @@ namespace AutoccultistNS.GUI
 
                     NucleusAccumbens.AddImperative(arc);
                 }
+
+                GUILayout.Label(arc.Name);
 
                 GUILayout.EndHorizontal();
             }

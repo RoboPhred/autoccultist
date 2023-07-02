@@ -439,12 +439,13 @@ namespace AutoccultistNS
         /// <summary>
         /// Sets the pause state of the game.
         /// </summary>
+        /// <param name="name">The name of this token, for leak detection.</param>
         /// <returns>A token to unpause the game.</returns>
-        public static PauseToken Pause()
+        public static PauseToken Pause(string name = null)
         {
             if (pauseDepth == 0)
             {
-                if (IsRunning)
+                if (IsRunning && MechanicalHeart.IsRunning)
                 {
                     Watchman.Get<LocalNexus>().ForcePauseGame(true);
                     isPaused = true;
@@ -453,20 +454,30 @@ namespace AutoccultistNS
 
             pauseDepth++;
 
-            return new PauseToken();
+            return new PauseToken(name);
         }
 
-        public static async Task WhilePaused(Func<Task> action, CancellationToken cancellationToken)
+        public static Task WhilePaused(Func<Task> action, CancellationToken cancellationToken)
         {
-            using (Pause())
+            return WhilePaused(null, action, cancellationToken);
+        }
+
+        public static Task<T> WhilePaused<T>(Func<Task<T>> action, CancellationToken cancellationToken)
+        {
+            return WhilePaused(null, action, cancellationToken);
+        }
+
+        public static async Task WhilePaused(string name, Func<Task> action, CancellationToken cancellationToken)
+        {
+            using (Pause(name))
             {
                 await action();
             }
         }
 
-        public static async Task<T> WhilePaused<T>(Func<Task<T>> action, CancellationToken cancellationToken)
+        public static async Task<T> WhilePaused<T>(string name, Func<Task<T>> action, CancellationToken cancellationToken)
         {
-            using (Pause())
+            using (Pause(name))
             {
                 return await action();
             }
@@ -570,13 +581,20 @@ namespace AutoccultistNS
         {
             private bool isDisposed = false;
 
+            public PauseToken(string name)
+            {
+                this.Name = name;
+            }
+
             /// <summary>
             /// Finalizes an instance of the <see cref="PauseToken"/> class.
             /// </summary>
             ~PauseToken()
             {
-                Autoccultist.LogWarn("Leaked PauseToken");
+                Autoccultist.LogWarn($"Leaked PauseToken {this.Name}");
             }
+
+            public string Name { get; }
 
             /// <inheritdoc/>
             public void Dispose()

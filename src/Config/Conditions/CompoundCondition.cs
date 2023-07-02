@@ -98,6 +98,8 @@ namespace AutoccultistNS.Config.Conditions
         /// <inheritdoc/>
         void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
+            var start = parser.Current.Start;
+
             parser.Consume<MappingStart>();
 
             var key = parser.Consume<Scalar>();
@@ -123,7 +125,10 @@ namespace AutoccultistNS.Config.Conditions
                 throw new YamlException(key.Start, key.End, "GameStateCondition must only have one property.");
             }
 
-            parser.Consume<MappingEnd>();
+            var end = parser.Consume<MappingEnd>();
+
+            // FIXME: AfterDeserialized isnt being called?
+            this.AfterDeserialized(start, end.End);
         }
 
         /// <inheritdoc/>

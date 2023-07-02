@@ -3,6 +3,135 @@ legacy: apostleforge
 startFromSave: ./.saves/apostle_power.json
 
 motivations:
-  - name: Perpetual survival
+  survive:
+    name: Survival
     primaryGoals:
-      - !import /goals/survive.yml
+      - survive
+
+  # Begin jobs
+  get_gg:
+    name: Get a job
+    requires:
+      - begin_game
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+
+  work_gg:
+    name: Work at Glover and Glover
+    requires:
+      - get_gg
+    blocks:
+      # glover and glover is more lucrative than labor, so stop doing labor when it is available.
+      - work_labor
+    primaryGoals:
+      - glover/work-glover
+      - glover/acquire-job-glover-standard
+
+  work_labor:
+    name: Work with physical labor
+    requires:
+      - begin_game
+    primaryGoals:
+      - funds/work-labor
+  # End jobs
+
+  # Begin Skills
+  get_buff:
+    name: Get a stronger physique
+    requires:
+      - begin_game
+    blocks:
+      # Block GG while doing this, so we fall back on labor for the extra vitality.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
+
+  get_scholarship_minor:
+    name: Get a scholarship
+    requires:
+      # Wait until we finish leveling up our health skill so we dont conflict over study.
+      - get_buff
+    blocks:
+      # Block GG while doing this, so we dont fight for our limited reason.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - reason/acquire-skillreasona
+
+  get_scholarship_major:
+    name: Get a profound scholarship
+    requires:
+      - get_scholarship_minor
+    primaryGoals:
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+  # End Skills
+
+  begin_game:
+    name: Begin the game
+    primaryGoals:
+      - victories/power/apostle/begin-power-apostle
+
+  # Begin recruitment
+  recruit_everyone:
+    # Once we get close to ascending, go ham and make sure we have everyone recruited as fodder for the spider door.
+    name: Find and recruit everyone
+    requires:
+      - begin_game
+    primaryGoals:
+      - cult/attract-recruit-poppyeat
+
+  satisfy_poppy:
+    name: Satisfy Poppy
+    requires:
+      - recruit_everyone
+    primaryGoals:
+      - patrons/satisfy-poppy
+  # End recruitment
+
+  find_places_of_interest:
+    name: Find places of interest
+    requires:
+      - begin_game
+    primaryGoals:
+      - find-auctionhouse
+      - find-bookdealer
+
+  find_apostle_tools:
+    name: Find tools for the apostle
+    requires:
+      - begin_game
+    primaryGoals:
+      - vaults/find-vaults-eveningisles-geryk
+
+  # Begin lore and rite collection
+  # drain_morlands:
+  #   name: Buy all books from Morlands
+  #   requires:
+  #     - begin_game
+  #   primaryGoals:
+  #     # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
+  #     - consume-bookdealer
+
+  # read_all_lore:
+  #   name: Read all lore books
+  #   requires:
+  #     # Don't do this until we have the skills so we are not monopolizing the study verb
+  #     # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
+  #     - get_buff
+  #     - get_scholarship_major
+  #   primaryGoals:
+  #     - consume-books-lore-waitmorland
+
+  # get_stumm:
+  #   name: Find Stumm from Oriflamme
+  #   requires:
+  #     # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
+  #     - drain_morlands
+  #   primaryGoals:
+  #     - find-auctionhouse
+  #     - auction/acquire-stumm-only
+  # End lore and rite collection

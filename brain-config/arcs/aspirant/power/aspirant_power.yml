@@ -132,7 +132,7 @@ motivations:
       - cult/form-cult-doctrine-secrethistories
 
   find_recruits:
-    name: Find all followers
+    name: Attract followers
     requires:
       # We need to have explore and talk
       - study_bequest_contents

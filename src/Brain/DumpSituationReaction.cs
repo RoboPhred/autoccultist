@@ -56,6 +56,7 @@ namespace AutoccultistNS.Brain
             try
             {
                 await GameAPI.WhilePaused(
+                    $"{this.GetType().Name}:{nameof(this.Dump)}",
                     async () =>
                     {
                         await GameAPI.AwaitNotInMansus(this.cancellationTokenSource.Token);

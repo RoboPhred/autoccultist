@@ -181,6 +181,7 @@ namespace AutoccultistNS.Brain
         private Task<bool> StartSituation()
         {
             return GameAPI.WhilePaused(
+                $"{this.GetType().Name}:{nameof(this.StartSituation)}",
                 async () =>
                 {
                     // Can't do this in Cerebellum or we could block the real mansus handler and deadlock.
@@ -251,6 +252,7 @@ namespace AutoccultistNS.Brain
             var pinnedRecipe = state.CurrentRecipe;
 
             return await GameAPI.WhilePaused(
+                $"{this.GetType().Name}:{nameof(this.TryExecuteCurrentRecipe)}",
                 async () =>
                 {
                     // Can't do this in Cerebellum or we could deadlock.
@@ -291,6 +293,7 @@ namespace AutoccultistNS.Brain
         private async Task CompleteOperation()
         {
             await GameAPI.WhilePaused(
+                $"{this.GetType().Name}:{nameof(this.CompleteOperation)}",
                 async () =>
                 {
                     await Cerebellum.Coordinate(
@@ -328,7 +331,7 @@ namespace AutoccultistNS.Brain
         {
             Autoccultist.LogWarn(ex, $"Operation {this.Operation.Name} failed: {ex.Message}");
 
-            var pause = GameAPI.Pause();
+            var pause = GameAPI.Pause("HandleOperationError");
             try
             {
                 var situation = this.GetSituationState();

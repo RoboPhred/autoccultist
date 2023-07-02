@@ -23,6 +23,8 @@ namespace AutoccultistNS.Tasks
 
         public string Name { get; set; }
 
+        public bool IsCancelled => this.selfCancel.IsCancellationRequested;
+
         public Task<T> Task => this.source.Task;
 
         public override string ToString()
@@ -44,6 +46,11 @@ namespace AutoccultistNS.Tasks
 
         public async Task Execute()
         {
+            if (this.selfCancel.IsCancellationRequested)
+            {
+                throw new TaskCanceledException();
+            }
+
             if (this.innerTask != null)
             {
                 throw new InvalidOperationException("Task has already been executed.");
@@ -57,11 +64,11 @@ namespace AutoccultistNS.Tasks
             }
             catch (TaskCanceledException)
             {
-                this.source.SetCanceled();
+                this.source.TrySetCanceled();
             }
             catch (Exception ex)
             {
-                this.source.SetException(ex);
+                this.source.TrySetException(ex);
             }
         }
     }

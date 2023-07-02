@@ -1,5 +1,6 @@
 name: Recruit an aquaintance to a believer
 situation: talk
+startCondition: currentRecipeSatisfied
 conditionalRecipes:
   # Secret Histories
   # This is first, as St Hydra has all venerations, but we want to handle it specially

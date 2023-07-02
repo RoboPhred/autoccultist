@@ -1,4 +1,4 @@
-name: Meet acquaintances and patrons
+name: Find all acquaintances and patrons (Ungated)
 # Note: This goal will re-activate if we loose any followers or patrons, and get stuck
 # trying to re-find them (as the mistakenidentity decays)
 # See attract-followers-memory if this is an issue.
