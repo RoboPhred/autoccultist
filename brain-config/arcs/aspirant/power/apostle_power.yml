@@ -68,6 +68,25 @@ motivations:
     primaryGoals:
       - reason/acquire-skillreasonb
       - reason/acquire-skillreasonc
+
+  get_rarefied_mind:
+    name: Get a Rarefied Mind
+    # Do this whenever we end up with the right amount of textbooks
+    # This is so we can keep our study verb busy when we are waiting to get enough money to spend at morlands.
+    # Danger: if our goal requirements drop off, this can disable and stop the motivation, which deadlocks the bot.
+    # Even a brief moment of disabling can allow read_all_lore to trigger again, taking over the study verb and causing our
+    # precious eruditionplus to decay.
+    # If this is unreliable, remove this, and require read_all_lore and drain_morland instead
+    requirePrimaryGoals: true
+    requires:
+      - get_scholarship_major
+    blocks:
+      # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
+      - read_all_lore
+      # There's a rare chance this can suck up the only lore we can use to get illumination.
+      - recruit_everyone
+    primaryGoals:
+      - reason/acquire-skillreasond-illumination
   # End Skills
 
   begin_game:
@@ -90,7 +109,48 @@ motivations:
       - recruit_everyone
     primaryGoals:
       - patrons/satisfy-poppy
+
+  disciple_all_followers:
+    name: Disciple all followers
+    primaryGoals:
+      - cult/promote-any-with-forge
   # End recruitment
+
+  # Begin lore and rite collection
+  drain_morlands:
+    name: Buy all books from Morlands
+    requires:
+      - begin_game
+    primaryGoals:
+      # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
+      - consume-bookdealer
+
+  read_all_lore:
+    name: Read all lore books
+    requires:
+      # Don't do this until we have the skills so we are not monopolizing the study verb
+      # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
+      - get_buff
+      - get_scholarship_major
+    primaryGoals:
+      - consume-books-lore-waitmorland
+
+  get_stumm:
+    name: Find Stumm from Oriflamme
+    requires:
+      # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
+      - drain_morlands
+    primaryGoals:
+      - find-auctionhouse
+      - auction/acquire-stumm-only
+  # End lore and rite collection
+
+  move_into_library:
+    name: Move into the bookshop
+    requires:
+      - drain_morlands
+    primaryGoals:
+      - hq/move-hq-library
 
   find_places_of_interest:
     name: Find places of interest
@@ -100,38 +160,34 @@ motivations:
       - find-auctionhouse
       - find-bookdealer
 
-  find_apostle_tools:
-    name: Find tools for the apostle
+  upgrade_forge_lore:
+    name: Upgrade forge lore
+    requires:
+      - get_rarefied_mind
+      - move_into_library
+    primaryGoals:
+      - lore/upgrade-all-forge
+
+  find_vaults:
+    name: Find particular vaults
     requires:
       - begin_game
+      # Need illumination for lore combination
+      - get_rarefied_mind
     primaryGoals:
+      # The Journal of Alessandro LaCroce (Fucine textbook, english version)
+      - vaults/find-vaults-capital-strathcoyne
+      # TODO: The Vanderschaaf Collection (vaultcontinent4) => The Geminiad => Rite of the Crow's Quenching (in Fucine) => For refining alchemy
+      # Bitterblack Salts
+      - vaults/find-vaults-rendingmountains-hunterspits
+      # Carcas Spark, a Furnace Paean (in Fucine)
       - vaults/find-vaults-eveningisles-geryk
 
-  # Begin lore and rite collection
-  # drain_morlands:
-  #   name: Buy all books from Morlands
-  #   requires:
-  #     - begin_game
-  #   primaryGoals:
-  #     # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
-  #     - consume-bookdealer
-
-  # read_all_lore:
-  #   name: Read all lore books
-  #   requires:
-  #     # Don't do this until we have the skills so we are not monopolizing the study verb
-  #     # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
-  #     - get_buff
-  #     - get_scholarship_major
-  #   primaryGoals:
-  #     - consume-books-lore-waitmorland
-
-  # get_stumm:
-  #   name: Find Stumm from Oriflamme
-  #   requires:
-  #     # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
-  #     - drain_morlands
-  #   primaryGoals:
-  #     - find-auctionhouse
-  #     - auction/acquire-stumm-only
-  # End lore and rite collection
+  explore_vaults:
+    name: Explore particular vaults
+    requires:
+      - disciple_all_followers
+    primaryGoals:
+      - vaults/explore-vaults-capital-strathcoyne
+      - vaults/explore-vaults-rendingmountains-hunterspits
+      - vaults/explore-vaults-eveningisles-geryk

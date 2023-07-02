@@ -1,4 +1,4 @@
-name: Find Vaults in the Lone and Level Sands
+name: Find the Star-Shattered Fane
 
 requirements:
   allOf:
@@ -7,17 +7,19 @@ requirements:
     - elementId: waystag_after
 
 completedWhen:
-  memory: has_all_vaults_loneandlevelsands
+  memory: has_vault_loneandlevelsands_fane
   value: 1
 
 impulses:
   - name: Remember our discovery
     requirements:
-      elementId: vaultloneandlevelsandsdefault
+      anyOf:
+        - elementId: vaultloneandlevelsandsdefault
+        - elementId: vaultloneandlevelsands1
     reactions:
-      - remember: has_all_vaults_loneandlevelsands
-        label: Has All Vaults in the Lone and Level Sands
-        description: We have found everything of interest in the Lone and Level Sands.
+      - remember: has_vault_loneandlevelsands_fane
+        label: Found the Star-Shattered Fane
+        description: We have found the Star-Shattered Fane.
 
   # TODO: Peacock door would be a perfect source, but we have to implement the mirror and commission loop
   # There is the spider door, but sacrifices are more limiting than bronze spintra

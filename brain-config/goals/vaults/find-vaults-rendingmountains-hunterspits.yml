@@ -1,4 +1,4 @@
-name: Find Vaults in the Lone and Level Sands
+name: Find the Hunter's Pits
 
 requirements:
   allOf:
@@ -7,17 +7,19 @@ requirements:
     - elementId: waystag_after
 
 completedWhen:
-  memory: has_all_vaults_loneandlevelsands
+  memory: has_vault_rendingmountains_hunterspits
   value: 1
 
 impulses:
   - name: Remember our discovery
     requirements:
-      elementId: vaultloneandlevelsandsdefault
+      anyOf:
+        - elementId: vaultrendingmountainsdefault
+        - elementId: vaultrendingmountains1
     reactions:
-      - remember: has_all_vaults_loneandlevelsands
-        label: Has All Vaults in the Lone and Level Sands
-        description: We have found everything of interest in the Lone and Level Sands.
+      - remember: has_vault_rendingmountains_hunterspits
+        label: Found the Hunter's Pits
+        description: We have found the Hunter's Pits.
 
   # TODO: Peacock door would be a perfect source, but we have to implement the mirror and commission loop
   # There is the spider door, but sacrifices are more limiting than bronze spintra
@@ -26,8 +28,8 @@ impulses:
       noneOf:
         - value:
             fromAll:
-              - elementId: fragmentsecrethistoriesf
-              - aspects: { vaultloneandlevelsands: 1 }
+              - elementId: fragmentsecrethistoriese
+              - aspects: { vaultrendingmountains: 1 }
             aspect: "@count"
           greaterThanOrEqualTo: 5
     # Stag door stops at c, so don't bother going past that.
@@ -53,15 +55,7 @@ impulses:
             - cardSet:
                 - elementId: fragmentsecrethistoriesd
                 - elementId: fragmentsecrethistoriesd
-            - cardSet:
-                - elementId: fragmentsecrethistoriese
-                - elementId: fragmentsecrethistoriese
     forbidders: !import /conditions/can-answer-challenge-intuition.yml
-
-  - name: Combine Unresolved Ambiguities into Vagabond's Maps
-    priority: maintenance
-    requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-e.yml
 
   - name: Combine Forbidden Epics into Unresolved Ambiguities
     priority: maintenance
@@ -83,11 +77,11 @@ impulses:
     requirements: *has-needed-secret-histories
     operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
 
-  - name: Explore the Lone and Level Sands
+  - name: Explore the Rending Mountains
     operation:
-      name: Find vaults in the Lone and Level Sands
+      name: Find Rending Mountain Vaults
       situation: explore
       startingRecipe:
         slots:
           explore:
-            elementId: fragmentsecrethistoriesf
+            elementId: fragmentsecrethistoriese

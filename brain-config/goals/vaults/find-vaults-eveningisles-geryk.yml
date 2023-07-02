@@ -7,7 +7,7 @@ requirements:
     - elementId: waystag_after
 
 completedWhen:
-  memory: has_all_vaults_eveningisles_geryk
+  memory: has_vault_eveningisles_geryk
   value: 1
 
 impulses:
@@ -17,7 +17,7 @@ impulses:
         - elementId: vaulteveningislesdefault
         - elementId: vaulteveningisles2
     reactions:
-      - remember: has_all_vaults_eveningisles_geryk
+      - remember: has_vault_eveningisles_geryk
         label: Found Fort Geryk
         description: We have found the location of the Carcass Spark.
 

@@ -1,34 +1,34 @@
 name: Upgrade all Grail lore
 completedWhen:
-  noneOf:
-    - cardSet:
-        - elementId: fragmentgrail
-        - elementId: fragmentgrail
-    - cardSet:
-        - elementId: fragmentgrailb
-        - elementId: fragmentgrailb
-    - cardSet:
-        - elementId: fragmentgrailc
-        - elementId: fragmentgrailc
-    - cardSet:
-        - elementId: fragmentgraild
-        - elementId: fragmentgraild
-    - allOf:
+  anyOf:
+    - elementId: fragmentgrailg
+    - noneOf:
         - cardSet:
-            - elementId: fragmentgraile
-            - elementId: fragmentgraile
-        - anyOf:
-            - elementId: skillpassiond_folly
-            - aspects: { sanctuary: 1 }
-    - allOf:
+            - elementId: fragmentgrail
+            - elementId: fragmentgrail
         - cardSet:
-            - elementId: fragmentgrailf
-            - elementId: fragmentgrailf
-        - anyOf:
-            - elementId: skillpassiond_folly
-            - aspects: { sanctuary: 1 }
-        - noneOf:
-            - elementId: fragmentgrailg
+            - elementId: fragmentgrailb
+            - elementId: fragmentgrailb
+        - cardSet:
+            - elementId: fragmentgrailc
+            - elementId: fragmentgrailc
+        - cardSet:
+            - elementId: fragmentgraild
+            - elementId: fragmentgraild
+        - allOf:
+            - cardSet:
+                - elementId: fragmentgraile
+                - elementId: fragmentgraile
+            - anyOf:
+                - elementId: skillpassiond_folly
+                - aspects: { sanctuary: 1 }
+        - allOf:
+            - cardSet:
+                - elementId: fragmentgrailf
+                - elementId: fragmentgrailf
+            - anyOf:
+                - elementId: skillpassiond_folly
+                - aspects: { sanctuary: 1 }
 impulses:
   - name: Ensure we have glimmering
     priority: maintenance
@@ -52,21 +52,11 @@ impulses:
     operation: !import /operations/lore/grail/lore-combine-grail-d.yml
 
   - name: Combine Grail E
-    requirements:
-      allOf:
-        - !import /conditions/can-answer-challenge-intuition.yml
-        - anyOf:
-            - elementId: skillpassiond_folly
-            - aspects: { sanctuary: 1 }
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
     operation: !import /operations/lore/grail/lore-combine-grail-e.yml
 
   - name: Combine Grail F
-    requirements:
-      allOf:
-        - !import /conditions/can-answer-challenge-intuition.yml
-        - anyOf:
-            - elementId: skillpassiond_folly
-            - aspects: { sanctuary: 1 }
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
     forbidders:
       elementId: fragmentgrailg
     operation: !import /operations/lore/grail/lore-combine-grail-f.yml

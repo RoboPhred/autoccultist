@@ -1,0 +1,46 @@
+name: Explore the Hunter's Pits
+
+completedWhen:
+  # We set the memory when we start exploring, in case the bot halts or exits before it completes and we loose track of it.
+  # So make sure we really explored it and that it does not exist on the table anymore.
+  anyOf:
+    - noneOf:
+        - elementId: vaultrendingmountains1
+    - memory: explored_vault_rendingmountains_hunterspits
+      value: 1
+
+impulses:
+  - name: Explore the Hunter's Pits
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Hunter's Pits
+      extends: !import /operations/vaults/continue-vault-any.yml
+      onStart:
+        - remember: explored_vault_rendingmountains_hunterspits
+          label: Explored the Hunter's Pits
+          description: We have explored the Hunter's Pits.
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultrendingmountains1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+      conditionalRecipes:
+        # We specifically want edge after forge, as that solves the next 2 challenges
+        - condition:
+            situation: explore
+            containsAspects: { edge: -10 }
+          slots:
+            Assistance:
+              aspects: { follower: 1, edge: 2 }
+              aspectWeightBias: highest

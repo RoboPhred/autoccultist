@@ -1,4 +1,4 @@
-name: Find Vaults in the Capital
+name: Find Strathcoyne's Residence
 
 requirements:
   allOf:
@@ -7,17 +7,19 @@ requirements:
     - elementId: waywood
 
 completedWhen:
-  memory: has_all_vaults_capital
+  memory: has_all_vaults_capital_strathcoyne
   value: 1
 
 impulses:
   - name: Remember our discovery
     requirements:
-      elementId: vaultcapitaldefault
+      anyOf:
+        - elementId: vaultcapitaldefault
+        - elementId: vaultcapital1
     reactions:
-      - remember: has_all_vaults_capital
-        label: Has All Vaults in Capital
-        description: We have found everything of interest at the Capital.
+      - remember: has_all_vaults_capital_strathcoyne
+        label: Found Strathcoyne's Residence
+        description: We have found Strathcoyne's Residence.
 
   - name: Collect Secret Histories from the Wood
     requirements: &has-needed-secret-histories

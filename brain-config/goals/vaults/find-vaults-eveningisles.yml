@@ -59,8 +59,7 @@ impulses:
             - cardSet:
                 - elementId: fragmentsecrethistoriesf
                 - elementId: fragmentsecrethistoriesf
-    forbidders:
-      elementId: glimmering
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
 
   - name: Combine Vagabond's Maps into Port Noon Anecdotes
     priority: maintenance

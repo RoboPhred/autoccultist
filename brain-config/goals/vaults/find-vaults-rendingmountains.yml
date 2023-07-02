@@ -53,8 +53,7 @@ impulses:
             - cardSet:
                 - elementId: fragmentsecrethistoriesd
                 - elementId: fragmentsecrethistoriesd
-    forbidders:
-      elementId: glimmering
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
 
   - name: Combine Forbidden Epics into Unresolved Ambiguities
     priority: maintenance

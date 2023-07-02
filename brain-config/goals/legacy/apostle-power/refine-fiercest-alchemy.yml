@@ -1,0 +1,22 @@
+name: Refine the Fiercest Alchemy
+
+requirements:
+  allOf:
+    - anyOf:
+        - elementId: ingredientforgeb
+        - elementId: ingredientforged
+        - elementId: ingredientforgef
+
+completedWhen:
+  elementId: apostleforge.pillar3
+# impulses:
+#   - name: Refine Bitterblack Salts
+#     requirements: !import /conditions/has-slushfund-major.yml
+#     operation:
+#       situation: work
+#       startingReicpe:
+#         slots:
+#           work:
+#             elementId: ingredientforgeb
+#           funds:
+#             elementId: funds

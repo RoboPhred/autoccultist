@@ -82,8 +82,11 @@ anyOf:
           - noneOf:
               - elementId: scholarmandaic
       - allOf:
-          - elementId: textbookfucinelatin
-            location: tabletop
+          - anyOf:
+              - elementId: textbookfucine
+                location: tabletop
+              - elementId: textbookfucinelatin
+                location: tabletop
           - noneOf:
               - elementId: scholarfucine
       - allOf:

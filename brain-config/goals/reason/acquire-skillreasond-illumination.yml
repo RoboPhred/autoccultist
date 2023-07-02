@@ -6,7 +6,6 @@ requirements:
     # We originally had goals latch on when they became active (or rather, not care about requirements at all)
     # This meant that this goal could declare its 3 reason textbook requirement and it would keep running
     # even as it consumed the text books and its requirements dropped back into 'not-met'.
-    # This was good!  We should do that again!
     # However, currently, we keep zero state about goals, and if the requirements drop off and the motivation is deferring to the goals,
     # then consuming our textbooks will cause requirements to fail and stop the motivation cold.
     # To try to work around this, we need to include all our interim states in our requirements.
