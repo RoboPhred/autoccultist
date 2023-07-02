@@ -84,32 +84,28 @@ namespace AutoccultistNS
             await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnStart += h, h => OnStart -= h, cancellationToken);
         }
 
-        public static async Task AwaitBeat(CancellationToken cancellationToken, TimeSpan? delay = null)
+        public static async Task AwaitBeatIfStopped(CancellationToken cancellationToken)
         {
-            if (!delay.HasValue)
+            if (!IsRunning)
             {
-                // No delay specified, wait for the next beat.
-                await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnBeat += h, h => OnBeat -= h, cancellationToken);
-                return;
+                await AwaitBeat(cancellationToken);
             }
+        }
 
+        public static async Task AwaitBeat(CancellationToken cancellationToken)
+        {
+            await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnBeat += h, h => OnBeat -= h, cancellationToken);
+        }
+
+        public static async Task AwaitBeat(CancellationToken cancellationToken, TimeSpan delay)
+        {
             if (delay == TimeSpan.Zero)
             {
-                if (!IsRunning)
-                {
-                    // Note: We used to also wait for Start, but that means once of our two AwaitEvent tasks were not being cancelled.
-                    // Rather than making a cancellation aware AwaitAll, just wait for the next beat, which will either happen
-                    // from a manual step or from the next frame after Start()
-                    await AwaitBeat(cancellationToken);
-                    return;
-                }
-
-                // Special case: caller wanted to wait no time at all, so let it continue.
-                return;
+                throw new ArgumentException("Delay must be greater than zero.", nameof(delay));
             }
 
             // Wait out the delay, then wait for the next beat
-            await RealtimeDelay.Of(delay.Value, cancellationToken);
+            await RealtimeDelay.Of(delay, cancellationToken);
             await AwaitBeat(cancellationToken);
         }
 

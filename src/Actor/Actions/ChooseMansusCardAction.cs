@@ -119,8 +119,8 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, "Failed to find mansus egress sphere.");
             }
 
-            // Force some more waits, as the egress is getting stuck open / not closing when the card is chosen
-            await RealtimeDelay.Of(TimeSpan.FromSeconds(2), cancellationToken);
+            // Let's wait a bit to calm this down
+            await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
 
             if (sphere.Tokens.Count > 0 && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {

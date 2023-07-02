@@ -122,7 +122,7 @@ namespace AutoccultistNS.Brain
                 {
                     // If the heart is not running, wait for a beat.
                     // If the heart is running, this no-ops.
-                    await MechanicalHeart.AwaitBeat(CancellationToken.None, TimeSpan.Zero);
+                    await MechanicalHeart.AwaitBeatIfStopped(CancellationToken.None);
 
                     currentAction = set;
                     try

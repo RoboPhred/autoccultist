@@ -122,7 +122,7 @@ namespace AutoccultistNS.Actor.Actions
             if (!situation.Verb.Spontaneous && !situation.Token.Defunct && situation.IsOpen)
             {
                 // Wait on a heartbeat but dont use any delay, as we waited on the cards
-                await MechanicalHeart.AwaitBeat(cancellationToken, TimeSpan.Zero);
+                await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
 
                 // Note: We had a game exception here once.  But now we gate this behind situation.Verb.Spontanious so I think we are ok now?
                 // Just to be safe, check again.
