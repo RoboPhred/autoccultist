@@ -138,17 +138,9 @@ namespace AutoccultistNS.Actor.Actions
                 sphere.EvictAllTokens(new Context(Context.ActionSource.PlayerDumpAll));
             }
 
-            // Wait to see if the ingress properly closes.
             // In theory we should be Defunct immediately on evicting the token.
-            try
-            {
-                await RealtimeDelay.Timeout(token => AwaitConditionTask.From(() => ingress.Defunct, token), TimeSpan.FromSeconds(1), cancellationToken);
-            }
-            catch (TimeoutException)
-            {
-                Autoccultist.LogWarn("ChooseMansusCardAction: Timed out waiting for ingress to close.  Force closing.");
-                ingress.Conclude();
-            }
+            // However, its possible for a greedy slot to yoink our token out from under us, and the ingress will not close if that happens.
+            ingress.Conclude();
 
             // Seems we get a lvl 3 unpause when the mansus completes.  Let's reassert the pause
             // so that the actor keeps control.
