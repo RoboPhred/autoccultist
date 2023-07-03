@@ -87,6 +87,9 @@ motivations:
       - recruit_everyone
     primaryGoals:
       - reason/acquire-skillreasond-illumination
+
+  # TODO: Level up passion, as a curse might eat it.
+
   # End Skills
 
   begin_game:
@@ -198,6 +201,8 @@ motivations:
       - vaults/find-vaults-rendingmountains-hunterspits
       # Carcas Spark, a Furnace Paean (in Fucine), Time of Division (in Deep Mandaic, Rite Intercalate)
       - vaults/find-vaults-eveningisles-geryk
+      # Mysteries of Opening
+      - vaults/find-vaults-eveningisles-raven
 
   explore_vaults:
     name: Explore particular vaults
@@ -208,6 +213,7 @@ motivations:
       - vaults/explore-vaults-continent-vanderschaaf
       - vaults/explore-vaults-rendingmountains-hunterspits
       - vaults/explore-vaults-eveningisles-geryk
+      - vaults/explore-vaults-eveningisles-raven
 
   begin_great_work:
     name: Begin the Great Work

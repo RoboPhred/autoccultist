@@ -5,6 +5,7 @@ allOf:
       - elementId: ritetoolconsumeinfluence
       - elementId: riteinfluenceconsumeingredient
       - elementId: fragmentforgeg
+      - elementId: fragmentknockg
   # Carcas Spark or Dawnbreaker Core
   # We hold off making the core until we are ready to begin, as it can be sabotaged
   - anyOf:
