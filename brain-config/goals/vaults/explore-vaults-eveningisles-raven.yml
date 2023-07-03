@@ -9,7 +9,7 @@ completedWhen:
     - memory: explored_vault_eveningisles_raven
       value: 1
 
-impulses:
+imperatives:
   - name: Explore Raven Isle
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

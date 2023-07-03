@@ -5,7 +5,7 @@ completedWhen:
   anyOf:
     - elementId: bequestintro
     - situation: time
-impulses:
+imperatives:
   - name: Work the intro job
     priority: goal
     operation:

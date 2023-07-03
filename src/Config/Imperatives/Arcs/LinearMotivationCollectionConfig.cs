@@ -14,6 +14,8 @@ namespace AutoccultistNS.Config
 
         public override int Count => this.motivations.Count;
 
+        public override IReadOnlyCollection<IImperative> Children => this.motivations;
+
         public MotivationConfig this[int index]
         {
             get
@@ -80,11 +82,6 @@ namespace AutoccultistNS.Config
         public void RemoveAt(int index)
         {
             this.motivations.RemoveAt(index);
-        }
-
-        public override IEnumerable<IImperative> Flatten()
-        {
-            return this.motivations.SelectMany(x => x.Flatten());
         }
 
         protected override IEnumerable<IMotivationConfig> GetCurrentMotivations(IGameState state)

@@ -2,7 +2,7 @@ name: Explore Vaults in the Lone and Level Sands
 completedWhen:
   noneOf:
     - aspects: { vaultloneandlevelsands: 1 }
-impulses:
+imperatives:
   - name: Explore Lagun's Tomb
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

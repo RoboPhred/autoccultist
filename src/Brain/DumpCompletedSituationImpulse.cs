@@ -6,11 +6,38 @@ namespace AutoccultistNS.Brain
     using AutoccultistNS.Resources;
     using SecretHistories.Enums;
 
-    public class DumpCompletedSituationImpulse : IImpulse
+    public class DumpCompletedSituationImpulse : IImperative, IImpulse
     {
         public static readonly DumpCompletedSituationImpulse Instance = new();
 
         public TaskPriority Priority => TaskPriority.Critical;
+
+        public string Name => "Dump Completed Situation";
+
+        public IReadOnlyCollection<IImperative> Children => new IImperative[0];
+
+        public ConditionResult CanActivate(IGameState state)
+        {
+            return this.GetCompletedSituations(state).Any() ? ConditionResult.Success : ConditionResult.Failure;
+        }
+
+        public ConditionResult IsSatisfied(IGameState state)
+        {
+            return this.GetCompletedSituations(state).Any() ? ConditionResult.Failure : ConditionResult.Success;
+        }
+
+        public IEnumerable<string> DescribeCurrentGoals(IGameState state)
+        {
+            return Enumerable.Empty<string>();
+        }
+
+        public IEnumerable<IImpulse> GetImpulses(IGameState state)
+        {
+            if (this.GetCompletedSituations(state).Any())
+            {
+                yield return this;
+            }
+        }
 
         public IReaction GetReaction()
         {
@@ -22,11 +49,6 @@ namespace AutoccultistNS.Brain
             }
 
             return new DumpSituationReaction(toDump.SituationId);
-        }
-
-        public ConditionResult IsConditionMet(IGameState state)
-        {
-            return this.GetCompletedSituations(state).Any() ? ConditionResult.Success : ConditionResult.Failure;
         }
 
         private IEnumerable<ISituationState> GetCompletedSituations(IGameState state)

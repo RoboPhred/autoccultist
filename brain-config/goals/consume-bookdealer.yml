@@ -3,5 +3,5 @@ requirements:
   elementId: locationbookdealer
 completedWhen:
   elementId: genericrubbishbook
-impulses:
+imperatives:
   - !import /impulses/books/buy-morland-books.yml

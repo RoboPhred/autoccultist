@@ -5,6 +5,6 @@ requirements:
     - aspects: { hq: 1 }
 completedWhen:
   elementId: hq.bookshop
-impulses:
+imperatives:
   - name: Change Premises to Library
     operation: !import /operations/hq/move-hq-library.yml

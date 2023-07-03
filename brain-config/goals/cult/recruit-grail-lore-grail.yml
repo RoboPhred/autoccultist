@@ -4,7 +4,7 @@ requirements:
     society: 1
     venerationgrail: 1
 completedWhen: !import /conditions/has-grail-follower.yml
-impulses:
+imperatives:
   - name: Recruit a grail acquaintance, by invoking Grail
     priority: goal
     operation: !import /operations/cult/recruit-grail-lore-grail.yml

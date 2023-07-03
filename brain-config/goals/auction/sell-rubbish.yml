@@ -15,7 +15,7 @@ completedWhen:
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
-impulses:
+imperatives:
   - name: Sell our rubbish
     requirements:
       anyOf:

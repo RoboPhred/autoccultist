@@ -2,7 +2,7 @@ name: Explore Vaults in the Evening Isles
 completedWhen:
   noneOf:
     - aspects: { vaulteveningisles: 1 }
-impulses:
+imperatives:
   - name: Explore Fort Geryk
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

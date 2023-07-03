@@ -9,7 +9,7 @@ completedWhen:
       location: tabletop
     - elementId: truecompleteasclepian
     - elementId: ritetoolconsumeinfluence
-impulses:
+imperatives:
   - name: Purchase A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
     priority: goal
     forbidders:

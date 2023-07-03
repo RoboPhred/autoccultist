@@ -5,7 +5,7 @@ completedWhen:
     - elementId: fragmentedgeb
     - elementId: fragmentedgec
 # TODO: Add more levels of Edge lore as their operations are added.
-impulses:
+imperatives:
   - name: Ensure we have erudition
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-knowledge.yml

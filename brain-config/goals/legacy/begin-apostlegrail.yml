@@ -6,7 +6,7 @@ completedWhen:
   noneOf:
     - elementId: legacyapostlegrailjob
 
-impulses:
+imperatives:
   - name: Work the intro job
     priority: goal
     operation:

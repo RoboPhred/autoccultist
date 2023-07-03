@@ -8,6 +8,6 @@ requirements:
         - aspects: { lore: 1, knock: 2 }
 completedWhen:
   elementId: waywood
-impulses:
+imperatives:
   - name: "Acquire Way: The wood"
     operation: !import /operations/mansus/acquire-way-wood.yml

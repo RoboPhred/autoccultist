@@ -134,45 +134,53 @@ namespace AutoccultistNS.Brain
         {
             var sb = new StringBuilder();
 
-            foreach (var imperative in ActiveImperatives.SelectMany(x => x.Flatten()))
-            {
-                sb.AppendFormat("Imperative: {0}\n", imperative.ToString());
-
-                var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
-                sb.AppendFormat("- Can Activate: {0}\n", canActivate.IsConditionMet);
-                if (!canActivate)
-                {
-                    sb.AppendFormat("- - Reason: {0}\n", canActivate.ToString());
-                }
-
-                var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
-                sb.AppendFormat("- Is Satisfied: {0}\n", isSatisfied.IsConditionMet);
-                if (!isSatisfied)
-                {
-                    sb.AppendFormat("- - Reason: {0}\n", isSatisfied.ToString());
-                }
-            }
-
-            sb.AppendLine("Reactions");
+            sb.AppendLine("Imperatives");
             foreach (var imperative in ActiveImperatives)
             {
-                var reactions = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
-                                orderby pair.Reaction.Priority descending, pair.Index ascending
-                                select pair.Reaction;
-                foreach (var reaction in reactions)
+                DumpImperative(imperative, sb, 1);
+            }
+
+            sb.AppendLine("Available Impulses");
+            foreach (var imperative in ActiveImperatives)
+            {
+                var impulses = from pair in imperative.GetImpulses(GameStateProvider.Current).Select((r, i) => new { Reaction = r, Index = i })
+                               orderby pair.Reaction.Priority descending, pair.Index ascending
+                               select pair.Reaction;
+                foreach (var reaction in impulses)
                 {
-                    sb.AppendFormat("- Reaction: {0}\n", reaction.ToString());
+                    sb.AppendFormat("- Impulse: {0}\n", reaction.ToString());
                     sb.AppendFormat("- - Priority: {0}\n", reaction.Priority);
-                    var isConditionMet = ConditionResult.Trace(() => reaction.IsConditionMet(GameStateProvider.Current));
-                    sb.AppendFormat("- - Is Condition Met: {0}\n", isConditionMet.IsConditionMet);
-                    if (!isConditionMet)
-                    {
-                        sb.AppendFormat("- - - Reason: {0}\n", isConditionMet.ToString());
-                    }
                 }
             }
 
             return sb.ToString();
+        }
+
+        private static void DumpImperative(IImperative imperative, StringBuilder sb, int depth)
+        {
+            var prefix = string.Join(" ", Enumerable.Repeat("-", depth));
+
+            sb.AppendFormat("{0}Imperative: {1}\n", prefix, imperative.ToString());
+
+            var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
+            sb.AppendFormat("{0} - Can Activate: {1}\n", prefix, canActivate.IsConditionMet);
+            if (!canActivate)
+            {
+                sb.AppendFormat("{0} - - Reason: {1}\n", prefix, canActivate.ToString());
+            }
+
+            var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
+            sb.AppendFormat("{0} - Is Satisfied: {1}\n", prefix, isSatisfied.IsConditionMet);
+            if (!isSatisfied)
+            {
+                sb.AppendFormat("{0} - - Reason: {1}\n", prefix, isSatisfied.ToString());
+            }
+
+            sb.AppendFormat("{0} - Children:\n", prefix);
+            foreach (var child in imperative.Children)
+            {
+                DumpImperative(child, sb, depth + 2);
+            }
         }
 
         private static async void InvokeImpulsesLoop()
@@ -312,27 +320,8 @@ namespace AutoccultistNS.Brain
         /// </summary>
         private static IEnumerable<EnumeratedImpulse> GetReadyImpulses()
         {
-            var impulses = GetAllImpulses().ToArray();
-
-            // Note: Added a ToArray to force it to resolve in the performance monitor.
-            var ready = PerfMonitor.Monitor(
-                nameof(GetReadyImpulses),
-                () => (from impulse in impulses
-                       where !RunningImpulses.Contains(impulse.Impulse)
-                       where impulse.Impulse.IsConditionMet(GameStateProvider.Current)
-                       select impulse).ToArray());
-            return ready;
-        }
-
-        /// <summary>
-        /// Gets all reactions that are currently active, in order of priority.
-        /// </summary>
-        private static IEnumerable<EnumeratedImpulse> GetAllImpulses()
-        {
-            // Note: Imperatives come in an indeterminate order due to the HashSet... We should use a consistant order here.
-            // Note: Added a ToArray to force it to resolve in the performance monitor.
             return PerfMonitor.Monitor(
-                nameof(GetAllImpulses),
+                nameof(GetReadyImpulses),
                 () =>
                 (from imperative in ActiveImperatives
                  from impulse in imperative.GetImpulses(GameStateProvider.Current).Distinct()

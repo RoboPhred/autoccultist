@@ -10,7 +10,7 @@ requirements:
 completedWhen:
   aspects: { desire: 7 }
 
-impulses:
+imperatives:
   - name: Labor for Funds
     forbidders:
       anyOf:

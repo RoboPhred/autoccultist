@@ -29,7 +29,7 @@ motivations:
   - name: This is my life, now
     primaryGoals:
       - name: Such as it is
-        impulses:
+        imperatives:
           - name: Better get used to it
             priority: goal
             operation: !import /operations/glover/work-glover-acceptance.yml

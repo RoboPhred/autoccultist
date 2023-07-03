@@ -6,7 +6,7 @@ requirements:
     - elementId: genericrubbishbook
 completedWhen:
   elementId: ritetoolconsumeinfluence
-impulses:
+imperatives:
   - name: Purchase items at auction
     priority: goal
     requirements: !import /conditions/has-slushfund-major.yml

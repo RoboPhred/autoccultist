@@ -44,6 +44,8 @@ namespace AutoccultistNS.Config
         /// </summary>
         public IGameStateConditionConfig SelectionHint { get; set; }
 
+        IReadOnlyCollection<IImperative> IImperative.Children => this.Motivations.Children;
+
         /// <inheritdoc/>
         IGameStateCondition IArc.SelectionHint => this.SelectionHint;
 
@@ -160,18 +162,7 @@ namespace AutoccultistNS.Config
 
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            // Arcs always dump completed situations, so as to keep the cards on the tabletop.
-            return (new IImpulse[] { DumpCompletedSituationImpulse.Instance }).Concat(this.Motivations.GetImpulses(state));
-        }
-
-        public IEnumerable<IImperative> Flatten()
-        {
-            yield return this;
-
-            foreach (var child in this.Motivations.Flatten())
-            {
-                yield return child;
-            }
+            return DumpCompletedSituationImpulse.Instance.GetImpulses(state).Concat(this.Motivations.GetImpulses(state));
         }
 
         private class ArcPersistenceProvider : GamePersistenceProvider

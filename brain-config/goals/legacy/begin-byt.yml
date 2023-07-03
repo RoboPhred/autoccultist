@@ -7,7 +7,7 @@ requirements:
 completedWhen:
   situation: talk
 
-impulses:
+imperatives:
   - name: Work the intro job
     priority: goal
     operation:

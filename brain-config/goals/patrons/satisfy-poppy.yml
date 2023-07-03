@@ -6,6 +6,6 @@ completedWhen:
     - elementId: poppycommission
     - elementId: poppycommissionready
     - elementId: poppyaway
-impulses:
+imperatives:
   - name: Feed Poppy
     operation: !import /operations/patrons/feed-poppy.yml

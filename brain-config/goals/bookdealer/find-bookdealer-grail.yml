@@ -6,7 +6,7 @@ completedWhen:
     lore: 1
     grail:
       greaterThanOrEqualTo: 1
-impulses:
+imperatives:
   - name: Find grail lore at Morlands
     requirements:
       cardSet:

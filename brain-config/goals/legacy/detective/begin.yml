@@ -6,7 +6,7 @@ completedWhen:
     - elementId: legacydetectivejob_matured
     - situation: dream
     - situation: study
-impulses:
+imperatives:
   - name: Work at the Station (the first time)
     priority: goal
     operation:

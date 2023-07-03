@@ -1,5 +1,5 @@
 name: Get commissions from, and submit them to, patrons
-impulses:
+imperatives:
   # Get Commissions
   - name: Get a commission from Poppy
     priority: goal
@@ -217,4 +217,3 @@ impulses:
               article: 1
               moth:
                 greaterThanOrEqualTo: 2
-

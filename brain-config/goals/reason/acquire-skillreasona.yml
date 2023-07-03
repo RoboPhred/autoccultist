@@ -3,6 +3,6 @@ requirements:
   elementId: reason
 completedWhen:
   aspects: { reasonskill: 1 }
-impulses:
+imperatives:
   - !import /impulses/goal-learn-lesson-erudition.yml
   - !import /impulses/norm-erudition-from-reason.yml

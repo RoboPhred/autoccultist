@@ -4,7 +4,7 @@ requirements:
     - elementId: legacydetectivejob
     - elementId: legacydetectivejob_matured
 
-impulses:
+imperatives:
   - name: Build up some evidence
     forbidders:
       anyOf:

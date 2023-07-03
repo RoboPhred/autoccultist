@@ -2,7 +2,7 @@ name: Explore Vaults on the Continent
 completedWhen:
   noneOf:
     - aspects: { vaultcontinent: 1 }
-impulses:
+imperatives:
   - name: Explore Chateau Raveline
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

@@ -3,7 +3,7 @@ requirements: !import /conditions/readable-or-translatable-books.yml
 completedWhen:
   noneOf:
     - !import /conditions/readable-or-translatable-books.yml
-impulses:
+imperatives:
   - !import /impulses/books/maint-read-lore.yml
   - !import /impulse-sets/learn-languages.yml
   - !import /impulse-sets/translate-books.yml

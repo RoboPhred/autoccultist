@@ -31,7 +31,7 @@ completedWhen:
             - anyOf:
                 - elementId: skillreasond_illumination
                 - aspects: { library: 1 }
-impulses:
+imperatives:
   - name: Ensure we have erudition
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-knowledge.yml

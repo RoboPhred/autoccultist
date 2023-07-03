@@ -3,7 +3,7 @@ requirements:
   allOf:
     - elementId: locationauctionhouse
     - aspects: { society: 1 }
-impulses:
+imperatives:
   - name: Find a bombmaker
     requirements:
       # Need money to make money

@@ -5,7 +5,7 @@ completedWhen:
   anyOf:
     - aspects: { acquaintance: 1 }
     - aspects: { follower: 1 }
-impulses:
+imperatives:
   - name: Contact Collaborator
     priority: goal
     operation:

@@ -23,6 +23,9 @@ motivations:
     blocks:
       # glover and glover is more lucrative than labor, so stop doing labor when it is available.
       - work_labor
+    # We must be able to actually do our goals.
+    # If not, we will fall back to work_labor
+    requirePrimaryGoals: true
     primaryGoals:
       - glover/work-glover
       - glover/acquire-job-glover-standard
@@ -159,7 +162,7 @@ motivations:
           elementId: stumm
         completedWhen:
           elementId: ritefollowerconsumeinfluence
-        impulses:
+        imperatives:
           - operation: !import /operations/watch-stumm.yml
   # End lore and rite collection
 
@@ -189,7 +192,8 @@ motivations:
   find_vaults:
     name: Find particular vaults
     requires:
-      - begin_game
+      # Need bookshop for lore combination
+      - move_into_library
       # Need illumination for lore combination
       - get_rarefied_mind
     primaryGoals:
@@ -202,6 +206,8 @@ motivations:
       # Carcas Spark, a Furnace Paean (in Fucine), Time of Division (in Deep Mandaic, Rite Intercalate)
       - vaults/find-vaults-eveningisles-geryk
       # Mysteries of Opening
+      # Note: alternatively, any other eveningisles vaults (aside from geryk, whose output we use) can provide an f level lore,
+      # which we can use in a subversion chain to get the Mysteries of Opening.
       - vaults/find-vaults-eveningisles-raven
 
   explore_vaults:

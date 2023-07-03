@@ -9,7 +9,7 @@ completedWhen:
     exalted: 1
     grail:
       greaterThanOrEqualTo: 10
-impulses:
+imperatives:
   - name: Exalt a special Grail Disciple by using a sixth-order influence
     priority: goal
     operation: !import /operations/cult/exalt-grail-mutations-influence-six.yml

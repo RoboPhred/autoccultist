@@ -2,7 +2,7 @@ name: Explore Vaults beyond the Forest
 completedWhen:
   noneOf:
     - aspects: { vaultlandbeyondforest: 1 }
-impulses:
+imperatives:
   - name: Explore the Cave of Candles
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

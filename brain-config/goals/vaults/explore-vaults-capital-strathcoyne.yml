@@ -9,7 +9,7 @@ completedWhen:
     - memory: explored_vault_capital_strathcoyne
       value: 1
 
-impulses:
+imperatives:
   - name: Explore Strathcoyne's Residence
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

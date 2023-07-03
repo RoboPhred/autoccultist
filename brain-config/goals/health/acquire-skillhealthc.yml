@@ -3,7 +3,7 @@ requirements:
   aspects: { healthskill: 2 }
 completedWhen:
   aspects: { healthskill: 3 }
-impulses:
+imperatives:
   - extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:
       # Stop using our skill card when we have enough lessons

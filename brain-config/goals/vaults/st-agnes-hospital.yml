@@ -7,7 +7,7 @@ completedWhen:
     - elementId: hq.hospital.potential
     - elementId: hq.hospital
     - elementId: toolgrailb
-impulses:
+imperatives:
   - name: Collect Secret Histories lore
     # Just look for vaultcapital4
     forbidders:

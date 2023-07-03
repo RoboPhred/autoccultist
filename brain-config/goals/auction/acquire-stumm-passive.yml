@@ -8,7 +8,7 @@ completedWhen:
     - elementId: stumm
       location: tabletop
     - elementId: ritefollowerconsumeinfluence
-impulses:
+imperatives:
   - name: Purchase STUMM! at auction
     priority: goal
     forbidders:

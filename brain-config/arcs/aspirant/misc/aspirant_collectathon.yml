@@ -186,7 +186,7 @@ motivations:
       - name: Watch Stumm
         completedWhen:
           elementId: ritefollowerconsumeinfluence
-        impulses:
+        imperatives:
           - operation: !import /operations/watch-stumm.yml
 
   read_all_lore:

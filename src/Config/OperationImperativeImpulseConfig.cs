@@ -7,9 +7,10 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Resources;
 
     /// <summary>
-    /// An operation is a series of tasks to complete a verb or situation.
+    /// Defines a combination operation reactor / impulse / imperative.
+    /// This config object defines both the conditions on which to perform an operation, and the operation itself.
     /// </summary>
-    public class OperationImpulseConfig : OperationConfig, IImpulseConfig
+    public class OperationImperativeImpulseConfig : OperationReactorConfig, IImperativeConfig, IImpulse
     {
         /// <summary>
         /// Defines options for when to consider this operation startable.
@@ -32,14 +33,14 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets the operation that this operation inherits from.
         /// </summary>
-        public OperationImpulseConfig Extends { get; set; }
+        public OperationImperativeImpulseConfig Extends { get; set; }
 
         /// <summary>
         /// Gets or sets the priority for this operation.
         /// Operations with a higher priority will run before lower priority operation.
         /// </summary>
         /// <remarks>
-        /// This will have no effect if this operation is nested inside another reaction such as an <see cref="ImpulseConfig"/>.
+        /// This will have no effect if this operation is nested inside another imperative such as an <see cref="NestedImperativeConfig"/>.
         /// </remarks>
         public TaskPriority? Priority { get; set; }
 
@@ -55,21 +56,26 @@ namespace AutoccultistNS.Config
         /// </summary>
         public bool? TargetOngoing { get; set; }
 
+        /// <inheritdoc/>
         TaskPriority IImpulse.Priority => this.Priority ?? this.Extends?.Priority ?? TaskPriority.Normal;
 
-        public ConditionResult IsConditionMet(IGameState state)
+        /// <inheritdoc/>
+        public IReadOnlyCollection<IImperative> Children => new IImperative[0];
+
+        /// <inheritdoc/>
+        public ConditionResult CanActivate(IGameState state)
         {
-            return CacheUtils.Compute(this, nameof(this.IsConditionMet), state, () =>
+            return CacheUtils.Compute(this, nameof(this.CanActivate), state, () =>
             {
                 var situationId = this.GetSituationId();
-                var situationState = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
+                var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
 
-                if (situationState == null)
+                if (situation == null)
                 {
                     return SituationConditionResult.ForFailure(situationId, "Situation not found.");
                 }
 
-                if (!Resource.Of<ISituationState>().IsAvailable(situationState))
+                if (!Resource.Of<ISituationState>().IsAvailable(situation))
                 {
                     return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
                 }
@@ -79,12 +85,6 @@ namespace AutoccultistNS.Config
 
                 var targetOngoing = this.TargetOngoing ?? this.Extends?.TargetOngoing ?? false;
                 var startCondition = this.StartCondition ?? this.Extends?.StartCondition ?? OperationStartCondition.AllRecipesSatisified;
-
-                var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
-                if (situation == null)
-                {
-                    return SituationConditionResult.ForFailure(situationId, "Situation not found.");
-                }
 
                 if (targetOngoing != situation.IsOccupied)
                 {
@@ -131,6 +131,31 @@ namespace AutoccultistNS.Config
 
                 return ConditionResult.Success;
             });
+        }
+
+        public ConditionResult IsSatisfied(IGameState state)
+        {
+            var canActivate = this.CanActivate(state);
+            if (!canActivate)
+            {
+                // Nothing to do if we can't activate.
+                return ConditionResult.Success;
+            }
+
+            return AddendedConditionResult.Addend(ConditionResult.Failure, "Operation is available for execution.");
+        }
+
+        public IEnumerable<string> DescribeCurrentGoals(IGameState state)
+        {
+            return Enumerable.Empty<string>();
+        }
+
+        public IEnumerable<IImpulse> GetImpulses(IGameState state)
+        {
+            if (this.CanActivate(state))
+            {
+                yield return this;
+            }
         }
 
         protected override string GetSituationId()

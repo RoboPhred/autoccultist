@@ -3,7 +3,7 @@ requirements:
   aspects: { passionskill: 2 }
 completedWhen:
   aspects: { passionskill: 3 }
-impulses:
+imperatives:
   - extends: !import /impulses/goal-learn-lesson-glimmering.yml
     forbidders:
       # Do not monopolize study when we have glimmering lessons to study

@@ -16,7 +16,7 @@ requirements:
         - elementId: influencemoth
         - elementId: influencemothc
         - elementId: influencemothe
-impulses:
+imperatives:
   - name: Recruit an acquaintance, by burning Fascination
     priority: goal
     operation: !import /operations/cult/recruit-influence-fascination.yml

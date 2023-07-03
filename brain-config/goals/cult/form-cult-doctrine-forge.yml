@@ -4,6 +4,6 @@ requirements:
 completedWhen:
   aspects: { society: 1 }
   location: tabletop
-impulses:
+imperatives:
   - !import /impulses/cult/goal-form-cult-doctrine-forge.yml
   - !import /impulses/cult/goal-form-cult-recruit.yml

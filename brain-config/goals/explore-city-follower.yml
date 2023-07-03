@@ -3,5 +3,5 @@ completedWhen:
   allOf:
     - elementId: locationcabaret
     - elementId: locationauctionhouse
-impulses:
+imperatives:
   - !import /impulses/explore-city-follower.yml

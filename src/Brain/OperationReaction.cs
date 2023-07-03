@@ -370,16 +370,19 @@ namespace AutoccultistNS.Brain
 
             this.cancellationSource.Cancel();
 
-            try
+            if (this.loopTask != null)
             {
-                await this.loopTask;
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                Autoccultist.LogWarn(ex, $"Exception while waiting for op ${this.Operation.Name} to end.");
+                try
+                {
+                    await this.loopTask;
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    Autoccultist.LogWarn(ex, $"Exception while waiting for op ${this.Operation.Name} to end.");
+                }
             }
 
             if (aborted)

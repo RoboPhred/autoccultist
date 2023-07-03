@@ -5,7 +5,7 @@ requirements:
     venerationforge: 1
 completedWhen:
   aspects: { follower: 1, disciple: 1, grail: 5 }
-impulses:
+imperatives:
   - name: Promote a Believer, while burning Restlessness
     priority: goal
     operation: !import /operations/cult/promote-grail-believer-forge-restlessness.yml

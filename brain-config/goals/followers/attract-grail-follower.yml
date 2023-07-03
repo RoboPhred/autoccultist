@@ -7,7 +7,7 @@ completedWhen:
         - elementId: renira_a
         - elementId: saliba_a
         - elementId: mistakenidentity
-impulses:
+imperatives:
   - name: Speak of esoteric matters
     # Leave this at normal so that indoctrinating members takes priority.
     priority: normal

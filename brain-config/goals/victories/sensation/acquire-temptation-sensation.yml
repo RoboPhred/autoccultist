@@ -6,7 +6,7 @@ requirements:
     - elementId: ascensionchangea
 completedWhen:
   aspects: { sensationmarks: 1 }
-impulses:
+imperatives:
   - name: Focus myself on Sensation
     priority: goal
     operation: !import /operations/victories/sensation/acquire-temptation-sensation.yml

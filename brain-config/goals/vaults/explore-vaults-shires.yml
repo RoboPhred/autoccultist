@@ -2,7 +2,7 @@ name: Explore Vaults in the Shires
 completedWhen:
   noneOf:
     - aspects: { vaultshires: 1 }
-impulses:
+imperatives:
   - name: Explore Crowkiss Hill
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

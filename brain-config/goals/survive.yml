@@ -1,5 +1,5 @@
 name: Survive
 requirements:
   situation: time
-impulses:
+imperatives:
   - !import /impulse-sets/survive.yml

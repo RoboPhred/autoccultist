@@ -9,7 +9,7 @@ completedWhen:
     - elementId: clovette_b
     - elementId: dorothy_b
     - elementId: leo_b
-impulses:
+imperatives:
   - name: Promote a Heart Believer, while burning Restlessness
     priority: goal
     operation: !import /operations/cult/promote-heart-believer-grail-restlessness.yml

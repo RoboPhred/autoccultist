@@ -9,7 +9,7 @@ requirements:
     - elementId: saliba_d
 completedWhen:
   aspects: { romanticinterest: 1 }
-impulses:
+imperatives:
   - name: Date a Grail Follower
     priority: goal
     operation: !import /operations/romance/date-grail-follower.yml

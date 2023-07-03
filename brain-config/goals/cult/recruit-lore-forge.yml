@@ -6,7 +6,7 @@ requirements:
 completedWhen:
   noneOf:
     - aspects: { acquaintance: 1 }
-impulses:
+imperatives:
   - name: Recruit an acquaintance, by burning Restlessness
     priority: goal
     operation: !import /operations/cult/recruit-influence-restlessness.yml

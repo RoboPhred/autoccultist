@@ -8,6 +8,6 @@ requirements:
         - aspects: { lore: 1, knock: 4 }
 completedWhen:
   elementId: waywhite
-impulses:
+imperatives:
   - name: "Acquire Way: The White Door"
     operation: !import /operations/mansus/acquire-way-whitedoor.yml

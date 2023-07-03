@@ -5,7 +5,7 @@ requirements:
     - elementId: ascensionsensationbm
 completedWhen:
   aspects: { desire: 3 }
-impulses:
+imperatives:
   - name: Acquire the Third Mark
     forbidders:
       aspects:

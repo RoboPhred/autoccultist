@@ -14,7 +14,7 @@ completedWhen:
     - elementId: gloverandgloverjuniorjob_demotion
     - elementId: gloverandgloverjuniorjob_nodifficultbossa_demotion
     - elementId: gloverandglovertopjob_tainted_demotion
-impulses:
+imperatives:
   - name: Work dilligently at Glover & Glover
     priority: goal
     operation: !import /operations/glover/work-glover-junior-dilligent.yml

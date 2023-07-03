@@ -10,7 +10,7 @@ completedWhen:
   memory: has_vault_continent_vanderschaaf
   value: 1
 
-impulses:
+imperatives:
   - name: Remember our discovery
     requirements:
       anyOf:

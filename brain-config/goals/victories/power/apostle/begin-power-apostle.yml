@@ -3,7 +3,7 @@ name: Begin the power apostle ascension
 completedWhen:
   elementId: apostleforge.mentor
 
-impulses:
+imperatives:
   - name: Start the game
     operation:
       situation: work

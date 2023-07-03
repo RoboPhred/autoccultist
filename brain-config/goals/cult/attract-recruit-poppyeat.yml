@@ -12,7 +12,7 @@ completedWhen:
     - elementId: poppyaway
     - situation: poppytime
 
-impulses:
+imperatives:
   - name: Accept Poppy's Offer
     priority: goal
     # Wait until we have recruited everyone

@@ -10,7 +10,7 @@ completedWhen:
   memory: has_vault_rendingmountains_hunterspits
   value: 1
 
-impulses:
+imperatives:
   - name: Remember our discovery
     requirements:
       anyOf:

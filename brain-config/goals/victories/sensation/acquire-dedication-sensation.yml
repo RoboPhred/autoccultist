@@ -5,7 +5,7 @@ requirements:
     - elementId: ascensionsensationa
 completedWhen:
   aspects: { desire: 2 }
-impulses:
+imperatives:
   - name: Dedicate myself to sensation
     priority: goal
     operation: !import /operations/victories/sensation/acquire-dedication-sensation.yml

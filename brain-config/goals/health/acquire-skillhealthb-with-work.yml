@@ -3,7 +3,7 @@ requirements:
   aspects: { healthskill: 1 }
 completedWhen:
   aspects: { healthskill: 2 }
-impulses:
+imperatives:
   - name: Skilled physical work
     priority: goal
     forbidders:

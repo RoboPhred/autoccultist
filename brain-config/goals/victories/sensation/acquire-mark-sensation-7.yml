@@ -7,7 +7,7 @@ requirements:
     - elementId: ascensionsensationf
 completedWhen:
   aspects: { desire: 7 }
-impulses:
+imperatives:
   - name: Work a junior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire

@@ -13,7 +13,7 @@ namespace AutoccultistNS.Config
         private readonly Dictionary<string, ParallelMotivationConfig> motivations = new();
 
         public ParallelMotivationCollectionConfig()
-                            : base()
+            : base()
         {
         }
 
@@ -32,6 +32,8 @@ namespace AutoccultistNS.Config
         public override int Count => this.motivations.Count;
 
         public bool IsReadOnly => false;
+
+        public override IReadOnlyCollection<IImperative> Children => this.motivations.Values;
 
         public ParallelMotivationConfig this[string key] { get => this.motivations[key]; set => this.motivations[key] = value; }
 
@@ -98,16 +100,6 @@ namespace AutoccultistNS.Config
         IEnumerator<KeyValuePair<string, ParallelMotivationConfig>> IEnumerable<KeyValuePair<string, ParallelMotivationConfig>>.GetEnumerator()
         {
             return this.motivations.GetEnumerator();
-        }
-
-        public override IEnumerable<IImperative> Flatten()
-        {
-            yield return this;
-
-            foreach (var flat in this.motivations.Values.SelectMany(x => x.Flatten()))
-            {
-                yield return flat;
-            }
         }
 
         public override void AfterDeserialized(Mark start, Mark end)

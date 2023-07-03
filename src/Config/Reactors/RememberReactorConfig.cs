@@ -4,7 +4,7 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Brain;
     using YamlDotNet.Core;
 
-    public class RememberConfig : NamedConfigObject, IReactorConfig
+    public class RememberReactorConfig : NamedConfigObject, IReactorConfig
     {
         /// <summary>
         /// Gets or sets the id of this memory.

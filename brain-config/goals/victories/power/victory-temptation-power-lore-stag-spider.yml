@@ -42,7 +42,7 @@ completedWhen:
 # => mothc + lanternc = lanternd
 # ...After spider door (needs lanternd)
 # => forged + lanternd = forgee
-impulses:
+imperatives:
   - name: Acquire the Stag Riddle
     forbidders:
       anyOf:

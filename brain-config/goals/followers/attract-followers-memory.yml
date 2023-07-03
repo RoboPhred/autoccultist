@@ -4,7 +4,7 @@ completedWhen:
   memory: has_all_followers
   value: 1
 
-impulses:
+imperatives:
   - name: Record our completion
     priority: goal
     requirements:

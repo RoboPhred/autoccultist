@@ -8,7 +8,10 @@ namespace AutoccultistNS.Config
     using SecretHistories.Enums;
     using YamlDotNet.Core;
 
-    public class OperationConfig : NamedConfigObject, IOperation, IReactor
+    /// <summary>
+    /// An operation is a series of tasks to complete a verb or situation.
+    /// </summary>
+    public class OperationReactorConfig : NamedConfigObject, IOperation, IReactor
     {
         /// <summary>
         /// Gets or sets the situation id to target for this operation.

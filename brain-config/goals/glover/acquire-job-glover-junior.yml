@@ -16,7 +16,7 @@ completedWhen:
     - elementId: gloverandgloverjuniorjob_demotion
     - elementId: gloverandgloverjuniorjob_nodifficultbossa_demotion
     - elementId: gloverandglovertopjob_tainted_demotion
-impulses:
+imperatives:
   - name: Find clerical work
     priority: goal
     operation: !import /operations/glover/find-clerical-work.yml

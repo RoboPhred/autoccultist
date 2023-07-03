@@ -2,7 +2,7 @@ name: Explore Vaults in the Capital
 completedWhen:
   noneOf:
     - aspects: { vaultcapital: 1 }
-impulses:
+imperatives:
   - name: Explore Cater & Hero Limited
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

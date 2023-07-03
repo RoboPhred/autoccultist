@@ -2,7 +2,7 @@ name: Study notes from a Previous Patient
 # priority: goal
 requirements:
   elementId: legacyphysiciannotes
-impulses:
+imperatives:
   - name: Study Notes
     operation:
       situation: study

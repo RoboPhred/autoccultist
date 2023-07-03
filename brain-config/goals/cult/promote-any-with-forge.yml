@@ -6,7 +6,7 @@ completedWhen:
     - aspects: { follower: 1, disciple: -1 }
       forbiddenElementIds:
         - generic_b_moth
-impulses:
+imperatives:
   - name: Promote a Believer with Forge, while burning Restlessness
     priority: goal
     operation: !import /operations/cult/promote-any-believer-forge-restlessness.yml

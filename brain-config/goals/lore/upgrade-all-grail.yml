@@ -29,7 +29,7 @@ completedWhen:
             - anyOf:
                 - elementId: skillpassiond_folly
                 - aspects: { sanctuary: 1 }
-impulses:
+imperatives:
   - name: Ensure we have glimmering
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-intuition.yml

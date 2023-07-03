@@ -7,7 +7,7 @@ completedWhen:
   cardSet:
     - elementId: genericrubbishbook
     - elementId: genericrubbishbook
-impulses:
+imperatives:
   - name: Purchase items at auction
     requirements: !import /conditions/has-slushfund-major.yml
     priority: goal

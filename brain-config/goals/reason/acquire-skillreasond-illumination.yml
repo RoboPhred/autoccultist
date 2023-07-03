@@ -41,7 +41,7 @@ requirements:
         - aspects: { lore: 1, knock: 1 }
 completedWhen:
   elementId: skillreasond_illumination
-impulses:
+imperatives:
   - name: Acquire erudition
     priority: maintenance
     forbidders:

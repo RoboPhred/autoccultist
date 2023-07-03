@@ -10,7 +10,7 @@ completedWhen:
   memory: has_all_vaults_rendingmountains
   value: 1
 
-impulses:
+imperatives:
   - name: Remember our discovery
     requirements:
       elementId: vaultrendingmountainsdefault

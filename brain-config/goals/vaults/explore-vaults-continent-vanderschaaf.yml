@@ -2,7 +2,7 @@ name: Explore The Vanderschaaf Collection
 completedWhen:
   noneOf:
     - elementId: vaultcontinent4
-impulses:
+imperatives:
   - name: Explore The Vanderschaaf Collection
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

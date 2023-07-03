@@ -7,12 +7,15 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Yaml;
 
     [CustomDeserializer(typeof(MotivationCollectionConfigDeserializer))]
-    public abstract class MotivationCollectionConfig : NamedConfigObject, IImperativeConfig, IImperative
+    public abstract class MotivationCollectionConfig : NamedConfigObject, IImperativeConfig
     {
         /// <summary>
         /// Gets the total number of motivations in this config
         /// </summary>
         public abstract int Count { get; }
+
+        /// <inheritdoc/>
+        public abstract IReadOnlyCollection<IImperative> Children { get; }
 
         /// <inheritdoc/>
         public abstract ConditionResult CanActivate(IGameState state);
@@ -38,12 +41,13 @@ namespace AutoccultistNS.Config
                                let secondaryGoals = motivation.SupportingGoals.Select(g => (g, 0))
                                let goals = primaryGoals.Concat(secondaryGoals).OrderByDescending(x => x.Item2).Select(x => x.Item1)
                                from goal in goals
+                                   // For legacy reasons, we ignore CanActivate
                                where !goal.IsSatisfied(state)
                                from impulse in goal.GetImpulses(state)
                                select impulse;
 
                 // Actualize the collection so the cache value can be enumerated multiple times without issue.
-                return impulses.Distinct().Cast<IImpulse>().ToArray();
+                return impulses.ToArray();
             });
         }
 
@@ -52,26 +56,20 @@ namespace AutoccultistNS.Config
         {
             return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
             {
-                var primaryGoals =
-                    from motivation in this.GetCurrentMotivations(state)
-                    from goal in motivation.PrimaryGoals
-                    select goal;
+                var motivations = this.GetCurrentMotivations(state);
 
-                foreach (var goal in primaryGoals)
+                foreach (var motivation in motivations)
                 {
-                    var result = goal.IsSatisfied(state);
+                    var result = motivation.IsSatisfied(state);
                     if (!result)
                     {
-                        return result;
+                        return AddendedConditionResult.Addend(result, "Active motivation is not satisfied");
                     }
                 }
 
                 return ConditionResult.Success;
             });
         }
-
-        /// <inheritdoc/>
-        public abstract IEnumerable<IImperative> Flatten();
 
         /// <summary>
         /// Gets the current active motivations from the game state.

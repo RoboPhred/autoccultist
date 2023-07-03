@@ -32,17 +32,14 @@ namespace AutoccultistNS.Config
         public IGameStateConditionConfig CompletedWhen { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of impulses this goal provides.
-        /// <para>
-        /// Each impulse provides an operation and conditions under which the operation will be performed.
+        /// Gets or sets a list of imperatives this goal provides.
         /// </summary>
-        public FlatList<IImpulseConfig> Impulses { get; set; } = new();
+        public FlatList<IImperativeConfig> Imperatives { get; set; } = new();
 
-        /// <summary>
-        /// Determines whether the goal can activate with the given game state.
-        /// </summary>
-        /// <param name="state">The game state to check conditions against.</param>
-        /// <returns>True if this goal is able to activate, False otherwise.</returns>
+        /// <inheritdoc/>
+        IReadOnlyCollection<IImperative> IImperative.Children => this.Imperatives;
+
+        /// <inheritdoc/>
         public ConditionResult CanActivate(IGameState state)
         {
             var satsifiedMatch = this.IsSatisfied(state);
@@ -63,11 +60,7 @@ namespace AutoccultistNS.Config
             return ConditionResult.Success;
         }
 
-        /// <summary>
-        /// Determines whether this goal is completed with the given game state.
-        /// </summary>
-        /// <param name="state">The game state to check conditions against.</param>
-        /// <returns>True if the goal is completed, False otherwise.</returns>
+        /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
             return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
@@ -89,12 +82,7 @@ namespace AutoccultistNS.Config
 
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            return this.Impulses;
-        }
-
-        public IEnumerable<IImperative> Flatten()
-        {
-            return new IImperative[] { this };
+            return this.Imperatives.SelectMany(x => x.GetImpulses(state));
         }
     }
 }

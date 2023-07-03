@@ -4,7 +4,7 @@ requirements:
     - elementId: legacydetectivejob_matured
     - elementId: favour
 
-impulses:
+imperatives:
   - name: Accept the promotion
     priority: goal
     operation:

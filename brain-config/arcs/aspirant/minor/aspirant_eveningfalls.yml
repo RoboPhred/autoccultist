@@ -48,7 +48,7 @@ motivations:
             - elementId: gloverandgloverseniorjob_youngerglovergone
             - elementId: gloverandglovertopjob
             - elementId: gloverandglovertopjob_tainted
-        impulses:
+        imperatives:
           - name: Find a devious or potent minion
             # We want to look for a mid-level minion here, as I think it will be faster to go for the 70% success chance than try with the 30%
             forbidders:
@@ -70,7 +70,7 @@ motivations:
   - name: This is my life, now
     primaryGoals:
       - name: Such as it is
-        impulses:
+        imperatives:
           - name: Better get used to it
             priority: goal
             operation: !import /operations/glover/work-glover-acceptance.yml

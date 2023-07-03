@@ -11,7 +11,7 @@ requirements:
 completedWhen:
   elementId: apostleforge.pillar3
 
-impulses:
+imperatives:
   - name: Refine Bitterblack Salts to Xanthotic Essence
     priority: goal
     requirements: !import /conditions/has-slushfund-major.yml

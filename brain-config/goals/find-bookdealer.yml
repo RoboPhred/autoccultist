@@ -1,10 +1,10 @@
 name: Find Miss Morland's
 completedWhen:
   anyOf:
-  - elementId: locationbookdealer
-  - elementId: genericrubbishbook
-  - elementId: locationbookdealer_exhausted
-impulses:
+    - elementId: locationbookdealer
+    - elementId: genericrubbishbook
+    - elementId: locationbookdealer_exhausted
+imperatives:
   - name: Explore the city with a follower
     operation: !import /operations/explore/explore-city-follower.yml
   - name: Explore the city with health

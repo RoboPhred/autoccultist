@@ -5,7 +5,7 @@ completedWhen:
   anyOf:
     - aspects:
         desire: 1
-impulses:
+imperatives:
   - name: Study the Bequest
     priority: goal
     operation:

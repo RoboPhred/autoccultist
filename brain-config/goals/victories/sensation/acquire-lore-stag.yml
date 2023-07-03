@@ -16,7 +16,7 @@ requirements:
     - elementId: fragmentwinter
 completedWhen:
   elementId: waystag_after
-impulses:
+imperatives:
   - name: Acquire the Stag Riddle
     forbidders:
       anyOf:

@@ -9,7 +9,7 @@ requirements:
     - aspects: { follower: 1, lantern: 2 }
 completedWhen:
   aspects: { desire: 7 }
-impulses:
+imperatives:
   - name: Labor for Funds
     forbidders:
       # Don't occupy the Work Verb when we're ready to ascend.

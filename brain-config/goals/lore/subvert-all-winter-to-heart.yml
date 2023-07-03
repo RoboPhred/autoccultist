@@ -5,7 +5,7 @@ completedWhen:
     - elementId: fragmentwinterb
     - elementId: fragmentwinterc
 # TODO: Add more levels of Winter lore as their operations are added.
-impulses:
+imperatives:
   - name: Ensure we have glimmering
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-intuition.yml

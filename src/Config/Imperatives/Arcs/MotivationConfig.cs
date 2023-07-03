@@ -18,18 +18,18 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
         /// </summary>
-        public FlatList<ObjectOrLibraryEntry<IImperativeConfig>> PrimaryGoals { get; set; } = new();
+        public FlatList<ObjectOrLibraryEntry<GoalConfig>> PrimaryGoals { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the secondary goals of this motivation.
         /// </summary>
-        public FlatList<ObjectOrLibraryEntry<IImperativeConfig>> SupportingGoals { get; set; } = new();
+        public FlatList<ObjectOrLibraryEntry<GoalConfig>> SupportingGoals { get; set; } = new();
 
-        IReadOnlyList<IImperativeConfig> IMotivationConfig.PrimaryGoals => this.PrimaryGoals.Select(x => x.Value).ToArray();
+        IReadOnlyCollection<IImperative> IImperative.Children => this.PrimaryGoals.Concat(this.SupportingGoals).Select(x => x.Value).ToArray();
 
-        IReadOnlyList<IImperativeConfig> IMotivationConfig.SupportingGoals => this.SupportingGoals.Select(x => x.Value).ToArray();
+        IReadOnlyList<GoalConfig> IMotivationConfig.PrimaryGoals => this.PrimaryGoals.Select(x => x.Value).ToArray();
 
-        string IImperative.Name => throw new System.NotImplementedException();
+        IReadOnlyList<GoalConfig> IMotivationConfig.SupportingGoals => this.SupportingGoals.Select(x => x.Value).ToArray();
 
         /// <inheritdoc/>
         public override void AfterDeserialized(Mark start, Mark end)
@@ -75,11 +75,14 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
+            // In practice, this is not used, as MotivationCollectionConfig implements its own sorting based on primary/supporting characteristics
+            // for all active motivations.
             return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () =>
             {
                 var primaryImpulses =
                     from goalEntry in this.PrimaryGoals
                     let goal = goalEntry.Value
+                    // For legacy reasons, we ignore CanActivate
                     where !goal.IsSatisfied(state)
                     from impulse in goal.GetImpulses(state)
                     select impulse;
@@ -87,6 +90,7 @@ namespace AutoccultistNS.Config
                 var supportingImpulses =
                     from goalEntry in this.SupportingGoals
                     let goal = goalEntry.Value
+                    // For legacy reasons, we ignore CanActivate
                     where !goal.IsSatisfied(state)
                     from impulse in goal.GetImpulses(state)
                     select impulse;
@@ -94,22 +98,6 @@ namespace AutoccultistNS.Config
                 // We must make this an array, as the cache might make it be enumerated several times.
                 return primaryImpulses.Concat(supportingImpulses).ToArray();
             });
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<IImperative> Flatten()
-        {
-            yield return this;
-
-            var goals =
-                from goal in this.PrimaryGoals.Select(x => x.Value).Concat(this.SupportingGoals.Select(x => x.Value))
-                from flat in goal.Flatten()
-                select flat;
-
-            foreach (var goal in goals)
-            {
-                yield return goal;
-            }
         }
 
         /// <inheritdoc/>

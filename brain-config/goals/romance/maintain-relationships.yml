@@ -1,5 +1,5 @@
 name: Maintain relationships
-impulses:
+imperatives:
   - !import /impulses/romance/maint-continue-relationship-sensation.yml
   - !import /impulses/romance/maint-continue-relationship-power.yml
   - !import /impulses/romance/maint-continue-relationship-enlightenment.yml

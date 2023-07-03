@@ -10,7 +10,7 @@ completedWhen:
     - elementId: apostleforge.pillar2.dormant
     - elementId: apostleforge.pillar2
 
-impulses:
+imperatives:
   - name: Craft the Dawnbreaker Core
     priority: goal
     requirements: !import /conditions/legacy/apostle-power/begin-great-work.yml

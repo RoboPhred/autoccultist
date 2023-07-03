@@ -18,7 +18,7 @@ completedWhen:
   allOf:
     - elementId: waystag_after
     - elementId: fragmentgraild
-impulses:
+imperatives:
   - name: Acquire the Stag Riddle
     forbidders:
       anyOf:

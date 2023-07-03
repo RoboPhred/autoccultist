@@ -9,7 +9,7 @@ completedWhen:
     - memory: explored_vault_rendingmountains_hunterspits
       value: 1
 
-impulses:
+imperatives:
   - name: Explore the Hunter's Pits
     requirements: !import /conditions/has-slushfund-major.yml
     forbidders: !import /conditions/has-evidence.yml

@@ -3,7 +3,7 @@ requirements:
   elementId: ascensionpowerb
 completedWhen:
   aspects: { desire: 3 }
-impulses:
+imperatives:
   - name: Acquire the Second Mark
     forbidders:
       aspects:
