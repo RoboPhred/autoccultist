@@ -1,0 +1,35 @@
+name: Acquire A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
+requirements:
+  allOf:
+    - elementId: locationauctionhouse
+    - elementId: genericrubbishbook
+completedWhen:
+  anyOf:
+    - elementId: truecompleteasclepiangreek
+      location: tabletop
+    - elementId: truecompleteasclepian
+    - elementId: ritetoolconsumeinfluence
+impulses:
+  - name: Purchase A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
+    priority: goal
+    forbidders:
+      anyOf:
+        - elementId: truecompleteasclepiangreek
+          location: tabletop
+        - elementId: truecompleteasclepian
+        - elementId: ritetoolconsumeinfluence
+        # Don't peek into the auction when we have yet to exhaust the bookdealer, or it might spawn
+        # unique books we want from the dealer that will never appear again.
+        - elementId: locationbookdealer
+    operation:
+      situation: explore
+      targetOngoing: true
+      startCondition: currentRecipeSatisfied
+      conditionalRecipes:
+        - condition:
+            situation: explore
+            storedCardsMatch:
+              elementId: truecompleteasclepiangreek
+          slots:
+            Bid:
+              elementId: funds

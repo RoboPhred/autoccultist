@@ -1,0 +1,13 @@
+name: Go to Oriflamme's
+impulses:
+  - name: Go to Oriflamme's
+    requirements: !import /conditions/has-slushfund-major.yml
+    # Start the auctionhouse then abandon it.  Our primary goals will take over if it's an item worth having.
+    operation:
+      name: Go to Oriflamme's
+      situation: explore
+      startingRecipe:
+        endOperation: true
+        slots:
+          explore:
+            elementId: locationauctionhouse

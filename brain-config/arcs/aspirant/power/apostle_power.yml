@@ -135,14 +135,29 @@ motivations:
     primaryGoals:
       - consume-books-lore-waitmorland
 
-  get_stumm:
-    name: Find Stumm from Oriflamme
+  get_auction_items:
+    name: Find Items from Oriflamme
     requires:
       # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
       - drain_morlands
     primaryGoals:
       - find-auctionhouse
-      - auction/acquire-stumm-only
+      - auction/acquire-stumm-passive
+      - auction/acquire-asclepian-passive
+    supportingGoals:
+      - auction/attend-auction
+
+  watch_stumm:
+    name: Watch Stumm
+    requirePrimaryGoals: true
+    primaryGoals:
+      - name: Watch Stumm
+        requirements:
+          elementId: stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        impulses:
+          - operation: !import /operations/watch-stumm.yml
   # End lore and rite collection
 
   move_into_library:
@@ -177,10 +192,11 @@ motivations:
     primaryGoals:
       # The Journal of Alessandro LaCroce (Fucine textbook, english version)
       - vaults/find-vaults-capital-strathcoyne
-      # TODO: The Vanderschaaf Collection (vaultcontinent4) => The Geminiad => Rite of the Crow's Quenching (in Fucine) => For refining alchemy
-      # Bitterblack Salts
+      # The Vanderschaaf Collection (vaultcontinent4) => The Geminiad (in Fucine, Rite of the Crow's Quenching), THE MAGUS VON... (Armaic textbook)
+      - vaults/find-vaults-continent-vanderschaaf
+      # Bitterblack Salts, The August Stone (in Armaic, Deep Mandaic textbook)
       - vaults/find-vaults-rendingmountains-hunterspits
-      # Carcas Spark, a Furnace Paean (in Fucine)
+      # Carcas Spark, a Furnace Paean (in Fucine), Time of Division (in Deep Mandaic, Rite Intercalate)
       - vaults/find-vaults-eveningisles-geryk
 
   explore_vaults:
@@ -189,5 +205,14 @@ motivations:
       - disciple_all_followers
     primaryGoals:
       - vaults/explore-vaults-capital-strathcoyne
+      - vaults/explore-vaults-continent-vanderschaaf
       - vaults/explore-vaults-rendingmountains-hunterspits
       - vaults/explore-vaults-eveningisles-geryk
+
+  begin_great_work:
+    name: Begin the Great Work
+    requirePrimaryGoals: true
+    primaryGoals:
+      - legacy/apostle-power/refine-fiercest-alchemy
+      - legacy/apostle-power/craft-dawnbreaker-core
+      - legacy/apostle-power/awaken-dawnbreaker-core

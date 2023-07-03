@@ -1,0 +1,26 @@
+name: Create the Dawnbreaker Core
+
+requirements:
+  allOf:
+    - elementId: ritetoolconsumeinfluence
+    - elementId: toolforgef
+
+completedWhen:
+  anyOf:
+    - elementId: apostleforge.pillar2.dormant
+    - elementId: apostleforge.pillar2
+
+impulses:
+  - name: Craft the Dawnbreaker Core
+    priority: goal
+    requirements: !import /conditions/legacy/apostle-power/begin-great-work.yml
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritetoolconsumeinfluence
+          Offering:
+            elementId: apostleforge.pillarfuel
+          Instrument:
+            elementId: toolforgef

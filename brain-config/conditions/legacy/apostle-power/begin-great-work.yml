@@ -1,0 +1,20 @@
+# Conditions to begin the Great Work in earnest
+allOf:
+  # Rites and such
+  - allOf:
+      - elementId: ritetoolconsumeinfluence
+      - elementId: riteinfluenceconsumeingredient
+      - elementId: fragmentforgeg
+  # Carcas Spark or Dawnbreaker Core
+  # We hold off making the core until we are ready to begin, as it can be sabotaged
+  - anyOf:
+      - elementId: toolforgef
+      - elementId: apostleforge.pillar2.dormant
+      - elementId: apostleforge.pillar2
+      - elementId: apostleforge.pillar2.sabotaged
+  # Iotic Essence or Blue Gold
+  # We hold off making the Blue Gold until we are ready to begin, as it can be sabotaged
+  - anyOf:
+      - elementId: ingredientforgef
+      - elementId: apostleforge.pillar3
+      - elementId: apostleforge.pillar3.sabotaged
