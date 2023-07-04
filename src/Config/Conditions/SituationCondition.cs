@@ -90,7 +90,7 @@ namespace AutoccultistNS.Config.Conditions
                     return ConditionResult.Success;
                 }
 
-                return SituationConditionResult.ForFailure(this.Situation, "is not missing");
+                return SituationConditionResult.ForFailure(this.Situation, "Situation is expected to be missing, but it is not.");
             }
 
             if (this.Recipe != null && situation.CurrentRecipe != this.Recipe)

@@ -37,7 +37,7 @@ namespace AutoccultistNS.Config
 
         public ParallelMotivationConfig this[string key] { get => this.motivations[key]; set => this.motivations[key] = value; }
 
-        public override ConditionResult CanActivate(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
             return ConditionResult.Success;
         }
@@ -167,7 +167,7 @@ namespace AutoccultistNS.Config
             {
                 cache[key] = MotivationStatus.Satisfied;
             }
-            else if (!motivation.CanActivate(state))
+            else if (!motivation.IsConditionMet(state))
             {
                 // Note: This is different from LinearMotivationCollectionConfig, which will start any motivation provided its previous motivations are satisfied.
                 cache[key] = MotivationStatus.MissingRequirements;
@@ -260,21 +260,27 @@ namespace AutoccultistNS.Config
             /// </summary>
             public List<string> Blocks { get; set; } = new();
 
-            public override ConditionResult CanActivate(IGameState state)
+            public override ConditionResult IsConditionMet(IGameState state)
             {
+                var baseCondition = base.IsConditionMet(state);
+                if (!baseCondition)
+                {
+                    return baseCondition;
+                }
+
                 if (!this.RequirePrimaryGoals)
                 {
                     return ConditionResult.Success;
                 }
 
-                // ParallelMotivations wait to activate until at least one primary goal can activate.
+                // ParallelMotivations with RequirePrimaryGoals wait to activate until at least one primary goal can activate.
                 // This is different from LinearMotivationCollectionConfig, which runs motivations as long as the previous motivations are satisfied.
-                return CacheUtils.Compute(this, nameof(this.CanActivate), state, () =>
+                return CacheUtils.Compute(this, nameof(this.IsConditionMet), state, () =>
                 {
                     var failures = new List<ConditionResult>();
                     foreach (var goal in this.PrimaryGoals)
                     {
-                        var match = goal.Value.CanActivate(state);
+                        var match = goal.Value.IsConditionMet(state);
                         if (match)
                         {
                             return ConditionResult.Success;

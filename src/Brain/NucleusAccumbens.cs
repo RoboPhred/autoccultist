@@ -160,10 +160,10 @@ namespace AutoccultistNS.Brain
         {
             var prefix = string.Join(" ", Enumerable.Repeat("-", depth));
 
-            sb.AppendFormat("{0}Imperative: {1}\n", prefix, imperative.ToString());
+            sb.AppendFormat("{0} Imperative: {1}\n", prefix, imperative.ToString());
 
-            var canActivate = ConditionResult.Trace(() => imperative.CanActivate(GameStateProvider.Current));
-            sb.AppendFormat("{0} - Can Activate: {1}\n", prefix, canActivate.IsConditionMet);
+            var canActivate = ConditionResult.Trace(() => imperative.IsConditionMet(GameStateProvider.Current));
+            sb.AppendFormat("{0} - Condition Met: {1}\n", prefix, canActivate.IsConditionMet);
             if (!canActivate)
             {
                 sb.AppendFormat("{0} - - Reason: {1}\n", prefix, canActivate.ToString());
@@ -176,10 +176,19 @@ namespace AutoccultistNS.Brain
                 sb.AppendFormat("{0} - - Reason: {1}\n", prefix, isSatisfied.ToString());
             }
 
-            sb.AppendFormat("{0} - Children:\n", prefix);
-            foreach (var child in imperative.Children)
+            sb.AppendFormat("{0} - Impulses:\n", prefix);
+            foreach (var impulse in imperative.GetImpulses(GameStateProvider.Current))
             {
-                DumpImperative(child, sb, depth + 2);
+                sb.AppendFormat("{0} - - Impulse: {1}\n", prefix, impulse.ToString());
+            }
+
+            if (imperative.Children.Count > 0)
+            {
+                sb.AppendFormat("{0} - Children:\n", prefix);
+                foreach (var child in imperative.Children)
+                {
+                    DumpImperative(child, sb, depth + 2);
+                }
             }
         }
 

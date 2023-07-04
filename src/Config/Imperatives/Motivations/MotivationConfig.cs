@@ -13,7 +13,7 @@ namespace AutoccultistNS.Config
     /// <para>
     /// For legacy reasons, a motivation can always activate regardless of its goals.
     /// </summary>
-    public class MotivationConfig : NamedConfigObject, IMotivationConfig
+    public class MotivationConfig : ImperativeConfigBase, IMotivationConfig
     {
         /// <summary>
         /// Gets or sets the primary goals of this motivation.
@@ -25,7 +25,7 @@ namespace AutoccultistNS.Config
         /// </summary>
         public FlatList<ObjectOrLibraryEntry<GoalConfig>> SupportingGoals { get; set; } = new();
 
-        IReadOnlyCollection<IImperative> IImperative.Children => this.PrimaryGoals.Concat(this.SupportingGoals).Select(x => x.Value).ToArray();
+        public override IReadOnlyCollection<IImperative> Children => this.PrimaryGoals.Concat(this.SupportingGoals).Select(x => x.Value).ToArray();
 
         IReadOnlyList<GoalConfig> IMotivationConfig.PrimaryGoals => this.PrimaryGoals.Select(x => x.Value).ToArray();
 
@@ -49,15 +49,25 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        public virtual ConditionResult CanActivate(IGameState state)
+        public override ConditionResult IsSatisfied(IGameState state)
         {
-            // For legacy reasons, we consider motivations to always be ready to start.
-            // This is overriden in newer systems.
-            return ConditionResult.Success;
+            return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
+            {
+                foreach (var goal in this.PrimaryGoals.Select(x => x.Value))
+                {
+                    var result = goal.IsSatisfied(state);
+                    if (!result)
+                    {
+                        return AddendedConditionResult.Addend(result, $"Primary goal {goal} unsatisfied.");
+                    }
+                }
+
+                return ConditionResult.Success;
+            });
         }
 
         /// <inheritdoc/>
-        public IEnumerable<string> DescribeCurrentGoals(IGameState state)
+        public override IEnumerable<string> DescribeCurrentGoals(IGameState state)
         {
             yield return $"[Motivation]: {this.Name}";
 
@@ -73,16 +83,22 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
-        public IEnumerable<IImpulse> GetImpulses(IGameState state)
+        public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             // In practice, this is not used, as MotivationCollectionConfig implements its own sorting based on primary/supporting characteristics
             // for all active motivations.
+            // For legacy reasons, we ignore goal,IsConditionMet
             return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () =>
             {
+                // This uses the default implementation which checks IsSatisfied
+                if (!this.IsConditionMet(state))
+                {
+                    return Enumerable.Empty<IImpulse>();
+                }
+
                 var primaryImpulses =
                     from goalEntry in this.PrimaryGoals
                     let goal = goalEntry.Value
-                    // For legacy reasons, we ignore CanActivate
                     where !goal.IsSatisfied(state)
                     from impulse in goal.GetImpulses(state)
                     select impulse;
@@ -90,31 +106,12 @@ namespace AutoccultistNS.Config
                 var supportingImpulses =
                     from goalEntry in this.SupportingGoals
                     let goal = goalEntry.Value
-                    // For legacy reasons, we ignore CanActivate
                     where !goal.IsSatisfied(state)
                     from impulse in goal.GetImpulses(state)
                     select impulse;
 
                 // We must make this an array, as the cache might make it be enumerated several times.
                 return primaryImpulses.Concat(supportingImpulses).ToArray();
-            });
-        }
-
-        /// <inheritdoc/>
-        public ConditionResult IsSatisfied(IGameState state)
-        {
-            return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
-            {
-                foreach (var goal in this.PrimaryGoals)
-                {
-                    var result = goal.Value.IsSatisfied(state);
-                    if (!result)
-                    {
-                        return AddendedConditionResult.Addend(result, "Primary goal unsatisfied");
-                    }
-                }
-
-                return ConditionResult.Success;
             });
         }
     }

@@ -60,7 +60,7 @@ imperatives:
         requireSlotCards: false
         cardRequirements:
           - aspects: { hq: 1 }
-          - aspects: &emprison-target
+          - aspects:
               follower: 1
               romanticinterest: -1
               exalted: -1
@@ -70,7 +70,13 @@ imperatives:
           talk:
             aspects: { hq: 1 }
           # Bookshop
-          Cellar: *emprison-target
+          Cellar: &emprison-target
+            aspects:
+              follower: 1
+              romanticinterest: -1
+              exalted: -1
+              grail: -5
+              summoned: -1
           # Mithraeum
           Chains: *emprison-target
           # Hospital

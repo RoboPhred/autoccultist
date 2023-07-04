@@ -18,7 +18,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
-    public class MotivationalArcConfig : NamedConfigObject, IArcConfig
+    public class MotivationalArcConfig : MotivationalImperativeConfig, IArcConfig
     {
         private string arcFolder;
 
@@ -35,16 +35,9 @@ namespace AutoccultistNS.Config
         public string StartFromSave { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of motivations that will drive the execution of this arc.
-        /// </summary>
-        public MotivationCollectionConfig Motivations { get; set; }
-
-        /// <summary>
         /// Gets or sets the selection hint to be used to determine the current arc on loading a save.
         /// </summary>
         public IGameStateConditionConfig SelectionHint { get; set; }
-
-        IReadOnlyCollection<IImperative> IImperative.Children => this.Motivations.Children;
 
         /// <inheritdoc/>
         IGameStateCondition IArc.SelectionHint => this.SelectionHint;
@@ -90,11 +83,6 @@ namespace AutoccultistNS.Config
             if (string.IsNullOrEmpty(this.Name))
             {
                 this.Name = NameGenerator.GenerateName(Deserializer.CurrentFilePath, start);
-            }
-
-            if (this.Motivations == null || this.Motivations.Count == 0)
-            {
-                throw new InvalidConfigException("Brain must have at least one motivation.");
             }
 
             if (!string.IsNullOrEmpty(this.StartFromSave))
@@ -145,24 +133,10 @@ namespace AutoccultistNS.Config
             return null;
         }
 
-        public ConditionResult CanActivate(IGameState state)
+        /// <inheritdoc/>
+        public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            return this.Motivations.CanActivate(state);
-        }
-
-        public ConditionResult IsSatisfied(IGameState state)
-        {
-            return this.Motivations.IsSatisfied(state);
-        }
-
-        public IEnumerable<string> DescribeCurrentGoals(IGameState state)
-        {
-            return this.Motivations.DescribeCurrentGoals(state);
-        }
-
-        public IEnumerable<IImpulse> GetImpulses(IGameState state)
-        {
-            return DumpCompletedSituationImpulse.Instance.GetImpulses(state).Concat(this.Motivations.GetImpulses(state));
+            return DumpCompletedSituationImpulse.Instance.GetImpulses(state).Concat(base.GetImpulses(state));
         }
 
         private class ArcPersistenceProvider : GamePersistenceProvider

@@ -2,6 +2,7 @@ namespace AutoccultistNS.Config
 {
     using System.Linq;
     using AutoccultistNS.Brain;
+    using AutoccultistNS.GameState;
     using YamlDotNet.Core;
 
     public class RememberReactorConfig : NamedConfigObject, IReactorConfig
@@ -50,6 +51,13 @@ namespace AutoccultistNS.Config
             Hippocampus.RegisterMemory(this.Remember, this.Label, this.Description);
         }
 
+        /// <inheritdoc/>
+        public ConditionResult IsConditionMet(IGameState state)
+        {
+            return ConditionResult.Success;
+        }
+
+        /// <inheritdoc/>
         public IReaction GetReaction()
         {
             return new MemoryReaction(this.Remember, this.Label, this.Description, this.Value ?? 1, this.Increment);

@@ -10,27 +10,34 @@ namespace AutoccultistNS.Brain
     {
         public static readonly DumpCompletedSituationImpulse Instance = new();
 
+        // <inheritdoc/>
         public TaskPriority Priority => TaskPriority.Critical;
 
+        // <inheritdoc/>
         public string Name => "Dump Completed Situation";
 
+        // <inheritdoc/>
         public IReadOnlyCollection<IImperative> Children => new IImperative[0];
 
-        public ConditionResult CanActivate(IGameState state)
+        // <inheritdoc/>
+        public ConditionResult IsConditionMet(IGameState state)
         {
             return this.GetCompletedSituations(state).Any() ? ConditionResult.Success : ConditionResult.Failure;
         }
 
+        // <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            return this.GetCompletedSituations(state).Any() ? ConditionResult.Failure : ConditionResult.Success;
+            return AddendedConditionResult.Addend(ConditionResult.Failure, "Dumping completed situations is never satisfied.");
         }
 
+        // <inheritdoc/>
         public IEnumerable<string> DescribeCurrentGoals(IGameState state)
         {
             return Enumerable.Empty<string>();
         }
 
+        // <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             if (this.GetCompletedSituations(state).Any())
@@ -39,9 +46,9 @@ namespace AutoccultistNS.Brain
             }
         }
 
+        // <inheritdoc/>
         public IReaction GetReaction()
         {
-            // FIXME: Pass IGameState to GetReaction
             var toDump = this.GetCompletedSituations(GameStateProvider.Current).FirstOrDefault();
             if (toDump == null)
             {

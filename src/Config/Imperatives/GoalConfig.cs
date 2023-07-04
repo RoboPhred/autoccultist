@@ -14,21 +14,16 @@ namespace AutoccultistNS.Config
     /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
     [LibraryConfigObject("goals")]
-    public class GoalConfig : NamedConfigObject, IImperativeConfig, IGoal
+    public class GoalConfig : ImperativeConfigBase, IGoal
     {
         /// <summary>
-        /// Gets or sets the condition which is required to be met for this goal to activate.
-        /// <para>
-        /// The goal will remain activated after these conditions are met,
-        /// and continue operating until the CompletedWhen condition is met.
-        /// </summary>
-        public IGameStateConditionConfig Requirements { get; set; }
-
-        /// <summary>
         /// Gets or sets the condition to determine when this goal is completed.
-        /// <para>
-        /// Once started, the goal will continue to operate until its completion conditions are met.
         /// </summary>
+        /// <remarks>
+        /// Completed goals will be inactive.
+        /// Depending on the imperative parent, goal completions might enable or disable other
+        /// sibling imperatives
+        /// </remarks>
         public IGameStateConditionConfig CompletedWhen { get; set; }
 
         /// <summary>
@@ -37,31 +32,10 @@ namespace AutoccultistNS.Config
         public FlatList<IImperativeConfig> Imperatives { get; set; } = new();
 
         /// <inheritdoc/>
-        IReadOnlyCollection<IImperative> IImperative.Children => this.Imperatives;
+        public override IReadOnlyCollection<IImperative> Children => this.Imperatives;
 
         /// <inheritdoc/>
-        public ConditionResult CanActivate(IGameState state)
-        {
-            var satsifiedMatch = this.IsSatisfied(state);
-            if (satsifiedMatch)
-            {
-                return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(this.CompletedWhen, satsifiedMatch), "Goal is already completed.");
-            }
-
-            if (this.Requirements != null)
-            {
-                var requirementsMatch = this.Requirements.IsConditionMet(state);
-                if (!requirementsMatch)
-                {
-                    return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(this.Requirements, requirementsMatch), "Goal requirements are not met.");
-                }
-            }
-
-            return ConditionResult.Success;
-        }
-
-        /// <inheritdoc/>
-        public ConditionResult IsSatisfied(IGameState state)
+        public override ConditionResult IsSatisfied(IGameState state)
         {
             return CacheUtils.Compute(this, nameof(this.IsSatisfied), state, () =>
             {
@@ -75,14 +49,15 @@ namespace AutoccultistNS.Config
             });
         }
 
-        public IEnumerable<string> DescribeCurrentGoals(IGameState gameState)
+        public override IEnumerable<string> DescribeCurrentGoals(IGameState gameState)
         {
             return new[] { this.Name };
         }
 
-        public IEnumerable<IImpulse> GetImpulses(IGameState state)
+        public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            return this.Imperatives.SelectMany(x => x.GetImpulses(state));
+            // Goals tend to be near the top of the imperative stack, so this is a good place for caching.
+            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () => base.GetImpulses(state).ToArray());
         }
     }
 }

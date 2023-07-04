@@ -105,29 +105,48 @@ namespace AutoccultistNS.Yaml
 
             if (cache && DeserializedObjectCache.TryGetValue(filePath, out var cached))
             {
-                return (T)cached;
+                if (typeof(T).IsAssignableFrom(cached.GetType()))
+                {
+                    return (T)cached;
+                }
+                else
+                {
+                    // Our cached object isnt actually assignable to this.  That probably means we saw an !import targeting a base type
+                    // and are now parsing it as derived.
+                    // We should probably cache based on the resultant type, and support AssignableFrom checks.
+                    // For now, lets just disable caching when weirdness like this happens.
+                    cache = false;
+                }
             }
 
             ParsingFiles.Push(filePath);
             try
             {
                 var fileContents = File.ReadAllText(filePath);
-                var parser = new MergingParser(new Parser(new StringReader(fileContents)));
-                var result = func(parser);
-
-                if (cache)
+                using (var textReader = new StringReader(fileContents))
                 {
-                    if (result is IYamlValueWrapper wrapper)
-                    {
-                        DeserializedObjectCache[filePath] = wrapper.Unwrap();
-                    }
-                    else
-                    {
-                        DeserializedObjectCache[filePath] = result;
-                    }
-                }
+                    var parser = new MergingParser(new Parser(textReader));
+                    var result = func(parser);
 
-                return result;
+                    if (cache)
+                    {
+                        // FIXME: This is here because some types are !import-ed into different targets.
+                        // However, this only handles the case where we get the more specific derived type imports first.
+                        // We should instead cache based on resultant type, and support AssignableFrom checks.
+                        // To keep the references the same, maybe we should also have base types able to annotate a ParseAsType marker to force
+                        // the parser into the more derived type.
+                        if (result is IYamlValueWrapper wrapper)
+                        {
+                            DeserializedObjectCache[filePath] = wrapper.Unwrap();
+                        }
+                        else
+                        {
+                            DeserializedObjectCache[filePath] = result;
+                        }
+                    }
+
+                    return result;
+                }
             }
             catch (YamlException ex) when (!(ex is YamlFileException))
             {

@@ -22,6 +22,11 @@ namespace AutoccultistNS.Config
         [YamlIgnore]
         public Mark End { get; private set; }
 
+        public override string ToString()
+        {
+            return $"{this.GetType().Name}(FilePath = {FilesystemHelpers.GetRelativePath(this.FilePath, Autoccultist.AssemblyDirectory)}:{this.Start?.Line})";
+        }
+
         public virtual void AfterDeserialized(Mark start, Mark end)
         {
             this.FilePath = AutoccultistNS.Yaml.Deserializer.CurrentFilePath;

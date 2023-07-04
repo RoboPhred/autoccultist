@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config
     /// Defines a combination operation reactor / impulse / imperative.
     /// This config object defines both the conditions on which to perform an operation, and the operation itself.
     /// </summary>
-    public class OperationImperativeImpulseConfig : OperationReactorConfig, IImperativeConfig, IImpulse
+    public class OperationConfig : OperationReactorConfig, IImperativeConfig, IImpulse
     {
         /// <summary>
         /// Defines options for when to consider this operation startable.
@@ -27,20 +27,27 @@ namespace AutoccultistNS.Config
             /// <summary>
             /// The operation can start if either the starting recipe (if the situation is idle) or a matched ongoing recipe can be satisfied.
             /// Note: conditionalRecipes will be checked if no ongoingRecipe matches the current recipe.
+            /// </summary>
             CurrentRecipeSatisfied,
+
+            /// <summary>
+            /// The operation will ignore recipe conditions when checking to see if it can start.
+            /// </summary>
+            IgnoreRecipes,
         }
 
         /// <summary>
         /// Gets or sets the operation that this operation inherits from.
         /// </summary>
-        public OperationImperativeImpulseConfig Extends { get; set; }
+        public OperationConfig Extends { get; set; }
 
         /// <summary>
         /// Gets or sets the priority for this operation.
         /// Operations with a higher priority will run before lower priority operation.
         /// </summary>
         /// <remarks>
-        /// This will have no effect if this operation is nested inside another imperative such as an <see cref="NestedImperativeConfig"/>.
+        /// While this operation config will apply this priority to its reactions, it can be overridden  if this operation is
+        /// nested inside a <see cref="LeafImperativeConfig"/>.
         /// </remarks>
         public TaskPriority? Priority { get; set; }
 
@@ -63,9 +70,17 @@ namespace AutoccultistNS.Config
         public IReadOnlyCollection<IImperative> Children => new IImperative[0];
 
         /// <inheritdoc/>
-        public ConditionResult CanActivate(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
-            return CacheUtils.Compute(this, nameof(this.CanActivate), state, () =>
+            // Check if our reaction conditions are met.
+            var baseConditionMet = base.IsConditionMet(state);
+            if (!baseConditionMet)
+            {
+                return baseConditionMet;
+            }
+
+            // Check if our impulse conditions are met.
+            return CacheUtils.Compute(this, nameof(this.IsConditionMet), state, () =>
             {
                 var situationId = this.GetSituationId();
                 var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
@@ -80,9 +95,6 @@ namespace AutoccultistNS.Config
                     return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
                 }
 
-                var startingRecipe = this.GetStartingRecipe();
-                var ongoingRecipes = this.GetOngoingRecipes();
-
                 var targetOngoing = this.TargetOngoing ?? this.Extends?.TargetOngoing ?? false;
                 var startCondition = this.StartCondition ?? this.Extends?.StartCondition ?? OperationStartCondition.AllRecipesSatisified;
 
@@ -90,6 +102,14 @@ namespace AutoccultistNS.Config
                 {
                     return SituationConditionResult.ForFailure(situationId, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
                 }
+
+                if (startCondition == OperationStartCondition.IgnoreRecipes)
+                {
+                    return ConditionResult.Success;
+                }
+
+                var startingRecipe = this.GetStartingRecipe();
+                var ongoingRecipes = this.GetOngoingRecipes();
 
                 if (startCondition == OperationStartCondition.AllRecipesSatisified)
                 {
@@ -113,6 +133,8 @@ namespace AutoccultistNS.Config
                     {
                         return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
                     }
+
+                    // Note: we do not check conditional recipes, as they are often overlapping cases or target nonoverlapping conditions.
                 }
                 else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
                 {
@@ -133,36 +155,34 @@ namespace AutoccultistNS.Config
             });
         }
 
+        /// <inheritdoc/>
         public ConditionResult IsSatisfied(IGameState state)
         {
-            var canActivate = this.CanActivate(state);
-            if (!canActivate)
-            {
-                // Nothing to do if we can't activate.
-                return ConditionResult.Success;
-            }
-
-            return AddendedConditionResult.Addend(ConditionResult.Failure, "Operation is available for execution.");
+            return AddendedConditionResult.Addend(ConditionResult.Failure, "Operation imperatives are never satisfied.");
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> DescribeCurrentGoals(IGameState state)
         {
             return Enumerable.Empty<string>();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            if (this.CanActivate(state))
+            if (this.IsConditionMet(state))
             {
                 yield return this;
             }
         }
 
+        /// <inheritdoc/>
         protected override string GetSituationId()
         {
             return base.GetSituationId() ?? this.Extends?.Situation;
         }
 
+        /// <inheritdoc/>
         protected override IRecipeSolution GetStartingRecipe()
         {
             var startingRecipe = base.GetStartingRecipe();
@@ -179,6 +199,7 @@ namespace AutoccultistNS.Config
             return null;
         }
 
+        /// <inheritdoc/>
         protected override IReadOnlyDictionary<string, IRecipeSolution> GetOngoingRecipes()
         {
             var ongoingRecipes = base.GetOngoingRecipes();
@@ -192,6 +213,7 @@ namespace AutoccultistNS.Config
             return ongoingRecipes;
         }
 
+        /// <inheritdoc/>
         protected override IReadOnlyList<IConditionalRecipeSolution> GetConditionalRecipes()
         {
             // Our conditionals come first so they take priority.

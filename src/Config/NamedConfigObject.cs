@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config
 
         public override string ToString()
         {
-            return $"{this.GetType().Name}(Name = {this.Name})";
+            return $"{this.GetType().Name}(Name = {this.Name}, FilePath = {FilesystemHelpers.GetRelativePath(this.FilePath, Autoccultist.AssemblyDirectory)}:{this.Start?.Line})";
         }
 
         public override void AfterDeserialized(Mark start, Mark end)

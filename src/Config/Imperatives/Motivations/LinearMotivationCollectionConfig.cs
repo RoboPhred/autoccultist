@@ -29,7 +29,7 @@ namespace AutoccultistNS.Config
             }
         }
 
-        public override ConditionResult CanActivate(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
             return ConditionResult.Success;
         }

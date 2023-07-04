@@ -6,7 +6,6 @@ namespace AutoccultistNS
         : base($"Situation {situation} not in appropriate state: {reason}")
         {
             this.Situation = situation;
-            this.Reason = reason;
         }
 
         public string Situation { get; private set; }

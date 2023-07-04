@@ -21,7 +21,7 @@ namespace AutoccultistNS.GUI
 
         private static string folderFilter = string.Empty;
 
-        private static bool filterCanActivate = true;
+        private static bool filterConditionMet = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Goals gui is being shown.
@@ -90,7 +90,7 @@ namespace AutoccultistNS.GUI
         private static void GoalsWindow(int id)
         {
             searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();
-            filterCanActivate = GUILayout.Toggle(filterCanActivate, "Can Activate");
+            filterConditionMet = GUILayout.Toggle(filterConditionMet, "Can Activate");
 
             scrollPositionNewGoals = GUILayout.BeginScrollView(scrollPositionNewGoals);
 
@@ -147,12 +147,12 @@ namespace AutoccultistNS.GUI
             var goals =
                 from goal in Library.Goals
                 where FilterGoal(goal, string.IsNullOrEmpty(searchFilter))
+                let conditionMet = goal.IsConditionMet(GameStateProvider.Current)
                 let satisfied = goal.IsSatisfied(GameStateProvider.Current)
-                let canActivate = goal.CanActivate(GameStateProvider.Current)
                 let active = NucleusAccumbens.CurrentImperatives.Contains(goal)
-                where filterCanActivate == false || canActivate
+                where filterConditionMet == false || conditionMet
                 orderby goal.Name.ToLower()
-                select new { Goal = goal, Satisfied = satisfied, CanActivate = canActivate, Active = active };
+                select new { Goal = goal, Satisfied = satisfied, CanActivate = conditionMet, Active = active };
 
             foreach (var pair in goals)
             {

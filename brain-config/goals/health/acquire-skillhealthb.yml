@@ -4,7 +4,7 @@ requirements:
 completedWhen:
   aspects: { healthskill: 2 }
 imperatives:
-  - !import /impulses/norm-vitality-from-health.yml
+  - !import /impulses/maint-vitality-from-health.yml
   - name: "Learn Lesson: Vitality"
     extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:

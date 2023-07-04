@@ -5,6 +5,7 @@ namespace AutoccultistNS.Config
     using System.Text;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Resources;
     using SecretHistories.Enums;
     using YamlDotNet.Core;
 
@@ -45,6 +46,31 @@ namespace AutoccultistNS.Config
 
         // Explicitly implement IOperation to get whatever our overriden situationId may be.
         string IOperation.Situation => this.GetSituationId();
+
+        /// <inheritdoc/>
+        public virtual ConditionResult IsConditionMet(IGameState state)
+        {
+            // We need to implement the bare minimum requirements for this reaction to start.
+            // This includes:
+            // - The situation must exist.
+            // - The situation must not be reserved by another reaction.
+            // We do not care about any recipes, since the user might want to start us to take over
+            // the situation once it hits a recipe we know about.
+            var situationId = this.GetSituationId();
+            var situation = state.Situations.FirstOrDefault(x => x.SituationId == situationId);
+
+            if (situation == null)
+            {
+                return SituationConditionResult.ForFailure(situationId, "Situation not found.");
+            }
+
+            if (!Resource.Of<ISituationState>().IsAvailable(situation))
+            {
+                return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
+            }
+
+            return ConditionResult.Success;
+        }
 
         /// <inheritdoc/>
         public IReaction GetReaction()
@@ -140,7 +166,7 @@ namespace AutoccultistNS.Config
 
         public override string ToString()
         {
-            return $"OperationConfig(Name = {this.Name}, File = {this.FilePath}, Situation = {this.Situation})";
+            return $"OperationConfig(Name = {this.Name}, File = {FilesystemHelpers.GetRelativePath(this.FilePath, Autoccultist.AssemblyDirectory)}, Situation = {this.Situation})";
         }
 
         protected virtual string GetSituationId()
