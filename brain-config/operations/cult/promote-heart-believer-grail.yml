@@ -1,15 +1,6 @@
 name: Promote a Heart believer by invoking Grail
 situation: talk
 startingRecipe:
-  requireSlotCards: false
-  cardRequirements:
-    - oneOf:
-        - elementId: clovette_b
-        - elementId: dorothy_b
-        - elementId: leo_b
-        - aspects: { follower: 1, disciple: -1, heart: 2 }
-    - aspects: { society: 1, venerationgrail: 1 }
-    - aspects: { lore: 1, grail: 8 }
   slots:
     talk:
       aspects: { society: 1, venerationgrail: 1 }
@@ -22,6 +13,7 @@ startingRecipe:
     Ceremony:
       aspects: { lore: 1, grail: 8 }
     Trappings:
+      optional: true
       oneOf:
         - elementId: fascination
         - elementId: dread

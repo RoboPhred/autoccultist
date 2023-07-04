@@ -3,19 +3,19 @@ situation: work
 startingRecipe:
   slots:
     work:
-      allowedElementIds:
-        - gloverandglover_difficultbossa_job
-        - gloverandglover_difficultbossa_gone_job
+      oneOf:
+        - elementId: gloverandglover_difficultbossa_job
+        - elementId: gloverandglover_difficultbossa_gone_job
 ongoingRecipes:
   gloverandglover_difficultbossa_overtime_initial:
-    # Use it if available, but don't let it stop us working.
-    requireSlotCards: false
     slots:
       Attention:
+        # Use it if available, but don't let it stop us working.
+        optional: true
         elementId: reason
   gloverandglover_difficultbossa_overtime:
-    # Use it if available, but don't let it stop us working.
-    requireSlotCards: false
     slots:
       Attention:
+        # Use it if available, but don't let it stop us working.
+        optional: true
         elementId: reason

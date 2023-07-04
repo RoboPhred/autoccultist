@@ -60,103 +60,29 @@ imperatives:
         requireSlotCards: false
         cardRequirements:
           - aspects: { hq: 1 }
-          - aspects:
+          - aspects: &emprison-target
               follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+              romanticinterest: -1
+              exalted: -1
+              grail: -5
+              summoned: -1
         slots:
           talk:
             aspects: { hq: 1 }
           # Bookshop
-          Cellar:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Cellar: *emprison-target
           # Mithraeum
-          Chains:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Chains: *emprison-target
           # Hospital
-          Cell:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Cell: *emprison-target
           # Warehouse
-          Shed:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Shed: *emprison-target
           # Townhouse
-          Attic:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Attic: *emprison-target
           # Church
-          Vestry:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Vestry: *emprison-target
           # Temporary HQ
-          Cupboard:
-            aspects:
-              follower: 1
-              romanticinterest:
-                lessThan: 1
-              exalted:
-                lessThan: 1
-              grail:
-                lessThan: 5
-              summoned:
-                lessThan: 1
+          Cupboard: *emprison-target
 
   - name: Obtain Grail Influence from the Stag Door
     requirements:
@@ -205,9 +131,9 @@ imperatives:
             aspects: { hunter: 1 }
       ongoingRecipes:
         talktohunter:
-          requireSlotCards: false
           slots:
             Subject:
+              optional: true
               oneOf:
                 - aspects: { follower: 1, edge: 10 }
                 - aspects: { follower: 1, edge: 5 }

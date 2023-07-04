@@ -3,21 +3,21 @@ situation: work
 startingRecipe:
   slots:
     work:
-      allowedElementIds:
-        - gloverandglover_difficultbossa_job
-        - gloverandglover_difficultbossa_gone_job
+      oneOf:
+        - elementId: gloverandglover_difficultbossa_job
+        - elementId: gloverandglover_difficultbossa_gone_job
 ongoingRecipes:
   gloverandglover_difficultbossa_overtime_initial:
-    # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
-    # we don't have reason available.
-    requireSlotCards: false
     slots:
       Attention:
+        # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
+        # we don't have reason available.
+        optional: true
         elementId: reason
   gloverandglover_difficultbossa_overtime:
-    # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
-    # we don't have reason available.
-    requireSlotCards: false
     slots:
       Attention:
+        # Don't require reason to start, keeping the job is more important than satisfying the overtime check if
+        # we don't have reason available.
+        optional: true
         elementId: reason

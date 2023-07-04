@@ -197,6 +197,7 @@ motivations:
       # Need illumination for lore combination
       - get_rarefied_mind
     primaryGoals:
+      # FIXME: Need Vak
       # The Journal of Alessandro LaCroce (Fucine textbook, english version)
       - vaults/find-vaults-capital-strathcoyne
       # The Vanderschaaf Collection (vaultcontinent4) => The Geminiad (in Fucine, Rite of the Crow's Quenching), THE MAGUS VON... (Armaic textbook)
@@ -207,7 +208,7 @@ motivations:
       - vaults/find-vaults-eveningisles-geryk
       # Mysteries of Opening
       # Note: alternatively, any other eveningisles vaults (aside from geryk, whose output we use) can provide an f level lore,
-      # which we can use in a subversion chain to get the Mysteries of Opening.
+      # which we can use in a subversion chain to get the Mysteries of Opening (in Vak).
       - vaults/find-vaults-eveningisles-raven
 
   explore_vaults:
