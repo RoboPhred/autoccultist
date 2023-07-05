@@ -63,7 +63,7 @@ namespace AutoccultistNS.Brain
             return
                 from situation in state.Situations
                 where situation.State == StateEnum.Complete
-                where situation.IsAvailable
+                where situation.IsAvailable()
                 select situation;
         }
     }

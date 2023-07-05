@@ -60,20 +60,18 @@ namespace AutoccultistNS.Config
 
             // Note: Each motivation has a GetImpulses too, but we want to rearrange the primary and supporting goals.
             // For legacy reasons, we ignore goal.IsConditionMet
-            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () =>
-            {
-                var impulses = from motivation in this.GetCurrentMotivations(state)
-                               let primaryGoals = motivation.PrimaryGoals.Select(g => (g, 1))
-                               let secondaryGoals = motivation.SupportingGoals.Select(g => (g, 0))
-                               let goals = primaryGoals.Concat(secondaryGoals).OrderByDescending(x => x.Item2).Select(x => x.Item1)
-                               from goal in goals
-                               where !goal.IsSatisfied(state)
-                               from impulse in goal.GetImpulses(state)
-                               select impulse;
+            // FIXME: This would be a prime candidate for caching, except that some conditions rely explicitly on Resources in use,
+            // which are not reflected in the game state.  See TODO
+            var impulses = from motivation in this.GetCurrentMotivations(state)
+                           let primaryGoals = motivation.PrimaryGoals.Select(g => (g, 1))
+                           let secondaryGoals = motivation.SupportingGoals.Select(g => (g, 0))
+                           let goals = primaryGoals.Concat(secondaryGoals).OrderByDescending(x => x.Item2).Select(x => x.Item1)
+                           from goal in goals
+                           where !goal.IsSatisfied(state)
+                           from impulse in goal.GetImpulses(state)
+                           select impulse;
 
-                // Actualize the collection so the cache value can be enumerated multiple times without issue.
-                return impulses.ToArray();
-            });
+            return impulses;
         }
 
         /// <summary>

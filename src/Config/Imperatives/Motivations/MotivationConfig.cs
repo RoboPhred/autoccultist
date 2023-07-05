@@ -85,34 +85,28 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
-            // In practice, this is not used, as MotivationCollectionConfig implements its own sorting based on primary/supporting characteristics
-            // for all active motivations.
-            // For legacy reasons, we ignore goal,IsConditionMet
-            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () =>
+            // This uses the default implementation which checks IsSatisfied
+            if (!this.IsConditionMet(state))
             {
-                // This uses the default implementation which checks IsSatisfied
-                if (!this.IsConditionMet(state))
-                {
-                    return Enumerable.Empty<IImpulse>();
-                }
+                return Enumerable.Empty<IImpulse>();
+            }
 
-                var primaryImpulses =
-                    from goalEntry in this.PrimaryGoals
-                    let goal = goalEntry.Value
-                    where !goal.IsSatisfied(state)
-                    from impulse in goal.GetImpulses(state)
-                    select impulse;
+            var primaryImpulses =
+                from goalEntry in this.PrimaryGoals
+                let goal = goalEntry.Value
+                where !goal.IsSatisfied(state)
+                from impulse in goal.GetImpulses(state)
+                select impulse;
 
-                var supportingImpulses =
-                    from goalEntry in this.SupportingGoals
-                    let goal = goalEntry.Value
-                    where !goal.IsSatisfied(state)
-                    from impulse in goal.GetImpulses(state)
-                    select impulse;
+            var supportingImpulses =
+                from goalEntry in this.SupportingGoals
+                let goal = goalEntry.Value
+                where !goal.IsSatisfied(state)
+                from impulse in goal.GetImpulses(state)
+                select impulse;
 
-                // We must make this an array, as the cache might make it be enumerated several times.
-                return primaryImpulses.Concat(supportingImpulses).ToArray();
-            });
+            // We must make this an array, as the cache might make it be enumerated several times.
+            return primaryImpulses.Concat(supportingImpulses);
         }
     }
 }

@@ -189,6 +189,7 @@ namespace AutoccultistNS.Brain
         private static async void InvokeImpulsesLoop()
         {
             var lastHash = 0;
+            var activeCount = 0;
 
             while (true)
             {
@@ -221,6 +222,24 @@ namespace AutoccultistNS.Brain
                     // Note: Funnily enough, this makes the GetFirstReadyImpulse performance monitor show a higher average time since
                     // its called less but doing more work when it is called.
                     continue;
+                }
+
+                if (!isActive)
+                {
+                    activeCount = 0;
+                }
+                else
+                {
+                    activeCount++;
+
+                    if (activeCount > 100)
+                    {
+                        var deadlockCandidate = GetReadyImpulses().FirstOrDefault();
+                        Autoccultist.LogWarn($"NucleusAccumbens tried to run 100 impulses in a row.  This is likely an infinite loop.  Our current available impulse is {deadlockCandidate}");
+                        GameAPI.Notify("Autoccultist Deadlock", $"Autoccultist seems to be stuck in an infinite loop around {deadlockCandidate}.  Please check your configs.");
+                        MechanicalHeart.Stop();
+                        continue;
+                    }
                 }
 
                 lastHash = currentHash;
@@ -294,7 +313,7 @@ namespace AutoccultistNS.Brain
             isActive = true;
             if (pauseToken == null)
             {
-                pauseToken = GameAPI.Pause();
+                pauseToken = GameAPI.Pause("NucleusAccumbens Active");
             }
         }
 
@@ -434,6 +453,11 @@ namespace AutoccultistNS.Brain
             public IImpulse Impulse { get; set; }
 
             public int Index { get; set; }
+
+            public override string ToString()
+            {
+                return $"{this.Imperative} => {this.Impulse}";
+            }
         }
     }
 }

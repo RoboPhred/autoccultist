@@ -64,7 +64,9 @@ namespace AutoccultistNS.Config
             }
 
             // Goals tend to be near the top of the imperative stack, so this is a good place for caching.
-            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () => this.Imperatives.SelectMany(x => x.GetImpulses(state)).ToArray());
+            // FIXME: We cannot cache this because OperationConfigs rely on Resource constraints, which are not part of this cache.
+            return this.Imperatives.SelectMany(x => x.GetImpulses(state));
+            // return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () => this.Imperatives.SelectMany(x => x.GetImpulses(state)).ToArray());
         }
     }
 }

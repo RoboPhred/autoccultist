@@ -90,7 +90,7 @@ namespace AutoccultistNS.Config
                     return SituationConditionResult.ForFailure(situationId, "Situation not found.");
                 }
 
-                if (!situation.IsAvailable)
+                if (!situation.IsAvailable())
                 {
                     return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
                 }
