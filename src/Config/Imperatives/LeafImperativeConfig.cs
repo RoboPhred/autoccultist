@@ -70,25 +70,30 @@ namespace AutoccultistNS.Config
         /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)
         {
-            var baseCondition = base.IsConditionMet(state);
-            if (!baseCondition)
-            {
-                return baseCondition;
-            }
-
             return CacheUtils.Compute(this, nameof(this.IsConditionMet), state, () =>
             {
+                var baseCondition = base.IsConditionMet(state);
+                if (!baseCondition)
+                {
+                    return baseCondition;
+                }
+
+                ConditionResult operationResult = null;
                 var operation = this.Operation ?? this.Extends?.Operation;
                 if (operation != null)
                 {
-                    var operationState = operation.IsConditionMet(state);
-                    if (!operationState)
+                    operationResult = operation.IsConditionMet(state);
+                    if (!operationResult)
                     {
-                        return AddendedConditionResult.Addend(operationState, "Operation imperative cannot activate.");
+                        return AddendedConditionResult.Addend(operationResult, "Operation imperative cannot activate.");
+                    }
+                    else
+                    {
+                        operationResult = AddendedConditionResult.Addend(operationResult, "Operation imperative can activate.");
                     }
                 }
 
-                return ConditionResult.Success;
+                return CompoundConditionResult.ForSuccess((new[] { baseCondition, operationResult }).Where(x => x != null));
             });
         }
 

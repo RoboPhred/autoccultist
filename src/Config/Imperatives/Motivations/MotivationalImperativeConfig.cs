@@ -8,7 +8,6 @@ namespace AutoccultistNS.Config
 
     public class MotivationalImperativeConfig : ImperativeConfigBase
     {
-
         /// <summary>
         /// Gets or sets a list of motivations that will drive the execution of this arc.
         /// </summary>

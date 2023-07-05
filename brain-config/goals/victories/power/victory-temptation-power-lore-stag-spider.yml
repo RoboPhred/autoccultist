@@ -1,22 +1,24 @@
 name: Acquire the Stag Door, Spider Door, and prepare for the Formula Fissive
+
 requirements:
   cardSet:
     - elementId: waywhite
     - aspects: { desire: 1 }
-    - elementId: fragmentforge
-    - elementId: fragmentforge
-    - elementId: fragmentforgeb
-    - elementId: fragmentknock
-    - elementId: fragmentknockb
-    - elementId: fragmentlantern
-    - elementId: fragmentlantern
-    - elementId: fragmentlanternb
-    - elementId: fragmentheart
-    - elementId: fragmentmoth
-    - elementId: fragmentmoth
-    - elementId: fragmentmothb
-    - elementId: fragmentwinter
-    - elementId: fragmentwinter
+# FIXME: These requirements are for our starting conditions, but as we do lore transformations these will no longer be met, shutting off
+# our goal.  For legacy reasons, goal requirements are not actually used when determining if a goal can send impulses, so this hasn't really been a problem.
+#     - elementId: fragmentforge
+#     - elementId: fragmentforge
+#     - elementId: fragmentforgeb
+#     - elementId: fragmentknock
+#     - elementId: fragmentlantern
+#     - elementId: fragmentlantern
+#     - elementId: fragmentlanternb
+#     - elementId: fragmentheart
+#     - elementId: fragmentmoth
+#     - elementId: fragmentmoth
+#     - elementId: fragmentmothb
+#     - elementId: fragmentwinter
+#     - elementId: fragmentwinter
 completedWhen:
   allOf:
     - elementId: waystag_after

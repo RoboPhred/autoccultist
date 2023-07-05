@@ -56,8 +56,15 @@ namespace AutoccultistNS.Config
 
         public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
+            // For legacy reasons, Goals are active even if their requirements are not met.
+            // FIXME: See about removing this
+            if (this.IsSatisfied(state))
+            {
+                return Enumerable.Empty<IImpulse>();
+            }
+
             // Goals tend to be near the top of the imperative stack, so this is a good place for caching.
-            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () => base.GetImpulses(state).ToArray());
+            return CacheUtils.Compute(this, nameof(this.GetImpulses), state, () => this.Imperatives.SelectMany(x => x.GetImpulses(state)).ToArray());
         }
     }
 }

@@ -9,8 +9,8 @@ namespace AutoccultistNS
         /// Initializes a new instance of the <see cref="GeneralConditionResult"/> class.
         /// </summary>
         /// <param name="reason">The reason the condition failed.</param>
-        protected GeneralConditionResult(string reason)
-        : base(false)
+        protected GeneralConditionResult(string reason, bool result = false)
+        : base(result)
         {
             this.Reason = reason;
         }

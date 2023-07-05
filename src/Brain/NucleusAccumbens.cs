@@ -164,17 +164,11 @@ namespace AutoccultistNS.Brain
 
             var canActivate = ConditionResult.Trace(() => imperative.IsConditionMet(GameStateProvider.Current));
             sb.AppendFormat("{0} - Condition Met: {1}\n", prefix, canActivate.IsConditionMet);
-            if (!canActivate)
-            {
-                sb.AppendFormat("{0} - - Reason: {1}\n", prefix, canActivate.ToString());
-            }
+            sb.AppendFormat("{0} - - Reason: {1}\n", prefix, canActivate.ToString());
 
             var isSatisfied = ConditionResult.Trace(() => imperative.IsSatisfied(GameStateProvider.Current));
             sb.AppendFormat("{0} - Is Satisfied: {1}\n", prefix, isSatisfied.IsConditionMet);
-            if (!isSatisfied)
-            {
-                sb.AppendFormat("{0} - - Reason: {1}\n", prefix, isSatisfied.ToString());
-            }
+            sb.AppendFormat("{0} - - Reason: {1}\n", prefix, isSatisfied.ToString());
 
             sb.AppendFormat("{0} - Impulses:\n", prefix);
             foreach (var impulse in imperative.GetImpulses(GameStateProvider.Current))

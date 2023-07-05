@@ -33,31 +33,49 @@ namespace AutoccultistNS.Config
             {
                 if (this.IsSatisfied(state))
                 {
-                    return AddendedConditionResult.Addend(ConditionResult.Failure, "Imperative is already satisfied.");
+                    return AddendedConditionResult.Addend(ConditionResult.Failure, $"{this.GetType().Name} is already satisfied.");
                 }
 
                 var requirements = this.GetRequirements();
                 var forbidders = this.GetForbidders();
 
+                ConditionResult requirementsResult;
                 if (requirements != null)
                 {
                     var reqsMet = requirements.IsConditionMet(state);
                     if (!reqsMet)
                     {
-                        return AddendedConditionResult.Addend(reqsMet, "Imperative requirements not met.");
+                        return AddendedConditionResult.Addend(reqsMet, $"{this.GetType().Name} requirements not met.");
+                    }
+                    else
+                    {
+                        requirementsResult = AddendedConditionResult.Addend(reqsMet, $"{this.GetType().Name} requirements met");
                     }
                 }
+                else
+                {
+                    requirementsResult = AddendedConditionResult.Addend(ConditionResult.Success, $"{this.GetType().Name} has no requirements.");
+                }
 
+                ConditionResult forbiddersResult;
                 if (forbidders != null)
                 {
                     var forbidsMet = forbidders.IsConditionMet(state);
                     if (forbidsMet)
                     {
-                        return AddendedConditionResult.Addend(forbidsMet, "Imperative forbidders met.");
+                        return AddendedConditionResult.Addend(GameStateConditionResult.ForFailure(forbidders, forbidsMet), $"{this.GetType().Name} forbidders met.");
+                    }
+                    else
+                    {
+                        forbiddersResult = AddendedConditionResult.Addend(forbidsMet, $"{this.GetType().Name} forbidders not met.");
                     }
                 }
+                else
+                {
+                    forbiddersResult = AddendedConditionResult.Addend(ConditionResult.Success, $"{this.GetType().Name} has no forbidders.");
+                }
 
-                return ConditionResult.Success;
+                return CompoundConditionResult.ForSuccess(new[] { requirementsResult, forbiddersResult });
             });
         }
 

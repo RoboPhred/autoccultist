@@ -12,8 +12,8 @@ namespace AutoccultistNS
         /// Initializes a new instance of the <see cref="CompoundConditionResult"/> class.
         /// </summary>
         /// <param name="conditions">The conditions that failed.</param>
-        protected CompoundConditionResult(IReadOnlyCollection<ConditionResult> conditions)
-        : base($"None of the expected conditions succeeded: [{string.Join(", ", conditions.Select(f => f.ToString()))}]")
+        protected CompoundConditionResult(IReadOnlyCollection<ConditionResult> conditions, bool result)
+        : base($"{(result ? "The" : "None of the")} expected conditions succeeded: [{string.Join(", ", conditions.Select(f => f.ToString()))}]", result)
         {
             this.Conditions = conditions;
         }
@@ -30,10 +30,23 @@ namespace AutoccultistNS
         {
             if (ConditionResult.IsTracing)
             {
-                return new CompoundConditionResult(conditions.ToList());
+                return new CompoundConditionResult(conditions.ToList(), false);
             }
 
             return ConditionResult.Failure;
+        }
+
+        /// <summary>
+        /// Gets a condition result describing a compound failure.
+        /// </summary>
+        public static ConditionResult ForSuccess(IEnumerable<ConditionResult> conditions)
+        {
+            if (ConditionResult.IsTracing)
+            {
+                return new CompoundConditionResult(conditions.ToList(), true);
+            }
+
+            return ConditionResult.Success;
         }
     }
 }

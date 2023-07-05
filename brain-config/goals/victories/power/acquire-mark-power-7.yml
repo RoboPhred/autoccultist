@@ -1,7 +1,7 @@
 name: Achieve the Seventh Mark of Power
 requirements:
   allOf:
-    - elementId: ascensionpowerc
+    - elementId: ascensionpowerf
     - elementId: wayspider
     - elementId: waystag_after
     - elementId: ritefollowerconsumeinfluence
@@ -23,7 +23,6 @@ imperatives:
           value: 10
         # Don't occupy the Work Verb when we're ready to ascend.
         - allOf:
-            - elementId: ascensionpowerf
             - anyOf:
                 - elementId: spirit_forgee_edge
                 - elementId: pre.spirit_forgee_edge
@@ -32,10 +31,6 @@ imperatives:
     operation: !import /operations/work-skillhealth.yml
 
   - name: Get a prisoner
-    requirements:
-      allOf:
-        # Wait until we are ready
-        - elementId: ascensionpowerf
     forbidders:
       anyOf:
         - situation: work
@@ -57,10 +52,6 @@ imperatives:
             aspects: { follower: 1, mortal: 1 }
 
   - name: Enter the spider door
-    requirements:
-      allOf:
-        # Wait until we are ready
-        - elementId: ascensionpowerf
     forbidders:
       anyOf:
         - situation: work
@@ -103,8 +94,6 @@ imperatives:
     priority: goal
     forbidders:
       allOf:
-        # Stop when we are ready to ascend
-        - elementId: ascensionpowerf
         - aspects: { influence: 1, forge: 15 }
         - elementId: spirit_forgee_edge
         - situation: work
