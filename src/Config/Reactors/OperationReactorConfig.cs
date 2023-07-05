@@ -64,7 +64,7 @@ namespace AutoccultistNS.Config
                 return SituationConditionResult.ForFailure(situationId, "Situation not found.");
             }
 
-            if (!Resource.Of<ISituationState>().IsAvailable(situation))
+            if (!situation.IsAvailable)
             {
                 return SituationConditionResult.ForFailure(situationId, "Situation is already reserved.");
             }

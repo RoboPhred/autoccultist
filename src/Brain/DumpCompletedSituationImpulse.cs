@@ -60,11 +60,10 @@ namespace AutoccultistNS.Brain
 
         private IEnumerable<ISituationState> GetCompletedSituations(IGameState state)
         {
-            var situationResources = Resource.Of<ISituationState>();
             return
                 from situation in state.Situations
                 where situation.State == StateEnum.Complete
-                where situationResources.IsAvailable(situation)
+                where situation.IsAvailable
                 select situation;
         }
     }

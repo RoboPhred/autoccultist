@@ -77,6 +77,7 @@ namespace AutoccultistNS.Resources
 
         private IReadOnlyDictionary<IResourceConstraint<T>, T> GetConstrainedResources()
         {
+            // This logic is set up so that we can have ICardChoosers as constraints to ICardState, but currently we do not actually use it in this way.
             // FIXME: We should preserve the order returned by GetCandidates, as that is the priority order.
             // FIXME: This is largely the same logic as ICardChooserExtensions.ChooseAll.  This code can be made generic
             // and called from both places.

@@ -188,6 +188,16 @@ namespace AutoccultistNS.GameState.Impl
             }
         }
 
+        public bool IsAvailable
+        {
+            get
+            {
+                // Don't actually care about our version, but we check this for consistency.
+                this.VerifyAccess();
+                return Resources.Resource.Of<ISituationState>().IsAvailable(this);
+            }
+        }
+
         public override int GetHashCode()
         {
             return this.hashCode.Value;

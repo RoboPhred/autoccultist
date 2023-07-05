@@ -6,7 +6,7 @@ namespace AutoccultistNS.GameState
     /// <summary>
     /// Represents the state of a situation.
     /// </summary>
-    public interface ISituationState
+    public interface ISituationState : IResourceState
     {
         /// <summary>
         /// Gets the id of the situation.
