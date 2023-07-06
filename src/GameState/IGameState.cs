@@ -5,7 +5,7 @@ namespace AutoccultistNS.GameState
     /// <summary>
     /// Represents the current state of the game.
     /// </summary>
-    public interface IGameState
+    public interface IGameState : IContentHashable
     {
         /// <summary>
         /// Gets a collection of all cards known to the game.

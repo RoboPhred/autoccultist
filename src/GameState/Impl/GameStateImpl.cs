@@ -18,7 +18,6 @@ namespace AutoccultistNS.GameState.Impl
         private readonly IReadOnlyCollection<ISituationState> situations;
         private readonly IReadOnlyDictionary<string, int> memories;
         private readonly IPortalState mansus;
-        private readonly Lazy<int> hashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameStateImpl"/> class.
@@ -59,28 +58,6 @@ namespace AutoccultistNS.GameState.Impl
 
             this.memories = memories;
             this.mansus = mansus;
-
-            this.hashCode = new Lazy<int>(
-                () => PerfMonitor.Monitor(
-                    "GameStateImpl Hash",
-                    () =>
-                    {
-                        var hash = HashUtils.Hash(
-                            this.tabletopCards,
-                            this.enRouteCards,
-                            this.codexCards,
-                            this.situations,
-                            HashUtils.HashAllUnordered(this.memories.Select(x => $"{x.Key}={x.Value}")),
-                            this.mansus);
-
-                        if (hash != prevHash)
-                        {
-                            PerfMonitor.AddCount("GameStateImpl New Hash");
-                            prevHash = hash;
-                        }
-
-                        return hash;
-                    }));
         }
 
         /// <inheritdoc/>
@@ -153,9 +130,29 @@ namespace AutoccultistNS.GameState.Impl
             }
         }
 
-        public override int GetHashCode()
+        /// <inheritdoc/>
+        protected override int ComputeContentHash()
         {
-            return this.hashCode.Value;
+            return PerfMonitor.Monitor(
+                "GameStateImpl Hash",
+                () =>
+                {
+                    var hash = HashUtils.Hash(
+                        this.tabletopCards,
+                        this.enRouteCards,
+                        this.codexCards,
+                        this.situations,
+                        HashUtils.HashAllUnordered(this.memories.Select(x => $"{x.Key}={x.Value}")),
+                        this.mansus);
+
+                    if (hash != prevHash)
+                    {
+                        PerfMonitor.AddCount("GameStateImpl New Hash");
+                        prevHash = hash;
+                    }
+
+                    return hash;
+                });
         }
     }
 }

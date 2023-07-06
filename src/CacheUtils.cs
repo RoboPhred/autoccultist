@@ -41,7 +41,7 @@ namespace AutoccultistNS
                 cache.Add(key, data);
             }
 
-            var hashCode = input.GetHashCode();
+            var hashCode = HashUtils.ContentHash(input);
 
             if (data.InputHashCode != hashCode)
             {

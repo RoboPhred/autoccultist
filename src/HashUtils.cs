@@ -21,12 +21,12 @@ namespace AutoccultistNS
         {
             unchecked
             {
-                if (objects is IContentHashingEnumerable contentHasher)
+                if (objects is IContentHashable hashable)
                 {
-                    return contentHasher.GetUnorderedContentHash();
+                    return hashable.GetContentHash();
                 }
 
-                return HashAllUnordered(objects.Select(HashOrDefault));
+                return HashAllUnordered(objects.Select(ContentHash));
             }
         }
 
@@ -42,7 +42,7 @@ namespace AutoccultistNS
         {
             unchecked
             {
-                return HashAll(objects.Select(HashOrDefault));
+                return HashAll(objects.Select(ContentHash));
             }
         }
 
@@ -61,9 +61,27 @@ namespace AutoccultistNS
             }
         }
 
-        public static int HashOrDefault<T>(T obj)
+        public static int ContentHash<T>(T obj)
         {
-            return obj?.GetHashCode() ?? 0;
+            return ContentHash(obj);
+        }
+
+        public static int ContentHash(object obj)
+        {
+            unchecked
+            {
+                if (obj == null)
+                {
+                    return 0;
+                }
+
+                if (obj is IContentHashable hashable)
+                {
+                    return hashable.GetContentHash();
+                }
+
+                return obj.GetHashCode();
+            }
         }
     }
 }

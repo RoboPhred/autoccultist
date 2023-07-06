@@ -1,6 +1,5 @@
 namespace AutoccultistNS.GameState.Impl
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using SecretHistories.Tokens.Payloads;
@@ -9,10 +8,8 @@ namespace AutoccultistNS.GameState.Impl
     /// <summary>
     /// Implements <see cref="IPortalState"/>.
     /// </summary>
-    internal class PortalStateImpl : IPortalState
+    internal class PortalStateImpl : GameStateObject, IPortalState
     {
-        private readonly Lazy<int> hashCode;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PortalStateImpl"/> class.
         /// </summary>
@@ -26,7 +23,6 @@ namespace AutoccultistNS.GameState.Impl
                 this.DeckCards = new Dictionary<string, ICardState>();
                 this.FaceUpDeck = null;
                 this.FaceUpCard = null;
-                this.hashCode = new(() => 0);
                 return;
             }
 
@@ -40,7 +36,6 @@ namespace AutoccultistNS.GameState.Impl
                 this.DeckCards = new Dictionary<string, ICardState>();
                 this.FaceUpDeck = null;
                 this.FaceUpCard = null;
-                this.hashCode = new(() => 0);
                 return;
             }
 
@@ -72,12 +67,6 @@ namespace AutoccultistNS.GameState.Impl
                     this.FaceUpCard = null;
                 }
             }
-
-            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
-                this.State,
-                this.PortalId,
-                HashUtils.HashAllUnordered(this.DeckCards?.Select(x => x.Key + x.Value) ?? Enumerable.Empty<string>()),
-                this.OutputCard));
         }
 
         /// <inheritdoc/>
@@ -98,9 +87,13 @@ namespace AutoccultistNS.GameState.Impl
         /// <inheritdoc/>
         public ICardState OutputCard { get; }
 
-        public override int GetHashCode()
+        protected override int ComputeContentHash()
         {
-            return this.hashCode.Value;
+            return HashUtils.Hash(
+                this.State,
+                this.PortalId,
+                HashUtils.HashAllUnordered(this.DeckCards?.Select(x => x.Key + x.Value) ?? Enumerable.Empty<string>()),
+                this.OutputCard);
         }
 
         internal static IPortalState FromCurrentState()

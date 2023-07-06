@@ -20,7 +20,6 @@ namespace AutoccultistNS.GameState.Impl
         private readonly IReadOnlyCollection<ISituationSlot> recipeSlots;
         private readonly IReadOnlyCollection<ICardState> storedCards;
         private readonly IReadOnlyCollection<ICardState> outputCards;
-        private readonly Lazy<int> hashCode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationStateImpl"/> class.
@@ -78,17 +77,6 @@ namespace AutoccultistNS.GameState.Impl
             this.recipeSlots = new HashCalculatingCollection<ISituationSlot>(slots);
             this.storedCards = new HashCalculatingCollection<ICardState>(stored);
             this.outputCards = new HashCalculatingCollection<ICardState>(output);
-
-            // Like card state lifetime, we want to make recipe time remaining bust the cache less.
-            this.hashCode = new Lazy<int>(() => HashUtils.Hash(
-                this.situationId,
-                this.state,
-                this.isOccupied,
-                this.currentRecipe,
-                (int)Math.Round(this.recipeTimeRemaining ?? 0),
-                this.recipeSlots,
-                this.storedCards,
-                this.outputCards));
         }
 
         /// <inheritdoc/>
@@ -188,9 +176,17 @@ namespace AutoccultistNS.GameState.Impl
             }
         }
 
-        public override int GetHashCode()
+        protected override int ComputeContentHash()
         {
-            return this.hashCode.Value;
+            return HashUtils.Hash(
+                this.situationId,
+                this.state,
+                this.isOccupied,
+                this.currentRecipe,
+                (int)Math.Round(this.recipeTimeRemaining ?? 0),
+                this.recipeSlots,
+                this.storedCards,
+                this.outputCards);
         }
     }
 }

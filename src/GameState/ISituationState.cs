@@ -19,7 +19,7 @@ namespace AutoccultistNS.GameState
         StateEnum State { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the situation is busy performing a verb.
+        /// Gets a value indicating whether the situation is busy performing a recipe.
         /// </summary>
         bool IsOccupied { get; }
 

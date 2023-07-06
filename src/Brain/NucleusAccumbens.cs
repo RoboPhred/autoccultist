@@ -214,7 +214,7 @@ namespace AutoccultistNS.Brain
                     await MechanicalHeart.AwaitBeat(CancellationToken.None);
                 }
 
-                var currentHash = GameStateProvider.Current.GetHashCode();
+                var currentHash = GameStateProvider.Current.GetContentHash();
                 if (!isActive && currentHash == lastHash)
                 {
                     // Not doing anything and nothing has changed, continue.

@@ -1,6 +1,5 @@
 namespace AutoccultistNS.GameState.Impl
 {
-    using System;
     using System.Linq;
     using SecretHistories.Spheres;
 
@@ -8,8 +7,6 @@ namespace AutoccultistNS.GameState.Impl
     {
         private readonly string sphereId;
         private readonly ICardState card;
-        private readonly Lazy<int> hashCode;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationSlotImpl"/> class.
         /// </summary>
@@ -28,8 +25,6 @@ namespace AutoccultistNS.GameState.Impl
             {
                 this.card = null;
             }
-
-            this.hashCode = new Lazy<int>(() => HashUtils.Hash(this.sphereId, this.card));
         }
 
         public string SpecId
@@ -50,9 +45,9 @@ namespace AutoccultistNS.GameState.Impl
             }
         }
 
-        public override int GetHashCode()
+        protected override int ComputeContentHash()
         {
-            return this.hashCode.Value;
+            return HashUtils.Hash(this.sphereId, this.card);
         }
     }
 }

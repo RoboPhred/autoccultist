@@ -203,16 +203,16 @@ namespace AutoccultistNS.GameState.Impl
             }
         }
 
-        public override int GetHashCode()
-        {
-            return this.hashCode;
-        }
-
         /// <inheritdoc/>
         public ElementStack ToElementStack()
         {
             this.VerifyAccess();
             return this.consumed.Value;
+        }
+
+        protected override int ComputeContentHash()
+        {
+            return this.hashCode;
         }
 
         /// <summary>
