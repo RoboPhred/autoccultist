@@ -44,7 +44,7 @@ namespace AutoccultistNS.GUI
             foreach (var ex in Library.ParseErrors)
             {
                 var target = ex.GetInnermostFileException() ?? ex;
-                GUILayout.Label($"{FilesystemHelpers.GetRelativePath(target.FilePath, Autoccultist.AssemblyDirectory)}:{target.Start.Line}");
+                GUILayout.Label($"{FilesystemHelpers.GetRelativePath(target.FilePath, Autoccultist.AssemblyDirectory)}:{target.Start?.Line}");
                 GUILayout.Label(ex.GetInnermostMessage());
                 if (GUILayout.Button("Copy to clipboard"))
                 {

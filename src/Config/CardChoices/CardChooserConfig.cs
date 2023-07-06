@@ -197,6 +197,47 @@ namespace AutoccultistNS.Config
             {
                 throw new InvalidConfigException("Card choice must have an elementId, allowedElementIds, or aspects.");
             }
+
+            if (this.ElementId != null && !CompendiumUtils.IsValidElement(this.ElementId))
+            {
+                throw new InvalidConfigException($"Card choice elementId \"{this.ElementId}\" is not a valid element.");
+            }
+
+            if (this.AllowedElementIds != null)
+            {
+                var invalid = this.AllowedElementIds.FirstOrDefault(x => !CompendiumUtils.IsValidElement(x));
+                if (invalid != null)
+                {
+                    throw new InvalidConfigException($"Card choice allowedElementId \"{invalid}\" is not a valid element.");
+                }
+            }
+
+            if (this.ForbiddenElementIds != null)
+            {
+                var invalid = this.ForbiddenElementIds.FirstOrDefault(x => !CompendiumUtils.IsValidElement(x));
+                if (invalid != null)
+                {
+                    throw new InvalidConfigException($"Card choice forbiddenElementId \"{invalid}\" is not a valid element.");
+                }
+            }
+
+            if (this.Aspects != null)
+            {
+                var invalid = this.Aspects.Keys.FirstOrDefault(x => !CompendiumUtils.IsValidElement(x));
+                if (invalid != null)
+                {
+                    throw new InvalidConfigException($"Card choice aspect \"{invalid}\" is not a valid aspect.");
+                }
+            }
+
+            if (this.ForbiddenAspects != null)
+            {
+                var invalid = this.ForbiddenAspects.FirstOrDefault(x => !CompendiumUtils.IsValidElement(x));
+                if (invalid != null)
+                {
+                    throw new InvalidConfigException($"Card choice forbidden aspect \"{invalid}\" is not a valid aspect.");
+                }
+            }
         }
 
         /// <summary>

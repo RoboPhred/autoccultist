@@ -25,6 +25,16 @@ namespace AutoccultistNS.Yaml
             {
                 throw ex;
             }
+            catch (YamlException ex)
+            {
+                // Record extra information on our failure.
+                throw new YamlFileException(
+                    Deserializer.CurrentFilePath,
+                    ex.Start,
+                    ex.End,
+                    ex.Message,
+                    ex);
+            }
             catch (Exception ex)
             {
                 // Record extra information on our failure.

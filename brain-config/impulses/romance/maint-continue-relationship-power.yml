@@ -7,6 +7,7 @@ forbidders:
         - !import /conditions/illhealth-pending-30secs.yml
         - situation: rose
           storedCardsMatch:
+            # FIXME: This is a hidden aspect.  We should use something else.
             aspects: { follower_lustpower: 1 }
         - noneOf:
             - cardSet:

@@ -87,6 +87,12 @@ namespace AutoccultistNS.GameState.Impl
         /// <inheritdoc/>
         public ICardState OutputCard { get; }
 
+        internal static IPortalState FromCurrentState()
+        {
+            var ingress = GameAPI.GetActiveIngress();
+            return new PortalStateImpl(ingress);
+        }
+
         protected override int ComputeContentHash()
         {
             return HashUtils.Hash(
@@ -94,12 +100,6 @@ namespace AutoccultistNS.GameState.Impl
                 this.PortalId,
                 HashUtils.HashAllUnordered(this.DeckCards?.Select(x => x.Key + x.Value) ?? Enumerable.Empty<string>()),
                 this.OutputCard);
-        }
-
-        internal static IPortalState FromCurrentState()
-        {
-            var ingress = GameAPI.GetActiveIngress();
-            return new PortalStateImpl(ingress);
         }
     }
 }

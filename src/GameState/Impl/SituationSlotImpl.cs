@@ -7,6 +7,7 @@ namespace AutoccultistNS.GameState.Impl
     {
         private readonly string sphereId;
         private readonly ICardState card;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationSlotImpl"/> class.
         /// </summary>

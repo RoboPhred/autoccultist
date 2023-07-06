@@ -93,7 +93,7 @@ namespace AutoccultistNS.Config
                     }
                 }
 
-                return CompoundConditionResult.ForSuccess((new[] { baseCondition, operationResult }).Where(x => x != null));
+                return CompoundConditionResult.ForSuccess(new[] { baseCondition, operationResult }.Where(x => x != null));
             });
         }
 

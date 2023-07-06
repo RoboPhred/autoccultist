@@ -21,11 +21,6 @@ namespace AutoccultistNS
         {
             unchecked
             {
-                if (objects is IContentHashable hashable)
-                {
-                    return hashable.GetContentHash();
-                }
-
                 return HashAllUnordered(objects.Select(ContentHash));
             }
         }
@@ -63,7 +58,7 @@ namespace AutoccultistNS
 
         public static int ContentHash<T>(T obj)
         {
-            return ContentHash(obj);
+            return ContentHash((object)obj);
         }
 
         public static int ContentHash(object obj)
