@@ -76,7 +76,7 @@ namespace AutoccultistNS.UI
         public void Attach(Situation situation)
         {
             this.situation = situation;
-            this.Title = $"{situation.VerbId} Automations";
+            this.Title = $"{situation.VerbId.Capitalize()} Automations";
         }
 
         public void ContentsDisplayChanged(ContentsDisplayChangedArgs args)
@@ -89,6 +89,9 @@ namespace AutoccultistNS.UI
 
         private void BuildWindow()
         {
+            // TODO: A lot of these RectTransform properties are interdependent.
+            // What do we need to set, what can we ignore?
+
             var rectTransform = this.gameObject.AddComponent<RectTransform>();
             rectTransform.anchorMin = new Vector2(.5f, .5f);
             rectTransform.anchorMax = new Vector2(.5f, .5f);
@@ -195,37 +198,22 @@ namespace AutoccultistNS.UI
             titleText.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
             titleText.font = ResourceHack.FindFont("Text_Philosopher");
 
-            // var thingThatTakesUpSpace = new GameObject("ThingThatTakesUpSpace");
-            // thingThatTakesUpSpace.transform.SetParent(this.gameObject.transform, false);
-            // thingThatTakesUpSpace.AddComponent<CanvasRenderer>();
-            // var thingThatTakesUpSpaceRt = thingThatTakesUpSpace.AddComponent<RectTransform>();
-            // thingThatTakesUpSpaceRt.anchoredPosition = new Vector2(0, 0);
-            // thingThatTakesUpSpaceRt.anchorMax = new Vector2(1, 1);
-            // thingThatTakesUpSpaceRt.anchorMin = new Vector2(0, 0);
-            // thingThatTakesUpSpaceRt.offsetMax = new Vector2(0, 0);
-            // thingThatTakesUpSpaceRt.offsetMin = new Vector2(0, 0);
-            // thingThatTakesUpSpaceRt.pivot = new Vector2(0.5f, 0.5f);
-            // thingThatTakesUpSpaceRt.sizeDelta = new Vector2(400, 700);
-            // var thingThatTakesUpSpaceLe = thingThatTakesUpSpace.AddComponent<LayoutElement>();
-            // thingThatTakesUpSpaceLe.minHeight = 400;
-            // thingThatTakesUpSpaceLe.minWidth = 700;
-
-
-            // var testVisual = new GameObject();
-            // testVisual.transform.SetParent(this.gameObject.transform, false);
-
-            // var sprite = ResourceHack.FindSprite("situation_completions_badge");
-            // if (sprite == null)
-            // {
-            //     NoonUtility.LogWarning($"Could not find sprite situation_completions_badge");
-            //     return;
-            // }
-
-            // var rect = testVisual.AddComponent<RectTransform>();
-            // rect.sizeDelta = new Vector2(200, 200);
-
-            // var image = testVisual.AddComponent<Image>();
-            // image.sprite = sprite;
+            var closeButton = new GameObject("CloseButton");
+            closeButton.transform.SetParent(this.gameObject.transform, false);
+            closeButton.AddComponent<CanvasRenderer>();
+            var closeButtonRt = closeButton.AddComponent<RectTransform>();
+            closeButtonRt.anchoredPosition = new Vector2(-25, -25);
+            closeButtonRt.anchorMax = new Vector2(1, 1);
+            closeButtonRt.anchorMin = new Vector2(1, 1);
+            closeButtonRt.offsetMax = new Vector2(-13, -13);
+            closeButtonRt.offsetMin = new Vector2(-37, -37);
+            closeButtonRt.sizeDelta = new Vector2(24, 24);
+            var closeButtonImg = closeButton.AddComponent<Image>();
+            closeButtonImg.sprite = ResourceHack.FindSprite("icon_close");
+            var button = closeButton.AddComponent<Button>();
+            var soundTrigger = closeButton.AddComponent<ButtonSoundTrigger>();
+            Reflection.SetPrivateField(soundTrigger, "soundFXName", "UIBUttonClose");
+            button.onClick.AddListener(this.Close);
         }
     }
 }
