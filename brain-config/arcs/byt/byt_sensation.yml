@@ -154,6 +154,7 @@ motivations:
       - !import /goals/hq/move-hq-library.yml
     supportingGoals:
       - !import /goals/survive.yml
+      - !import /goals/romance/maintain-relationships.yml
       - !import /goals/glover/work-glover.yml
       - !import /goals/cult/recruit-away-influences.yml
       - !import /goals/consume-books-lore-waitmorland.yml

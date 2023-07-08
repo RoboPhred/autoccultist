@@ -1,6 +1,7 @@
 name: Maintain a relationship based on Blood
 situation: rose
 targetOngoing: true
+startCondition: currentRecipeSatisfied
 ongoingRecipes:
   L_continuerose_risen:
     slots:

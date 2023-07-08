@@ -1,6 +1,7 @@
 name: Maintain a relationship based on Sensation
 situation: rose
 targetOngoing: true
+startCondition: currentRecipeSatisfied
 ongoingRecipes:
   L_continuerose_sensation:
     slots:
