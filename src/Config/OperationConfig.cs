@@ -61,6 +61,12 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets a value indicating whether this operation should target an ongoing situation.
         /// </summary>
+        /// <remarks>
+        /// Setting this to true will gate the operation start behind
+        /// having a solution to the current recipe of the ongoing situation.
+        /// This can be bypassed with <see cref="StartCondition"/> <see cref="OperationStartCondition.IgnoreRecipes"/>, although
+        /// this will also bypass all card requirements.
+        /// </remarks>
         public bool? TargetOngoing { get; set; }
 
         /// <inheritdoc/>
@@ -100,12 +106,18 @@ namespace AutoccultistNS.Config
 
                 if (targetOngoing != situation.IsOccupied)
                 {
-                    return SituationConditionResult.ForFailure(situationId, $"Situation is {(situation.IsOccupied ? "ongoing" : "idle")}.");
+                    return SituationConditionResult.ForFailure(situationId, $"Situation is {(situation.IsOccupied ? "occupied" : "idle")}.");
                 }
 
                 if (startCondition == OperationStartCondition.IgnoreRecipes)
                 {
                     return ConditionResult.Success;
+                }
+
+                // Special condition for targetOngoing: We must have a recipe for the current ongoing verb.
+                if (targetOngoing && this.GetRecipeSolution(situation, state) == null)
+                {
+                    return SituationConditionResult.ForFailure(situationId, $"Situation is ongoing but we do not have a solution to its current recipe.");
                 }
 
                 var startingRecipe = this.GetStartingRecipe();
@@ -128,13 +140,12 @@ namespace AutoccultistNS.Config
                             select choice);
                     }
 
+                    // Note: we do not check conditional recipes, as they are often overlapping cases or target nonoverlapping conditions.
                     requiredCards.ToArray().ChooseAll(state.TabletopCards, state, out var unsatisfiedChoice);
                     if (unsatisfiedChoice != null)
                     {
                         return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChoice), $"when ensuring all recipes can start");
                     }
-
-                    // Note: we do not check conditional recipes, as they are often overlapping cases or target nonoverlapping conditions.
                 }
                 else if (startCondition == OperationStartCondition.CurrentRecipeSatisfied)
                 {

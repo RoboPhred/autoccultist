@@ -8,6 +8,7 @@ using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
 using AutoccultistNS.Resources;
+using AutoccultistNS.UI;
 using AutoccultistNS.Yaml;
 using SecretHistories.Services;
 using SecretHistories.UI;
@@ -117,6 +118,8 @@ public class Autoccultist : MonoBehaviour
         // Run initializations inside a sync context to capture created threads.
         AutoccultistSettings.Initialize();
         GameAPI.Initialize();
+
+        SituationManifestationUIManager.Initialize();
 
         // The order is important for these initializers, so they take subscriptions to MechanicalHeart.OnBeat in the right order.
         NucleusAccumbens.Initialize();
