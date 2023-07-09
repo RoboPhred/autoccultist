@@ -8,6 +8,7 @@ namespace AutoccultistNS
             {
                 return value;
             }
+
             return char.ToUpper(value[0]) + value.Substring(1);
         }
     }

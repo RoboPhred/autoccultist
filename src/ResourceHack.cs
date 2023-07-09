@@ -7,13 +7,13 @@ namespace AutoccultistNS
 
     public static class ResourceHack
     {
-        private static readonly Dictionary<string, Material> materialCache = new();
-        private static readonly Dictionary<string, TMP_FontAsset> fontCache = new();
-        private static readonly Dictionary<string, Sprite> spriteCache = new();
+        private static readonly Dictionary<string, Material> MaterialCache = new();
+        private static readonly Dictionary<string, TMP_FontAsset> FontCache = new();
+        private static readonly Dictionary<string, Sprite> SpriteCache = new();
 
         public static Material FindMaterial(string name)
         {
-            if (materialCache.TryGetValue(name, out var material))
+            if (MaterialCache.TryGetValue(name, out var material))
             {
                 return material;
             }
@@ -25,13 +25,13 @@ namespace AutoccultistNS
                 return null;
             }
 
-            materialCache[name] = material;
+            MaterialCache[name] = material;
             return material;
         }
 
         public static TMP_FontAsset FindFont(string name)
         {
-            if (fontCache.TryGetValue(name, out var font))
+            if (FontCache.TryGetValue(name, out var font))
             {
                 return font;
             }
@@ -43,13 +43,13 @@ namespace AutoccultistNS
                 return null;
             }
 
-            fontCache[name] = font;
+            FontCache[name] = font;
             return font;
         }
 
         public static Sprite FindSprite(string name)
         {
-            if (spriteCache.TryGetValue(name, out var sprite))
+            if (SpriteCache.TryGetValue(name, out var sprite))
             {
                 return sprite;
             }
@@ -61,7 +61,7 @@ namespace AutoccultistNS
                 return null;
             }
 
-            spriteCache[name] = sprite;
+            SpriteCache[name] = sprite;
             return sprite;
         }
     }
