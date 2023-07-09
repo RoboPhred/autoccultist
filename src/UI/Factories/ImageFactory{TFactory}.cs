@@ -3,7 +3,7 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class ImageFactory<TFactory> : LayoutElementFactory<TFactory>
+    public class ImageFactory<TFactory> : SizingElementFactory<TFactory>
         where TFactory : ImageFactory<TFactory>
     {
         private readonly Image image;
@@ -11,7 +11,7 @@ namespace AutoccultistNS.UI
         public ImageFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.image = this.gameObject.GetOrAddComponent<Image>();
+            this.image = this.GameObject.GetOrAddComponent<Image>();
         }
 
         public TFactory Sprite(string resourceName)

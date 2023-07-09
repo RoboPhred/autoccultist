@@ -3,14 +3,14 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class ImageFactory : LayoutElementFactory<ImageFactory>
+    public class ImageFactory : SizingElementFactory<ImageFactory>
     {
         private readonly Image image;
 
         public ImageFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.image = this.gameObject.GetOrAddComponent<Image>();
+            this.image = this.GameObject.GetOrAddComponent<Image>();
         }
 
         public ImageFactory Sprite(string resourceName)

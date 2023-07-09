@@ -11,8 +11,8 @@ namespace AutoccultistNS.UI
         public IconButtonFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.button = this.gameObject.GetOrAddComponent<Button>();
-            this.soundTrigger = this.gameObject.GetOrAddComponent<ButtonSoundTrigger>();
+            this.button = this.GameObject.GetOrAddComponent<Button>();
+            this.soundTrigger = this.GameObject.GetOrAddComponent<ButtonSoundTrigger>();
         }
 
         public IconButtonFactory ClickSound(string soundEffect)

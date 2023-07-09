@@ -2,7 +2,6 @@ namespace AutoccultistNS.UI
 {
     using System;
     using System.Linq;
-    using AutoccultistNS.Brain;
     using SecretHistories.Abstract;
     using SecretHistories.Entities;
     using SecretHistories.Events;
@@ -49,7 +48,6 @@ namespace AutoccultistNS.UI
             gameObject.transform.SetParent(windowSphere.transform, false);
 
             var window = gameObject.AddComponent<SituationAutomationWindow>();
-            NoonUtility.LogWarning($"Creating window {name}.  Our rect transform parent is {window.GetComponentInParent<RectTransform>()}");
             window.BuildWindow();
 
             return window;
@@ -97,18 +95,32 @@ namespace AutoccultistNS.UI
         {
             UIFactories.CreateScrollRect("ScrollRect", this.gameObject.transform)
                 .Anchor(0, -50)
-                .AnchorRelativeToParent(0, 1, 1, 0)
-                // Note: This bottom should be 52 to coincide with our BG_Body, but that overlaps us with the footer.
-                .Offset(0, -50, 0, 77)
+                .Left(0, 0)
+                .Top(1, -50)
+                .Right(1, 0)
+                .Bottom(0, 77)
                 .Vertical()
                 .AddContent(
                     transform =>
                     {
-                        UIFactories.CreateText("DumpText", transform)
-                        .Pivot(0, 0)
-                        .FontSize(16)
-                        .Text(string.Join("\n", Enumerable.Repeat("Testing", 50)))
-                        .Build();
+                        UIFactories.CreateVeritcalLayoutGroup("ScrollContent", transform)
+                            .ChildControlHeight(true)
+                            .ChildControlWidth(true)
+                            .Padding(15)
+                            .AddContent(transform =>
+                            {
+                                UIFactories.CreateText("DumpText", transform)
+                                    .Pivot(0, 0)
+                                    .FontSize(20)
+                                    .Text(string.Join("\n", Enumerable.Repeat("Testing", 50)))
+                                    .Build();
+                                // FIXME: Button is overlapping text.
+                                UIFactories.CreateTextButton("TestButton", transform)
+                                    .Text("Test")
+                                    .OnClick(() => GameAPI.Notify("Test", "Test button"))
+                                    .Build();
+                            })
+                            .Build();
                     })
                 .Build();
         }
@@ -123,7 +135,7 @@ namespace AutoccultistNS.UI
                 .AnchorRelativeToParent(.5f, .5f, .5f, .5f)
                 .Size(700, 420)
                 .Build();
-            UIFactories.AddLayoutElement(this.gameObject)
+            UIFactories.AddSizingElement(this.gameObject)
                 .MinWidth(650)
                 .MinHeight(600)
                 .Build();

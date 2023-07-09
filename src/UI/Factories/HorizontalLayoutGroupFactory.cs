@@ -4,82 +4,81 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class VerticalLayoutGroupFactory : SizingElementFactory<VerticalLayoutGroupFactory>
+    public class HorizontalLayoutGroupFactory : SizingElementFactory<HorizontalLayoutGroupFactory>
     {
-        private readonly VerticalLayoutGroup layoutGroup;
+        private readonly HorizontalLayoutGroup layoutGroup;
 
-        public VerticalLayoutGroupFactory(GameObject gameObject)
+        public HorizontalLayoutGroupFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.layoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            this.layoutGroup = this.GameObject.GetOrAddComponent<HorizontalLayoutGroup>();
         }
 
-        public VerticalLayoutGroupFactory ChildControlHeight(bool value)
+        public HorizontalLayoutGroupFactory ChildControlHeight(bool value)
         {
             this.layoutGroup.childControlHeight = value;
             return this;
         }
 
-        public VerticalLayoutGroupFactory ChildControlWidth(bool value)
+        public HorizontalLayoutGroupFactory ChildControlWidth(bool value)
         {
             this.layoutGroup.childControlWidth = value;
             return this;
         }
 
-        public VerticalLayoutGroupFactory ChildForceExpandHeight(bool value)
+        public HorizontalLayoutGroupFactory ChildForceExpandHeight(bool value)
         {
             this.layoutGroup.childForceExpandHeight = value;
             return this;
         }
 
-        public VerticalLayoutGroupFactory ChildForceExpandWidth(bool value)
+        public HorizontalLayoutGroupFactory ChildForceExpandWidth(bool value)
         {
             this.layoutGroup.childForceExpandWidth = value;
             return this;
         }
-
-        public VerticalLayoutGroupFactory Padding(int left, int top, int right, int bottom)
+        public HorizontalLayoutGroupFactory Padding(int left, int top, int right, int bottom)
         {
             this.layoutGroup.padding = new RectOffset(left, right, top, bottom);
             return this;
         }
 
-        public VerticalLayoutGroupFactory Padding(int x, int y)
+        public HorizontalLayoutGroupFactory Padding(int x, int y)
         {
             this.layoutGroup.padding = new RectOffset(x, x, y, y);
             return this;
         }
 
-        public VerticalLayoutGroupFactory Padding(int value)
+        public HorizontalLayoutGroupFactory Padding(int value)
         {
             this.layoutGroup.padding = new RectOffset(value, value, value, value);
             return this;
         }
 
-        public VerticalLayoutGroupFactory AddContent(Action<Transform> contentFactory)
+        public HorizontalLayoutGroupFactory AddContent(Action<Transform> contentFactory)
         {
             contentFactory(this.GameObject.transform);
             return this;
         }
 
-        public VerticalLayoutGroupFactory AddContentCentered(Action<Transform> contentFactory)
+        public HorizontalLayoutGroupFactory AddContentCentered(Action<Transform> contentFactory)
         {
-            var leftSpacer = new GameObject("TopSpacer");
+            var leftSpacer = new GameObject("LeftSpacer");
             leftSpacer.transform.SetParent(this.GameObject.transform, false);
             var leftSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            leftSpacerLayout.flexibleHeight = 1;
+            leftSpacerLayout.flexibleWidth = 1;
 
             contentFactory(this.GameObject.transform);
 
-            var bottomSpacer = new GameObject("BottomSpacer");
-            bottomSpacer.transform.SetParent(this.GameObject.transform, false);
+            var rightSpacer = new GameObject("RightSpacer");
+            rightSpacer.transform.SetParent(this.GameObject.transform, false);
             var rightSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            rightSpacerLayout.flexibleHeight = 1;
+            rightSpacerLayout.flexibleWidth = 1;
 
             return this;
         }
 
-        public new VerticalLayoutGroup Build()
+        public new HorizontalLayoutGroup Build()
         {
             return this.layoutGroup;
         }

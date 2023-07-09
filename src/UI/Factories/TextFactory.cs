@@ -3,14 +3,14 @@ namespace AutoccultistNS.UI
     using TMPro;
     using UnityEngine;
 
-    public class TextFactory : LayoutElementFactory<TextFactory>
+    public class TextFactory : SizingElementFactory<TextFactory>
     {
         private readonly TextMeshProUGUI text;
 
         public TextFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.text = this.gameObject.GetOrAddComponent<TextMeshProUGUI>();
+            this.text = this.GameObject.GetOrAddComponent<TextMeshProUGUI>();
             this.text.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
             this.text.font = ResourceHack.FindFont("Text_Philosopher");
         }

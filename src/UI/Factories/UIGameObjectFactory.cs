@@ -5,17 +5,17 @@ namespace AutoccultistNS.UI
     public class UIGameObjectFactory<TFactory>
         where TFactory : UIGameObjectFactory<TFactory>
     {
-        protected readonly GameObject gameObject;
-
         public UIGameObjectFactory(GameObject target)
         {
-            this.gameObject = target;
-            this.gameObject.GetOrAddComponent<CanvasRenderer>();
+            this.GameObject = target;
+            this.GameObject.GetOrAddComponent<CanvasRenderer>();
         }
+
+        protected GameObject GameObject { get; private set; }
 
         public GameObject Build()
         {
-            return this.gameObject;
+            return this.GameObject;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class ScrollRectFactory : LayoutElementFactory<ScrollRectFactory>
+    public class ScrollRectFactory : SizingElementFactory<ScrollRectFactory>
     {
         private readonly ScrollRect scrollRect;
 
@@ -15,7 +15,7 @@ namespace AutoccultistNS.UI
         public ScrollRectFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.scrollRect = this.gameObject.GetOrAddComponent<ScrollRect>();
+            this.scrollRect = this.GameObject.GetOrAddComponent<ScrollRect>();
             this.scrollRect.movementType = ScrollRect.MovementType.Elastic;
             this.scrollRect.horizontal = false;
             this.scrollRect.vertical = false;
@@ -24,7 +24,7 @@ namespace AutoccultistNS.UI
             var viewport = new GameObject("Viewport");
             var viewportRt = viewport.AddComponent<RectTransform>();
             this.scrollRect.viewport = viewportRt;
-            viewportRt.SetParent(this.gameObject.transform, false);
+            viewportRt.SetParent(this.GameObject.transform, false);
             viewportRt.anchoredPosition = new Vector2(0, 0);
             viewportRt.anchorMin = new Vector2(0, 0);
             viewportRt.anchorMax = new Vector2(1, 1);

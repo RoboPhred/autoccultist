@@ -10,7 +10,7 @@ namespace AutoccultistNS.UI
         public RectTransformFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.rectTransform = this.gameObject.GetOrAddComponent<RectTransform>();
+            this.rectTransform = this.GameObject.GetOrAddComponent<RectTransform>();
             this.rectTransform.anchorMin = Vector2.zero;
             this.rectTransform.anchorMax = Vector2.one;
             this.rectTransform.offsetMin = Vector2.zero;
