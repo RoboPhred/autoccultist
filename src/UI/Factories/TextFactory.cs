@@ -10,7 +10,7 @@ namespace AutoccultistNS.UI
         public TextFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.text = this.gameObject.AddComponent<TextMeshProUGUI>();
+            this.text = this.gameObject.GetOrAddComponent<TextMeshProUGUI>();
             this.text.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
             this.text.font = ResourceHack.FindFont("Text_Philosopher");
         }
@@ -38,7 +38,7 @@ namespace AutoccultistNS.UI
         public TextFactory FontSize(float size)
         {
             this.text.fontSize = size;
-            this.text.enableAutoSizing = this.text.fontSizeMin != this.text.fontSizeMax;
+            this.text.enableAutoSizing = false;
             return this;
         }
 

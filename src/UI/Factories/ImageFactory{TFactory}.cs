@@ -11,7 +11,7 @@ namespace AutoccultistNS.UI
         public ImageFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.image = this.gameObject.AddComponent<Image>();
+            this.image = this.gameObject.GetOrAddComponent<Image>();
         }
 
         public TFactory Sprite(string resourceName)

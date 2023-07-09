@@ -10,7 +10,11 @@ namespace AutoccultistNS.UI
         public RectTransformFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.rectTransform = this.gameObject.AddComponent<RectTransform>();
+            this.rectTransform = this.gameObject.GetOrAddComponent<RectTransform>();
+            this.rectTransform.anchorMin = Vector2.zero;
+            this.rectTransform.anchorMax = Vector2.one;
+            this.rectTransform.offsetMin = Vector2.zero;
+            this.rectTransform.offsetMax = Vector2.zero;
         }
 
         public TFactory Anchor(Vector2 anchor)
@@ -22,6 +26,34 @@ namespace AutoccultistNS.UI
         public TFactory Anchor(float x, float y)
         {
             this.rectTransform.anchoredPosition = new Vector2(x, y);
+            return this as TFactory;
+        }
+
+        public TFactory Left(float anchor, float offset)
+        {
+            this.rectTransform.anchorMin = new Vector2(anchor, this.rectTransform.anchorMin.y);
+            this.rectTransform.offsetMin = new Vector2(offset, this.rectTransform.offsetMin.y);
+            return this as TFactory;
+        }
+
+        public TFactory Right(float anchor, float offset)
+        {
+            this.rectTransform.anchorMax = new Vector2(anchor, this.rectTransform.anchorMax.y);
+            this.rectTransform.offsetMax = new Vector2(offset, this.rectTransform.offsetMax.y);
+            return this as TFactory;
+        }
+
+        public TFactory Top(float anchor, float offset)
+        {
+            this.rectTransform.anchorMax = new Vector2(this.rectTransform.anchorMax.x, anchor);
+            this.rectTransform.offsetMax = new Vector2(this.rectTransform.offsetMax.x, offset);
+            return this as TFactory;
+        }
+
+        public TFactory Bottom(float anchor, float offset)
+        {
+            this.rectTransform.anchorMin = new Vector2(this.rectTransform.anchorMin.x, anchor);
+            this.rectTransform.offsetMin = new Vector2(this.rectTransform.offsetMin.x, offset);
             return this as TFactory;
         }
 

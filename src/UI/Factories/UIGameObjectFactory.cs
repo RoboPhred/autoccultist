@@ -10,7 +10,7 @@ namespace AutoccultistNS.UI
         public UIGameObjectFactory(GameObject target)
         {
             this.gameObject = target;
-            this.gameObject.AddComponent<CanvasRenderer>();
+            this.gameObject.GetOrAddComponent<CanvasRenderer>();
         }
 
         public GameObject Build()

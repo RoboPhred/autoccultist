@@ -15,7 +15,7 @@ namespace AutoccultistNS.UI
         public ScrollRectFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.scrollRect = this.gameObject.AddComponent<ScrollRect>();
+            this.scrollRect = this.gameObject.GetOrAddComponent<ScrollRect>();
             this.scrollRect.movementType = ScrollRect.MovementType.Elastic;
             this.scrollRect.horizontal = false;
             this.scrollRect.vertical = false;

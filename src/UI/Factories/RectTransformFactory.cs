@@ -9,7 +9,7 @@ namespace AutoccultistNS.UI
         public RectTransformFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.rectTransform = this.gameObject.AddComponent<RectTransform>();
+            this.rectTransform = this.gameObject.GetOrAddComponent<RectTransform>();
         }
 
         public RectTransformFactory Anchor(Vector2 anchor)

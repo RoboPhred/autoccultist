@@ -10,7 +10,7 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroupFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.layoutGroup = this.gameObject.AddComponent<VerticalLayoutGroup>();
+            this.layoutGroup = this.gameObject.GetOrAddComponent<VerticalLayoutGroup>();
         }
 
         public VerticalLayoutGroupFactory ChildControlHeight(bool value)

@@ -10,7 +10,7 @@ namespace AutoccultistNS.UI
         public LayoutElementFactory(GameObject gameObject)
             : base(gameObject)
         {
-            this.layoutElement = this.gameObject.AddComponent<LayoutElement>();
+            this.layoutElement = this.gameObject.GetOrAddComponent<LayoutElement>();
         }
 
         public LayoutElementFactory MinWidth(float width)
