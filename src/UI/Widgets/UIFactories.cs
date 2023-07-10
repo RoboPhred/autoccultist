@@ -14,6 +14,18 @@ namespace AutoccultistNS.UI
             return new SizingLayoutWidget(gameObject);
         }
 
+        public static SizingLayoutWidget CreateSizingLayout(string key, GameObject parent)
+        {
+            return CreateSizingLayout(key, parent.transform);
+        }
+
+        public static SizingLayoutWidget CreateSizingLayout(string key, Transform parent)
+        {
+            var gameObject = new GameObject(key);
+            gameObject.transform.SetParent(parent, false);
+            return new SizingLayoutWidget(gameObject);
+        }
+
         public static ImageWidget CreateImage(string key, GameObject parent)
         {
             return CreateImage(key, parent.transform);

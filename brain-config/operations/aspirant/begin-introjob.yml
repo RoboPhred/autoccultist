@@ -1,0 +1,6 @@
+name: Begin the Apsirant's intro job
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: introjob

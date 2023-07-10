@@ -4,8 +4,8 @@ namespace AutoccultistNS.Config
     using System.Linq;
     using System.Text;
     using AutoccultistNS.Brain;
-    using AutoccultistNS.GameState;
     using AutoccultistNS.GameResources;
+    using AutoccultistNS.GameState;
     using SecretHistories.Enums;
     using YamlDotNet.Core;
 

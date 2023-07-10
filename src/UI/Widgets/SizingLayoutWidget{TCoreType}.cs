@@ -26,6 +26,8 @@ namespace AutoccultistNS.UI
                 if (this.layoutElement == null)
                 {
                     this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
+                    this.layoutElement.flexibleWidth = -1;
+                    this.layoutElement.flexibleHeight = -1;
                     this.LayoutElement.minHeight = -1;
                     this.LayoutElement.minWidth = -1;
                     this.LayoutElement.preferredHeight = -1;
@@ -69,15 +71,27 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
+        public TCoreType PreferredWidth(float width)
+        {
+            this.LayoutElement.preferredWidth = width;
+            return this as TCoreType;
+        }
+
         public TCoreType PreferredHeight(float height)
         {
             this.LayoutElement.preferredHeight = height;
             return this as TCoreType;
         }
 
-        public TCoreType PreferredWidth(float width)
+        public TCoreType FlexWidth(float value)
         {
-            this.LayoutElement.preferredWidth = width;
+            this.LayoutElement.flexibleWidth = value;
+            return this as TCoreType;
+        }
+
+        public TCoreType FlexHeight(float value)
+        {
+            this.LayoutElement.flexibleHeight = value;
             return this as TCoreType;
         }
 

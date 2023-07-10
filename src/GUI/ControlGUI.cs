@@ -5,7 +5,6 @@ namespace AutoccultistNS.GUI
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.GameResources;
     using UnityEngine;
 
     /// <summary>

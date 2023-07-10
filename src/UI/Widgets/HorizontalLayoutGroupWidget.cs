@@ -15,6 +15,8 @@ namespace AutoccultistNS.UI
             : base(gameObject)
         {
             this.LayoutGroup = this.GameObject.GetOrAddComponent<HorizontalLayoutGroup>();
+            this.ChildControlHeight(true);
+            this.ChildControlWidth(true);
         }
 
         public HorizontalLayoutGroup LayoutGroup { get; private set; }

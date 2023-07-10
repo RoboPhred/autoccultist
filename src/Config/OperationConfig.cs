@@ -3,8 +3,8 @@ namespace AutoccultistNS.Config
     using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.Brain;
-    using AutoccultistNS.GameState;
     using AutoccultistNS.GameResources;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Defines a combination operation reactor / impulse / imperative.

@@ -15,6 +15,8 @@ namespace AutoccultistNS.UI
             : base(gameObject)
         {
             this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            this.ChildControlHeight(true);
+            this.ChildControlWidth(true);
         }
 
         public VerticalLayoutGroup LayoutGroup { get; private set; }
@@ -61,26 +63,32 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public VerticalLayoutGroupWidget AddContent(Action<Transform> contentFactory)
+        public VerticalLayoutGroupWidget AddExpandingSpacer()
         {
-            contentFactory(this.GameObject.transform);
+            var spacer = new SizingLayoutWidget("Spacer")
+                .FlexibleHeight(1);
+
+            this.AddContent(spacer);
             return this;
         }
 
-        public VerticalLayoutGroupWidget AddContentCentered(Action<Transform> contentFactory)
+        public VerticalLayoutGroupWidget AddSpacer(int height)
         {
-            var leftSpacer = new GameObject("TopSpacer");
-            leftSpacer.transform.SetParent(this.GameObject.transform, false);
-            var leftSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            leftSpacerLayout.flexibleHeight = 1;
+            var spacer = new SizingLayoutWidget("Spacer");
+            spacer.PreferredHeight(height);
+            this.AddContent(spacer);
+            return this;
+        }
 
-            contentFactory(this.GameObject.transform);
+        public VerticalLayoutGroupWidget AddContent(GameObject gameObject)
+        {
+            gameObject.transform.SetParent(this.GameObject.transform, false);
+            return this;
+        }
 
-            var bottomSpacer = new GameObject("BottomSpacer");
-            bottomSpacer.transform.SetParent(this.GameObject.transform, false);
-            var rightSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            rightSpacerLayout.flexibleHeight = 1;
-
+        public VerticalLayoutGroupWidget AddContent(Action<Transform> transform)
+        {
+            transform(this.GameObject.transform);
             return this;
         }
     }

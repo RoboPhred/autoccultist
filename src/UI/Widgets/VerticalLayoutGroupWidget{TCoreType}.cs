@@ -16,6 +16,8 @@ namespace AutoccultistNS.UI
             : base(gameObject)
         {
             this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            this.ChildControlHeight(true);
+            this.ChildControlWidth(true);
         }
 
         public VerticalLayoutGroup LayoutGroup { get; private set; }
@@ -62,36 +64,32 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
-        public TCoreType AddContent(GameObject gameObject)
+        public TCoreType AddExpandingSpacer()
         {
-            return this.AddContent(transform => gameObject.transform.SetParent(transform, false));
-        }
+            var spacer = new SizingLayoutWidget("Spacer")
+                .FlexibleHeight(1);
 
-        public TCoreType AddContent(Action<Transform> contentFactory)
-        {
-            contentFactory(this.GameObject.transform);
+            this.AddContent(spacer);
             return this as TCoreType;
         }
 
-        public TCoreType AddContentCentered(GameObject gameObject)
+        public TCoreType AddSpacer(int height)
         {
-            return this.AddContentCentered(transform => gameObject.transform.SetParent(transform, false));
+            var spacer = new SizingLayoutWidget("Spacer");
+            spacer.PreferredHeight(height);
+            this.AddContent(spacer);
+            return this as TCoreType;
         }
 
-        public TCoreType AddContentCentered(Action<Transform> contentFactory)
+        public TCoreType AddContent(GameObject gameObject)
         {
-            var leftSpacer = new GameObject("TopSpacer");
-            leftSpacer.transform.SetParent(this.GameObject.transform, false);
-            var leftSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            leftSpacerLayout.flexibleHeight = 1;
+            gameObject.transform.SetParent(this.GameObject.transform, false);
+            return this as TCoreType;
+        }
 
-            contentFactory(this.GameObject.transform);
-
-            var bottomSpacer = new GameObject("BottomSpacer");
-            bottomSpacer.transform.SetParent(this.GameObject.transform, false);
-            var rightSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            rightSpacerLayout.flexibleHeight = 1;
-
+        public TCoreType AddContent(Action<Transform> transform)
+        {
+            transform(this.GameObject.transform);
             return this as TCoreType;
         }
     }

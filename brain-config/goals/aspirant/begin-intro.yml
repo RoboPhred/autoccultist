@@ -8,9 +8,4 @@ completedWhen:
 imperatives:
   - name: Work the intro job
     priority: goal
-    operation:
-      situation: work
-      startingRecipe:
-        slots:
-          work:
-            elementId: introjob
+    operation: !import /operations/aspirant/begin-introjob.yml

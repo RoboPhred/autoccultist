@@ -3,8 +3,8 @@ namespace AutoccultistNS.Brain
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using AutoccultistNS.GameState;
     using AutoccultistNS.GameResources;
+    using AutoccultistNS.GameState;
 
     public abstract class SituationReaction : IReaction, IResourceConstraint<ISituationState>
     {

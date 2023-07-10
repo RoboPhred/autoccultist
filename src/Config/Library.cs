@@ -106,7 +106,6 @@ namespace AutoccultistNS.Config
             return (T)GetByFilePath(typeof(T), filePath);
         }
 
-
         /// <summary>
         /// Gets a library config object by file path.
         /// </summary>
@@ -171,6 +170,9 @@ namespace AutoccultistNS.Config
         public static void LoadAll()
         {
             LibraryParseErrors.Clear();
+
+            // Load these in order of dependency.
+            LoadOperations();
             LoadGoals();
             LoadArcs();
         }

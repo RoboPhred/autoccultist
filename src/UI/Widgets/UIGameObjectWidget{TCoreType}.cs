@@ -20,15 +20,25 @@ namespace AutoccultistNS.UI
 
         public CanvasRenderer CanvasRenderer { get; private set; }
 
-        public TCoreType Parent(GameObject parent)
-        {
-            this.GameObject.transform.SetParent(parent.transform, false);
-            return this as TCoreType;
-        }
-
         public static implicit operator GameObject(UIGameObjectWidget<TCoreType> widget)
         {
             return widget.GameObject;
+        }
+
+        public TCoreType Clear()
+        {
+            foreach (Transform child in this.GameObject.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+
+            return this as TCoreType;
+        }
+
+        public TCoreType AttachTo(GameObject parent)
+        {
+            this.GameObject.transform.SetParent(parent.transform, false);
+            return this as TCoreType;
         }
     }
 }

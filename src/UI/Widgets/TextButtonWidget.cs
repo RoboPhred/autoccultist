@@ -45,9 +45,6 @@ namespace AutoccultistNS.UI
 
             this.Button.image = image.Image;
 
-            this.ChildControlHeight(true);
-            this.ChildControlWidth(true);
-
             this.ChildForceExpandHeight(true);
             this.ChildForceExpandWidth(true);
 
@@ -64,7 +61,9 @@ namespace AutoccultistNS.UI
                 .MinFontSize(12)
                 .MaxFontSize(20);
 
-            this.AddContentCentered(this.TextWidget);
+            this.AddExpandingSpacer();
+            this.AddContent(this.TextWidget);
+            this.AddExpandingSpacer();
         }
 
         public Button Button { get; private set; }
@@ -76,6 +75,22 @@ namespace AutoccultistNS.UI
         public TextWidget TextWidget { get; private set; }
 
         public TextMeshProUGUI TextMesh => this.TextWidget.TextMesh;
+
+        public TextButtonWidget SetEnabled(bool enabled)
+        {
+            this.Button.interactable = enabled;
+            return this;
+        }
+
+        public TextButtonWidget Enable()
+        {
+            return this.SetEnabled(true);
+        }
+
+        public TextButtonWidget Disable()
+        {
+            return this.SetEnabled(false);
+        }
 
         public TextButtonWidget Text(string value)
         {

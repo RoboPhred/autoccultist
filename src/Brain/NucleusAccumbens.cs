@@ -28,6 +28,7 @@ namespace AutoccultistNS.Brain
         private static bool isInitialized = false;
 
         private static bool isActive = false;
+        private static int lastHash = 0;
 
         private static GameAPI.PauseToken pauseToken;
 
@@ -82,11 +83,6 @@ namespace AutoccultistNS.Brain
                 throw new ArgumentNullException(nameof(imperative));
             }
 
-            if (ActiveImperatives.Contains(imperative))
-            {
-                return;
-            }
-
             if (imperative.IsSatisfied(GameStateProvider.Current))
             {
                 return;
@@ -94,6 +90,9 @@ namespace AutoccultistNS.Brain
 
             ActiveImperatives.Add(imperative);
             ActiveReactionsByImperative.Add(imperative, new HashSet<IReaction>());
+
+            // Clear the hash so we re-check all imperatives.
+            lastHash = 0;
         }
 
         /// <summary>
@@ -102,15 +101,23 @@ namespace AutoccultistNS.Brain
         /// <param name="imperative">The imperative to remove.</param>
         public static void RemoveImperative(IImperative imperative)
         {
-            foreach (var reaction in ActiveReactionsByImperative[imperative])
+            if (ActiveReactionsByImperative.TryGetValue(imperative, out var reactions))
             {
-                ImpulsesByReaction.Remove(reaction);
-                reaction.Completed -= HandleReactionCompleted;
-                reaction.Abort();
+                foreach (var reaction in reactions)
+                {
+                    ImpulsesByReaction.Remove(reaction);
+                    reaction.Completed -= HandleReactionCompleted;
+                    reaction.Abort();
+                }
+
+                ActiveReactionsByImperative.Remove(imperative);
+            }
+            else
+            {
+                Autoccultist.LogWarn($"NucleusAccumbens.RemoveImperative: Could not find imperative {imperative} to remove.");
             }
 
             ActiveImperatives.Remove(imperative);
-            ActiveReactionsByImperative.Remove(imperative);
         }
 
         /// <summary>
@@ -188,7 +195,6 @@ namespace AutoccultistNS.Brain
 
         private static async void InvokeImpulsesLoop()
         {
-            var lastHash = 0;
             var activeCount = 0;
 
             while (true)
@@ -434,7 +440,6 @@ namespace AutoccultistNS.Brain
 
             ImpulsesByReaction.Remove(reaction);
 
-            // Shame we don't know what imperative this was part of, but we shouldn't have very many parallel imperatives
             foreach (var executions in ActiveReactionsByImperative.Values)
             {
                 if (executions.Remove(reaction))

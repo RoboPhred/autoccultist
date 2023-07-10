@@ -25,8 +25,7 @@ namespace AutoccultistNS.UI
                 return;
             }
 
-            this.window = SituationAutomationWindow.CreateWindow($"Window_{situation.VerbId}_automation");
-            this.window.Attach(situation);
+            this.window = SituationAutomationWindow.CreateWindow(situation);
 
             this.button = this.CreateButton(this.window);
             this.button.transform.SetParent(manifestation.gameObject.transform, false);
@@ -78,7 +77,7 @@ namespace AutoccultistNS.UI
                 NoonUtility.LogWarning("Window is not visible, opening");
 
                 var token = this.GetComponentInParent<Token>();
-                this.Window.Show(token.Location.LocalPosition);
+                this.Window.OpenAt(token.Location.LocalPosition);
             }
 
             public void OnPointerEnter(PointerEventData eventData)

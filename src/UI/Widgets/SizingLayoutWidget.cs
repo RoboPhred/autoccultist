@@ -25,6 +25,8 @@ namespace AutoccultistNS.UI
                 if (this.layoutElement == null)
                 {
                     this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
+                    this.layoutElement.flexibleWidth = -1;
+                    this.layoutElement.flexibleHeight = -1;
                     this.LayoutElement.minHeight = -1;
                     this.LayoutElement.minWidth = -1;
                     this.LayoutElement.preferredHeight = -1;
@@ -68,15 +70,27 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public SizingLayoutWidget PreferredWidth(float width)
+        {
+            this.LayoutElement.preferredWidth = width;
+            return this;
+        }
+
         public SizingLayoutWidget PreferredHeight(float height)
         {
             this.LayoutElement.preferredHeight = height;
             return this;
         }
 
-        public SizingLayoutWidget PreferredWidth(float width)
+        public SizingLayoutWidget FlexibleWidth(float width)
         {
-            this.LayoutElement.preferredWidth = width;
+            this.LayoutElement.flexibleWidth = width;
+            return this;
+        }
+
+        public SizingLayoutWidget FlexibleHeight(float height)
+        {
+            this.LayoutElement.flexibleHeight = height;
             return this;
         }
 
