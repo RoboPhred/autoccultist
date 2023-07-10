@@ -3,51 +3,52 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class ImageFactory : SizingElementFactory<ImageFactory>
+    public class ImageWidget<TCoreType> : SizingLayoutWidget<TCoreType>
+        where TCoreType : ImageWidget<TCoreType>
     {
         private readonly Image image;
 
-        public ImageFactory(GameObject gameObject)
+        public ImageWidget(string key)
+            : this(new GameObject(key))
+        {
+        }
+
+        public ImageWidget(GameObject gameObject)
             : base(gameObject)
         {
             this.image = this.GameObject.GetOrAddComponent<Image>();
         }
 
-        public ImageFactory Sprite(string resourceName)
+        public TCoreType Sprite(string resourceName)
         {
             this.image.sprite = ResourceHack.FindSprite(resourceName);
-            return this;
+            return this as TCoreType;
         }
 
-        public ImageFactory StretchImage()
+        public TCoreType StretchImage()
         {
             this.image.type = Image.Type.Simple;
             this.image.preserveAspect = false;
-            return this;
+            return this as TCoreType;
         }
 
-        public ImageFactory CenterImage()
+        public TCoreType CenterImage()
         {
             this.image.type = Image.Type.Simple;
             this.image.preserveAspect = true;
-            return this;
+            return this as TCoreType;
         }
 
-        public ImageFactory SlicedImage()
+        public TCoreType SliceImage()
         {
             this.image.type = Image.Type.Sliced;
-            return this;
+            return this as TCoreType;
         }
 
-        public ImageFactory Color(Color color)
+        public TCoreType Color(Color color)
         {
             this.image.color = color;
-            return this;
-        }
-
-        public new Image Build()
-        {
-            return this.image;
+            return this as TCoreType;
         }
     }
 }

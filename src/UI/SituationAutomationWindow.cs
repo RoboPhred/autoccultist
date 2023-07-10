@@ -20,7 +20,7 @@ namespace AutoccultistNS.UI
 
         private CanvasGroupFader canvasGroupFader;
         private WindowPositioner positioner;
-        private TextMeshProUGUI title;
+        private TextWidget title;
 
         public Vector3 Position
         {
@@ -93,7 +93,7 @@ namespace AutoccultistNS.UI
 
         private void BuildWindowContent()
         {
-            UIFactories.CreateScrollRect("ScrollRect", this.gameObject.transform)
+            UIFactories.CreateScroll("ScrollRect", this.gameObject)
                 .Anchor(0, -50)
                 .Left(0, 0)
                 .Top(1, -50)
@@ -112,39 +112,29 @@ namespace AutoccultistNS.UI
                                 UIFactories.CreateText("DumpText", transform)
                                     .Pivot(0, 0)
                                     .FontSize(20)
-                                    .Text(string.Join("\n", Enumerable.Repeat("Testing", 50)))
-                                    .Build();
-                                // FIXME: Button is overlapping text.
+                                    .Text(string.Join("\n", Enumerable.Repeat("Testing", 50)));
                                 UIFactories.CreateTextButton("TestButton", transform)
                                     .Text("Test")
-                                    .OnClick(() => GameAPI.Notify("Test", "Test button"))
-                                    .Build();
-                            })
-                            .Build();
-                    })
-                .Build();
+                                    .OnClick(() => GameAPI.Notify("Test", "Test button"));
+                            });
+                    });
         }
 
         private void BuildWindowFrame()
         {
-            // TODO: A lot of these RectTransform properties are interdependent.
-            // What do we need to set, what can we ignore?
-
             // Note: We should auto-size from our content.
             var rectTransform = UIFactories.AddRectTransform(this.gameObject)
                 .AnchorRelativeToParent(.5f, .5f, .5f, .5f)
-                .Size(700, 420)
-                .Build();
-            UIFactories.AddSizingElement(this.gameObject)
+                .Size(700, 420);
+            UIFactories.AddSizingLayout(this.gameObject)
                 .MinWidth(650)
-                .MinHeight(600)
-                .Build();
+                .MinHeight(600);
 
             var canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
 
             this.positioner = this.gameObject.AddComponent<WindowPositioner>();
-            Reflection.SetPrivateField(this.positioner, "rectTrans", rectTransform);
-            Reflection.SetPrivateField(this.positioner, "canvasGroup", canvasGroup);
+            Reflection.SetPrivateField<RectTransform>(this.positioner, "rectTrans", rectTransform);
+            Reflection.SetPrivateField<CanvasGroup>(this.positioner, "canvasGroup", canvasGroup);
 
             this.canvasGroupFader = this.gameObject.AddComponent<CanvasGroupFader>();
             this.canvasGroupFader.durationTurnOn = 0.3f;
@@ -155,7 +145,7 @@ namespace AutoccultistNS.UI
             fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            UIFactories.CreateImage("BG_Top", this.gameObject.transform)
+            UIFactories.CreateImage("BG_Top", this.gameObject)
                 .Anchor(0, 0)
                 .Left(0, 0)
                 .Top(1, 0)
@@ -163,10 +153,9 @@ namespace AutoccultistNS.UI
                 .Bottom(1, -50)
                 .Sprite("window_bg_top")
                 .SlicedImage()
-                .Color(BgColorHeader)
-                .Build();
+                .Color(BgColorHeader);
 
-            UIFactories.CreateImage("BG_Body", this.gameObject.transform)
+            UIFactories.CreateImage("BG_Body", this.gameObject)
                 .Anchor(0, -50)
                 .Left(0, 0)
                 .Top(1, -50)
@@ -174,10 +163,9 @@ namespace AutoccultistNS.UI
                 .Bottom(0, 77)
                 .Sprite("window_bg_middle")
                 .SlicedImage()
-                .Color(BgColorBody)
-                .Build();
+                .Color(BgColorBody);
 
-            var footerContainer = UIFactories.CreateVeritcalLayoutGroup("FooterContainer", this.gameObject.transform)
+            var footerContainer = UIFactories.CreateVeritcalLayoutGroup("FooterContainer", this.gameObject)
                 .Left(0, 0)
                 .Top(0, 77)
                 .Right(1, 0)
@@ -185,10 +173,9 @@ namespace AutoccultistNS.UI
                 .ChildControlHeight(true)
                 .ChildControlWidth(true)
                 .ChildForceExpandHeight(true)
-                .ChildForceExpandWidth(true)
-                .Build();
+                .ChildForceExpandWidth(true);
 
-            UIFactories.CreateImage("Footer", footerContainer.gameObject.transform)
+            UIFactories.CreateImage("Footer", footerContainer)
                 .Anchor(350, -90)
                 .Left(0, 0)
                 .Top(1, -40)
@@ -197,10 +184,9 @@ namespace AutoccultistNS.UI
                 .MinHeight(5)
                 .Sprite("window_bg_bottom")
                 .SlicedImage()
-                .Color(BgColorFooter)
-                .Build();
+                .Color(BgColorFooter);
 
-            this.title = UIFactories.CreateText("TitleText", this.gameObject.transform)
+            this.title = UIFactories.CreateText("TitleText", this.gameObject)
                 .Anchor(Vector2.zero)
                 .Left(0, 57.5f)
                 .Top(1, 0)
@@ -211,8 +197,7 @@ namespace AutoccultistNS.UI
                 .MinFontSize(10)
                 .MaxFontSize(30)
                 .TextAlignment(TextAlignmentOptions.BottomLeft)
-                .TextColor(new Color(0.5765f, 0.8824f, 0.9373f, 1))
-                .Build();
+                .TextColor(new Color(0.5765f, 0.8824f, 0.9373f, 1));
 
             UIFactories.CreateIconButton("CloseButton", this.gameObject.transform)
                 .Anchor(-25, -25)
@@ -224,8 +209,7 @@ namespace AutoccultistNS.UI
                 .Sprite("icon_close")
                 .CenterImage()
                 .ClickSound("UIBUttonClose")
-                .OnClick(this.Close)
-                .Build();
+                .OnClick(this.Close);
         }
     }
 }
