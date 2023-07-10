@@ -15,6 +15,7 @@ namespace AutoccultistNS.Config
         private static readonly List<YamlFileException> LibraryParseErrors = new();
         private static readonly List<GoalConfig> LibraryGoals = new();
         private static readonly List<IArcConfig> LibraryArcs = new();
+        private static readonly List<OperationConfig> LibraryOperations = new();
 
         /// <summary>
         /// Gets a collection of errors encountered while loading the library.
@@ -24,6 +25,17 @@ namespace AutoccultistNS.Config
             get
             {
                 return LibraryParseErrors.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection of loaded arcs.
+        /// </summary>
+        public static IReadOnlyCollection<IArc> Arcs
+        {
+            get
+            {
+                return LibraryArcs.ToArray();
             }
         }
 
@@ -39,24 +51,19 @@ namespace AutoccultistNS.Config
         }
 
         /// <summary>
-        /// Gets the collection of loaded arcs.
+        /// Gets the collection of loaded operations.
         /// </summary>
-        public static IReadOnlyCollection<IArc> Arcs
+        public static IReadOnlyCollection<OperationConfig> Operations
         {
             get
             {
-                return LibraryArcs.ToArray();
+                return LibraryOperations.ToArray();
             }
         }
 
-        public static string GoalsDirectory
-        {
-            get
-            {
-                return Path.Combine(Autoccultist.AssemblyDirectory, "goals");
-            }
-        }
-
+        /// <summary>
+        /// Gets the directory where arc assets are stored.
+        /// </summary>
         public static string ArcsDirectory
         {
             get
@@ -66,14 +73,46 @@ namespace AutoccultistNS.Config
         }
 
         /// <summary>
+        /// Gets the directory where goal assets are stored.
+        /// </summary>
+        public static string GoalsDirectory
+        {
+            get
+            {
+                return Path.Combine(Autoccultist.AssemblyDirectory, "goals");
+            }
+        }
+
+        /// <summary>
+        /// Gets the directory where operation assets are stored.
+        /// </summary>
+        public static string OperationsDirectory
+        {
+            get
+            {
+                return Path.Combine(Autoccultist.AssemblyDirectory, "operations");
+            }
+        }
+
+        /// <summary>
         /// Gets a library config object by file path.
         /// </summary>
+        /// <typeparam name="T">The type of config object to get.</typeparam>
+        /// <param name="filePath">The file path of the config object.</param>
+        /// <returns>The config object, or null if not found.</returns>
         public static T GetByFilePath<T>(string filePath)
             where T : IConfigObject
         {
             return (T)GetByFilePath(typeof(T), filePath);
         }
 
+
+        /// <summary>
+        /// Gets a library config object by file path.
+        /// </summary>
+        /// <param name="type">The type of config object to get.</param>
+        /// <param name="filePath">The file path of the config object.</param>
+        /// <returns>The config object, or null if not found.</returns>
         public static object GetByFilePath(Type type, string filePath)
         {
             var candidates = new List<IConfigObject>();
@@ -89,12 +128,21 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets a library config object by ID.
         /// </summary>
+        /// <typeparam name="T">The type of config object to get.</typeparam>
+        /// <param name="id">The ID of the config object.</param>
+        /// <returns>The config object, or null if not found.</returns>
         public static T GetById<T>(string id)
             where T : IConfigObject
         {
             return (T)GetById(typeof(T), id);
         }
 
+        /// <summary>
+        /// Gets a library config object by ID.
+        /// </summary>
+        /// <param name="type">The type of config object to get.</param>
+        /// <param name="id">The ID of the config object.</param>
+        /// <returns>The config object, or null if not found.</returns>
         public static IConfigObject GetById(Type type, string id)
         {
             var candidates = new List<IConfigObject>();
@@ -127,6 +175,32 @@ namespace AutoccultistNS.Config
             LoadArcs();
         }
 
+        private static void LoadArcs()
+        {
+            LibraryArcs.Clear();
+            FilesystemHelpers.WalkDirectory(ArcsDirectory, LoadArc);
+        }
+
+        private static void LoadArc(string filePath)
+        {
+            try
+            {
+                var arc = Deserializer.Deserialize<MotivationalArcConfig>(filePath);
+                if (arc == null)
+                {
+                    Autoccultist.LogWarn($"Arc at {filePath} returned a null object.");
+                    return;
+                }
+
+                LibraryArcs.Add(arc);
+            }
+            catch (YamlFileException ex)
+            {
+                LibraryParseErrors.Add(ex);
+                Autoccultist.LogWarn(ex, $"Failed to load arc from file {filePath}");
+            }
+        }
+
         private static void LoadGoals()
         {
             LibraryGoals.Clear();
@@ -153,29 +227,29 @@ namespace AutoccultistNS.Config
             }
         }
 
-        private static void LoadArcs()
+        private static void LoadOperations()
         {
-            LibraryArcs.Clear();
-            FilesystemHelpers.WalkDirectory(ArcsDirectory, LoadArc);
+            LibraryOperations.Clear();
+            FilesystemHelpers.WalkDirectory(OperationsDirectory, LoadOperation);
         }
 
-        private static void LoadArc(string filePath)
+        private static void LoadOperation(string filePath)
         {
             try
             {
-                var arc = Deserializer.Deserialize<MotivationalArcConfig>(filePath);
-                if (arc == null)
+                var operation = Deserializer.Deserialize<OperationConfig>(filePath);
+                if (operation == null)
                 {
-                    Autoccultist.LogWarn($"Arc at {filePath} returned a null object.");
+                    Autoccultist.LogWarn($"Operation at {filePath} returned a null object.");
                     return;
                 }
 
-                LibraryArcs.Add(arc);
+                LibraryOperations.Add(operation);
             }
             catch (YamlFileException ex)
             {
                 LibraryParseErrors.Add(ex);
-                Autoccultist.LogWarn(ex, $"Failed to load arc from file {filePath}");
+                Autoccultist.LogWarn(ex, $"Failed to load operation from file {filePath}");
             }
         }
     }

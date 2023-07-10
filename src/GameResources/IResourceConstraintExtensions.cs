@@ -1,4 +1,4 @@
-namespace AutoccultistNS.Resources
+namespace AutoccultistNS.GameResources
 {
     public static class IResourceConstraintExtensions
     {

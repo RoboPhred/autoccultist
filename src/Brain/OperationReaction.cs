@@ -7,7 +7,7 @@ namespace AutoccultistNS.Brain
     using AutoccultistNS.Actor;
     using AutoccultistNS.Actor.Actions;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.Resources;
+    using AutoccultistNS.GameResources;
     using AutoccultistNS.Tasks;
     using SecretHistories.Enums;
 

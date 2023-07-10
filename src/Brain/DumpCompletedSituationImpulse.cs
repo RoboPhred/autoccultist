@@ -3,7 +3,7 @@ namespace AutoccultistNS.Brain
     using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.Resources;
+    using AutoccultistNS.GameResources;
     using SecretHistories.Enums;
 
     public class DumpCompletedSituationImpulse : IImperative, IImpulse

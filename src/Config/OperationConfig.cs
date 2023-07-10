@@ -4,7 +4,7 @@ namespace AutoccultistNS.Config
     using System.Linq;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.Resources;
+    using AutoccultistNS.GameResources;
 
     /// <summary>
     /// Defines a combination operation reactor / impulse / imperative.

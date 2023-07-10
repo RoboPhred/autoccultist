@@ -1,4 +1,4 @@
-namespace AutoccultistNS.Resources
+namespace AutoccultistNS.GameResources
 {
     using System;
     using System.Collections.Generic;

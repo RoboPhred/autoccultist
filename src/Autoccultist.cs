@@ -7,7 +7,7 @@ using AutoccultistNS.Brain;
 using AutoccultistNS.Config;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
-using AutoccultistNS.Resources;
+using AutoccultistNS.GameResources;
 using AutoccultistNS.UI;
 using AutoccultistNS.Yaml;
 using SecretHistories.Services;

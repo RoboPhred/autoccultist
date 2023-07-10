@@ -5,7 +5,7 @@ namespace AutoccultistNS.Config
     using System.Text;
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
-    using AutoccultistNS.Resources;
+    using AutoccultistNS.GameResources;
     using SecretHistories.Enums;
     using YamlDotNet.Core;
 
