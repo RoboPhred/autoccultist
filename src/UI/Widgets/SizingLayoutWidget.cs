@@ -1,5 +1,6 @@
 namespace AutoccultistNS.UI
 {
+    using System;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ namespace AutoccultistNS.UI
     {
         private LayoutElement layoutElement;
         private ContentSizeFitter contentSizeFitter;
+        private ConstrainedLayoutElement constrainedLayoutElement;
 
         public SizingLayoutWidget(string key)
             : this(new GameObject(key))
@@ -25,8 +27,8 @@ namespace AutoccultistNS.UI
                 if (this.layoutElement == null)
                 {
                     this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
-                    this.layoutElement.flexibleWidth = -1;
-                    this.layoutElement.flexibleHeight = -1;
+                    this.layoutElement.flexibleWidth = 0;
+                    this.layoutElement.flexibleHeight = 0;
                     this.LayoutElement.minHeight = -1;
                     this.LayoutElement.minWidth = -1;
                     this.LayoutElement.preferredHeight = -1;
@@ -49,6 +51,19 @@ namespace AutoccultistNS.UI
                 }
 
                 return this.contentSizeFitter;
+            }
+        }
+
+        public ConstrainedLayoutElement ConstrainedLayoutElement
+        {
+            get
+            {
+                if (this.constrainedLayoutElement == null)
+                {
+                    this.constrainedLayoutElement = this.GameObject.GetOrAddComponent<ConstrainedLayoutElement>();
+                }
+
+                return this.constrainedLayoutElement;
             }
         }
 
@@ -82,15 +97,27 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public SizingLayoutWidget FlexibleWidth(float width)
+        public SizingLayoutWidget MaxWidth(float width)
         {
-            this.LayoutElement.flexibleWidth = width;
+            this.ConstrainedLayoutElement.MaxWidth = width;
             return this;
         }
 
-        public SizingLayoutWidget FlexibleHeight(float height)
+        public SizingLayoutWidget MaxHeight(float height)
         {
-            this.LayoutElement.flexibleHeight = height;
+            this.ConstrainedLayoutElement.MaxHeight = height;
+            return this;
+        }
+
+        public SizingLayoutWidget ExpandWidth()
+        {
+            this.LayoutElement.flexibleWidth = 1;
+            return this;
+        }
+
+        public SizingLayoutWidget ExpandHeight()
+        {
+            this.LayoutElement.flexibleHeight = 1;
             return this;
         }
 
@@ -104,6 +131,16 @@ namespace AutoccultistNS.UI
         {
             this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
+        }
+
+        public void AddContent(GameObject gameObject)
+        {
+            gameObject.transform.SetParent(this.GameObject.transform, false);
+        }
+
+        public void AddContent(Action<Transform> contentFactory)
+        {
+            contentFactory(this.GameObject.transform);
         }
     }
 }

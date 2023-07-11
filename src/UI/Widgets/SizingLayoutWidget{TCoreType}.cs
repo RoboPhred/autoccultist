@@ -8,6 +8,7 @@ namespace AutoccultistNS.UI
     {
         private LayoutElement layoutElement;
         private ContentSizeFitter contentSizeFitter;
+        private ConstrainedLayoutElement constrainedLayoutElement;
 
         public SizingLayoutWidget(string key)
             : this(new GameObject(key))
@@ -26,8 +27,8 @@ namespace AutoccultistNS.UI
                 if (this.layoutElement == null)
                 {
                     this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
-                    this.layoutElement.flexibleWidth = -1;
-                    this.layoutElement.flexibleHeight = -1;
+                    this.layoutElement.flexibleWidth = 0;
+                    this.layoutElement.flexibleHeight = 0;
                     this.LayoutElement.minHeight = -1;
                     this.LayoutElement.minWidth = -1;
                     this.LayoutElement.preferredHeight = -1;
@@ -50,6 +51,19 @@ namespace AutoccultistNS.UI
                 }
 
                 return this.contentSizeFitter;
+            }
+        }
+
+        public ConstrainedLayoutElement ConstrainedLayoutElement
+        {
+            get
+            {
+                if (this.constrainedLayoutElement == null)
+                {
+                    this.constrainedLayoutElement = this.GameObject.GetOrAddComponent<ConstrainedLayoutElement>();
+                }
+
+                return this.constrainedLayoutElement;
             }
         }
 
@@ -83,15 +97,27 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
-        public TCoreType FlexWidth(float value)
+        public TCoreType MaxWidth(float width)
         {
-            this.LayoutElement.flexibleWidth = value;
+            this.ConstrainedLayoutElement.MaxWidth = width;
             return this as TCoreType;
         }
 
-        public TCoreType FlexHeight(float value)
+        public TCoreType MaxHeight(float height)
         {
-            this.LayoutElement.flexibleHeight = value;
+            this.ConstrainedLayoutElement.MaxHeight = height;
+            return this as TCoreType;
+        }
+
+        public TCoreType ExpandWidth()
+        {
+            this.LayoutElement.flexibleWidth = 1;
+            return this as TCoreType;
+        }
+
+        public TCoreType ExpandHeight()
+        {
+            this.LayoutElement.flexibleHeight = 1;
             return this as TCoreType;
         }
 

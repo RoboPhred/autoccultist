@@ -25,6 +25,24 @@ namespace AutoccultistNS.UI
             return widget.GameObject;
         }
 
+        public TCoreType SetActive(bool active)
+        {
+            this.GameObject.SetActive(active);
+            return this as TCoreType;
+        }
+
+        public TCoreType Activate()
+        {
+            this.GameObject.SetActive(true);
+            return this as TCoreType;
+        }
+
+        public TCoreType Deactivate()
+        {
+            this.GameObject.SetActive(false);
+            return this as TCoreType;
+        }
+
         public TCoreType Clear()
         {
             foreach (Transform child in this.GameObject.transform)

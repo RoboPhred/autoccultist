@@ -15,8 +15,11 @@ namespace AutoccultistNS.UI
             : base(gameObject)
         {
             this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            this.Spacing(0);
             this.ChildControlHeight(true);
             this.ChildControlWidth(true);
+            this.ChildForceExpandWidth(false);
+            this.ChildForceExpandHeight(false);
         }
 
         public VerticalLayoutGroup LayoutGroup { get; private set; }
@@ -45,6 +48,12 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public VerticalLayoutGroupWidget Spacing(float value)
+        {
+            this.LayoutGroup.spacing = value;
+            return this;
+        }
+
         public VerticalLayoutGroupWidget Padding(int left, int top, int right, int bottom)
         {
             this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
@@ -66,7 +75,7 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroupWidget AddExpandingSpacer()
         {
             var spacer = new SizingLayoutWidget("Spacer")
-                .FlexibleHeight(1);
+                .ExpandHeight();
 
             this.AddContent(spacer);
             return this;

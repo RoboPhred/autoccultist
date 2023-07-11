@@ -18,7 +18,7 @@ namespace AutoccultistNS.UI
             this.ScrollRect.movementType = ScrollRect.MovementType.Elastic;
             this.ScrollRect.horizontal = false;
             this.ScrollRect.vertical = false;
-            this.ScrollRect.scrollSensitivity = 20;
+            this.ScrollRect.scrollSensitivity = 5;
 
             var viewport = new GameObject("Viewport");
             var viewportRt = viewport.AddComponent<RectTransform>();
@@ -32,11 +32,6 @@ namespace AutoccultistNS.UI
             viewportRt.offsetMax = new Vector2(0, 0);
 
             viewport.AddComponent<RectMask2D>();
-
-            // Size ourselves to fit our contents.
-            var fitter = this.Content.AddComponent<ContentSizeFitter>();
-            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
 
         public ScrollRect ScrollRect { get; private set; }
@@ -105,18 +100,6 @@ namespace AutoccultistNS.UI
             }
 
             content = new GameObject("Content");
-            if (this.ScrollRect.vertical)
-            {
-                var group = content.AddComponent<VerticalLayoutGroup>();
-                group.childControlHeight = true;
-                group.childForceExpandWidth = true;
-            }
-            else if (this.ScrollRect.horizontal)
-            {
-                var group = content.AddComponent<HorizontalLayoutGroup>();
-                group.childControlWidth = true;
-                group.childForceExpandHeight = true;
-            }
 
             var contentRt = content.GetOrAddComponent<RectTransform>();
             contentRt.anchoredPosition = new Vector2(0, 0);
@@ -125,6 +108,43 @@ namespace AutoccultistNS.UI
             contentRt.pivot = new Vector2(0, 0);
             contentRt.offsetMin = new Vector2(0, 0);
             contentRt.offsetMax = new Vector2(0, 0);
+
+            // Expand the viewport to the size of the content we want to scroll.
+            var sizer = content.AddComponent<ContentSizeFitter>();
+
+
+            // Shove a blank image in so we capture mouse events for mouse drag scrolling
+            var image = content.GetOrAddComponent<Image>();
+            image.sprite = ResourcesManager.GetSpriteForUI("empty_bg");
+            image.color = new Color(1, 1, 1, 0);
+
+            if (this.ScrollRect.horizontal && this.ScrollRect.vertical)
+            {
+                sizer.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                sizer.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            }
+            else if (this.ScrollRect.vertical)
+            {
+                sizer.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+                var group = content.AddComponent<VerticalLayoutGroup>();
+                group.spacing = 0;
+                group.childControlHeight = true;
+                group.childControlWidth = true;
+                group.childForceExpandHeight = false;
+                group.childForceExpandWidth = true;
+            }
+            else if (this.ScrollRect.horizontal)
+            {
+                sizer.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+                var group = content.AddComponent<HorizontalLayoutGroup>();
+                group.spacing = 0;
+                group.childControlWidth = true;
+                group.childControlHeight = true;
+                group.childForceExpandWidth = false;
+                group.childForceExpandHeight = true;
+            }
 
             this.SetContent(content);
         }

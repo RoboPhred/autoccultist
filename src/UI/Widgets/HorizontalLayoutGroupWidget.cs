@@ -15,11 +15,21 @@ namespace AutoccultistNS.UI
             : base(gameObject)
         {
             this.LayoutGroup = this.GameObject.GetOrAddComponent<HorizontalLayoutGroup>();
-            this.ChildControlHeight(true);
+            this.ChildAlignment(TextAnchor.UpperLeft);
+            this.Spacing(0);
             this.ChildControlWidth(true);
+            this.ChildControlHeight(true);
+            this.ChildForceExpandWidth(false);
+            this.ChildForceExpandHeight(false);
         }
 
         public HorizontalLayoutGroup LayoutGroup { get; private set; }
+
+        public HorizontalLayoutGroupWidget ChildAlignment(TextAnchor value)
+        {
+            this.LayoutGroup.childAlignment = value;
+            return this;
+        }
 
         public HorizontalLayoutGroupWidget ChildControlHeight(bool value)
         {
@@ -45,6 +55,12 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public HorizontalLayoutGroupWidget Spacing(float value)
+        {
+            this.LayoutGroup.spacing = value;
+            return this;
+        }
+
         public HorizontalLayoutGroupWidget Padding(int left, int top, int right, int bottom)
         {
             this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
@@ -66,23 +82,6 @@ namespace AutoccultistNS.UI
         public HorizontalLayoutGroupWidget AddContent(Action<Transform> contentFactory)
         {
             contentFactory(this.GameObject.transform);
-            return this;
-        }
-
-        public HorizontalLayoutGroupWidget AddContentCentered(Action<Transform> contentFactory)
-        {
-            var leftSpacer = new GameObject("LeftSpacer");
-            leftSpacer.transform.SetParent(this.GameObject.transform, false);
-            var leftSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            leftSpacerLayout.flexibleWidth = 1;
-
-            contentFactory(this.GameObject.transform);
-
-            var rightSpacer = new GameObject("RightSpacer");
-            rightSpacer.transform.SetParent(this.GameObject.transform, false);
-            var rightSpacerLayout = leftSpacer.AddComponent<LayoutElement>();
-            rightSpacerLayout.flexibleWidth = 1;
-
             return this;
         }
     }

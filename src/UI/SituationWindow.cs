@@ -111,11 +111,10 @@ namespace AutoccultistNS.UI
         {
             // Note: We should auto-size from our content.
             var rectTransform = UIFactories.AddRectTransform(this.gameObject)
-                .AnchorRelativeToParent(.5f, .5f, .5f, .5f)
-                .Size(700, 420);
+                .AnchorRelativeToParent(.5f, .5f, .5f, .5f);
             UIFactories.AddSizingLayout(this.gameObject)
-                .MinWidth(650)
-                .MinHeight(600);
+                .MinWidth(450)
+                .MinHeight(400);
 
             var canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
 

@@ -65,6 +65,12 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public TextWidget VerticalAlignment(VerticalAlignmentOptions alignment)
+        {
+            this.TextMesh.verticalAlignment = alignment;
+            return this;
+        }
+
         public TextWidget MinFontSize(float size)
         {
             this.TextMesh.fontSizeMin = size;
