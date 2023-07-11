@@ -16,4 +16,4 @@ forbidders:
     - allOf:
         - situation: explore
           containsAspects: { moth: 10 }
-operation: !import /operations/vaults/continue-vault-follower-moth.yml
+operation: vaults/continue-vault-follower-moth

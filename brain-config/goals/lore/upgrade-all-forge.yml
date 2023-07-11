@@ -35,30 +35,30 @@ imperatives:
   - name: Ensure we have erudition
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/reason/study-reason.yml
+    operation: reason/study-reason
 
   - name: Combine Forge F
     requirements: !import /conditions/can-answer-challenge-knowledge.yml
     forbidders:
       elementId: fragmentforgeg
-    operation: !import /operations/lore/forge/lore-combine-forge-f.yml
+    operation: lore/forge/lore-combine-forge-f
 
   - name: Combine Forge E
     requirements: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/forge/lore-combine-forge-e.yml
+    operation: lore/forge/lore-combine-forge-e
 
   - name: Combine Forge D
     requirements: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/forge/lore-combine-forge-d.yml
+    operation: lore/forge/lore-combine-forge-d
 
   - name: Combine Forge C
     requirements: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/forge/lore-combine-forge-c.yml
+    operation: lore/forge/lore-combine-forge-c
 
   - name: Combine Forge B
     requirements: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/forge/lore-combine-forge-b.yml
+    operation: lore/forge/lore-combine-forge-b
 
   - name: Combine Forge A
     requirements: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/forge/lore-combine-forge-a.yml
+    operation: lore/forge/lore-combine-forge-a

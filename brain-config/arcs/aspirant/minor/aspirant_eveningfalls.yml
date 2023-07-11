@@ -55,15 +55,15 @@ motivations:
               anyOf:
                 - !import /conditions/has-suspicion.yml
                 - aspects: { hireling: 1 }
-            operation: !import /operations/explore/explore-city-criminal-potent.yml
+            operation: explore/explore-city-criminal-potent
           - name: Re-hire a minion
-            operation: !import /operations/hirelings/rehire-hireling-any.yml
+            operation: hirelings/rehire-hireling-any
           - name: Dispose of Alden with moth
             priority: goal
-            operation: !import /operations/annoyance/madden-annoyance.yml
+            operation: annoyance/madden-annoyance
           - name: Dispose of Alden with edge
             priority: goal
-            operation: !import /operations/annoyance/murder-annoyance.yml
+            operation: annoyance/murder-annoyance
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml
@@ -73,7 +73,7 @@ motivations:
         imperatives:
           - name: Better get used to it
             priority: goal
-            operation: !import /operations/glover/work-glover-acceptance.yml
+            operation: glover/work-glover-acceptance
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml

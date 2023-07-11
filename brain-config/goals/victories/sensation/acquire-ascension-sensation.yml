@@ -11,4 +11,4 @@ imperatives:
       aspects:
         sensationmarks:
           greaterThan: 2
-    operation: !import /operations/victories/sensation/acquire-ascension-sensation.yml
+    operation: victories/sensation/acquire-ascension-sensation

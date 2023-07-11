@@ -17,4 +17,4 @@ completedWhen:
 imperatives:
   - name: Work dilligently at Glover & Glover
     priority: goal
-    operation: !import /operations/glover/work-glover-junior-dilligent.yml
+    operation: glover/work-glover-junior-dilligent

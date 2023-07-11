@@ -4,4 +4,4 @@ imperatives:
     priority: maintenance
     requirements:
       elementId: notoriety
-    operation: !import /operations/cult-business/counter-notariety.yml
+    operation: cult-business/counter-notariety

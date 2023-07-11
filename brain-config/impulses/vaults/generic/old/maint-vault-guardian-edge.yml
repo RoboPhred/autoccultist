@@ -52,4 +52,4 @@ forbidders:
             cardSet:
               - elementId: guardian_serpent
           containsAspects: { knock: 10 }
-operation: !import /operations/vaults/continue-vault-follower-edge.yml
+operation: vaults/continue-vault-follower-edge

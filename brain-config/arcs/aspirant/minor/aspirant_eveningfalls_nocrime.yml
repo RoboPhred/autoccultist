@@ -32,7 +32,7 @@ motivations:
         imperatives:
           - name: Better get used to it
             priority: goal
-            operation: !import /operations/glover/work-glover-acceptance.yml
+            operation: glover/work-glover-acceptance
     supportingGoals:
       - !import /goals/survive.yml
       - !import /goals/glover/work-glover.yml

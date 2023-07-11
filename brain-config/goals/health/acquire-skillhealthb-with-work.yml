@@ -11,7 +11,7 @@ imperatives:
       cardSet:
         - elementId: vitalityplus
         - elementId: vitalityplus
-    operation: !import /operations/work-skillhealth.yml
+    operation: work-skillhealth
   - name: "Learn Lesson: Vitality"
     extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:
@@ -21,5 +21,5 @@ imperatives:
         - elementId: vitalityplus
   - name: Upgrade Stronger Physique to Hardened Physique
     priority: goal
-    operation: !import /operations/health/upgrade-skillhealtha.yml
+    operation: health/upgrade-skillhealtha
   - !import /impulse-sets/procure-vitality.yml

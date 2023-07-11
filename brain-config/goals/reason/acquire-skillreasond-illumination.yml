@@ -54,7 +54,7 @@ imperatives:
             - elementId: eruditionplus
             - elementId: eruditionplus
             - elementId: eruditionplus
-    operation: !import /operations/reason/study-reason.yml
+    operation: reason/study-reason
   - name: Acquire an erudition lesson through study
     priority: goal
     forbidders:
@@ -63,7 +63,7 @@ imperatives:
         - elementId: eruditionplus
         - elementId: eruditionplus
         - elementId: eruditionplus
-    operation: !import /operations/learn-erudition-lesson.yml
+    operation: learn-erudition-lesson
   - name: Acquire an erudition lesson through books
     priority: goal
     requirements:
@@ -76,7 +76,7 @@ imperatives:
         - elementId: eruditionplus
         - elementId: eruditionplus
         - elementId: eruditionplus
-    operation: !import /operations/learn-erudition-lesson-textbookreason.yml
+    operation: learn-erudition-lesson-textbookreason
   - name: Acquire a Rarefied Mind
     priority: goal
-    operation: !import /operations/reason/upgrade-skillreasonc-illumination.yml
+    operation: reason/upgrade-skillreasonc-illumination

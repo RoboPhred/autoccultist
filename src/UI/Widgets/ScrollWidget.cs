@@ -112,7 +112,6 @@ namespace AutoccultistNS.UI
             // Expand the viewport to the size of the content we want to scroll.
             var sizer = content.AddComponent<ContentSizeFitter>();
 
-
             // Shove a blank image in so we capture mouse events for mouse drag scrolling
             var image = content.GetOrAddComponent<Image>();
             image.sprite = ResourcesManager.GetSpriteForUI("empty_bg");

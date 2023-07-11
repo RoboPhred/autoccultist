@@ -26,4 +26,4 @@ forbidders:
         # Forbid if study is idle (leave it to crit-affliction-emergency-vitality)
         - situation: study
           state: idle
-operation: !import /operations/heal-affliction-with-funds.yml
+operation: heal-affliction-with-funds

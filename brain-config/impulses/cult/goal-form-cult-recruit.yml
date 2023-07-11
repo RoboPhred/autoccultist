@@ -12,4 +12,4 @@ forbidders:
     - situation: time
       storedCardsMatch:
         elementId: seasonsuspicion
-operation: !import /operations/cult/form-cult-recruit.yml
+operation: cult/form-cult-recruit

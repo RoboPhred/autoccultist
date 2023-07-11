@@ -6,6 +6,6 @@ completedWhen:
     - elementId: locationbookdealer_exhausted
 imperatives:
   - name: Explore the city with a follower
-    operation: !import /operations/explore/explore-city-follower.yml
+    operation: explore/explore-city-follower
   - name: Explore the city with health
-    operation: !import /operations/explore/explore-city-health.yml
+    operation: explore/explore-city-health

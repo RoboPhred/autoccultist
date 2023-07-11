@@ -28,17 +28,17 @@ imperatives:
               - aspects: { vaultcontinent: 1 }
             aspect: "@count"
           greaterThanOrEqualTo: 7
-    operation: !import /operations/mansus/use-white-secrethistories.yml
+    operation: mansus/use-white-secrethistories
 
   - name: Combine Furtive Truths into Forgotten Chronicles
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-b
 
   - name: Combine Occult Scraps into Furtive Truths
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-a
 
   - name: Explore the Continent
     operation:

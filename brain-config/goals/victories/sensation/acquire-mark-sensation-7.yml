@@ -13,31 +13,31 @@ imperatives:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import /operations/glover/work-glover-junior.yml
+    operation: glover/work-glover-junior
   - name: Work at Glover & Glover under Alden
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import /operations/glover/work-glover-alden.yml
+    operation: glover/work-glover-alden
   - name: Work at Glover & Glover with diligence
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import /operations/glover/work-glover-diligence.yml
+    operation: glover/work-glover-diligence
   - name: Work a senior job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import /operations/glover/work-glover-senior.yml
+    operation: glover/work-glover-senior
   - name: Plead for job at Glover & Glover
     forbidders:
       # Stop working when we are waiting for the influence, as work takes longer than influence takes to expire
       !import /conditions/ascension-lore-and-cyprian.yml
     priority: maintenance
-    operation: !import /operations/glover/plead-glover.yml
+    operation: glover/plead-glover
 
   - name: Get a prisoner
     requirements:
@@ -100,13 +100,13 @@ imperatives:
         - situation: work
           storedCardsMatch:
             elementId: influencegrailc
-    operation: !import /operations/mansus/use-stag-ascent-of-knives.yml
+    operation: mansus/use-stag-ascent-of-knives
 
   - name: Paint to keep the Influence from fading
     requirements: !import /conditions/ascension-lore-and-cyprian.yml
     forbidders:
       elementId: ascensionsensationf
-    operation: !import /operations/painting/paint-influencegrailc.yml
+    operation: painting/paint-influencegrailc
 
   - name: Keep the hunter out of our hair
     requirements:

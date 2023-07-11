@@ -19,12 +19,12 @@ namespace AutoccultistNS.UI
             return window;
         }
 
-        public void Awake()
+        public void Update()
         {
             this.UpdateContent();
         }
 
-        public void Update()
+        protected override void OnAwake()
         {
             this.UpdateContent();
         }

@@ -16,4 +16,4 @@ imperatives:
   - !import /impulses/maint-vitality-from-health.yml
   - name: Upgrade Steely Physique with Forge
     priority: goal
-    operation: !import /operations/health/upgrade-skillhealthc-strength.yml
+    operation: health/upgrade-skillhealthc-strength

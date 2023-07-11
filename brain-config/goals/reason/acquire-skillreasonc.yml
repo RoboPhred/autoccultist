@@ -14,4 +14,4 @@ imperatives:
   - !import /impulses/norm-erudition-from-reason.yml
   - name: Upgrade Notable Scholarship to Profound Scholarship
     priority: goal
-    operation: !import /operations/reason/upgrade-skillreasonb.yml
+    operation: reason/upgrade-skillreasonb

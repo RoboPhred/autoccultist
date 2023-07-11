@@ -187,7 +187,7 @@ motivations:
         completedWhen:
           elementId: ritefollowerconsumeinfluence
         imperatives:
-          - operation: !import /operations/watch-stumm.yml
+          - operation: watch-stumm
 
   read_all_lore:
     name: Read all lore books

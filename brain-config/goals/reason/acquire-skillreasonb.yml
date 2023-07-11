@@ -13,4 +13,4 @@ imperatives:
   - !import /impulses/norm-erudition-from-reason.yml
   - name: Upgrade Scholarship to Notable Scholarship
     priority: goal
-    operation: !import /operations/reason/upgrade-skillreasona.yml
+    operation: reason/upgrade-skillreasona

@@ -14,8 +14,8 @@ imperatives:
       anyOf:
         - elementId: truecompleteasclepiangreek
         - elementId: truecompleteasclepian
-    operation: !import /operations/auction-purchase.yml
+    operation: auction-purchase
   - name: Read A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
-    operation: !import /operations/books/read-truecompleteasclepian.yml
+    operation: books/read-truecompleteasclepian
   - name: Translate A True and Complete Accounting of the Asclepian Mysteries of the Roots of the House
-    operation: !import /operations/books/translate-truecompleteasclepian.yml
+    operation: books/translate-truecompleteasclepian

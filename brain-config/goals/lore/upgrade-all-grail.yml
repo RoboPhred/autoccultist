@@ -33,30 +33,30 @@ imperatives:
   - name: Ensure we have glimmering
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/passion/study-passion.yml
+    operation: passion/study-passion
 
   - name: Combine Grail A
     requirements: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/lore/grail/lore-combine-grail-a.yml
+    operation: lore/grail/lore-combine-grail-a
 
   - name: Combine Grail B
     requirements: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/lore/grail/lore-combine-grail-b.yml
+    operation: lore/grail/lore-combine-grail-b
 
   - name: Combine Grail C
     requirements: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/lore/grail/lore-combine-grail-c.yml
+    operation: lore/grail/lore-combine-grail-c
 
   - name: Combine Grail D
     requirements: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/lore/grail/lore-combine-grail-d.yml
+    operation: lore/grail/lore-combine-grail-d
 
   - name: Combine Grail E
     requirements: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/lore/grail/lore-combine-grail-e.yml
+    operation: lore/grail/lore-combine-grail-e
 
   - name: Combine Grail F
     requirements: !import /conditions/can-answer-challenge-intuition.yml
     forbidders:
       elementId: fragmentgrailg
-    operation: !import /operations/lore/grail/lore-combine-grail-f.yml
+    operation: lore/grail/lore-combine-grail-f

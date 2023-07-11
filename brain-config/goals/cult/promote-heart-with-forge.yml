@@ -25,4 +25,4 @@ completedWhen:
 imperatives:
   - name: Promote a Heart Believer, by invoking Forge
     priority: goal
-    operation: !import /operations/cult/promote-heart-believer-forge.yml
+    operation: cult/promote-heart-believer-forge

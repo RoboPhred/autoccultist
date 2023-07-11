@@ -116,10 +116,7 @@ namespace AutoccultistNS.Config
         {
             var candidates = new List<IConfigObject>();
 
-            candidates.AddRange(LibraryGoals.Where(x => type.IsAssignableFrom(x.GetType())));
-            candidates.AddRange(LibraryArcs.Where(x => type.IsAssignableFrom(x.GetType())));
-
-            var result = candidates.Find(candidate => candidate.FilePath == filePath);
+            var result = GetAllConfigObjects(type).FirstOrDefault(candidate => candidate.FilePath == filePath);
 
             return result;
         }
@@ -156,10 +153,7 @@ namespace AutoccultistNS.Config
                 throw new ArgumentNullException(nameof(id));
             }
 
-            candidates.AddRange(LibraryGoals.Where(x => type.IsAssignableFrom(x.GetType())));
-            candidates.AddRange(LibraryArcs.Where(x => type.IsAssignableFrom(x.GetType())));
-
-            var result = candidates.Find(candidate => candidate.Id == id);
+            var result = GetAllConfigObjects(type).FirstOrDefault(candidate => candidate.Id == id);
 
             return result;
         }
@@ -175,6 +169,18 @@ namespace AutoccultistNS.Config
             LoadOperations();
             LoadGoals();
             LoadArcs();
+        }
+
+        private static IEnumerable<IConfigObject> GetAllConfigObjects(Type type = null)
+        {
+            var objects = new IConfigObject[0].Concat(LibraryArcs).Concat(LibraryGoals).Concat(LibraryOperations);
+
+            if (type != null)
+            {
+                objects = objects.Where(x => type.IsAssignableFrom(x.GetType()));
+            }
+
+            return objects;
         }
 
         private static void LoadArcs()

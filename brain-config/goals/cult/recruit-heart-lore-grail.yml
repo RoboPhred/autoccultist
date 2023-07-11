@@ -7,4 +7,4 @@ completedWhen: !import /conditions/has-heart-follower.yml
 imperatives:
   - name: Recruit a Heart acquaintance, by invoking Grail
     priority: goal
-    operation: !import /operations/cult/recruit-heart-lore-grail.yml
+    operation: cult/recruit-heart-lore-grail

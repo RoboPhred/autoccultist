@@ -14,4 +14,4 @@ imperatives:
   - !import /impulses/maint-vitality-from-health.yml
   - name: Upgrade Hardened Physique to Steely Physique
     priority: goal
-    operation: !import /operations/health/upgrade-skillhealthb.yml
+    operation: health/upgrade-skillhealthb

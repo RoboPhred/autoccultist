@@ -8,4 +8,4 @@ completedWhen:
     - elementId: poppyaway
 imperatives:
   - name: Feed Poppy
-    operation: !import /operations/patrons/feed-poppy.yml
+    operation: patrons/feed-poppy

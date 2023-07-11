@@ -7,4 +7,4 @@ completedWhen: !import /conditions/has-grail-follower.yml
 imperatives:
   - name: Recruit a grail acquaintance, by invoking Grail
     priority: goal
-    operation: !import /operations/cult/recruit-grail-lore-grail.yml
+    operation: cult/recruit-grail-lore-grail

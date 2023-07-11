@@ -21,7 +21,7 @@ imperatives:
             forge:
               greaterThanOrEqualTo: 15
     priority: maintenance
-    operation: !import /operations/work-skillhealth.yml
+    operation: work-skillhealth
 
   - name: Mansus-Grind for Knock Influence
     priority: goal
@@ -41,7 +41,7 @@ imperatives:
         # In theory the bot should be frame perfect at sustaining crucible, but in practice
         # gaps of time slip by between game frames and decay he does.
         - !import /conditions/has-evidence.yml
-    operation: !import /operations/mansus/use-stag-normal.yml
+    operation: mansus/use-stag-normal
 
   - name: Summon King Crucible
     priority: goal

@@ -9,12 +9,12 @@ imperatives:
   - name: Ensure we have glimmering
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-intuition.yml
-    operation: !import /operations/passion/study-passion.yml
+    operation: passion/study-passion
 
   - name: Ensure we have erudition
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/reason/study-reason.yml
+    operation: reason/study-reason
 
   - name: Talk to Sulochana about a Glimmering
     priority: maintenance
@@ -28,7 +28,7 @@ imperatives:
           recipe: studyresearch.entrypoint
           storedCardsMatch:
             aspects: { challenge.knowledge: 1 }
-    operation: !import /operations/sulochana/chat-glimmering.yml
+    operation: sulochana/chat-glimmering
 
   - name: Subvert Winter B to Heart
     priority: goal
@@ -42,13 +42,13 @@ imperatives:
             - elementId: fragmentwinterb
               aspects: { challenge.knowledge: -1 }
             - !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/heart/lore-subvert-winter-heart-b.yml
+    operation: lore/heart/lore-subvert-winter-heart-b
 
   - name: Combine Heart A
     requirements: !import /conditions/can-answer-challenge-intuition.yml
     forbidders:
       elementId: fragmentwinter
-    operation: !import /operations/lore/heart/lore-combine-heart-a.yml
+    operation: lore/heart/lore-combine-heart-a
 
   - name: Combine Winter A
     requirements:
@@ -57,7 +57,7 @@ imperatives:
         - anyOf:
             - elementId: fragmentheartb
             - elementId: fragmentheartc
-    operation: !import /operations/lore/winter/lore-combine-winter-a.yml
+    operation: lore/winter/lore-combine-winter-a
 
   - name: Subvert Winter A to Heart
     requirements:
@@ -70,7 +70,7 @@ imperatives:
             - elementId: fragmentwinter
               aspects: { challenge.knowledge: -1 }
             - !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/heart/lore-subvert-winter-heart-a.yml
+    operation: lore/heart/lore-subvert-winter-heart-a
 
   - name: Downgrade Heart B
     requirements:
@@ -82,10 +82,10 @@ imperatives:
         - cardSet:
             - elementId: fragmentwinter
             - elementId: fragmentwinter
-    operation: !import /operations/lore/heart/lore-breakdown-heart-b.yml
+    operation: lore/heart/lore-breakdown-heart-b
 
   - name: Downgrade Winter C
-    operation: !import /operations/lore/winter/lore-breakdown-winter-c.yml
+    operation: lore/winter/lore-breakdown-winter-c
 
   - name: Downgrade Heart C
     requirements:
@@ -94,11 +94,11 @@ imperatives:
         - elementId: fragmentwinterb
     forbidders:
       elementId: fragmentheartb
-    operation: !import /operations/lore/heart/lore-breakdown-heart-c.yml
+    operation: lore/heart/lore-breakdown-heart-c
 
   - name: Downgrade Winter B
     requirements:
       elementId: fragmentheart
     forbidders:
       aspects: { lore: 1, heart: 4 }
-    operation: !import /operations/lore/winter/lore-breakdown-winter-b.yml
+    operation: lore/winter/lore-breakdown-winter-b

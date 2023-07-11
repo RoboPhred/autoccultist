@@ -9,7 +9,7 @@ completedWhen:
 imperatives:
   - name: Recruit an acquaintance, by burning Restlessness
     priority: goal
-    operation: !import /operations/cult/recruit-influence-restlessness.yml
+    operation: cult/recruit-influence-restlessness
   - name: Recruit an acquaintance, by invoking Grail
     priority: goal
-    operation: !import /operations/cult/recruit-lore-grail.yml
+    operation: cult/recruit-lore-grail

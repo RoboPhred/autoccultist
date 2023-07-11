@@ -14,4 +14,4 @@ imperatives:
   - !import /impulses/norm-glimmering-from-passion.yml
   - name: Upgrade Wild Imagination to Fevered Imagination
     priority: goal
-    operation: !import /operations/passion/upgrade-skillpassionb.yml
+    operation: passion/upgrade-skillpassionb

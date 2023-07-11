@@ -20,4 +20,4 @@ forbidders:
         - elementId: vitalityplus
         - elementId: vitalityplus
         - aspects: { lore: 1, forge: 2 }
-operation: !import /operations/health/study-health.yml
+operation: health/study-health

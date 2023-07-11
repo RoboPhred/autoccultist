@@ -9,4 +9,4 @@ completedWhen:
 imperatives:
   - name: Focus myself on Sensation
     priority: goal
-    operation: !import /operations/victories/sensation/acquire-temptation-sensation.yml
+    operation: victories/sensation/acquire-temptation-sensation

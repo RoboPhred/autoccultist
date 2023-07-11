@@ -3,7 +3,7 @@ priority: goal
 requirements:
   cardSet:
     - elementId: waystagbefore_5
-operation: !import /operations/mansus/use-wood-secrethistories.yml
+operation: mansus/use-wood-secrethistories
 forbidders:
   anyOf:
     - cardSet:

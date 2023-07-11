@@ -19,19 +19,19 @@ requirements:
 imperatives:
   - name: Recruit an acquaintance, by burning Fascination
     priority: goal
-    operation: !import /operations/cult/recruit-influence-fascination.yml
+    operation: cult/recruit-influence-fascination
   - name: Recruit an acquaintance, by burning Dread
     priority: goal
-    operation: !import /operations/cult/recruit-influence-dread.yml
+    operation: cult/recruit-influence-dread
   - name: Recruit an acquaintance, by burning Restlessness
     priority: goal
-    operation: !import /operations/cult/recruit-influence-restlessness.yml
+    operation: cult/recruit-influence-restlessness
   - name: Recruit an acquaintance, by burning Lantern Influence
     priority: goal
-    operation: !import /operations/cult/recruit-influence-lantern.yml
+    operation: cult/recruit-influence-lantern
   - name: Recruit an acquaintance, by burning Winter Influence
     priority: goal
-    operation: !import /operations/cult/recruit-influence-winter.yml
+    operation: cult/recruit-influence-winter
   - name: Recruit an acquaintance, by burning Moth Influence
     priority: goal
-    operation: !import /operations/cult/recruit-influence-moth.yml
+    operation: cult/recruit-influence-moth

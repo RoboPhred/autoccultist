@@ -8,4 +8,4 @@ completedWhen:
 imperatives:
   - name: Work the intro job
     priority: goal
-    operation: !import /operations/aspirant/begin-introjob.yml
+    operation: aspirant/begin-introjob

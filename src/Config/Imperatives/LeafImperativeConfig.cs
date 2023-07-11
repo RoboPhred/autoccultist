@@ -33,7 +33,7 @@ namespace AutoccultistNS.Config
         /// This takes an OperationImperative, that must also be able to activate in order
         /// for this imperative to activate.
         /// </summary>
-        public OperationConfig Operation { get; set; }
+        public ObjectOrLibraryEntry<OperationConfig> Operation { get; set; }
 
         /// <summary>
         /// Gets or sets a list of reactions to perform when this impulse is triggered.
@@ -47,7 +47,7 @@ namespace AutoccultistNS.Config
                 var operation = this.Operation ?? this.Extends?.Operation;
                 if (operation != null)
                 {
-                    return new IImperative[] { operation };
+                    return new IImperative[] { operation.Value };
                 }
                 else
                 {
@@ -82,7 +82,7 @@ namespace AutoccultistNS.Config
                 var operation = this.Operation ?? this.Extends?.Operation;
                 if (operation != null)
                 {
-                    operationResult = operation.IsConditionMet(state);
+                    operationResult = operation.Value.IsConditionMet(state);
                     if (!operationResult)
                     {
                         return AddendedConditionResult.Addend(operationResult, "Operation imperative cannot activate.");
@@ -110,7 +110,7 @@ namespace AutoccultistNS.Config
             }
 
             var operation = this.Operation ?? this.Extends?.Operation;
-            var impulses = operation != null ? operation.GetImpulses(state) : Enumerable.Empty<IImpulse>();
+            var impulses = operation != null ? operation.Value.GetImpulses(state) : Enumerable.Empty<IImpulse>();
 
             // if we have a priority, override our operation priority.
             if (this.Priority.HasValue)

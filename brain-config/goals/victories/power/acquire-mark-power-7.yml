@@ -28,7 +28,7 @@ imperatives:
                 - elementId: pre.spirit_forgee_edge
             - aspects: { influence: 1, forge: 15 }
     priority: maintenance
-    operation: !import /operations/work-skillhealth.yml
+    operation: work-skillhealth
 
   - name: Get a prisoner
     forbidders:
@@ -127,7 +127,7 @@ imperatives:
         - elementId: spirit_forgee_edge.defunct
           lifetimeRemaining: 30
         - aspects: { influence: 1, knock: 5 }
-    operation: !import /operations/mansus/use-stag-normal.yml
+    operation: mansus/use-stag-normal
 
   - name: Summon King Crucible
     priority: goal

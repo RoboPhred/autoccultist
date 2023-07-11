@@ -10,4 +10,4 @@ completedWhen:
   elementId: waywood
 imperatives:
   - name: "Acquire Way: The wood"
-    operation: !import /operations/mansus/acquire-way-wood.yml
+    operation: mansus/acquire-way-wood

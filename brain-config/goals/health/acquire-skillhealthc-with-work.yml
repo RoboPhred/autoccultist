@@ -12,7 +12,7 @@ imperatives:
         - elementId: vitalityplus
         - elementId: vitalityplus
         - elementId: vitalityplus
-    operation: !import /operations/work-skillhealth.yml
+    operation: work-skillhealth
   - extends: !import /impulses/goal-learn-lesson-vitality.yml
     forbidders:
       # Stop using our skill card when we have enough lessons
@@ -22,5 +22,5 @@ imperatives:
         - elementId: vitalityplus
   - name: Upgrade Hardened Physique to Steely Physique
     priority: goal
-    operation: !import /operations/health/upgrade-skillhealthb.yml
+    operation: health/upgrade-skillhealthb
   - !import /impulse-sets/procure-vitality.yml

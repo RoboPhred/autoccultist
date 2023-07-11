@@ -9,4 +9,4 @@ forbidders:
                 - elementId: health
                 - elementId: health
         - !import /conditions/illhealth-pending-30secs.yml
-operation: !import /operations/work-health.yml
+operation: work-health

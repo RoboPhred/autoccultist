@@ -14,4 +14,4 @@ imperatives:
         - elementId: vitalityplus
   - name: Upgrade Stronger Physique to Hardened Physique
     priority: goal
-    operation: !import /operations/health/upgrade-skillhealtha.yml
+    operation: health/upgrade-skillhealtha

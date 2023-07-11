@@ -8,4 +8,4 @@ imperatives:
   - !import /impulse-sets/learn-languages.yml
   - !import /impulse-sets/translate-books.yml
   - name: Watch Stumm
-    operation: !import /operations/watch-stumm.yml
+    operation: watch-stumm

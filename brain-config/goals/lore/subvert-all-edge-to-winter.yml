@@ -9,7 +9,7 @@ imperatives:
   - name: Ensure we have erudition
     priority: maintenance
     forbidders: !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/reason/study-reason.yml
+    operation: reason/study-reason
 
   - name: Downgrade Winter C
     requirements:
@@ -18,20 +18,20 @@ imperatives:
         - elementId: fragmentedgeb
     forbidders:
       elementId: fragmentwinterb
-    operation: !import /operations/lore/winter/lore-breakdown-winter-c.yml
+    operation: lore/winter/lore-breakdown-winter-c
 
   - name: Downgrade Winter B
     requirements:
       elementId: fragmentedge
     forbidders:
       elementId: fragmentwinter
-    operation: !import /operations/lore/winter/lore-breakdown-winter-b.yml
+    operation: lore/winter/lore-breakdown-winter-b
 
   - name: Downgrade Edge C
-    operation: !import /operations/lore/edge/lore-breakdown-edge-c.yml
+    operation: lore/edge/lore-breakdown-edge-c
 
   - name: Downgrade Edge B
-    operation: !import /operations/lore/edge/lore-breakdown-edge-b.yml
+    operation: lore/edge/lore-breakdown-edge-b
 
   - name: Subvert Edge to Winter
     priority: goal
@@ -40,4 +40,4 @@ imperatives:
         - elementId: fragmentwinter
           aspects: { challenge.knowledge: -1 }
         - !import /conditions/can-answer-challenge-knowledge.yml
-    operation: !import /operations/lore/winter/lore-subvert-edge-winter-a.yml
+    operation: lore/winter/lore-subvert-edge-winter-a

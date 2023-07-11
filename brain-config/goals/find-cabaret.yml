@@ -5,4 +5,4 @@ completedWhen:
     - elementId: locationcabaretclosed
 imperatives:
   - name: Explore the city
-    operation: !import /operations/explore/explore-city-follower.yml
+    operation: explore/explore-city-follower

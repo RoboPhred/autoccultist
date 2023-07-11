@@ -28,17 +28,17 @@ imperatives:
               - aspects: { vaultlandbeyondforest: 1 }
             aspect: "@count"
           greaterThanOrEqualTo: 6 # 6 total locations
-    operation: !import /operations/mansus/use-stag-secrethistories.yml
+    operation: mansus/use-stag-secrethistories
 
   - name: Combine Occult Scraps into Furtive Truths
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-a
 
   - name: Combine Furtive Truths into Forgotten Chronicles
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-b
 
   # Get a glimmering so we can combine secret histories c
   - extends: !import /impulses/norm-glimmering-from-passion.yml
@@ -54,7 +54,7 @@ imperatives:
   - name: Combine Forgotten Chronicles into Forbidden Epics
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-c
 
   - name: Explore Beyond the Forest
     operation:

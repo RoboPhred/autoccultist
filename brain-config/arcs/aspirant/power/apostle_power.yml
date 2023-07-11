@@ -163,7 +163,7 @@ motivations:
         completedWhen:
           elementId: ritefollowerconsumeinfluence
         imperatives:
-          - operation: !import /operations/watch-stumm.yml
+          - operation: watch-stumm
   # End lore and rite collection
 
   move_into_library:

@@ -28,15 +28,15 @@ imperatives:
         - elementId: waystagbefore_4
         - elementId: waystagbefore_5
         - elementId: waystag_after
-    operation: !import /operations/mansus/stag/aquire-way-stag-riddle.yml
+    operation: mansus/stag/aquire-way-stag-riddle
   - name: Answer Ghirbi's riddle on Moth
-    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-1.yml
+    operation: mansus/stag/aquire-way-stag-riddle-1
   - name: Answer Ghirbi's riddle on Lantern
-    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-2.yml
+    operation: mansus/stag/aquire-way-stag-riddle-2
   - name: Answer Ghirbi's riddle on Grail
-    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-3.yml
+    operation: mansus/stag/aquire-way-stag-riddle-3
   - name: Answer Ghirbi's riddle on Knock
-    operation: !import /operations/mansus/stag/aquire-way-stag-riddle-4.yml
+    operation: mansus/stag/aquire-way-stag-riddle-4
 
   - name: Ensure we have glimmering
     priority: maintenance
@@ -47,7 +47,7 @@ imperatives:
           #  TODO: Should let the operation itself state this requirement.
           lifetimeRemaining:
             greaterThan: 60
-    operation: !import /operations/passion/study-passion.yml
+    operation: passion/study-passion
 
   # Begin Knock C
   - name: Subvert Sexton's Secret to Knock
@@ -59,7 +59,7 @@ imperatives:
             - elementId: fragmentknockb
             - elementId: fragmentknockb
         - elementId: fragmentknockc
-    operation: !import /operations/lore/knock/lore-subvert-winter-knock-a.yml
+    operation: lore/knock/lore-subvert-winter-knock-a
   - name: Break down Operation of Declining Sun
     requirements:
       elementId: waystagbefore_4
@@ -69,13 +69,13 @@ imperatives:
             - elementId: fragmentwinterb
             - elementId: fragmentwinterb
         - elementId: fragmentknockc
-    operation: !import /operations/lore/winter/lore-breakdown-winter-c.yml
+    operation: lore/winter/lore-breakdown-winter-c
   - name: Subvert A White Ceremony to Knock
     requirements:
       elementId: waystagbefore_4
     forbidders:
       elementId: fragmentknockc
-    operation: !import /operations/lore/knock/lore-subvert-winter-knock-b.yml
+    operation: lore/knock/lore-subvert-winter-knock-b
   # End Knock C
 
   # Begin Grail C
@@ -83,7 +83,7 @@ imperatives:
   - name: Combine A Megalesian Incantation
     forbidders:
       elementId: fragmentgrailc
-    operation: !import /operations/lore/grail/lore-combine-grail-b.yml
+    operation: lore/grail/lore-combine-grail-b
   - name: Combine A Red Secret
     forbidders:
       anyOf:
@@ -91,7 +91,7 @@ imperatives:
             - elementId: fragmentgrailb
             - elementId: fragmentgrailb
         - elementId: fragmentgrailc
-    operation: !import /operations/lore/grail/lore-combine-grail-a.yml
+    operation: lore/grail/lore-combine-grail-a
   # End Grail C
 
   # Begin Secret Histories C
@@ -100,7 +100,7 @@ imperatives:
       elementId: waystagbefore_5
     forbidders:
       elementId: fragmentsecrethistoriesc
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-b
   - name: Combine An Occult Scrap
     requirements:
       elementId: waystagbefore_5
@@ -110,7 +110,7 @@ imperatives:
             - elementId: fragmentsecrethistoriesb
             - elementId: fragmentsecrethistoriesb
         - elementId: fragmentsecrethistoriesc
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-a
   # End Secret Histories C
 
   # Begin Lantern C
@@ -124,7 +124,7 @@ imperatives:
             - elementId: fragmentlanternb
             - elementId: fragmentlanternb
         - elementId: fragmentlanternc
-    operation: !import /operations/lore/lantern/lore-combine-lantern-a.yml
+    operation: lore/lantern/lore-combine-lantern-a
   - name: Combine An Iguvine Rite
     priority: goal
     requirements:
@@ -132,7 +132,7 @@ imperatives:
     forbidders:
       anyOf:
         - elementId: fragmentlanternc
-    operation: !import /operations/lore/lantern/lore-combine-lantern-b.yml
+    operation: lore/lantern/lore-combine-lantern-b
   # End Lantern C
 
   # heartc + grailc = graild
@@ -140,4 +140,4 @@ imperatives:
     priority: goal
     forbidders:
       elementId: waystagbefore_3
-    operation: !import /operations/lore/grail/lore-subvert-heart-grail-c.yml
+    operation: lore/grail/lore-subvert-heart-grail-c

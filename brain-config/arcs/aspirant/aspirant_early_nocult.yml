@@ -132,7 +132,7 @@ motivations:
         completedWhen:
           elementId: ritefollowerconsumeinfluence
         imperatives:
-          - operation: !import /operations/watch-stumm.yml
+          - operation: watch-stumm
 
   acquire_early_doors:
     name: Acquire the Wood and White Door

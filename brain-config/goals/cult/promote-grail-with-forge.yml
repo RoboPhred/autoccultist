@@ -8,7 +8,7 @@ completedWhen:
 imperatives:
   - name: Promote a Believer, while burning Restlessness
     priority: goal
-    operation: !import /operations/cult/promote-grail-believer-forge-restlessness.yml
+    operation: cult/promote-grail-believer-forge-restlessness
   - name: Promote a Believer, by invoking Forge
     priority: goal
-    operation: !import /operations/cult/promote-grail-believer-forge.yml
+    operation: cult/promote-grail-believer-forge

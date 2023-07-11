@@ -3,7 +3,7 @@
 # TODO: Take into account: painting, selling spintria
 - name: Skilled physical work
   priority: maintenance
-  operation: !import /operations/work-skillhealth.yml
+  operation: work-skillhealth
 - name: Unskilled physical work
   priority: maintenance
-  operation: !import /operations/work-health.yml
+  operation: work-health

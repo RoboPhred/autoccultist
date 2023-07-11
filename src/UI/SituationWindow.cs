@@ -68,10 +68,17 @@ namespace AutoccultistNS.UI
             throw new NotSupportedException();
         }
 
+        public void Awake()
+        {
+            this.canvasGroupFader.HideImmediately();
+            this.OnAwake();
+        }
+
         public void Attach(Situation situation)
         {
             this.Situation = situation;
             this.Title = $"{situation.VerbId.Capitalize()} Automations";
+            this.canvasGroupFader.HideImmediately();
             this.content.Clear();
             this.BuildContent(this.content.GameObject.transform);
         }
@@ -102,6 +109,10 @@ namespace AutoccultistNS.UI
         }
 
         protected abstract void BuildContent(Transform parent);
+
+        protected virtual void OnAwake()
+        {
+        }
 
         protected virtual void OnClose()
         {

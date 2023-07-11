@@ -7,4 +7,4 @@ completedWhen:
   elementId: hq.bookshop
 imperatives:
   - name: Change Premises to Library
-    operation: !import /operations/hq/move-hq-library.yml
+    operation: hq/move-hq-library

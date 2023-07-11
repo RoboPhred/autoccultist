@@ -40,4 +40,4 @@ forbidders:
             cardSet:
               - elementId: peril_treacherousground
           containsAspects: { lantern: 10 }
-operation: !import /operations/vaults/continue-vault-follower-forge.yml
+operation: vaults/continue-vault-follower-forge

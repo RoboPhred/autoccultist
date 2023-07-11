@@ -20,4 +20,4 @@ forbidders:
         - elementId: vitalityplus
         - elementId: vitalityplus
         - aspects: { lore: 1, forge: 2 }
-operation: !import /operations/learn-vitality-lesson.yml
+operation: learn-vitality-lesson

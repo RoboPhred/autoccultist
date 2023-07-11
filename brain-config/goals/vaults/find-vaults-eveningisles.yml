@@ -38,7 +38,7 @@ imperatives:
         - elementId: fragmentsecrethistoriesc
         - elementId: fragmentsecrethistoriesc
         - elementId: fragmentsecrethistoriesc
-    operation: !import /operations/mansus/use-stag-secrethistories.yml
+    operation: mansus/use-stag-secrethistories
 
   # Get a glimmering so we can combine secret histories c and d
   - extends: !import /impulses/norm-glimmering-from-passion.yml
@@ -64,32 +64,32 @@ imperatives:
   - name: Combine Vagabond's Maps into Port Noon Anecdotes
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-f.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-f
 
   - name: Combine Unresolved Ambiguities into Vagabond's Maps
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-e.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-e
 
   - name: Combine Forbidden Epics into Unresolved Ambiguities
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-d.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-d
 
   - name: Combine Forgotten Chronicles into Forbidden Epics
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-c.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-c
 
   - name: Combine Furtive Truths into Forgotten Chronicles
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-b.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-b
 
   - name: Combine Occult Scraps into Furtive Truths
     priority: maintenance
     requirements: *has-needed-secret-histories
-    operation: !import /operations/lore/secrethistories/lore-combine-secrethistories-a.yml
+    operation: lore/secrethistories/lore-combine-secrethistories-a
 
   - name: Explore the Evening Isles
     operation:

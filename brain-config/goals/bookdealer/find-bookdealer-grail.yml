@@ -43,6 +43,6 @@ imperatives:
                 - elementId: scholarlatin
         - elementId: orchidtransfigurations2
         - elementId: skeletonsongs
-    operation: !import /operations/buy-book-from-morland.yml
+    operation: buy-book-from-morland
   - !import /impulses/books/maint-translate-books-latin.yml
   - !import /impulses/books/maint-read-lore.yml

@@ -30,14 +30,14 @@ imperatives:
               - aspects: { vaultcapital: 1 }
             aspect: "@count"
           greaterThanOrEqualTo: 6 # 6 total locations
-    operation: !import /operations/mansus/use-wood-secrethistories.yml
+    operation: mansus/use-wood-secrethistories
 
   - name: Break down Furtive Truths into Occult Scraps
     priority: maintenance
     requirements: *has-needed-secret-histories
     forbidders:
       elementId: fragmentsecrethistories
-    operation: !import /operations/lore/secrethistories/lore-breakdown-secrethistories-b.yml
+    operation: lore/secrethistories/lore-breakdown-secrethistories-b
 
   - name: Explore the Capital
     operation:
