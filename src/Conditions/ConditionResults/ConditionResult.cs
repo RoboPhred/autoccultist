@@ -5,7 +5,7 @@ namespace AutoccultistNS
     /// <summary>
     /// The result of a condition check.
     /// </summary>
-    public class ConditionResult : IEquatable<ConditionResult>
+    public class ConditionResult : IEquatable<ConditionResult>, IComparable<ConditionResult>
     {
         /// <summary>
         /// A condition result that indicates success without further context.
@@ -56,6 +56,11 @@ namespace AutoccultistNS
         public bool Equals(ConditionResult other)
         {
             return this.IsConditionMet == other.IsConditionMet;
+        }
+
+        public int CompareTo(ConditionResult other)
+        {
+            return this.IsConditionMet.CompareTo(other.IsConditionMet);
         }
     }
 }

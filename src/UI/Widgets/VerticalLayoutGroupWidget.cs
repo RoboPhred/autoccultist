@@ -95,9 +95,9 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public VerticalLayoutGroupWidget AddContent(Action<Transform> transform)
+        public VerticalLayoutGroupWidget AddContent(Action<WidgetMountPoint> factory)
         {
-            transform(this.GameObject.transform);
+            factory(new WidgetMountPoint(this.GameObject.transform));
             return this;
         }
     }

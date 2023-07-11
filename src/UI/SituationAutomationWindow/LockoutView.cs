@@ -6,13 +6,33 @@ namespace AutoccultistNS.UI
     {
         public LockoutView(SituationAutomationWindow window, Transform contentRoot)
         {
-            UIFactories.CreateVeritcalLayoutGroup("VerticalLayout", contentRoot)
+            var test = UIFactories.CreateVeritcalLayoutGroup("VerticalLayout", contentRoot)
+                .Padding(10, 2)
+                .ExpandWidth()
                 .FillContentHeight()
-                .AddContent(transform =>
+                .AddContent(mountPoint =>
                 {
-                    UIFactories.CreateText("LockoutText", transform)
+                    mountPoint.AddText("LockoutText")
+                        .ExpandWidth()
+                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
+                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                        .FontSize(32)
                         .Text("Locked out");
-                    UIFactories.CreateTextButton("Unlock", transform)
+
+                    mountPoint.AddSizingLayout("Spacer")
+                        .PreferredHeight(10);
+
+                    mountPoint.AddText("Explainer")
+                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
+                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                        .FontSize(20)
+                        .Text("Autoccultist will not automate this verb.  You can use it for your own purposes.");
+
+                    mountPoint.AddSizingLayout("Spacer")
+                        .PreferredHeight(10);
+
+                    mountPoint.AddTextButton("Unlock")
+                        .Left(0, 0)
                         .Text("Unlock")
                         .OnClick(() =>
                             {

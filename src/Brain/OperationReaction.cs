@@ -1,6 +1,7 @@
 namespace AutoccultistNS.Brain
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace AutoccultistNS.Brain
         private IRecipeSolution currentRecipeSolution;
         private bool isEnding = false;
 
+        private List<string> recipeHistory = new();
+
         public OperationReaction(IOperation operation)
             : base(operation.Situation)
         {
@@ -25,6 +28,8 @@ namespace AutoccultistNS.Brain
         }
 
         public IOperation Operation { get; }
+
+        public IReadOnlyList<string> RecipeHistory => this.recipeHistory;
 
         public override string ToString()
         {
@@ -201,6 +206,8 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
 
+                            this.recipeHistory.Add(this.GetSituationState().CurrentRecipe);
+
                             if (recipeSolution.EndOperation)
                             {
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
@@ -218,7 +225,10 @@ namespace AutoccultistNS.Brain
                             }
 
                             this.currentRecipeSolution = recipeSolution;
+
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
+
+                            this.recipeHistory.Add(this.GetSituationState().CurrentRecipe);
 
                             await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
 
@@ -235,6 +245,11 @@ namespace AutoccultistNS.Brain
             // Do this ahead of time so we know not to pause if there is nothing to do.
             var state = this.GetSituationState();
 
+            // Remember what this was, in case it somehow ends up changing.
+            var pinnedRecipe = state.CurrentRecipe;
+
+            this.recipeHistory.Add(pinnedRecipe);
+
             var recipeSolution = this.Operation.GetRecipeSolution(state);
             if (recipeSolution == null)
             {
@@ -247,9 +262,6 @@ namespace AutoccultistNS.Brain
                 // Nothing to slot, no need to coordinate anything.
                 return !recipeSolution.EndOperation;
             }
-
-            // Remember what this was, in case it somehow ends up changing.
-            var pinnedRecipe = state.CurrentRecipe;
 
             return await GameAPI.WhilePaused(
                 $"{this.GetType().Name}:{nameof(this.TryExecuteCurrentRecipe)}",

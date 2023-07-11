@@ -41,6 +41,7 @@ namespace AutoccultistNS.UI
         public bool IsVisible => this.canvasGroupFader.IsFullyVisible() || this.canvasGroupFader.IsAppearing();
 
         protected SizingLayoutWidget Content { get; private set; }
+
         public static T CreateWindow<T>(string key)
             where T : SituationWindow
         {
@@ -72,6 +73,11 @@ namespace AutoccultistNS.UI
         {
             this.canvasGroupFader.HideImmediately();
             this.OnAwake();
+        }
+
+        public void Update()
+        {
+            this.OnUpdate();
         }
 
         public void Attach(Situation situation)
@@ -116,6 +122,10 @@ namespace AutoccultistNS.UI
         {
         }
 
+        protected virtual void OnUpdate()
+        {
+        }
+
         protected virtual void OnClose()
         {
         }
@@ -144,76 +154,81 @@ namespace AutoccultistNS.UI
             fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            UIFactories.CreateImage("BG_Top", this.gameObject)
-                .Anchor(0, 0)
-                .Left(0, 0)
-                .Top(1, 0)
-                .Right(1, 0)
-                .Bottom(1, -50)
-                .Sprite("window_bg_top")
-                .SlicedImage()
-                .Color(BgColorHeader);
+            WidgetMountPoint.On(this.gameObject, mountPoint =>
+            {
+                mountPoint.AddImage("BG_Top")
+                    .Anchor(0, 0)
+                    .Left(0, 0)
+                    .Top(1, 0)
+                    .Right(1, 0)
+                    .Bottom(1, -50)
+                    .Sprite("window_bg_top")
+                    .SlicedImage()
+                    .Color(BgColorHeader);
 
-            UIFactories.CreateImage("BG_Body", this.gameObject)
-                .Anchor(0, -50)
-                .Left(0, 0)
-                .Top(1, -50)
-                .Right(1, 0)
-                .Bottom(0, 77)
-                .Sprite("window_bg_middle")
-                .SlicedImage()
-                .Color(BgColorBody);
+                mountPoint.AddImage("BG_Body")
+                    .Anchor(0, -50)
+                    .Left(0, 0)
+                    .Top(1, -50)
+                    .Right(1, 0)
+                    .Bottom(0, 77)
+                    .Sprite("window_bg_middle")
+                    .SlicedImage()
+                    .Color(BgColorBody);
 
-            var footerContainer = UIFactories.CreateVeritcalLayoutGroup("FooterContainer", this.gameObject)
-                .Left(0, 0)
-                .Top(0, 77)
-                .Right(1, 0)
-                .Bottom(0, 27)
-                .ChildForceExpandHeight(true)
-                .ChildForceExpandWidth(true);
+                var footerContainer = mountPoint.AddVeritcalLayoutGroup("FooterContainer")
+                    .Left(0, 0)
+                    .Top(0, 77)
+                    .Right(1, 0)
+                    .Bottom(0, 27)
+                    .ChildForceExpandHeight(true)
+                    .ChildForceExpandWidth(true)
+                    .AddContent(mountPoint =>
+                    {
+                        mountPoint.AddImage("Footer")
+                        .Anchor(350, -90)
+                        .Left(0, 0)
+                        .Top(1, -40)
+                        .Right(0, 700)
+                        .Bottom(1, -90)
+                        .MinHeight(5)
+                        .Sprite("window_bg_bottom")
+                        .SlicedImage()
+                        .Color(BgColorFooter);
+                    });
 
-            UIFactories.CreateImage("Footer", footerContainer)
-                .Anchor(350, -90)
-                .Left(0, 0)
-                .Top(1, -40)
-                .Right(0, 700)
-                .Bottom(1, -90)
-                .MinHeight(5)
-                .Sprite("window_bg_bottom")
-                .SlicedImage()
-                .Color(BgColorFooter);
+                this.title = mountPoint.AddText("TitleText")
+                    .Anchor(Vector2.zero)
+                    .Left(0, 57.5f)
+                    .Top(1, 0)
+                    .Right(1, -57.5f)
+                    .Bottom(1, -45)
+                    .PreferredHeight(25)
+                    .FontSize(30)
+                    .MinFontSize(10)
+                    .MaxFontSize(30)
+                    .TextAlignment(TextAlignmentOptions.BottomLeft)
+                    .TextColor(new Color(0.5765f, 0.8824f, 0.9373f, 1));
 
-            this.title = UIFactories.CreateText("TitleText", this.gameObject)
-                .Anchor(Vector2.zero)
-                .Left(0, 57.5f)
-                .Top(1, 0)
-                .Right(1, -57.5f)
-                .Bottom(1, -45)
-                .PreferredHeight(25)
-                .FontSize(30)
-                .MinFontSize(10)
-                .MaxFontSize(30)
-                .TextAlignment(TextAlignmentOptions.BottomLeft)
-                .TextColor(new Color(0.5765f, 0.8824f, 0.9373f, 1));
+                mountPoint.AddIconButton("CloseButton")
+                    .Anchor(-25, -25)
+                    .Left(1, -37)
+                    .Top(1, -13)
+                    .Right(1, -13)
+                    .Bottom(1, -37)
+                    .Size(24, 24)
+                    .Sprite("icon_close")
+                    .CenterImage()
+                    .ClickSound("UIBUttonClose")
+                    .OnClick(this.Close);
 
-            UIFactories.CreateIconButton("CloseButton", this.gameObject)
-                .Anchor(-25, -25)
-                .Left(1, -37)
-                .Top(1, -13)
-                .Right(1, -13)
-                .Bottom(1, -37)
-                .Size(24, 24)
-                .Sprite("icon_close")
-                .CenterImage()
-                .ClickSound("UIBUttonClose")
-                .OnClick(this.Close);
-
-            this.Content = UIFactories.CreateSizingLayout("Content", this.gameObject)
-                .Anchor(0, -50)
-                .Left(0, 0)
-                .Top(1, -50)
-                .Right(1, 0)
-                .Bottom(0, 77);
+                this.Content = mountPoint.AddSizingLayout("Content")
+                    .Anchor(0, -50)
+                    .Left(0, 0)
+                    .Top(1, -50)
+                    .Right(1, 0)
+                    .Bottom(0, 77);
+            });
         }
     }
 }

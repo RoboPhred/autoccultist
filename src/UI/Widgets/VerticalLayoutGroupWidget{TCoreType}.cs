@@ -96,9 +96,9 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
-        public TCoreType AddContent(Action<Transform> transform)
+        public TCoreType AddContent(Action<WidgetMountPoint> factory)
         {
-            transform(this.GameObject.transform);
+            factory(new WidgetMountPoint(this.GameObject.transform));
             return this as TCoreType;
         }
     }

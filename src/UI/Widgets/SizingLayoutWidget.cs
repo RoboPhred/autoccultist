@@ -138,9 +138,9 @@ namespace AutoccultistNS.UI
             gameObject.transform.SetParent(this.GameObject.transform, false);
         }
 
-        public void AddContent(Action<Transform> contentFactory)
+        public void AddContent(Action<WidgetMountPoint> contentFactory)
         {
-            contentFactory(this.GameObject.transform);
+            contentFactory(new WidgetMountPoint(this.GameObject.transform));
         }
     }
 }

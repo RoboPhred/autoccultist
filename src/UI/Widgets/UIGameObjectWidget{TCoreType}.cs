@@ -43,7 +43,7 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
-        public TCoreType Clear()
+        public virtual TCoreType Clear()
         {
             foreach (Transform child in this.GameObject.transform)
             {

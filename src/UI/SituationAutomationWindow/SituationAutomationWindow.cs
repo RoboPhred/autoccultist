@@ -85,13 +85,19 @@ namespace AutoccultistNS.UI
             else
             {
                 this.lockOutAfterConstraint = currentConstraint;
+
                 // Doing something, lock out after the current constraint is done.
                 currentConstraint.Disposed += this.LockOutAfterConstraint;
             }
         }
 
-        public void Update()
+        protected override void OnUpdate()
         {
+            if (!this.IsVisible)
+            {
+                return;
+            }
+
             if (this.CurrentResourceConstraint == null && this.currentView is not NewOperationView)
             {
                 this.Content.Clear();
@@ -114,6 +120,15 @@ namespace AutoccultistNS.UI
             }
         }
 
+        protected override void OnClose()
+        {
+            base.OnClose();
+
+            // Leave the content set for our fadeout.
+            // It will be replaced when we next open.
+            this.currentView = null;
+        }
+
         private void LockOutAfterConstraint(object sender, EventArgs e)
         {
             if (this.lockoutConstraint == null)
@@ -125,6 +140,5 @@ namespace AutoccultistNS.UI
             this.lockOutAfterConstraint = null;
             GameResources.GameResource.Of<ISituationState>().AddConstraint(this.lockoutConstraint);
         }
-
     }
 }

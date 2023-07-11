@@ -37,41 +37,30 @@ namespace AutoccultistNS.UI
 
         public void UpdateContent()
         {
-            // TODO: Reorder entries based on startability
             var state = GameStateProvider.Current;
-            foreach (var op in this.operationUIs.Keys)
+
+            var orderedOps =
+                from pair in this.operationUIs
+                let op = pair.Key
+                let canExecute = op.IsConditionMet(state)
+                orderby canExecute descending, op.Name
+                select new { Operation = op, CanExecute = canExecute, Elements = pair.Value };
+
+            foreach (var pair in orderedOps)
             {
-                var ui = this.operationUIs[op];
-
-                var canRun = op.IsConditionMet(state);
-
-                var runningImpulse = NucleusAccumbens.CurrentImperatives.OfType<UITriggeredImperative>().FirstOrDefault(x => x.Imperative == op);
-
-                if (runningImpulse == null && !canRun)
-                {
-                    ui.StartButton.Disable();
-                    ui.StartButton.Text("Start");
-                }
-                else if (runningImpulse != null)
-                {
-                    ui.StartButton.Enable();
-                    ui.StartButton.Text("Abort");
-                }
-                else
-                {
-                    ui.StartButton.Enable();
-                    ui.StartButton.Text("Start");
-                }
+                pair.Elements.Row.GameObject.transform.SetAsLastSibling();
+                pair.Elements.StartButton.SetEnabled(pair.CanExecute);
             }
         }
 
         private void BuildOperationRow(OperationConfig operation, Transform parent)
         {
-            UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
+            TextButtonWidget startButton = null;
+            var row = UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
                 .Padding(10, 2)
-                .AddContent(transform =>
+                .AddContent(mountPoint =>
                 {
-                    var nameElement = UIFactories.CreateText("Name", transform)
+                    var nameElement = mountPoint.AddText("Name")
                         .FontSize(12)
                         .MinFontSize(8)
                         .MaxFontSize(12)
@@ -79,21 +68,22 @@ namespace AutoccultistNS.UI
                         .VerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
                         .Text(operation.Name);
 
-                    UIFactories.CreateSizingLayout("Spacer", transform)
+                    mountPoint.AddSizingLayout("Spacer")
                         .MinWidth(10)
                         .ExpandWidth();
 
-                    var startButton = UIFactories.CreateTextButton("Button", transform)
+                    startButton = mountPoint.AddTextButton("Button")
                         .PreferredHeight(35)
                         .Disable()
                         .Text("Start")
                         .OnClick(() => this.OnOperationButtonClick(operation));
-
-                    this.operationUIs.Add(operation, new OperationUIElements
-                    {
-                        StartButton = startButton,
-                    });
                 });
+
+            this.operationUIs.Add(operation, new OperationUIElements
+            {
+                Row = row,
+                StartButton = startButton,
+            });
         }
 
         private void OnOperationButtonClick(OperationConfig operation)
@@ -113,6 +103,8 @@ namespace AutoccultistNS.UI
 
         private class OperationUIElements
         {
+            public HorizontalLayoutGroupWidget Row { get; set; }
+
             public TextButtonWidget StartButton { get; set; }
         }
     }

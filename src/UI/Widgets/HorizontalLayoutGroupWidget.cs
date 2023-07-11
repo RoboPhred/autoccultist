@@ -79,9 +79,9 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public HorizontalLayoutGroupWidget AddContent(Action<Transform> contentFactory)
+        public HorizontalLayoutGroupWidget AddContent(Action<WidgetMountPoint> contentFactory)
         {
-            contentFactory(this.GameObject.transform);
+            contentFactory(new WidgetMountPoint(this.GameObject.transform));
             return this;
         }
     }

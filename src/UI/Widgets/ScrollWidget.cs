@@ -63,13 +63,25 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public override ScrollWidget Clear()
+        {
+            foreach (Transform child in this.Content.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// Allows adding children to the scrolled area.
         /// For best results, Horizontal() or Vertical() should be called before this.
         /// </summary>
-        public ScrollWidget AddContent(Action<Transform> contentFactory)
+        public ScrollWidget AddContent(Action<WidgetMountPoint> contentFactory)
         {
-            contentFactory(this.Content.transform);
+            contentFactory(new WidgetMountPoint(this.Content.transform));
+            this.ScrollRect.StopMovement();
+            this.ScrollRect.verticalNormalizedPosition = 0;
             return this;
         }
 
