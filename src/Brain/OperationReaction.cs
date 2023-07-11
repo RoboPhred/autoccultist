@@ -38,7 +38,7 @@ namespace AutoccultistNS.Brain
                 throw new ReactionFailedException($"Cannot start OperationReaction more than once.");
             }
 
-            if (!Resource.Of<ISituationState>().TryAddConstraint(this))
+            if (!GameResource.Of<ISituationState>().TryAddConstraint(this))
             {
                 throw new ReactionFailedException($"Cannot start operation {this.Operation} as situation resource is already busy.");
             }

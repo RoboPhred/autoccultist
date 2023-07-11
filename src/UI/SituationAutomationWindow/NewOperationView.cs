@@ -5,56 +5,38 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
-    using SecretHistories.Entities;
     using UnityEngine;
 
-    public class SituationAutomationWindow : SituationWindow
+    public class NewOperationView : IWindowView
     {
+        private readonly SituationAutomationWindow window;
+        private readonly Transform contentRoot;
         private readonly Dictionary<OperationConfig, OperationUIElements> operationUIs = new();
 
-        public static SituationAutomationWindow CreateWindow(Situation situation)
+        public NewOperationView(SituationAutomationWindow window, Transform contentRoot)
         {
-            var window = SituationWindow.CreateWindow<SituationAutomationWindow>($"window_${situation.VerbId}_automation");
-            window.Attach(situation);
-            return window;
-        }
+            this.window = window;
+            this.contentRoot = contentRoot;
 
-        public void Update()
-        {
-            this.UpdateContent();
-        }
-
-        protected override void OnAwake()
-        {
-            this.UpdateContent();
-        }
-
-        protected override void BuildContent(Transform parent)
-        {
             // FIXME: We want to let the window expand up to a point then stop.
             // var constraint = UIFactories.CreateSizingLayout("Constraint", parent)
             //     .FillContentWidth()
             //     .MaxHeight(600);
 
-            UIFactories.CreateScroll("ScrollRect", parent)
+            UIFactories.CreateScroll("ScrollRect", contentRoot)
                 .Vertical()
                 .AddContent(
                     transform =>
                     {
-                        foreach (var op in Library.Operations.Where(x => x.Situation == this.Situation.VerbId))
+                        foreach (var op in Library.Operations.Where(x => x.Situation == window.Situation.VerbId))
                         {
                             this.BuildOperationRow(op, transform);
                         }
                     });
         }
 
-        private void UpdateContent()
+        public void UpdateContent()
         {
-            if (!this.IsVisible)
-            {
-                return;
-            }
-
             // TODO: Reorder entries based on startability
             var state = GameStateProvider.Current;
             foreach (var op in this.operationUIs.Keys)
@@ -85,7 +67,7 @@ namespace AutoccultistNS.UI
 
         private void BuildOperationRow(OperationConfig operation, Transform parent)
         {
-            var layout = UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
+            UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
                 .Padding(10, 2)
                 .AddContent(transform =>
                 {

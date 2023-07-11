@@ -4,7 +4,7 @@ namespace AutoccultistNS.GameResources
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Resource<T> : IDisposable
+    public class GameResource<T> : IDisposable
         where T : class
     {
         private readonly HashSet<IResourceConstraint<T>> constraints = new();
@@ -41,6 +41,17 @@ namespace AutoccultistNS.GameResources
             return true;
         }
 
+        public bool RemoveConstraint(IResourceConstraint<T> constraint)
+        {
+            if (this.constraints.Remove(constraint))
+            {
+                constraint.Disposed -= this.OnConstraintDisposed;
+                return true;
+            }
+
+            return false;
+        }
+
         public T ResolveConstraint(IResourceConstraint<T> constraint)
         {
             var resolved = this.GetConstrainedResources();
@@ -62,6 +73,21 @@ namespace AutoccultistNS.GameResources
         public bool IsAvailable(T resource)
         {
             return !this.GetConstrainedResources().Values.Contains(resource);
+        }
+
+        public IResourceConstraint<T> GetConstraint(T resource)
+        {
+            foreach (var pair in this.GetConstrainedResources())
+            {
+                if (pair.Value == resource)
+                {
+                    {
+                        return pair.Key;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void Dispose()

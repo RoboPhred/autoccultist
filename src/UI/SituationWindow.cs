@@ -18,7 +18,6 @@ namespace AutoccultistNS.UI
         private CanvasGroupFader canvasGroupFader;
         private WindowPositioner positioner;
         private TextWidget title;
-        private SizingLayoutWidget content;
 
         public SituationWindow()
         {
@@ -41,6 +40,7 @@ namespace AutoccultistNS.UI
 
         public bool IsVisible => this.canvasGroupFader.IsFullyVisible() || this.canvasGroupFader.IsAppearing();
 
+        protected SizingLayoutWidget Content { get; private set; }
         public static T CreateWindow<T>(string key)
             where T : SituationWindow
         {
@@ -79,8 +79,8 @@ namespace AutoccultistNS.UI
             this.Situation = situation;
             this.Title = $"{situation.VerbId.Capitalize()} Automations";
             this.canvasGroupFader.HideImmediately();
-            this.content.Clear();
-            this.BuildContent(this.content.GameObject.transform);
+            this.Content.Clear();
+            this.BuildContent(this.Content.GameObject.transform);
         }
 
         public void OpenAt(Vector3 position)
@@ -108,7 +108,9 @@ namespace AutoccultistNS.UI
             this.OnClose();
         }
 
-        protected abstract void BuildContent(Transform parent);
+        protected virtual void BuildContent(Transform parent)
+        {
+        }
 
         protected virtual void OnAwake()
         {
@@ -206,7 +208,7 @@ namespace AutoccultistNS.UI
                 .ClickSound("UIBUttonClose")
                 .OnClick(this.Close);
 
-            this.content = UIFactories.CreateSizingLayout("Content", this.gameObject)
+            this.Content = UIFactories.CreateSizingLayout("Content", this.gameObject)
                 .Anchor(0, -50)
                 .Left(0, 0)
                 .Top(1, -50)

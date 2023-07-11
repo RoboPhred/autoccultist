@@ -120,6 +120,11 @@ namespace AutoccultistNS.Brain
             ActiveImperatives.Remove(imperative);
         }
 
+        public static void ReevaluateImpulses()
+        {
+            lastHash = 0;
+        }
+
         /// <summary>
         /// Clears all goals and resets the goal driver.
         /// </summary>

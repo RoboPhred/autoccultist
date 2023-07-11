@@ -1,8 +1,5 @@
 namespace AutoccultistNS.UI
 {
-    using System;
-    using System.Linq;
-    using AutoccultistNS.GameState;
     using SecretHistories.Entities;
     using SecretHistories.Manifestations;
     using SecretHistories.UI;
@@ -10,27 +7,19 @@ namespace AutoccultistNS.UI
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
 
-
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent(typeof(Image))]
-    class SituationAutomationButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class SituationAutomationButton : MonoBehaviour, IPointerClickHandler
     {
         private const float RotationSpeedPerSecond = -360 / 8;
 
-        private Sprite sprite;
+        private Sprite defaultSprite;
+        private Sprite lockoutSprite;
+        private Image image;
 
         public Situation Situation { get; set; }
 
         public SituationAutomationWindow Window { get; private set; }
-
-        private bool IsAutomating
-        {
-            get
-            {
-                var situation = GameStateProvider.Current.Situations.FirstOrDefault(x => x.SituationId == this.Window.Situation.VerbId);
-                return !GameResources.Resource.Of<ISituationState>().IsAvailable(situation);
-            }
-        }
 
         public static void AttachToSituation(Situation situation)
         {
@@ -62,46 +51,71 @@ namespace AutoccultistNS.UI
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = new Vector2(50, 50);
 
-            this.sprite = ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge");
-            if (sprite == null)
+            this.defaultSprite = ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge");
+            if (this.defaultSprite == null)
             {
                 NoonUtility.LogWarning($"Could not find sprite autoccultist_situation_automation_badge");
             }
 
-            this.GetComponent<Image>().sprite = this.sprite;
+            this.lockoutSprite = ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge_lockout");
+            if (this.lockoutSprite == null)
+            {
+                NoonUtility.LogWarning($"Could not find sprite autoccultist_situation_automation_badge_lockout");
+            }
+
+            this.image = this.GetComponent<Image>();
+            this.image.sprite = this.defaultSprite;
         }
 
         public void Update()
         {
-            if (!this.IsAutomating)
+            if (this.Window.IsLockedOut && this.image.sprite != this.lockoutSprite)
             {
-                return;
+                this.image.sprite = this.lockoutSprite;
+            }
+            else if (!this.Window.IsLockedOut && this.image.sprite != this.defaultSprite)
+            {
+                this.image.sprite = this.defaultSprite;
             }
 
-            this.transform.localRotation = Quaternion.Euler(0, 0, this.transform.localEulerAngles.z + Time.deltaTime * RotationSpeedPerSecond);
+            if (this.Window.IsAutomating)
+            {
+                this.transform.localRotation = Quaternion.Euler(0, 0, this.transform.localEulerAngles.z + (Time.deltaTime * RotationSpeedPerSecond));
+            }
+            else if (this.Window.IsLockedOut)
+            {
+                this.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            switch (eventData.button)
+            {
+                case PointerEventData.InputButton.Left:
+                    this.OnLeftClick(eventData);
+                    break;
+                case PointerEventData.InputButton.Right:
+                    this.OnRightClick(eventData);
+                    break;
+            }
+        }
+
+        private void OnLeftClick(PointerEventData eventData)
+        {
             if (this.Window.IsVisible)
             {
-                NoonUtility.LogWarning("Window is visible, closing");
                 this.Window.Close();
                 return;
             }
-
-            NoonUtility.LogWarning("Window is not visible, opening");
 
             var token = this.GetComponentInParent<Token>();
             this.Window.OpenAt(token.Location.LocalPosition);
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        private void OnRightClick(PointerEventData eventData)
         {
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
+            this.Window.ToggleLockout();
         }
     }
 }

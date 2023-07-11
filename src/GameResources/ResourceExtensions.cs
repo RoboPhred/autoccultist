@@ -15,7 +15,7 @@ namespace AutoccultistNS.GameResources
         // an unexpected quirk that may very well lead us into trouble.
         public static bool IsAvailable(this ISituationState situation)
         {
-            return Resource.Of<ISituationState>().IsAvailable(situation);
+            return GameResource.Of<ISituationState>().IsAvailable(situation);
         }
     }
 }

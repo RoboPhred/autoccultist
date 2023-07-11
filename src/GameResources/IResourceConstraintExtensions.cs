@@ -5,7 +5,7 @@ namespace AutoccultistNS.GameResources
         public static T Resolve<T>(this IResourceConstraint<T> constraint)
             where T : class
         {
-            return Resource.Of<T>().ResolveConstraint(constraint);
+            return GameResource.Of<T>().ResolveConstraint(constraint);
         }
     }
 }
