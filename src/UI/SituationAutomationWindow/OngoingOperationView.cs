@@ -53,7 +53,7 @@ namespace AutoccultistNS.UI
                     .PreferredHeight(10);
 
                     mountPoint.AddTextButton("Cancel")
-                        .Text("Cancel")
+                        .Text("Abort")
                         .OnClick(() =>
                             {
                                 reaction.Dispose();
@@ -68,7 +68,6 @@ namespace AutoccultistNS.UI
             var historyItems = this.Reaction.RecipeHistory;
             if (historyItems.Count == this.cachedHistoryItems)
             {
-                NoonUtility.LogWarning($"No history items to update: {historyItems.Count}");
                 return;
             }
 
@@ -76,7 +75,6 @@ namespace AutoccultistNS.UI
 
             var compendium = Watchman.Get<Compendium>();
 
-            NoonUtility.LogWarning($"Updating history items to {historyItems.Count}");
             this.historyScroll.Clear();
             this.historyScroll.AddContent(
                 mountPoint =>

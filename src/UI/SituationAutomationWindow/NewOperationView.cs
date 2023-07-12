@@ -1,5 +1,6 @@
 namespace AutoccultistNS.UI
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using AutoccultistNS.Brain;
@@ -9,9 +10,12 @@ namespace AutoccultistNS.UI
 
     public class NewOperationView : IWindowView
     {
+        private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(.5);
         private readonly SituationAutomationWindow window;
         private readonly Transform contentRoot;
         private readonly Dictionary<OperationConfig, OperationUIElements> operationUIs = new();
+
+        private DateTime lastUpdate = DateTime.MinValue;
 
         public NewOperationView(SituationAutomationWindow window, Transform contentRoot)
         {
@@ -38,6 +42,13 @@ namespace AutoccultistNS.UI
 
         public void UpdateContent()
         {
+            if (DateTime.UtcNow - this.lastUpdate < this.updateInterval)
+            {
+                return;
+            }
+
+            this.lastUpdate = DateTime.UtcNow;
+
             var state = GameStateProvider.Current;
 
             var orderedOps =
