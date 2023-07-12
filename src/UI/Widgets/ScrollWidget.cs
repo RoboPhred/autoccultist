@@ -57,6 +57,20 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public ScrollWidget ScrollToHorizontal(float value)
+        {
+            this.ScrollRect.StopMovement();
+            this.ScrollRect.horizontalNormalizedPosition = value;
+            return this;
+        }
+
+        public ScrollWidget ScrollToVertical(float value)
+        {
+            this.ScrollRect.StopMovement();
+            this.ScrollRect.verticalNormalizedPosition = value;
+            return this;
+        }
+
         public ScrollWidget Sensitivity(float value)
         {
             this.ScrollRect.scrollSensitivity = value;
@@ -138,6 +152,7 @@ namespace AutoccultistNS.UI
             {
                 sizer.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
+                // FIXME: Items are centering in this.  Implicit property of LayoutGroups?
                 var group = content.AddComponent<VerticalLayoutGroup>();
                 group.spacing = 0;
                 group.childControlHeight = true;

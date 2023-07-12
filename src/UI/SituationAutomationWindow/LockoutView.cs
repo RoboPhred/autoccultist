@@ -9,7 +9,7 @@ namespace AutoccultistNS.UI
             var test = UIFactories.CreateVeritcalLayoutGroup("VerticalLayout", contentRoot)
                 .Padding(10, 2)
                 .ExpandWidth()
-                .FillContentHeight()
+                .FitContentHeight()
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("LockoutText")

@@ -18,8 +18,8 @@ namespace AutoccultistNS.UI
         {
             this.Pivot(.5f, .5f);
 
-            this.FillContentWidth();
-            this.FillContentHeight();
+            this.FitContentWidth();
+            this.FitContentHeight();
 
             // FIXME: While this looks generally good,
             // only our top padding is being applied.

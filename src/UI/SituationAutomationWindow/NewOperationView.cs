@@ -32,7 +32,8 @@ namespace AutoccultistNS.UI
                         {
                             this.BuildOperationRow(op, transform);
                         }
-                    });
+                    })
+                .ScrollToVertical(0);
         }
 
         public void UpdateContent()

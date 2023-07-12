@@ -1,6 +1,8 @@
 namespace AutoccultistNS.UI
 {
     using AutoccultistNS.Brain;
+    using SecretHistories.Entities;
+    using SecretHistories.UI;
     using UnityEngine;
 
     public class OngoingOperationView : IWindowView
@@ -15,7 +17,7 @@ namespace AutoccultistNS.UI
             UIFactories.CreateVeritcalLayoutGroup("VerticalLayout", contentRoot)
                 .Padding(10, 2)
                 .ExpandWidth()
-                .FillContentHeight()
+                .FitContentHeight()
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("OperationText")
@@ -40,16 +42,11 @@ namespace AutoccultistNS.UI
                     mountPoint.AddSizingLayout("Spacer")
                         .PreferredHeight(10);
 
-                    mountPoint.AddText("HistoryLabel")
-                        .ExpandWidth()
-                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                        .FontSize(20)
-                        .Text("History");
-
                     this.historyScroll = mountPoint.AddScroll("History")
                         .ExpandWidth()
-                        .ExpandHeight()
+                        // FIXME: Not working
+                        // .ExpandHeight()
+                        .PreferredHeight(125)
                         .Vertical();
 
                     mountPoint.AddSizingLayout("Spacer")
@@ -77,6 +74,8 @@ namespace AutoccultistNS.UI
 
             this.cachedHistoryItems = historyItems.Count;
 
+            var compendium = Watchman.Get<Compendium>();
+
             NoonUtility.LogWarning($"Updating history items to {historyItems.Count}");
             this.historyScroll.Clear();
             this.historyScroll.AddContent(
@@ -84,14 +83,16 @@ namespace AutoccultistNS.UI
                 {
                     foreach (var item in historyItems)
                     {
+                        var recipe = compendium.GetEntityById<Recipe>(item);
                         mountPoint.AddText("HistoryItem")
                             .ExpandWidth()
                             .TextAlignment(TMPro.TextAlignmentOptions.Center)
                             .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
                             .FontSize(20)
-                            .Text(item);
+                            .Text(recipe.Label ?? item);
                     }
                 });
+            this.historyScroll.ScrollToVertical(1);
         }
     }
 }

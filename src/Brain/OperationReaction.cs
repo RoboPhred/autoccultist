@@ -206,20 +206,21 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
 
-                            this.recipeHistory.Add(this.GetSituationState().CurrentRecipe);
+                            state = this.GetSituationState();
 
                             if (recipeSolution.EndOperation)
                             {
+                                this.recipeHistory.Add(state.CurrentRecipe);
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
                                 return false;
                             }
 
                             // Get and satisfy the first ongoing situation.
-                            state = this.GetSituationState();
                             recipeSolution = this.Operation.GetRecipeSolution(state);
                             if (recipeSolution == null)
                             {
                                 // Don't know what this recipe is, let it continue.
+                                this.recipeHistory.Add(state.CurrentRecipe);
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
                                 return true;
                             }
