@@ -109,20 +109,22 @@ public class Autoccultist : MonoBehaviour
 
         this.mainThread = Thread.CurrentThread;
 
+        // Run initializations inside a sync context to capture created threads.
+        AutoccultistSettings.Initialize();
+        // Game needs to start first, so it is the first to know if the game starts or stops.
+        GameAPI.Initialize();
+
+        // The order is important for these initializers, so they take subscriptions to MechanicalHeart.OnBeat in the right order.
+        // We want to run after GameAPI, so we can properly start the heart.
         GameEventSource.GameStarted += this.HandleGameStarted;
         GameEventSource.GameEnded += this.HandleGameEnded;
+        // NucleusAccumbens wants to run after the heart
+        NucleusAccumbens.Initialize();
 
         SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(this.HandleSceneLoaded);
         SceneManager.sceneUnloaded += new UnityAction<Scene>(this.HandleSceneUnloaded);
 
-        // Run initializations inside a sync context to capture created threads.
-        AutoccultistSettings.Initialize();
-        GameAPI.Initialize();
-
         SituationManifestationUIManager.Initialize();
-
-        // The order is important for these initializers, so they take subscriptions to MechanicalHeart.OnBeat in the right order.
-        NucleusAccumbens.Initialize();
 
         this.ReloadAll();
 
@@ -267,10 +269,9 @@ public class Autoccultist : MonoBehaviour
             LogTrace($"Game started with a scheduled arc {this.loadArcOnGameStart.Name}");
             NucleusAccumbens.AddImperative(this.loadArcOnGameStart);
             this.loadArcOnGameStart = null;
-            this.StartAutoccultist();
         }
 
-        // TODO: Autoselect an arc.
+        this.StartAutoccultist();
     }
 
     private void HandleGameEnded(object sender, EventArgs e)

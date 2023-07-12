@@ -1,6 +1,7 @@
 namespace AutoccultistNS.UI
 {
     using System;
+    using System.Collections;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -14,6 +15,8 @@ namespace AutoccultistNS.UI
         public ScrollWidget(GameObject gameObject)
             : base(gameObject)
         {
+            this.Pivot(0, 1);
+
             this.ScrollRect = this.GameObject.GetOrAddComponent<ScrollRect>();
             this.ScrollRect.movementType = ScrollRect.MovementType.Elastic;
             this.ScrollRect.horizontal = false;
@@ -27,7 +30,7 @@ namespace AutoccultistNS.UI
             viewportRt.anchoredPosition = new Vector2(0, 0);
             viewportRt.anchorMin = new Vector2(0, 0);
             viewportRt.anchorMax = new Vector2(1, 1);
-            viewportRt.pivot = new Vector2(0, 0);
+            viewportRt.pivot = new Vector2(0, 1);
             viewportRt.offsetMin = new Vector2(0, 0);
             viewportRt.offsetMax = new Vector2(0, 0);
 
@@ -59,15 +62,13 @@ namespace AutoccultistNS.UI
 
         public ScrollWidget ScrollToHorizontal(float value)
         {
-            this.ScrollRect.StopMovement();
-            this.ScrollRect.horizontalNormalizedPosition = value;
+            this.ScrollRect.StartCoroutine(this.JankfestScrollHorizontal(value));
             return this;
         }
 
         public ScrollWidget ScrollToVertical(float value)
         {
-            this.ScrollRect.StopMovement();
-            this.ScrollRect.verticalNormalizedPosition = value;
+            this.ScrollRect.StartCoroutine(this.JankfestScrollVertical(value));
             return this;
         }
 
@@ -91,11 +92,20 @@ namespace AutoccultistNS.UI
         /// Allows adding children to the scrolled area.
         /// For best results, Horizontal() or Vertical() should be called before this.
         /// </summary>
-        public ScrollWidget AddContent(Action<WidgetMountPoint> contentFactory)
+        public ScrollWidget AddContent(Action<WidgetMountPoint> contentFactory, AddContentScroll scrollReposition = AddContentScroll.None)
         {
             contentFactory(new WidgetMountPoint(this.Content.transform));
-            this.ScrollRect.StopMovement();
-            this.ScrollRect.verticalNormalizedPosition = 0;
+
+            if (scrollReposition != AddContentScroll.None)
+            {
+                // Why the fuck does this only work once.  The entire scroller is destroyed and recreated each time.
+                this.ScrollRect.StartCoroutine(this.JankfestScrollVertical(scrollReposition == AddContentScroll.Bottom ? 0 : 1));
+            }
+            else
+            {
+                this.ScrollRect.enabled = true;
+            }
+
             return this;
         }
 
@@ -109,6 +119,48 @@ namespace AutoccultistNS.UI
             newContent.transform.SetParent(this.ScrollRect.viewport.gameObject.transform, false);
             this.ScrollRect.content = newContent.GetComponent<RectTransform>();
             return this;
+        }
+
+        private IEnumerator JankfestScrollHorizontal(float value)
+        {
+            // Unity's UI is a total jankfest, and it wants to scroll to a random position somewhere in the middle
+            // whenever it opens.
+            // We have to wait for that jank scroll to happen in order to override it.
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+
+            Canvas.ForceUpdateCanvases();
+
+            this.ScrollRect.StopMovement();
+            this.ScrollRect.horizontalNormalizedPosition = value;
+            if (this.ScrollRect.horizontalScrollbar != null)
+            {
+                this.ScrollRect.horizontalScrollbar.value = value;
+            }
+
+            Canvas.ForceUpdateCanvases();
+        }
+
+        private IEnumerator JankfestScrollVertical(float value)
+        {
+            // Unity's UI is a total jankfest, and it wants to scroll to a random position somewhere in the middle
+            // whenever it opens.
+            // We have to wait for that jank scroll to happen in order to override it.
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+
+            Canvas.ForceUpdateCanvases();
+
+            this.ScrollRect.StopMovement();
+            this.ScrollRect.verticalNormalizedPosition = value;
+            if (this.ScrollRect.verticalScrollbar != null)
+            {
+                this.ScrollRect.verticalScrollbar.value = value;
+            }
+
+            Canvas.ForceUpdateCanvases();
         }
 
         private void EnsureContent()
@@ -131,7 +183,7 @@ namespace AutoccultistNS.UI
             contentRt.anchoredPosition = new Vector2(0, 0);
             contentRt.anchorMin = new Vector2(0, 0);
             contentRt.anchorMax = new Vector2(1, 1);
-            contentRt.pivot = new Vector2(0, 0);
+            contentRt.pivot = new Vector2(0, 1);
             contentRt.offsetMin = new Vector2(0, 0);
             contentRt.offsetMax = new Vector2(0, 0);
 
@@ -173,6 +225,13 @@ namespace AutoccultistNS.UI
             }
 
             this.SetContent(content);
+        }
+
+        public enum AddContentScroll
+        {
+            None,
+            Top,
+            Bottom,
         }
     }
 }

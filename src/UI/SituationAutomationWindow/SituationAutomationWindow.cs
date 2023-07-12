@@ -93,8 +93,15 @@ namespace AutoccultistNS.UI
 
         protected override void OnUpdate()
         {
-            if (!this.IsVisible)
+            if (this.IsClosed)
             {
+                // HACK: Fuck scrollbars
+                if (this.currentView != null)
+                {
+                    this.Content.Clear();
+                    this.currentView = null;
+                }
+
                 return;
             }
 
@@ -118,15 +125,6 @@ namespace AutoccultistNS.UI
             {
                 this.currentView.UpdateContent();
             }
-        }
-
-        protected override void OnClose()
-        {
-            base.OnClose();
-
-            // Leave the content set for our fadeout.
-            // It will be replaced when we next open.
-            this.currentView = null;
         }
 
         private void LockOutAfterConstraint(object sender, EventArgs e)

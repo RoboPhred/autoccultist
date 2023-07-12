@@ -89,8 +89,8 @@ namespace AutoccultistNS.UI
                             .FontSize(20)
                             .Text(recipe.Label ?? item);
                     }
-                });
-            this.historyScroll.ScrollToVertical(1);
+                },
+                ScrollWidget.AddContentScroll.Bottom);
         }
     }
 }

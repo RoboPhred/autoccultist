@@ -14,6 +14,7 @@ namespace AutoccultistNS.UI
         private readonly SituationAutomationWindow window;
         private readonly Transform contentRoot;
         private readonly Dictionary<OperationConfig, OperationUIElements> operationUIs = new();
+        private readonly ScrollWidget scrollWidget;
 
         private DateTime lastUpdate = DateTime.MinValue;
 
@@ -27,7 +28,7 @@ namespace AutoccultistNS.UI
             //     .FillContentWidth()
             //     .MaxHeight(600);
 
-            UIFactories.CreateScroll("ScrollRect", contentRoot)
+            this.scrollWidget = UIFactories.CreateScroll("ScrollRect", contentRoot)
                 .Vertical()
                 .AddContent(
                     transform =>
@@ -36,8 +37,8 @@ namespace AutoccultistNS.UI
                         {
                             this.BuildOperationRow(op, transform);
                         }
-                    })
-                .ScrollToVertical(0);
+                    },
+                    ScrollWidget.AddContentScroll.Top);
         }
 
         public void UpdateContent()

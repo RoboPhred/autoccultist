@@ -44,3 +44,7 @@ We still make decisions on IsAvailable, which end up being cached behind the gam
 is not reflected in the hash code. While this doesn't give us any problems at the moment, it is a worrying edge case that can surface bugs later.
 
 This is particularly painful as it stops us ever caching GetImpulses, and leads to incorrect caching around requirements/forbidders/completedWhen
+
+### UI Jank
+
+- Padding bottom doesn't work on anything. Buttons are squished.

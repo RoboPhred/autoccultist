@@ -38,7 +38,11 @@ namespace AutoccultistNS.UI
             set => this.title.text = value;
         }
 
+        public bool IsOpen => this.canvasGroupFader.IsFullyVisible();
+
         public bool IsVisible => this.canvasGroupFader.IsFullyVisible() || this.canvasGroupFader.IsAppearing();
+
+        public bool IsClosed => this.canvasGroupFader.IsInvisible();
 
         protected SizingLayoutWidget Content { get; private set; }
 
