@@ -8,13 +8,13 @@ namespace AutoccultistNS.UI
     public class OngoingOperationView : IWindowView
     {
         private int cachedHistoryItems = -1;
-        private ScrollWidget historyScroll;
+        private ScrollRegionWidget historyScroll;
 
-        public OngoingOperationView(SituationAutomationWindow window, OperationReaction reaction, Transform contentRoot)
+        public OngoingOperationView(SituationAutomationWindow window, OperationReaction reaction, WidgetMountPoint contentMount, WidgetMountPoint footerMount)
         {
             this.Reaction = reaction;
 
-            UIFactories.CreateVeritcalLayoutGroup("VerticalLayout", contentRoot)
+            contentMount.AddVeritcalLayoutGroup("VerticalLayout")
                 .Padding(10, 2)
                 .ExpandWidth()
                 .FitContentHeight()
@@ -42,10 +42,9 @@ namespace AutoccultistNS.UI
                     mountPoint.AddSizingLayout("Spacer")
                         .PreferredHeight(10);
 
-                    this.historyScroll = mountPoint.AddScroll("History")
+                    // FIXME: ExpandHeight not working.  Falling back to PreferredHeight
+                    this.historyScroll = mountPoint.AddScrollRegion("History")
                         .ExpandWidth()
-                        // FIXME: Not working
-                        // .ExpandHeight()
                         .PreferredHeight(125)
                         .Vertical();
 
@@ -89,8 +88,8 @@ namespace AutoccultistNS.UI
                             .FontSize(20)
                             .Text(recipe.Label ?? item);
                     }
-                },
-                ScrollWidget.AddContentScroll.Bottom);
+                })
+            .ScrollToVertical(0);
         }
     }
 }

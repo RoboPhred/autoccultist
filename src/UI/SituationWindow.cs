@@ -46,6 +46,8 @@ namespace AutoccultistNS.UI
 
         protected SizingLayoutWidget Content { get; private set; }
 
+        protected SizingLayoutWidget Footer { get; private set; }
+
         public static T CreateWindow<T>(string key)
             where T : SituationWindow
         {
@@ -87,10 +89,8 @@ namespace AutoccultistNS.UI
         public void Attach(Situation situation)
         {
             this.Situation = situation;
-            this.Title = $"{situation.VerbId.Capitalize()} Automations";
             this.canvasGroupFader.HideImmediately();
-            this.Content.Clear();
-            this.BuildContent(this.Content.GameObject.transform);
+            this.OnAttach();
         }
 
         public void OpenAt(Vector3 position)
@@ -118,11 +118,11 @@ namespace AutoccultistNS.UI
             this.OnClose();
         }
 
-        protected virtual void BuildContent(Transform parent)
+        protected virtual void OnAwake()
         {
         }
 
-        protected virtual void OnAwake()
+        protected virtual void OnAttach()
         {
         }
 

@@ -111,6 +111,7 @@ public class Autoccultist : MonoBehaviour
 
         // Run initializations inside a sync context to capture created threads.
         AutoccultistSettings.Initialize();
+
         // Game needs to start first, so it is the first to know if the game starts or stops.
         GameAPI.Initialize();
 
@@ -118,6 +119,7 @@ public class Autoccultist : MonoBehaviour
         // We want to run after GameAPI, so we can properly start the heart.
         GameEventSource.GameStarted += this.HandleGameStarted;
         GameEventSource.GameEnded += this.HandleGameEnded;
+
         // NucleusAccumbens wants to run after the heart
         NucleusAccumbens.Initialize();
 

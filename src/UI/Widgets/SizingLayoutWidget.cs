@@ -67,6 +67,11 @@ namespace AutoccultistNS.UI
             }
         }
 
+        public static implicit operator WidgetMountPoint(SizingLayoutWidget widget)
+        {
+            return new WidgetMountPoint(widget.GameObject.transform);
+        }
+
         public SizingLayoutWidget IgnoreLayout()
         {
             this.LayoutElement.ignoreLayout = true;

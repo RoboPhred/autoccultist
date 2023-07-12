@@ -2,8 +2,7 @@ namespace AutoccultistNS.UI
 {
     using UnityEngine;
 
-    public class UIGameObjectWidget<TCoreType> : UIGameObjectWidget
-        where TCoreType : UIGameObjectWidget<TCoreType>
+    public class UIGameObjectWidget
     {
         public UIGameObjectWidget(string key)
             : this(new GameObject(key))
@@ -11,41 +10,46 @@ namespace AutoccultistNS.UI
         }
 
         public UIGameObjectWidget(GameObject target)
-            : base(target)
         {
+            this.GameObject = target;
+            this.CanvasRenderer = this.GameObject.GetOrAddComponent<CanvasRenderer>();
         }
 
-        public static implicit operator GameObject(UIGameObjectWidget<TCoreType> widget)
+        public GameObject GameObject { get; private set; }
+
+        public CanvasRenderer CanvasRenderer { get; private set; }
+
+        public static implicit operator GameObject(UIGameObjectWidget widget)
         {
             return widget.GameObject;
         }
 
-        public new TCoreType SetActive(bool active)
+        public UIGameObjectWidget SetActive(bool active)
         {
             this.GameObject.SetActive(active);
-            return this as TCoreType;
+            return this;
         }
 
-        public new TCoreType Activate()
+        public UIGameObjectWidget Activate()
         {
             this.GameObject.SetActive(true);
-            return this as TCoreType;
+            return this;
         }
 
-        public new TCoreType Deactivate()
+        public UIGameObjectWidget Deactivate()
         {
             this.GameObject.SetActive(false);
-            return this as TCoreType;
+            return this;
         }
 
-        public new virtual TCoreType Clear()
+        public virtual UIGameObjectWidget Clear()
         {
             foreach (Transform child in this.GameObject.transform)
             {
                 GameObject.Destroy(child.gameObject);
             }
 
-            return this as TCoreType;
+            return this;
         }
     }
 }

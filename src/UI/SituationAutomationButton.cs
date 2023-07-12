@@ -17,6 +17,8 @@ namespace AutoccultistNS.UI
         private Sprite lockoutSprite;
         private Image image;
 
+        private bool isPointerOver = false;
+
         public Situation Situation { get; set; }
 
         public SituationAutomationWindow Window { get; private set; }
@@ -35,12 +37,13 @@ namespace AutoccultistNS.UI
                 return;
             }
 
-            var button = new GameObject();
-            var handler = button.AddComponent<SituationAutomationButton>();
-            handler.Situation = situation;
+            var buttonGO = new GameObject();
+            var button = buttonGO.AddComponent<SituationAutomationButton>();
+            button.Situation = situation;
+            buttonGO.transform.SetParent(manifestation.gameObject.transform, false);
+            buttonGO.transform.localPosition = new Vector3(-65, 65, 0);
 
-            button.transform.SetParent(manifestation.gameObject.transform, false);
-            button.transform.localPosition = new Vector3(-65, 65, 0);
+            manifestation.gameObject.AddComponent<ManifestationMouseListener>().Button = button;
         }
 
         public void Start()
@@ -80,12 +83,28 @@ namespace AutoccultistNS.UI
 
             if (this.Window.IsAutomating)
             {
+                this.image.color = new Color(1, 1, 1, 1);
                 this.transform.localRotation = Quaternion.Euler(0, 0, this.transform.localEulerAngles.z + (Time.deltaTime * RotationSpeedPerSecond));
             }
             else if (this.Window.IsLockedOut)
             {
+                this.image.color = this.isPointerOver ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, .5f);
                 this.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
+            else
+            {
+                this.image.color = this.isPointerOver ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
+            }
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            this.isPointerOver = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            this.isPointerOver = false;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -116,6 +135,21 @@ namespace AutoccultistNS.UI
         private void OnRightClick(PointerEventData eventData)
         {
             this.Window.ToggleLockout();
+        }
+
+        private class ManifestationMouseListener : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+        {
+            public SituationAutomationButton Button { get; set; }
+
+            public void OnPointerEnter(PointerEventData eventData)
+            {
+                this.Button.OnPointerEnter(eventData);
+            }
+
+            public void OnPointerExit(PointerEventData eventData)
+            {
+                this.Button.OnPointerExit(eventData);
+            }
         }
     }
 }

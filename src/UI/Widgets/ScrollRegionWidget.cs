@@ -5,14 +5,14 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class ScrollWidget : SizingLayoutWidget<ScrollWidget>
+    public class ScrollRegionWidget : SizingLayoutWidget<ScrollRegionWidget>
     {
-        public ScrollWidget(string key)
+        public ScrollRegionWidget(string key)
             : this(new GameObject(key))
         {
         }
 
-        public ScrollWidget(GameObject gameObject)
+        public ScrollRegionWidget(GameObject gameObject)
             : base(gameObject)
         {
             this.Pivot(0, 1);
@@ -48,37 +48,42 @@ namespace AutoccultistNS.UI
             }
         }
 
-        public ScrollWidget Horizontal()
+        public static implicit operator WidgetMountPoint(ScrollRegionWidget widget)
+        {
+            return new WidgetMountPoint(widget.Content.transform);
+        }
+
+        public ScrollRegionWidget Horizontal()
         {
             this.ScrollRect.horizontal = true;
             return this;
         }
 
-        public ScrollWidget Vertical()
+        public ScrollRegionWidget Vertical()
         {
             this.ScrollRect.vertical = true;
             return this;
         }
 
-        public ScrollWidget ScrollToHorizontal(float value)
+        public ScrollRegionWidget ScrollToHorizontal(float value)
         {
             this.ScrollRect.StartCoroutine(this.JankfestScrollHorizontal(value));
             return this;
         }
 
-        public ScrollWidget ScrollToVertical(float value)
+        public ScrollRegionWidget ScrollToVertical(float value)
         {
             this.ScrollRect.StartCoroutine(this.JankfestScrollVertical(value));
             return this;
         }
 
-        public ScrollWidget Sensitivity(float value)
+        public ScrollRegionWidget Sensitivity(float value)
         {
             this.ScrollRect.scrollSensitivity = value;
             return this;
         }
 
-        public override ScrollWidget Clear()
+        public override ScrollRegionWidget Clear()
         {
             foreach (Transform child in this.Content.transform)
             {
@@ -92,20 +97,9 @@ namespace AutoccultistNS.UI
         /// Allows adding children to the scrolled area.
         /// For best results, Horizontal() or Vertical() should be called before this.
         /// </summary>
-        public ScrollWidget AddContent(Action<WidgetMountPoint> contentFactory, AddContentScroll scrollReposition = AddContentScroll.None)
+        public ScrollRegionWidget AddContent(Action<WidgetMountPoint> contentFactory)
         {
             contentFactory(new WidgetMountPoint(this.Content.transform));
-
-            if (scrollReposition != AddContentScroll.None)
-            {
-                // Why the fuck does this only work once.  The entire scroller is destroyed and recreated each time.
-                this.ScrollRect.StartCoroutine(this.JankfestScrollVertical(scrollReposition == AddContentScroll.Bottom ? 0 : 1));
-            }
-            else
-            {
-                this.ScrollRect.enabled = true;
-            }
-
             return this;
         }
 
@@ -114,7 +108,7 @@ namespace AutoccultistNS.UI
         /// This can be used to directly control the scrolled content object, without
         /// going through the default layout wrapper.
         /// </summary>
-        public ScrollWidget SetContent(GameObject newContent)
+        public ScrollRegionWidget SetContent(GameObject newContent)
         {
             newContent.transform.SetParent(this.ScrollRect.viewport.gameObject.transform, false);
             this.ScrollRect.content = newContent.GetComponent<RectTransform>();
@@ -225,13 +219,6 @@ namespace AutoccultistNS.UI
             }
 
             this.SetContent(content);
-        }
-
-        public enum AddContentScroll
-        {
-            None,
-            Top,
-            Bottom,
         }
     }
 }

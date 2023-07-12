@@ -4,6 +4,8 @@ Do we want the bot to play it straight and not to have access to knowledge the p
 
 I used to think apostle trapped elements used hidden aspects, but they in fact do not, so this is probably totally doable.
 
+Update: We only used one hidden aspect. We use it no longer. Go ahead and implement this.
+
 ### Pre-scan configs for validity
 
 Check to make sure aspects and element ids specifid in configs actually exist in the compendium

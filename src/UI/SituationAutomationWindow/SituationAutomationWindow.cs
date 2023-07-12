@@ -91,6 +91,12 @@ namespace AutoccultistNS.UI
             }
         }
 
+        protected override void OnAttach()
+        {
+            base.OnAttach();
+            this.Title = $"{this.Situation.VerbId.Capitalize()} Automations";
+        }
+
         protected override void OnUpdate()
         {
             if (this.IsClosed)
@@ -108,17 +114,17 @@ namespace AutoccultistNS.UI
             if (this.CurrentResourceConstraint == null && this.currentView is not NewOperationView)
             {
                 this.Content.Clear();
-                this.currentView = new NewOperationView(this, this.Content.GameObject.transform);
+                this.currentView = new NewOperationView(this, this.Content);
             }
             else if (this.CurrentResourceConstraint is UISituationLockoutConstraint && this.currentView is not LockoutView)
             {
                 this.Content.Clear();
-                this.currentView = new LockoutView(this, this.Content.GameObject.transform);
+                this.currentView = new LockoutView(this, this.Content);
             }
             else if (this.CurrentResourceConstraint is OperationReaction reaction && (this.currentView is not OngoingOperationView view || view.Reaction != reaction))
             {
                 this.Content.Clear();
-                this.currentView = new OngoingOperationView(this, reaction, this.Content.GameObject.transform);
+                this.currentView = new OngoingOperationView(this, reaction, this.Content, this.Footer);
             }
 
             if (this.currentView != null)

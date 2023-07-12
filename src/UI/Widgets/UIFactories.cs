@@ -98,16 +98,16 @@ namespace AutoccultistNS.UI
             return new HorizontalLayoutGroupWidget(gameObject);
         }
 
-        public static ScrollWidget CreateScroll(string key, GameObject parent)
+        public static ScrollRegionWidget CreateScroll(string key, GameObject parent)
         {
             return CreateScroll(key, parent.transform);
         }
 
-        public static ScrollWidget CreateScroll(string key, Transform parent)
+        public static ScrollRegionWidget CreateScroll(string key, Transform parent)
         {
             var gameObject = new GameObject(key);
             gameObject.transform.SetParent(parent, false);
-            return new ScrollWidget(gameObject);
+            return new ScrollRegionWidget(gameObject);
         }
     }
 }

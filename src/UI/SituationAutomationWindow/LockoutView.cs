@@ -4,9 +4,9 @@ namespace AutoccultistNS.UI
 
     public class LockoutView : IWindowView
     {
-        public LockoutView(SituationAutomationWindow window, Transform contentRoot)
+        public LockoutView(SituationAutomationWindow window, WidgetMountPoint content)
         {
-            var test = UIFactories.CreateVeritcalLayoutGroup("VerticalLayout", contentRoot)
+            var test = content.AddVeritcalLayoutGroup("VerticalLayout")
                 .Padding(10, 2)
                 .ExpandWidth()
                 .FitContentHeight()

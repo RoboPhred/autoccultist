@@ -14,21 +14,18 @@ namespace AutoccultistNS.UI
         private readonly SituationAutomationWindow window;
         private readonly Transform contentRoot;
         private readonly Dictionary<OperationConfig, OperationUIElements> operationUIs = new();
-        private readonly ScrollWidget scrollWidget;
+        private readonly ScrollRegionWidget scrollWidget;
 
         private DateTime lastUpdate = DateTime.MinValue;
 
-        public NewOperationView(SituationAutomationWindow window, Transform contentRoot)
+        public NewOperationView(SituationAutomationWindow window, WidgetMountPoint content)
         {
             this.window = window;
-            this.contentRoot = contentRoot;
+            this.contentRoot = content;
 
             // FIXME: We want to let the window expand up to a point then stop.
-            // var constraint = UIFactories.CreateSizingLayout("Constraint", parent)
-            //     .FillContentWidth()
-            //     .MaxHeight(600);
-
-            this.scrollWidget = UIFactories.CreateScroll("ScrollRect", contentRoot)
+            // See the nonfunctional ConstrainedLayoutElement
+            this.scrollWidget = content.AddScrollRegion("ScrollRect")
                 .Vertical()
                 .AddContent(
                     transform =>
@@ -37,8 +34,8 @@ namespace AutoccultistNS.UI
                         {
                             this.BuildOperationRow(op, transform);
                         }
-                    },
-                    ScrollWidget.AddContentScroll.Top);
+                    })
+                .ScrollToVertical(1);
         }
 
         public void UpdateContent()
