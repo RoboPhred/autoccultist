@@ -208,7 +208,7 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
 
-                            this.CaptureHistory();
+                            this.CaptureHistory(true);
 
                             state = this.GetSituationState();
 
@@ -231,7 +231,7 @@ namespace AutoccultistNS.Brain
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
 
-                            this.CaptureHistory();
+                            this.CaptureHistory(false);
 
                             await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
 
@@ -255,14 +255,14 @@ namespace AutoccultistNS.Brain
             if (recipeSolution == null)
             {
                 // Don't know what this recipe is, let it continue.
-                this.CaptureHistory();
+                this.CaptureHistory(false);
                 return true;
             }
 
             if (state.RecipeSlots.Count == 0)
             {
                 // Nothing to slot, no need to coordinate anything.
-                this.CaptureHistory();
+                this.CaptureHistory(false);
                 return !recipeSolution.EndOperation;
             }
 
@@ -297,7 +297,7 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
-                            this.CaptureHistory();
+                            this.CaptureHistory(false);
 
                             return !recipeSolution.EndOperation;
                         },
@@ -344,27 +344,13 @@ namespace AutoccultistNS.Brain
                 this.cancellationSource.Token);
         }
 
-        private void CaptureHistory()
+        private void CaptureHistory(bool fromStoredCards)
         {
             var state = this.GetSituationState();
-            var aspects = new Dictionary<string, int>();
-            foreach (var card in state.GetSlottedCards())
-            {
-                foreach (var aspect in card.Aspects)
-                {
-                    if (aspects.ContainsKey(aspect.Key))
-                    {
-                        aspects[aspect.Key] += aspect.Value;
-                    }
-                    else
-                    {
-                        aspects[aspect.Key] = aspect.Value;
-                    }
-                }
-            }
 
-            // FIXME: Wait for magnet slots to do their thing.  For speak on esoteric matters, showing the pre-magnet-slotted recipe.
-            var history = new OperationHistory(state.CurrentRecipe, state.SlottedRecipe, aspects);
+            var cards = fromStoredCards ? state.StoredCards : state.GetSlottedCards();
+            var history = new OperationHistory(state.CurrentRecipe, state.SlottedRecipe, cards.Select(x => x.ElementId).ToArray());
+
             this.history.Add(history);
         }
 
@@ -440,16 +426,18 @@ namespace AutoccultistNS.Brain
 
         public class OperationHistory
         {
-            public OperationHistory(string recipeId, string SlottedRecipeId, IReadOnlyDictionary<string, int> slottedAspects)
+            public OperationHistory(string recipeId, string slottedRecipeId, IReadOnlyCollection<string> slottedElements)
             {
                 this.RecipeId = recipeId;
-                this.SlottedRecipeId = SlottedRecipeId;
-                this.SlottedAspects = slottedAspects;
+                this.SlottedRecipeId = slottedRecipeId;
+                this.SlottedElements = slottedElements;
             }
 
             public string RecipeId { get; private set; }
+
             public string SlottedRecipeId { get; private set; }
-            public IReadOnlyDictionary<string, int> SlottedAspects { get; private set; }
+
+            public IReadOnlyCollection<string> SlottedElements { get; private set; }
         }
     }
 }

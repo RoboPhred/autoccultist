@@ -91,6 +91,16 @@ namespace AutoccultistNS.UI
             }
         }
 
+        protected override void OnAwake()
+        {
+            base.OnAwake();
+
+            this.Icon.AddContent(mountPoint =>
+            {
+                mountPoint.AddImage().Sprite(ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge"));
+            });
+        }
+
         protected override void OnAttach()
         {
             base.OnAttach();
@@ -101,7 +111,6 @@ namespace AutoccultistNS.UI
         {
             if (this.IsClosed)
             {
-                // HACK: Fuck scrollbars
                 if (this.currentView != null)
                 {
                     this.Clear();

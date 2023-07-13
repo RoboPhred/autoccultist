@@ -39,7 +39,7 @@ namespace AutoccultistNS.GameState.Impl
             Our idea of the current recipe is what we are currently working on, not what the next will be.
             */
 
-            if (this.state == StateEnum.Unstarted || this.state == StateEnum.RequiringExecution || this.state == StateEnum.Starting)
+            if (this.state == StateEnum.Unstarted || this.state == StateEnum.RequiringExecution)
             {
                 this.currentRecipe = situation.CurrentRecipeId;
                 this.slottedRecipe = situation.CurrentRecipeId;
@@ -47,8 +47,7 @@ namespace AutoccultistNS.GameState.Impl
             }
             else if (this.state == StateEnum.Ongoing)
             {
-                // We want to know the recipe currently being processed, not the one that will trigger if the warmup completes.
-                this.currentRecipe = situation.FallbackRecipeId;
+                this.currentRecipe = situation.RecipeId;
                 this.slottedRecipe = situation.CurrentRecipeId;
                 this.recipeTimeRemaining = situation.TimeRemaining;
             }

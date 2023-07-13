@@ -56,6 +56,7 @@ namespace AutoccultistNS.GUI
                     }
 
                     NucleusAccumbens.AddImperative(arc);
+                    IsShowing = false;
                 }
 
                 GUILayout.Label(arc.Name);

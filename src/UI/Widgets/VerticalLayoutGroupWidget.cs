@@ -22,11 +22,12 @@ namespace AutoccultistNS.UI
             this.EnableChildLayoutWidthAndBreakSelfSizing(true);
             this.EnableChildLayoutHeightAndBreakSelfSizing(true);
 
-            this.ExpandChildrenToWidthExceptActuallyCenterThemAndLeaveGaps(false);
-            this.ExpandChildrenToHeightExceptActuallyCenterThemAndLeaveGaps(false);
+            this.SpreadChildrenHorizontally(false);
+            this.SpreadChildrenVertically(false);
         }
 
         public VerticalLayoutGroup LayoutGroup { get; private set; }
+
         // Fucking stupid name, but this property does both.
         public VerticalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value)
         {
@@ -42,14 +43,14 @@ namespace AutoccultistNS.UI
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public VerticalLayoutGroupWidget ExpandChildrenToWidthExceptActuallyCenterThemAndLeaveGaps(bool value)
+        public VerticalLayoutGroupWidget SpreadChildrenHorizontally(bool value)
         {
             this.LayoutGroup.childForceExpandWidth = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public VerticalLayoutGroupWidget ExpandChildrenToHeightExceptActuallyCenterThemAndLeaveGaps(bool value)
+        public VerticalLayoutGroupWidget SpreadChildrenVertically(bool value)
         {
             this.LayoutGroup.childForceExpandHeight = value;
             return this;

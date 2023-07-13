@@ -1,6 +1,8 @@
 namespace AutoccultistNS.UI
 {
+    using System;
     using UnityEngine;
+    using UnityEngine.EventSystems;
 
     public class UIGameObjectWidget
     {
@@ -39,6 +41,24 @@ namespace AutoccultistNS.UI
         public UIGameObjectWidget Deactivate()
         {
             this.GameObject.SetActive(false);
+            return this;
+        }
+
+        public UIGameObjectWidget OnPointerEnter(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<PointerEventAdapter>().PointerEnter += (sender, e) => action(e);
+            return this;
+        }
+
+        public UIGameObjectWidget OnPointerExit(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<PointerEventAdapter>().PointerExit += (sender, e) => action(e);
+            return this;
+        }
+
+        public UIGameObjectWidget OnPointerClick(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<PointerEventAdapter>().PointerClick += (sender, e) => action(e);
             return this;
         }
 

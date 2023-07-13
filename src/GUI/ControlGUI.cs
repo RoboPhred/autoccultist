@@ -101,9 +101,19 @@ namespace AutoccultistNS.GUI
             var currentArc = NucleusAccumbens.CurrentImperatives.OfType<IArc>().FirstOrDefault();
             GUILayout.Label($"Current Arc: {currentArc?.Name ?? "None"}");
 
-            if (GUILayout.Button("Arcs", GUILayout.ExpandWidth(false)))
+            if (currentArc == null)
             {
-                ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
+                if (GUILayout.Button("Start Arc", GUILayout.ExpandWidth(false)))
+                {
+                    ArcsGUI.IsShowing = !ArcsGUI.IsShowing;
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Abort Arc", GUILayout.ExpandWidth(false)))
+                {
+                    NucleusAccumbens.RemoveImperative(currentArc);
+                }
             }
 
             GUILayout.EndHorizontal();

@@ -24,6 +24,12 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public ImageWidget Sprite(Sprite sprite)
+        {
+            this.Image.sprite = sprite;
+            return this;
+        }
+
         public ImageWidget StretchImage()
         {
             this.Image.type = Image.Type.Simple;

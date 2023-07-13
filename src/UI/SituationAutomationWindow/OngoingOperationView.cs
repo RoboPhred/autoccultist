@@ -2,8 +2,10 @@ namespace AutoccultistNS.UI
 {
     using AutoccultistNS.Brain;
     using SecretHistories.Entities;
+    using SecretHistories.Entities.NullEntities;
     using SecretHistories.UI;
     using UnityEngine;
+    using UnityEngine.UI;
 
     public class OngoingOperationView : IWindowView
     {
@@ -18,23 +20,12 @@ namespace AutoccultistNS.UI
                 .Padding(10, 2)
                 .AddContent(mountPoint =>
                 {
-                    mountPoint.AddText("OperationText")
-                        .ExpandWidth()
-                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                        .FontSize(32)
-                        .Text("Operation in progress");
-
-                    mountPoint.AddSizingLayout("Spacer")
-                        .PreferredHeight(10);
-
                     mountPoint.AddText("OperationName")
                         .ExpandWidth()
                         .TextAlignment(TMPro.TextAlignmentOptions.Center)
                         .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                        .FontSize(20)
-                        .MaxFontSize(20)
-                        .MinFontSize(12)
+                        .MinFontSize(16)
+                        .MaxFontSize(32)
                         .Text(reaction.Operation.Name);
 
                     mountPoint.AddSizingLayout("Spacer")
@@ -82,15 +73,52 @@ namespace AutoccultistNS.UI
                     foreach (var item in historyItems)
                     {
                         var recipe = compendium.GetEntityById<Recipe>(item.SlottedRecipeId);
-                        mountPoint.AddText("HistoryItem")
+                        mountPoint.AddVeritcalLayoutGroup("HistoryEntry")
+                            .SpreadChildrenHorizontally(true)
                             .ExpandWidth()
-                            .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                            .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                            .FontSize(20)
-                            .Text(recipe.Label ?? item.SlottedRecipeId);
+                            .FitContentHeight()
+                            .Padding(10, 2)
+                            .Spacing(3)
+                            .AddContent(mountPoint =>
+                            {
+                                mountPoint.AddText("HistoryItem")
+                                    .ExpandWidth()
+                                    .TextAlignment(TMPro.TextAlignmentOptions.Center)
+                                    .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                                    .FontSize(20)
+                                    .Text(recipe.Label ?? item.SlottedRecipeId);
+
+                                foreach (var elementId in item.SlottedElements)
+                                {
+                                    var element = compendium.GetEntityById<Element>(elementId);
+
+                                    mountPoint.AddHorizontalLayoutGroup("Element")
+                                        .ExpandWidth()
+                                        .FitContentHeight()
+                                        .ChildAlignment(TextAnchor.MiddleCenter)
+                                        .Spacing(5)
+                                        // Nope, need a real ElementStack for this...
+                                        // .OnPointerClick((e) =>
+                                        // {
+                                        //     NoonUtility.LogWarning($"Clicked on element {element.Label}");
+                                        //     Watchman.Get<Notifier>().ShowCardElementDetails(element, NullElementStack.Create());
+                                        // })
+                                        .AddContent(mountPoint =>
+                                        {
+                                            mountPoint.AddImage("ElementImage")
+                                                .PreferredWidth(30)
+                                                .PreferredHeight(30)
+                                                .Sprite(ResourcesManager.GetAppropriateSpriteForElement(element));
+
+                                            mountPoint.AddText("ElementName")
+                                                .FontSize(16)
+                                                .Text(element.Label);
+                                        });
+                                }
+                            });
                     }
                 })
-            .ScrollToVertical(0);
+                .ScrollToVertical(0);
         }
     }
 }
