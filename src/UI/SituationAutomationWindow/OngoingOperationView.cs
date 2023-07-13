@@ -4,12 +4,13 @@ namespace AutoccultistNS.UI
     using SecretHistories.Entities;
     using SecretHistories.UI;
     using UnityEngine;
-    using UnityEngine.UI;
 
     public class OngoingOperationView : IWindowView
     {
         private int cachedHistoryItems = -1;
         private ScrollRegionWidget historyScroll;
+        private ScrollRegionWidget recipeDescriptionScroll;
+        private TextWidget recipeDescription;
 
         public OngoingOperationView(SituationAutomationWindow window, OperationReaction reaction, WidgetMountPoint contentMount, WidgetMountPoint footerMount)
         {
@@ -41,11 +42,14 @@ namespace AutoccultistNS.UI
                     mountPoint.AddSizingLayout("Spacer")
                         .PreferredHeight(10);
 
-                    // FIXME: ExpandHeight not working.  Falling back to PreferredHeight
                     this.historyScroll = mountPoint.AddScrollRegion("History")
                         .ExpandWidth()
                         .ExpandHeight()
+                        .PreferredHeight(100)
                         .Vertical();
+
+                    // TODO: Show current recipe text.
+                    // It seems CurrentRecipe description is usually ".".  Are they tokens?  Stored in a situation dominion?
                 });
 
             var test = footerMount.AddHorizontalLayoutGroup("FooterButtons")
@@ -89,6 +93,14 @@ namespace AutoccultistNS.UI
                     }
                 })
             .ScrollToVertical(0);
+
+            if (historyItems.Count > 0)
+            {
+                var lastItem = historyItems[historyItems.Count - 1];
+                var recipe = compendium.GetEntityById<Recipe>(lastItem);
+                this.recipeDescription.Text(recipe?.Description ?? "");
+                this.recipeDescriptionScroll.ScrollToVertical(1);
+            }
         }
     }
 }

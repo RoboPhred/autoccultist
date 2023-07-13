@@ -72,6 +72,12 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public TextWidget WordWrapping(bool enabled)
+        {
+            this.TextMesh.enableWordWrapping = enabled;
+            return this;
+        }
+
         public TextWidget MinFontSize(float size)
         {
             this.TextMesh.fontSizeMin = size;

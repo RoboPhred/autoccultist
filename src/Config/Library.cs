@@ -169,6 +169,9 @@ namespace AutoccultistNS.Config
             LoadOperations();
             LoadGoals();
             LoadArcs();
+
+            ValidateNamedObjectCollection(LibraryGoals);
+            ValidateNamedObjectCollection(LibraryOperations);
         }
 
         private static IEnumerable<IConfigObject> GetAllConfigObjects(Type type = null)
@@ -258,6 +261,28 @@ namespace AutoccultistNS.Config
             {
                 LibraryParseErrors.Add(ex);
                 Autoccultist.LogWarn(ex, $"Failed to load operation from file {filePath}");
+            }
+        }
+
+        private static void ValidateNamedObjectCollection(IReadOnlyCollection<NamedConfigObject> items)
+        {
+            var seenNames = new Dictionary<string, string>();
+            foreach (var item in items)
+            {
+                if (item.AutoName)
+                {
+                    Autoccultist.LogWarn($"{item.GetType().Name} at {item.FilePath} was not given a name.");
+                    continue;
+                }
+
+                if (seenNames.TryGetValue(item.Name.ToLower(), out var oldPath))
+                {
+                    Autoccultist.LogWarn($"{item.GetType().Name} named {item.Name} at {item.FilePath} has a name that conflicts with the item at {oldPath}.");
+                }
+                else
+                {
+                    seenNames.Add(item.Name.ToLower(), item.FilePath);
+                }
             }
         }
     }

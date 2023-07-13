@@ -19,6 +19,8 @@ namespace AutoccultistNS.Brain
         private IRecipeSolution currentRecipeSolution;
         private bool isEnding = false;
 
+        // There is confusion between the current recipe we are solving for and the resulting recipe of the cards we have slotted.
+        // This list is for the former.
         private List<string> recipeHistory = new();
 
         public OperationReaction(IOperation operation)
@@ -249,18 +251,18 @@ namespace AutoccultistNS.Brain
             // Remember what this was, in case it somehow ends up changing.
             var pinnedRecipe = state.CurrentRecipe;
 
-            this.recipeHistory.Add(pinnedRecipe);
-
             var recipeSolution = this.Operation.GetRecipeSolution(state);
             if (recipeSolution == null)
             {
                 // Don't know what this recipe is, let it continue.
+                this.recipeHistory.Add(pinnedRecipe);
                 return true;
             }
 
             if (state.RecipeSlots.Count == 0)
             {
                 // Nothing to slot, no need to coordinate anything.
+                this.recipeHistory.Add(pinnedRecipe);
                 return !recipeSolution.EndOperation;
             }
 
@@ -294,6 +296,9 @@ namespace AutoccultistNS.Brain
 
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
+
+                            // Re-fetch whatever recipe we just triggered due to our card slotting.
+                            this.recipeHistory.Add(this.GetSituationState().CurrentRecipe);
 
                             return !recipeSolution.EndOperation;
                         },
