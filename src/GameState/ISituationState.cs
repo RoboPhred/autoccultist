@@ -25,8 +25,15 @@ namespace AutoccultistNS.GameState
 
         /// <summary>
         /// Gets the current recipe this situation is working on, if any.
+        /// Note that this will be the base recipe before cards are slotted.
+        /// If we have cards slotted, SlottedRecipe will show the recipe we will execute.
         /// </summary>
         string CurrentRecipe { get; }
+
+        /// <summary>
+        /// Gets the recipe that will activate given the current slotted cards.
+        /// </summary>
+        string SlottedRecipe { get; }
 
         /// <summary>
         /// Gets a value indicating whether the current recipe is a Mansus recipe.

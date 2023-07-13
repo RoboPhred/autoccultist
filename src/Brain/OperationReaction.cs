@@ -21,7 +21,7 @@ namespace AutoccultistNS.Brain
 
         // There is confusion between the current recipe we are solving for and the resulting recipe of the cards we have slotted.
         // This list is for the former.
-        private List<string> recipeHistory = new();
+        private List<OperationHistory> history = new();
 
         public OperationReaction(IOperation operation)
             : base(operation.Situation)
@@ -31,7 +31,7 @@ namespace AutoccultistNS.Brain
 
         public IOperation Operation { get; }
 
-        public IReadOnlyList<string> RecipeHistory => this.recipeHistory;
+        public IReadOnlyList<OperationHistory> History => this.history;
 
         public override string ToString()
         {
@@ -208,11 +208,12 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
 
+                            this.CaptureHistory();
+
                             state = this.GetSituationState();
 
                             if (recipeSolution.EndOperation)
                             {
-                                this.recipeHistory.Add(state.CurrentRecipe);
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
                                 return false;
                             }
@@ -222,7 +223,6 @@ namespace AutoccultistNS.Brain
                             if (recipeSolution == null)
                             {
                                 // Don't know what this recipe is, let it continue.
-                                this.recipeHistory.Add(state.CurrentRecipe);
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
                                 return true;
                             }
@@ -231,7 +231,7 @@ namespace AutoccultistNS.Brain
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
 
-                            this.recipeHistory.Add(this.GetSituationState().CurrentRecipe);
+                            this.CaptureHistory();
 
                             await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
 
@@ -255,14 +255,14 @@ namespace AutoccultistNS.Brain
             if (recipeSolution == null)
             {
                 // Don't know what this recipe is, let it continue.
-                this.recipeHistory.Add(pinnedRecipe);
+                this.CaptureHistory();
                 return true;
             }
 
             if (state.RecipeSlots.Count == 0)
             {
                 // Nothing to slot, no need to coordinate anything.
-                this.recipeHistory.Add(pinnedRecipe);
+                this.CaptureHistory();
                 return !recipeSolution.EndOperation;
             }
 
@@ -297,8 +297,7 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
-                            // Re-fetch whatever recipe we just triggered due to our card slotting.
-                            this.recipeHistory.Add(this.GetSituationState().CurrentRecipe);
+                            this.CaptureHistory();
 
                             return !recipeSolution.EndOperation;
                         },
@@ -343,6 +342,30 @@ namespace AutoccultistNS.Brain
                         this.cancellationSource.Token);
                 },
                 this.cancellationSource.Token);
+        }
+
+        private void CaptureHistory()
+        {
+            var state = this.GetSituationState();
+            var aspects = new Dictionary<string, int>();
+            foreach (var card in state.GetSlottedCards())
+            {
+                foreach (var aspect in card.Aspects)
+                {
+                    if (aspects.ContainsKey(aspect.Key))
+                    {
+                        aspects[aspect.Key] += aspect.Value;
+                    }
+                    else
+                    {
+                        aspects[aspect.Key] = aspect.Value;
+                    }
+                }
+            }
+
+            // FIXME: Wait for magnet slots to do their thing.  For speak on esoteric matters, showing the pre-magnet-slotted recipe.
+            var history = new OperationHistory(state.CurrentRecipe, state.SlottedRecipe, aspects);
+            this.history.Add(history);
         }
 
         private async Task HandleOperationError(Exception ex)
@@ -413,6 +436,20 @@ namespace AutoccultistNS.Brain
             }
 
             this.TryComplete();
+        }
+
+        public class OperationHistory
+        {
+            public OperationHistory(string recipeId, string SlottedRecipeId, IReadOnlyDictionary<string, int> slottedAspects)
+            {
+                this.RecipeId = recipeId;
+                this.SlottedRecipeId = SlottedRecipeId;
+                this.SlottedAspects = slottedAspects;
+            }
+
+            public string RecipeId { get; private set; }
+            public string SlottedRecipeId { get; private set; }
+            public IReadOnlyDictionary<string, int> SlottedAspects { get; private set; }
         }
     }
 }

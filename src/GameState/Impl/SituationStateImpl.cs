@@ -16,6 +16,7 @@ namespace AutoccultistNS.GameState.Impl
         private readonly StateEnum state;
         private readonly bool isOccupied;
         private readonly string currentRecipe;
+        private readonly string slottedRecipe;
         private readonly float? recipeTimeRemaining;
         private readonly IReadOnlyCollection<ISituationSlot> recipeSlots;
         private readonly IReadOnlyCollection<ICardState> storedCards;
@@ -38,21 +39,30 @@ namespace AutoccultistNS.GameState.Impl
             Our idea of the current recipe is what we are currently working on, not what the next will be.
             */
 
-            if (this.state == StateEnum.Ongoing)
+            if (this.state == StateEnum.Unstarted || this.state == StateEnum.RequiringExecution || this.state == StateEnum.Starting)
+            {
+                this.currentRecipe = situation.CurrentRecipeId;
+                this.slottedRecipe = situation.CurrentRecipeId;
+                this.recipeTimeRemaining = null;
+            }
+            else if (this.state == StateEnum.Ongoing)
             {
                 // We want to know the recipe currently being processed, not the one that will trigger if the warmup completes.
                 this.currentRecipe = situation.FallbackRecipeId;
+                this.slottedRecipe = situation.CurrentRecipeId;
                 this.recipeTimeRemaining = situation.TimeRemaining;
             }
             else if (this.state == StateEnum.Complete)
             {
                 // Recipe is complete, we want to know the thing we chose.
                 this.currentRecipe = situation.CurrentRecipeId;
+                this.slottedRecipe = situation.CurrentRecipeId;
                 this.recipeTimeRemaining = situation.TimeRemaining;
             }
             else
             {
                 this.currentRecipe = null;
+                this.slottedRecipe = null;
                 this.recipeTimeRemaining = null;
             }
 
@@ -119,6 +129,17 @@ namespace AutoccultistNS.GameState.Impl
             }
         }
 
+        /// <inheritdoc/>
+        public string SlottedRecipe
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.slottedRecipe;
+            }
+        }
+
+        /// <inheritdoc/>
         public string CurrentRecipePortal
         {
             get

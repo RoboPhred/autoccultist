@@ -9,8 +9,6 @@ namespace AutoccultistNS.UI
     {
         private int cachedHistoryItems = -1;
         private ScrollRegionWidget historyScroll;
-        private ScrollRegionWidget recipeDescriptionScroll;
-        private TextWidget recipeDescription;
 
         public OngoingOperationView(SituationAutomationWindow window, OperationReaction reaction, WidgetMountPoint contentMount, WidgetMountPoint footerMount)
         {
@@ -67,7 +65,7 @@ namespace AutoccultistNS.UI
 
         public void UpdateContent()
         {
-            var historyItems = this.Reaction.RecipeHistory;
+            var historyItems = this.Reaction.History;
             if (historyItems.Count == this.cachedHistoryItems)
             {
                 return;
@@ -83,24 +81,16 @@ namespace AutoccultistNS.UI
                 {
                     foreach (var item in historyItems)
                     {
-                        var recipe = compendium.GetEntityById<Recipe>(item);
+                        var recipe = compendium.GetEntityById<Recipe>(item.SlottedRecipeId);
                         mountPoint.AddText("HistoryItem")
                             .ExpandWidth()
                             .TextAlignment(TMPro.TextAlignmentOptions.Center)
                             .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
                             .FontSize(20)
-                            .Text(recipe.Label ?? item);
+                            .Text(recipe.Label ?? item.SlottedRecipeId);
                     }
                 })
             .ScrollToVertical(0);
-
-            if (historyItems.Count > 0)
-            {
-                var lastItem = historyItems[historyItems.Count - 1];
-                var recipe = compendium.GetEntityById<Recipe>(lastItem);
-                this.recipeDescription.Text(recipe?.Description ?? "");
-                this.recipeDescriptionScroll.ScrollToVertical(1);
-            }
         }
     }
 }
