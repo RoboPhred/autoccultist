@@ -17,8 +17,6 @@ namespace AutoccultistNS.UI
 
             contentMount.AddVeritcalLayoutGroup("VerticalLayout")
                 .Padding(10, 2)
-                .ExpandWidth()
-                .FitContentHeight()
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("OperationText")
