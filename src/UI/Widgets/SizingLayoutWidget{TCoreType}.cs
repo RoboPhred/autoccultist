@@ -18,23 +18,20 @@ namespace AutoccultistNS.UI
         public SizingLayoutWidget(GameObject gameObject)
             : base(gameObject)
         {
+            // Always do this, in case we find ourselves in a dreaded childControlsWidth/Height group.
+            this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
+            this.layoutElement.flexibleWidth = 0;
+            this.layoutElement.flexibleHeight = 0;
+            this.LayoutElement.minHeight = -1;
+            this.LayoutElement.minWidth = -1;
+            this.LayoutElement.preferredHeight = -1;
+            this.LayoutElement.preferredWidth = -1;
         }
 
         public LayoutElement LayoutElement
         {
             get
             {
-                if (this.layoutElement == null)
-                {
-                    this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
-                    this.layoutElement.flexibleWidth = 0;
-                    this.layoutElement.flexibleHeight = 0;
-                    this.LayoutElement.minHeight = -1;
-                    this.LayoutElement.minWidth = -1;
-                    this.LayoutElement.preferredHeight = -1;
-                    this.LayoutElement.preferredWidth = -1;
-                }
-
                 return this.layoutElement;
             }
         }
@@ -65,6 +62,11 @@ namespace AutoccultistNS.UI
 
                 return this.constrainedLayoutElement;
             }
+        }
+
+        public static implicit operator SizingLayoutWidget(SizingLayoutWidget<TCoreType> widget)
+        {
+            return new SizingLayoutWidget(widget.GameObject);
         }
 
         public TCoreType IgnoreLayout()

@@ -16,6 +16,7 @@ namespace AutoccultistNS.UI
             this.TextMesh = this.GameObject.GetOrAddComponent<TextMeshProUGUI>();
             this.TextMesh.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
             this.TextMesh.font = ResourceHack.FindFont("Text_Philosopher");
+            this.TextMesh.color = new Color(0.5765f, 0.8824f, 0.9373f, 1);
         }
 
         public TextMeshProUGUI TextMesh { get; private set; }

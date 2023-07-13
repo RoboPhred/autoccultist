@@ -17,10 +17,14 @@ namespace AutoccultistNS.UI
             this.LayoutGroup = this.GameObject.GetOrAddComponent<HorizontalLayoutGroup>();
             this.ChildAlignment(TextAnchor.UpperLeft);
             this.Spacing(0);
-            this.ChildControlWidth(true);
-            this.ChildControlHeight(true);
-            this.ChildForceExpandWidth(false);
-            this.ChildForceExpandHeight(false);
+
+            // These absolutely must be on, or all our children will be zero-sized.
+            // Yes, this also fucks up our own size.  Too bad.
+            this.EnableChildLayoutWidthAndBreakSelfSizing(true);
+            this.EnableChildLayoutHeightAndBreakSelfSizing(true);
+
+            this.ExpandChildrenToHeightExceptActuallyCenterThemAndLeaveGaps(false);
+            this.ExpandChildrenToWidthExceptActuallyCenterThemAndLeaveGaps(false);
         }
 
         public HorizontalLayoutGroup LayoutGroup { get; private set; }
@@ -31,27 +35,31 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public HorizontalLayoutGroupWidget ChildControlHeight(bool value)
-        {
-            this.LayoutGroup.childControlHeight = value;
-            return this;
-        }
-
-        public HorizontalLayoutGroupWidget ChildControlWidth(bool value)
+        // Fucking stupid name, but this property does both.
+        public HorizontalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value)
         {
             this.LayoutGroup.childControlWidth = value;
             return this;
         }
 
-        public HorizontalLayoutGroupWidget ChildForceExpandHeight(bool value)
+        // Fucking stupid name, but this property does both.
+        public HorizontalLayoutGroupWidget EnableChildLayoutHeightAndBreakSelfSizing(bool value)
         {
-            this.LayoutGroup.childForceExpandHeight = value;
+            this.LayoutGroup.childControlHeight = value;
             return this;
         }
 
-        public HorizontalLayoutGroupWidget ChildForceExpandWidth(bool value)
+        // what the fuck does this even do.  It centers things but leaves other things zero sized.
+        public HorizontalLayoutGroupWidget ExpandChildrenToWidthExceptActuallyCenterThemAndLeaveGaps(bool value)
         {
             this.LayoutGroup.childForceExpandWidth = value;
+            return this;
+        }
+
+        // what the fuck does this even do.  It centers things but leaves other things zero sized.
+        public HorizontalLayoutGroupWidget ExpandChildrenToHeightExceptActuallyCenterThemAndLeaveGaps(bool value)
+        {
+            this.LayoutGroup.childForceExpandHeight = value;
             return this;
         }
 

@@ -187,7 +187,7 @@ namespace AutoccultistNS.UI
             // Shove a blank image in so we capture mouse events for mouse drag scrolling
             var image = content.GetOrAddComponent<Image>();
             image.sprite = ResourcesManager.GetSpriteForUI("empty_bg");
-            image.color = new Color(1, 1, 1, 0);
+            image.color = new Color(1, 1, 1, 1);
 
             if (this.ScrollRect.horizontal && this.ScrollRect.vertical)
             {

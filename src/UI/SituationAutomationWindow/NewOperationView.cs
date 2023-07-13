@@ -67,6 +67,8 @@ namespace AutoccultistNS.UI
         {
             TextButtonWidget startButton = null;
             var row = UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
+                // This centers the text for no decent reason.
+                .ExpandChildrenToHeightExceptActuallyCenterThemAndLeaveGaps(true)
                 .Padding(10, 2)
                 .AddContent(mountPoint =>
                 {
@@ -74,6 +76,7 @@ namespace AutoccultistNS.UI
                         .FontSize(12)
                         .MinFontSize(8)
                         .MaxFontSize(12)
+                        .ExpandWidth()
                         .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
                         .VerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
                         .Text(operation.Name);

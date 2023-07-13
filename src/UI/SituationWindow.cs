@@ -134,6 +134,12 @@ namespace AutoccultistNS.UI
         {
         }
 
+        protected void Clear()
+        {
+            this.Content.Clear();
+            this.Footer.Clear();
+        }
+
         private void BuildWindowFrame()
         {
             // Note: We should auto-size from our content.
@@ -175,30 +181,24 @@ namespace AutoccultistNS.UI
                     .Left(0, 0)
                     .Top(1, -50)
                     .Right(1, 0)
-                    .Bottom(0, 77)
+                    .Bottom(0, 50)
                     .Sprite("window_bg_middle")
                     .SlicedImage()
                     .Color(BgColorBody);
 
-                var footerContainer = mountPoint.AddVeritcalLayoutGroup("FooterContainer")
+                mountPoint.AddSizingLayout("Footer")
                     .Left(0, 0)
-                    .Top(0, 77)
+                    .Top(0, 50)
                     .Right(1, 0)
-                    .Bottom(0, 27)
-                    .ChildForceExpandHeight(true)
-                    .ChildForceExpandWidth(true)
+                    .Bottom(0, 0) // container was 77/27
                     .AddContent(mountPoint =>
                     {
-                        mountPoint.AddImage("Footer")
-                        .Anchor(350, -90)
-                        .Left(0, 0)
-                        .Top(1, -40)
-                        .Right(0, 700)
-                        .Bottom(1, -90)
-                        .MinHeight(5)
-                        .Sprite("window_bg_bottom")
-                        .SlicedImage()
-                        .Color(BgColorFooter);
+                        mountPoint.AddImage("BG_Footer")
+                            .Sprite("window_bg_bottom")
+                            .SlicedImage()
+                            .Color(BgColorFooter);
+
+                        this.Footer = mountPoint.AddSizingLayout("FooterContent");
                     });
 
                 this.title = mountPoint.AddText("TitleText")
@@ -211,8 +211,7 @@ namespace AutoccultistNS.UI
                     .FontSize(30)
                     .MinFontSize(10)
                     .MaxFontSize(30)
-                    .TextAlignment(TextAlignmentOptions.BottomLeft)
-                    .TextColor(new Color(0.5765f, 0.8824f, 0.9373f, 1));
+                    .TextAlignment(TextAlignmentOptions.BottomLeft);
 
                 mountPoint.AddIconButton("CloseButton")
                     .Anchor(-25, -25)

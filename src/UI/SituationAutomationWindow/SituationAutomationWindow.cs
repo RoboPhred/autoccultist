@@ -41,7 +41,7 @@ namespace AutoccultistNS.UI
 
         public static SituationAutomationWindow CreateWindow(Situation situation)
         {
-            var window = SituationWindow.CreateWindow<SituationAutomationWindow>($"window_${situation.VerbId}_automation");
+            var window = SituationWindow.CreateWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
             window.Attach(situation);
             return window;
         }
@@ -104,7 +104,7 @@ namespace AutoccultistNS.UI
                 // HACK: Fuck scrollbars
                 if (this.currentView != null)
                 {
-                    this.Content.Clear();
+                    this.Clear();
                     this.currentView = null;
                 }
 
@@ -113,17 +113,17 @@ namespace AutoccultistNS.UI
 
             if (this.CurrentResourceConstraint == null && this.currentView is not NewOperationView)
             {
-                this.Content.Clear();
+                this.Clear();
                 this.currentView = new NewOperationView(this, this.Content);
             }
             else if (this.CurrentResourceConstraint is UISituationLockoutConstraint && this.currentView is not LockoutView)
             {
-                this.Content.Clear();
+                this.Clear();
                 this.currentView = new LockoutView(this, this.Content);
             }
             else if (this.CurrentResourceConstraint is OperationReaction reaction && (this.currentView is not OngoingOperationView view || view.Reaction != reaction))
             {
-                this.Content.Clear();
+                this.Clear();
                 this.currentView = new OngoingOperationView(this, reaction, this.Content, this.Footer);
             }
 

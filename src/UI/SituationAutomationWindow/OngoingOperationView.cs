@@ -4,6 +4,7 @@ namespace AutoccultistNS.UI
     using SecretHistories.Entities;
     using SecretHistories.UI;
     using UnityEngine;
+    using UnityEngine.UI;
 
     public class OngoingOperationView : IWindowView
     {
@@ -45,18 +46,18 @@ namespace AutoccultistNS.UI
                     // FIXME: ExpandHeight not working.  Falling back to PreferredHeight
                     this.historyScroll = mountPoint.AddScrollRegion("History")
                         .ExpandWidth()
-                        .PreferredHeight(125)
+                        .ExpandHeight()
                         .Vertical();
+                });
 
-                    mountPoint.AddSizingLayout("Spacer")
-                    .PreferredHeight(10);
-
-                    mountPoint.AddTextButton("Cancel")
+            var test = footerMount.AddHorizontalLayoutGroup("FooterButtons")
+                .ChildAlignment(TextAnchor.MiddleRight)
+                .Padding(10, 2)
+                .AddContent(mountPoint =>
+                {
+                    mountPoint.AddTextButton("AbortButton")
                         .Text("Abort")
-                        .OnClick(() =>
-                            {
-                                reaction.Dispose();
-                            });
+                        .OnClick(() => reaction.Dispose());
                 });
         }
 
