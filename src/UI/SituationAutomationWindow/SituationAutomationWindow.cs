@@ -123,7 +123,7 @@ namespace AutoccultistNS.UI
             if (this.CurrentResourceConstraint == null && this.currentView is not NewOperationView)
             {
                 this.Clear();
-                this.currentView = new NewOperationView(this, this.Content);
+                this.currentView = new NewOperationView(this, this.Content, this.Footer);
             }
             else if (this.CurrentResourceConstraint is UISituationLockoutConstraint && this.currentView is not LockoutView)
             {

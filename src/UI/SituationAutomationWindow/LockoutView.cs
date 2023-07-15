@@ -6,14 +6,14 @@ namespace AutoccultistNS.UI
     {
         public LockoutView(SituationAutomationWindow window, WidgetMountPoint content)
         {
-            var test = content.AddVeritcalLayoutGroup("VerticalLayout")
+            content.AddVeritcalLayoutGroup("VerticalLayout")
                 .Padding(10, 2)
                 .ExpandWidth()
+                .SpreadChildrenHorizontally()
                 .FitContentHeight()
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("LockoutText")
-                        .ExpandWidth()
                         .TextAlignment(TMPro.TextAlignmentOptions.Center)
                         .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
                         .FontSize(32)
@@ -32,7 +32,6 @@ namespace AutoccultistNS.UI
                         .PreferredHeight(10);
 
                     mountPoint.AddTextButton("Unlock")
-                        .Left(0, 0)
                         .Text("Unlock")
                         .OnClick(() =>
                             {

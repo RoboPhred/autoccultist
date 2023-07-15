@@ -2,18 +2,20 @@ namespace AutoccultistNS.UI
 {
     using AutoccultistNS.Brain;
     using SecretHistories.Entities;
-    using SecretHistories.Entities.NullEntities;
     using SecretHistories.UI;
     using UnityEngine;
-    using UnityEngine.UI;
 
     public class OngoingOperationView : IWindowView
     {
         private int cachedHistoryItems = -1;
+
+        private SituationAutomationWindow window;
+        private TextButtonWidget lockoutButton;
         private ScrollRegionWidget historyScroll;
 
         public OngoingOperationView(SituationAutomationWindow window, OperationReaction reaction, WidgetMountPoint contentMount, WidgetMountPoint footerMount)
         {
+            this.window = window;
             this.Reaction = reaction;
 
             contentMount.AddVeritcalLayoutGroup("VerticalLayout")
@@ -41,14 +43,19 @@ namespace AutoccultistNS.UI
                     // It seems CurrentRecipe description is usually ".".  Are they tokens?  Stored in a situation dominion?
                 });
 
-            var test = footerMount.AddHorizontalLayoutGroup("FooterButtons")
+            footerMount.AddHorizontalLayoutGroup("FooterButtons")
                 .ChildAlignment(TextAnchor.MiddleRight)
                 .Padding(10, 2)
+                .Spacing(5)
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddTextButton("AbortButton")
                         .Text("Abort")
                         .OnClick(() => reaction.Dispose());
+
+                    lockoutButton = mountPoint.AddTextButton("LockoutButton")
+                        .Text("Lockout")
+                        .OnClick(() => window.ToggleLockout());
                 });
         }
 
@@ -56,6 +63,8 @@ namespace AutoccultistNS.UI
 
         public void UpdateContent()
         {
+            this.lockoutButton.SetEnabled(!this.window.IsLockedOut);
+
             var historyItems = this.Reaction.History;
             if (historyItems.Count == this.cachedHistoryItems)
             {
@@ -74,7 +83,7 @@ namespace AutoccultistNS.UI
                     {
                         var recipe = compendium.GetEntityById<Recipe>(item.SlottedRecipeId);
                         mountPoint.AddVeritcalLayoutGroup("HistoryEntry")
-                            .SpreadChildrenHorizontally(true)
+                            .SpreadChildrenHorizontally()
                             .ExpandWidth()
                             .FitContentHeight()
                             .Padding(10, 2)

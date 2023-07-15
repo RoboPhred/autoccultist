@@ -29,5 +29,9 @@ namespace AutoccultistNS.UI
             this.Situation = situation;
             this.OnAttach();
         }
+
+        protected virtual void OnAttach()
+        {
+        }
     }
 }

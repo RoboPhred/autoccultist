@@ -50,14 +50,14 @@ namespace AutoccultistNS.UI
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public HorizontalLayoutGroupWidget SpreadChildrenHorizontally(bool value)
+        public HorizontalLayoutGroupWidget SpreadChildrenHorizontally(bool value = true)
         {
             this.LayoutGroup.childForceExpandWidth = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public HorizontalLayoutGroupWidget SpreadChildrenVertically(bool value)
+        public HorizontalLayoutGroupWidget SpreadChildrenVertically(bool value = true)
         {
             this.LayoutGroup.childForceExpandHeight = value;
             return this;

@@ -18,7 +18,7 @@ namespace AutoccultistNS.UI
 
         private DateTime lastUpdate = DateTime.MinValue;
 
-        public NewOperationView(SituationAutomationWindow window, WidgetMountPoint content)
+        public NewOperationView(SituationAutomationWindow window, WidgetMountPoint content, WidgetMountPoint footer)
         {
             this.window = window;
             this.contentRoot = content;
@@ -36,6 +36,17 @@ namespace AutoccultistNS.UI
                         }
                     })
                 .ScrollToVertical(1);
+
+            footer.AddHorizontalLayoutGroup("FooterButtons")
+                .ChildAlignment(TextAnchor.MiddleRight)
+                .Padding(10, 2)
+                .Spacing(5)
+                .AddContent(mountPoint =>
+                {
+                    mountPoint.AddTextButton("LockoutButton")
+                        .Text(window.IsLockedOut ? "Unlock" : "Lockout")
+                        .OnClick(() => window.ToggleLockout());
+                });
         }
 
         public void UpdateContent()
@@ -67,8 +78,8 @@ namespace AutoccultistNS.UI
         {
             TextButtonWidget startButton = null;
             var row = UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
-                .SpreadChildrenVertically(true)
-                .Padding(10, 2)
+                .SpreadChildrenVertically()
+                .Padding(10, 5)
                 .AddContent(mountPoint =>
                 {
                     var nameElement = mountPoint.AddText("Recipe")

@@ -107,10 +107,6 @@ namespace AutoccultistNS.UI
         {
         }
 
-        protected virtual void OnAttach()
-        {
-        }
-
         protected virtual void OnUpdate()
         {
         }
@@ -168,8 +164,20 @@ namespace AutoccultistNS.UI
                 this.Icon = mountPoint.AddSizingLayout("IconContainer")
                     .Top(1, 0)
                     .Bottom(1, -50)
-                    .Left(0, 5)
-                    .Right(0, 55);
+                    .Left(0, 3)
+                    .Right(0, 53);
+
+                this.title = mountPoint.AddText("TitleText")
+                    .Anchor(Vector2.zero)
+                    .Left(0, 57.5f)
+                    .Top(1, 0)
+                    .Right(1, -57.5f)
+                    .Bottom(1, -45)
+                    .PreferredHeight(25)
+                    .FontSize(30)
+                    .MinFontSize(10)
+                    .MaxFontSize(30)
+                    .TextAlignment(TextAlignmentOptions.BottomLeft);
 
                 mountPoint.AddImage("BG_Body")
                     .Anchor(0, -50)
@@ -195,18 +203,6 @@ namespace AutoccultistNS.UI
 
                         this.Footer = mountPoint.AddSizingLayout("FooterContent");
                     });
-
-                this.title = mountPoint.AddText("TitleText")
-                    .Anchor(Vector2.zero)
-                    .Left(0, 57.5f)
-                    .Top(1, 0)
-                    .Right(1, -57.5f)
-                    .Bottom(1, -45)
-                    .PreferredHeight(25)
-                    .FontSize(30)
-                    .MinFontSize(10)
-                    .MaxFontSize(30)
-                    .TextAlignment(TextAlignmentOptions.BottomLeft);
 
                 mountPoint.AddIconButton("CloseButton")
                     .Anchor(-25, -25)

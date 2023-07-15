@@ -29,28 +29,28 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroup LayoutGroup { get; private set; }
 
         // Fucking stupid name, but this property does both.
-        public VerticalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value)
+        public VerticalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value = true)
         {
             this.LayoutGroup.childControlWidth = value;
             return this;
         }
 
         // Fucking stupid name, but this property does both.
-        public VerticalLayoutGroupWidget EnableChildLayoutHeightAndBreakSelfSizing(bool value)
+        public VerticalLayoutGroupWidget EnableChildLayoutHeightAndBreakSelfSizing(bool value = true)
         {
             this.LayoutGroup.childControlHeight = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public VerticalLayoutGroupWidget SpreadChildrenHorizontally(bool value)
+        public VerticalLayoutGroupWidget SpreadChildrenHorizontally(bool value = true)
         {
             this.LayoutGroup.childForceExpandWidth = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public VerticalLayoutGroupWidget SpreadChildrenVertically(bool value)
+        public VerticalLayoutGroupWidget SpreadChildrenVertically(bool value = true)
         {
             this.LayoutGroup.childForceExpandHeight = value;
             return this;
