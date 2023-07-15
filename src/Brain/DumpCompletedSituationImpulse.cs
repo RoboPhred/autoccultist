@@ -60,6 +60,11 @@ namespace AutoccultistNS.Brain
 
         private IEnumerable<ISituationState> GetCompletedSituations(IGameState state)
         {
+            if (state.Mansus.State != PortalActiveState.Closed)
+            {
+                return Enumerable.Empty<ISituationState>();
+            }
+
             return
                 from situation in state.Situations
                 where situation.State == StateEnum.Complete
