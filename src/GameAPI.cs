@@ -443,8 +443,6 @@ namespace AutoccultistNS
         /// <returns>A token to unpause the game.</returns>
         public static PauseToken Pause(string name = null)
         {
-            Autoccultist.LogTrace($"Pausing for {name}");
-
             if (pauseDepth == 0)
             {
                 if (IsRunning && MechanicalHeart.IsRunning)
@@ -605,8 +603,6 @@ namespace AutoccultistNS
                 {
                     return;
                 }
-
-                Autoccultist.LogTrace($"Unpausing for {this.Name}");
 
                 this.isDisposed = true;
                 GC.SuppressFinalize(this);

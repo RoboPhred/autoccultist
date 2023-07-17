@@ -6,7 +6,7 @@ namespace AutoccultistNS.UI
     {
         public LockoutView(SituationAutomationWindow window, WidgetMountPoint content)
         {
-            content.AddVeritcalLayoutGroup("VerticalLayout")
+            content.AddVerticalLayoutGroup("VerticalLayout")
                 .Padding(10, 2)
                 .ExpandWidth()
                 .SpreadChildrenHorizontally()

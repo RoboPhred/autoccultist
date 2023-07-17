@@ -18,7 +18,7 @@ namespace AutoccultistNS.UI
             this.window = window;
             this.Reaction = reaction;
 
-            contentMount.AddVeritcalLayoutGroup("VerticalLayout")
+            contentMount.AddVerticalLayoutGroup("VerticalLayout")
                 .Padding(10, 2)
                 .AddContent(mountPoint =>
                 {
@@ -82,7 +82,7 @@ namespace AutoccultistNS.UI
                     foreach (var item in historyItems)
                     {
                         var recipe = compendium.GetEntityById<Recipe>(item.SlottedRecipeId);
-                        mountPoint.AddVeritcalLayoutGroup("HistoryEntry")
+                        mountPoint.AddVerticalLayoutGroup("HistoryEntry")
                             .SpreadChildrenHorizontally()
                             .ExpandWidth()
                             .FitContentHeight()

@@ -1,6 +1,6 @@
 namespace AutoccultistNS.UI
 {
-    public static class WIdgetMountPointExtensions
+    public static class WidgetMountPointExtensions
     {
         public static SizingLayoutWidget AddSizingLayout(this WidgetMountPoint mountPoint, string key = "SizingLayout")
         {
@@ -37,7 +37,7 @@ namespace AutoccultistNS.UI
             return widget;
         }
 
-        public static VerticalLayoutGroupWidget AddVeritcalLayoutGroup(this WidgetMountPoint mountPoint, string key = "VerticalLayoutGroup")
+        public static VerticalLayoutGroupWidget AddVerticalLayoutGroup(this WidgetMountPoint mountPoint, string key = "VerticalLayoutGroup")
         {
             var widget = new VerticalLayoutGroupWidget(key);
             mountPoint.AddWidget(widget);
