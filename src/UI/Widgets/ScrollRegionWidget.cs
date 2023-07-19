@@ -58,6 +58,8 @@ namespace AutoccultistNS.UI
             }
         }
 
+        public override WidgetMountPoint MountPoint => new WidgetMountPoint(this.Content.transform);
+
         public static implicit operator WidgetMountPoint(ScrollRegionWidget widget)
         {
             return new WidgetMountPoint(widget.Content.transform);

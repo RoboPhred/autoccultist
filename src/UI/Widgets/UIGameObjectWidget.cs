@@ -19,11 +19,18 @@ namespace AutoccultistNS.UI
 
         public GameObject GameObject { get; private set; }
 
+        public virtual WidgetMountPoint MountPoint => new WidgetMountPoint(this.GameObject.transform);
+
         public CanvasRenderer CanvasRenderer { get; private set; }
 
         public static implicit operator GameObject(UIGameObjectWidget widget)
         {
             return widget.GameObject;
+        }
+
+        public static implicit operator WidgetMountPoint(UIGameObjectWidget widget)
+        {
+            return widget.MountPoint;
         }
 
         public UIGameObjectWidget SetActive(bool active)
@@ -59,6 +66,24 @@ namespace AutoccultistNS.UI
         public UIGameObjectWidget OnPointerClick(Action<PointerEventData> action)
         {
             this.GameObject.GetOrAddComponent<PointerEventAdapter>().PointerClick += (sender, e) => action(e);
+            return this;
+        }
+
+        public UIGameObjectWidget OnBeginDrag(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<DragAdapter>().BeginDrag += (sender, e) => action(e);
+            return this;
+        }
+
+        public UIGameObjectWidget OnDrag(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<DragAdapter>().Drag += (sender, e) => action(e);
+            return this;
+        }
+
+        public UIGameObjectWidget OnEndDrag(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<DragAdapter>().EndDrag += (sender, e) => action(e);
             return this;
         }
 

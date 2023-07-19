@@ -58,6 +58,24 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
+        public new TCoreType OnBeginDrag(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<DragAdapter>().BeginDrag += (sender, e) => action(e);
+            return this as TCoreType;
+        }
+
+        public new TCoreType OnDrag(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<DragAdapter>().Drag += (sender, e) => action(e);
+            return this as TCoreType;
+        }
+
+        public new TCoreType OnEndDrag(Action<PointerEventData> action)
+        {
+            this.GameObject.GetOrAddComponent<DragAdapter>().EndDrag += (sender, e) => action(e);
+            return this as TCoreType;
+        }
+
         public new virtual TCoreType Clear()
         {
             foreach (Transform child in this.GameObject.transform)
