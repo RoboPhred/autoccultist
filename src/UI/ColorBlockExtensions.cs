@@ -1,7 +1,7 @@
-using UnityEngine.UI;
-
 namespace AutoccultistNS.UI
 {
+    using UnityEngine.UI;
+
     public static class ColorBlockExtensions
     {
         public static ColorBlock Clone(this ColorBlock colorBlock)

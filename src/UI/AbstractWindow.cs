@@ -16,13 +16,14 @@ namespace AutoccultistNS.UI
         private WindowPositioner positioner;
         private TextWidget title;
 
-        public event EventHandler Opened;
-        public event EventHandler Closed;
-
         public AbstractWindow()
         {
             this.BuildWindowFrame();
         }
+
+        public event EventHandler Opened;
+
+        public event EventHandler Closed;
 
         public Vector3 Position
         {

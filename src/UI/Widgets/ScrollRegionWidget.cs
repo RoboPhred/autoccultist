@@ -12,6 +12,7 @@ namespace AutoccultistNS.UI
             normalColor = new Color(0.3765f, 0.7255f, 0.7882f, 1),
             highlightedColor = Color.white,
             pressedColor = new Color(0.5804f, 0.8863f, 0.9373f, 1),
+            selectedColor = new Color(0.3765f, 0.7255f, 0.7882f, 1),
             disabledColor = new Color(0.3738f, 0.4914f, 0.5138f, 0.502f),
             colorMultiplier = 1,
             fadeDuration = 0.1f,
@@ -74,7 +75,6 @@ namespace AutoccultistNS.UI
         public ScrollRegionWidget Vertical()
         {
             this.ScrollRect.vertical = true;
-
 
             var verticalScrollbar = new GameObject("Scrollbar Vertical");
 
