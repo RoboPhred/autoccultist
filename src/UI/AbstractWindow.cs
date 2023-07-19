@@ -16,6 +16,9 @@ namespace AutoccultistNS.UI
         private WindowPositioner positioner;
         private TextWidget title;
 
+        public event EventHandler Opened;
+        public event EventHandler Closed;
+
         public AbstractWindow()
         {
             this.BuildWindowFrame();
@@ -39,19 +42,33 @@ namespace AutoccultistNS.UI
 
         public bool IsClosed => this.canvasGroupFader.IsInvisible();
 
-        protected SizingLayoutWidget Icon { get; private set; }
+        protected WidgetMountPoint Icon { get; private set; }
 
-        protected SizingLayoutWidget Content { get; private set; }
+        protected WidgetMountPoint Content { get; private set; }
 
-        protected SizingLayoutWidget Footer { get; private set; }
+        protected WidgetMountPoint Footer { get; private set; }
 
-        public static T CreateWindow<T>(string key)
+        public static T CreateTabletopWindow<T>(string key)
             where T : AbstractWindow
         {
             var windowSphere = GameObject.Find("TabletopWindowSphere");
             if (windowSphere == null)
             {
                 throw new Exception("Cannot find TabletopWindowSphere.");
+            }
+
+            var gameObject = new GameObject(key);
+            gameObject.transform.SetParent(windowSphere.transform, false);
+            return gameObject.AddComponent<T>();
+        }
+
+        public static T CreateMetaWindow<T>(string key)
+            where T : AbstractWindow
+        {
+            var windowSphere = GameObject.Find("CanvasMeta");
+            if (windowSphere == null)
+            {
+                throw new Exception("Cannot find CanvasMeta.");
             }
 
             var gameObject = new GameObject(key);
@@ -81,6 +98,8 @@ namespace AutoccultistNS.UI
             this.canvasGroupFader.Show();
             this.positioner.Show(this.canvasGroupFader.durationTurnOn, position);
             this.OnOpen();
+
+            this.Opened?.Invoke(this, EventArgs.Empty);
         }
 
         public void Close(bool immediately = false)
@@ -89,6 +108,7 @@ namespace AutoccultistNS.UI
             {
                 this.canvasGroupFader.HideImmediately();
                 this.OnClose();
+                this.Closed?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
@@ -101,6 +121,12 @@ namespace AutoccultistNS.UI
             this.canvasGroupFader.Hide();
 
             this.OnClose();
+            this.Closed?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Retire()
+        {
+            Destroy(this.gameObject);
         }
 
         protected virtual void OnAwake()
@@ -130,8 +156,10 @@ namespace AutoccultistNS.UI
             // Note: We should auto-size from our content.
             var rectTransform = UIFactories.AddRectTransform(this.gameObject)
                 .AnchorRelativeToParent(.5f, .5f, .5f, .5f);
+
+            // One day I will refactor this to use dynamic sizing, but until then...
             UIFactories.AddSizingLayout(this.gameObject)
-                .MinWidth(450)
+                .MinWidth(500)
                 .MinHeight(400);
 
             var canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
@@ -212,6 +240,11 @@ namespace AutoccultistNS.UI
                     .Bottom(1, -37)
                     .Size(24, 24)
                     .Sprite("icon_close")
+                    .Color(new Color(0.3804f, 0.7294f, 0.7922f, 1))
+                    .HighlightedColor(Color.white)
+                    .PressedColor(new Color(0.2671f, 0.6328f, 0.6985f, 1))
+                    .SelectedColor(Color.white)
+                    .DisabledColor(new Color(0.5368f, 0.5368f, 0.5368f, 0.502f))
                     .CenterImage()
                     .ClickSound("UIBUttonClose")
                     .OnClick(() => this.Close());

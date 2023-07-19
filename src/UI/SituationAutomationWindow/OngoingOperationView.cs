@@ -53,7 +53,7 @@ namespace AutoccultistNS.UI
                         .Text("Abort")
                         .OnClick(() => reaction.Dispose());
 
-                    lockoutButton = mountPoint.AddTextButton("LockoutButton")
+                    this.lockoutButton = mountPoint.AddTextButton("LockoutButton")
                         .Text("Lockout")
                         .OnClick(() => window.ToggleLockout());
                 });

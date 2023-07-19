@@ -41,7 +41,7 @@ namespace AutoccultistNS.UI
 
         public static SituationAutomationWindow CreateWindow(Situation situation)
         {
-            var window = SituationWindow.CreateWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
+            var window = SituationWindow.CreateTabletopWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
             window.Attach(situation);
             return window;
         }
@@ -95,10 +95,7 @@ namespace AutoccultistNS.UI
         {
             base.OnAwake();
 
-            this.Icon.AddContent(mountPoint =>
-            {
-                mountPoint.AddImage().Sprite(ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge"));
-            });
+            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge"));
         }
 
         protected override void OnAttach()

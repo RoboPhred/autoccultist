@@ -41,6 +41,46 @@ namespace AutoccultistNS.UI
             return this as IconButtonWidget;
         }
 
+        public new IconButtonWidget Color(Color color)
+        {
+            var newValue = this.Button.colors.Clone();
+            newValue.normalColor = color;
+            this.Button.colors = newValue;
+            return this as IconButtonWidget;
+        }
+
+        public IconButtonWidget HighlightedColor(Color color)
+        {
+            var newValue = this.Button.colors.Clone();
+            newValue.highlightedColor = color;
+            this.Button.colors = newValue;
+            return this as IconButtonWidget;
+        }
+
+        public IconButtonWidget PressedColor(Color color)
+        {
+            var newValue = this.Button.colors.Clone();
+            newValue.pressedColor = color;
+            this.Button.colors = newValue;
+            return this as IconButtonWidget;
+        }
+
+        public IconButtonWidget SelectedColor(Color color)
+        {
+            var newValue = this.Button.colors.Clone();
+            newValue.selectedColor = color;
+            this.Button.colors = newValue;
+            return this as IconButtonWidget;
+        }
+
+        public IconButtonWidget DisabledColor(Color color)
+        {
+            var newValue = this.Button.colors.Clone();
+            newValue.disabledColor = color;
+            this.Button.colors = newValue;
+            return this as IconButtonWidget;
+        }
+
         public IconButtonWidget OnClick(UnityEngine.Events.UnityAction action)
         {
             this.Button.onClick.AddListener(action);

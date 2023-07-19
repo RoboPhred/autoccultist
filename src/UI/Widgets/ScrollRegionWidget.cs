@@ -7,6 +7,16 @@ namespace AutoccultistNS.UI
 
     public class ScrollRegionWidget : SizingLayoutWidget<ScrollRegionWidget>
     {
+        private static readonly ColorBlock ScrollbarColors = new ColorBlock
+        {
+            normalColor = new Color(0.3765f, 0.7255f, 0.7882f, 1),
+            highlightedColor = Color.white,
+            pressedColor = new Color(0.5804f, 0.8863f, 0.9373f, 1),
+            disabledColor = new Color(0.3738f, 0.4914f, 0.5138f, 0.502f),
+            colorMultiplier = 1,
+            fadeDuration = 0.1f,
+        };
+
         public ScrollRegionWidget(string key)
             : this(new GameObject(key))
         {
@@ -62,6 +72,43 @@ namespace AutoccultistNS.UI
         public ScrollRegionWidget Vertical()
         {
             this.ScrollRect.vertical = true;
+
+
+            var verticalScrollbar = new GameObject("Scrollbar Vertical");
+
+            var handle = new GameObject("Handle");
+            var handleRt = handle.AddComponent<RectTransform>();
+            handleRt.anchorMax = new Vector2(1, 1);
+            handleRt.anchorMin = new Vector2(0, 0.47f);
+            handleRt.offsetMin = Vector2.zero;
+            handleRt.offsetMax = Vector2.zero;
+            handleRt.pivot = new Vector2(0.5f, 0.5f);
+            handleRt.SetParent(verticalScrollbar.transform, false);
+            var handleImage = handle.AddComponent<Image>();
+            handleImage.sprite = ResourceHack.FindSprite("UISprite");
+            handleImage.type = Image.Type.Sliced;
+
+            verticalScrollbar.AddComponent<CanvasRenderer>();
+            var scrollbarRt = verticalScrollbar.AddComponent<RectTransform>();
+            scrollbarRt.anchorMax = new Vector2(1, 1);
+            scrollbarRt.anchorMin = new Vector2(1, 0);
+            scrollbarRt.offsetMin = new Vector2(-15, 5);
+            scrollbarRt.offsetMax = new Vector2(-5, -5);
+            scrollbarRt.pivot = new Vector2(1, 1);
+            scrollbarRt.SetParent(this.GameObject.transform, false);
+            var scrollbarImage = verticalScrollbar.AddComponent<Image>();
+            scrollbarImage.sprite = ResourceHack.FindSprite("Background");
+            scrollbarImage.type = Image.Type.Sliced;
+            scrollbarImage.color = new Color(0, 0, 0, 0.1961f);
+
+            this.ScrollRect.verticalScrollbar = verticalScrollbar.AddComponent<Scrollbar>();
+            this.ScrollRect.verticalScrollbar.direction = Scrollbar.Direction.BottomToTop;
+            this.ScrollRect.verticalScrollbar.handleRect = handleRt;
+            this.ScrollRect.verticalScrollbar.targetGraphic = handleImage;
+            this.ScrollRect.verticalScrollbar.colors = ScrollbarColors;
+
+            this.ScrollRect.viewport.GetComponent<RectTransform>().offsetMax = new Vector2(-15, 0);
+
             return this;
         }
 
