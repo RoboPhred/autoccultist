@@ -8,7 +8,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.GameState;
     using UnityEngine;
 
-    public class NewOperationView : IWindowView
+    public class OperationListView : IWindowView
     {
         private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(.5);
         private readonly SituationAutomationWindow window;
@@ -18,7 +18,7 @@ namespace AutoccultistNS.UI
 
         private DateTime lastUpdate = DateTime.MinValue;
 
-        public NewOperationView(SituationAutomationWindow window, WidgetMountPoint content, WidgetMountPoint footer)
+        public OperationListView(SituationAutomationWindow window, WidgetMountPoint content, WidgetMountPoint footer)
         {
             this.window = window;
             this.contentRoot = content;
@@ -76,7 +76,7 @@ namespace AutoccultistNS.UI
 
         private void BuildOperationRow(OperationConfig operation, Transform parent)
         {
-            TextButtonWidget startButton = null;
+            IconButtonWidget startButton = null;
             var row = UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
                 .SpreadChildrenVertically()
                 .Padding(10, 5)
@@ -95,10 +95,12 @@ namespace AutoccultistNS.UI
                         .MinWidth(10)
                         .ExpandWidth();
 
-                    startButton = mountPoint.AddTextButton("Button")
+                    startButton = mountPoint.AddIconButton("StartButton")
+                        .PreferredWidth(35)
                         .PreferredHeight(35)
                         .Disable()
-                        .Text("Start")
+                        .Background()
+                        .Sprite("play_icon")
                         .OnClick(() => this.OnOperationButtonClick(operation));
                 });
 
@@ -128,7 +130,7 @@ namespace AutoccultistNS.UI
         {
             public HorizontalLayoutGroupWidget Row { get; set; }
 
-            public TextButtonWidget StartButton { get; set; }
+            public IconButtonWidget StartButton { get; set; }
         }
     }
 }

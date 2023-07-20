@@ -5,6 +5,8 @@ namespace AutoccultistNS.UI
 
     public class TextWidget : SizingLayoutWidget<TextWidget>, ITextWidget<TextWidget>
     {
+        private TextMeshProUGUI textMesh;
+
         public TextWidget(string key)
             : this(new GameObject(key))
         {
@@ -13,101 +15,100 @@ namespace AutoccultistNS.UI
         public TextWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.TextMesh = this.GameObject.GetOrAddComponent<TextMeshProUGUI>();
-            this.TextMesh.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
-            this.TextMesh.font = ResourceHack.FindFont("Text_Philosopher");
-            this.TextMesh.color = new Color(0.5765f, 0.8824f, 0.9373f, 1);
+            this.textMesh = this.GameObject.GetOrAddComponent<TextMeshProUGUI>();
+            this.textMesh.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
+            this.textMesh.font = ResourceHack.FindFont("Text_Philosopher");
+            this.textMesh.color = new Color(0.5765f, 0.8824f, 0.9373f, 1);
         }
 
-        public TextMeshProUGUI TextMesh { get; private set; }
+        public TextMeshProUGUI TextMeshBehavior => this.textMesh;
 
-        // Unity likes its lower case properties.
 #pragma warning disable SA1300
         public string text
         {
-            get => this.TextMesh.text;
-            set => this.TextMesh.text = value;
+            get => this.textMesh.text;
+            set => this.textMesh.text = value;
         }
 #pragma warning restore SA1300
 
         public TextWidget FontMaterial(string resourceName)
         {
-            this.TextMesh.fontMaterial = ResourceHack.FindMaterial(resourceName);
+            this.textMesh.fontMaterial = ResourceHack.FindMaterial(resourceName);
             return this;
         }
 
         public TextWidget Font(string resourceName)
         {
-            this.TextMesh.font = ResourceHack.FindFont(resourceName);
+            this.textMesh.font = ResourceHack.FindFont(resourceName);
             return this;
         }
 
         public TextWidget FontStyle(FontStyles style)
         {
-            this.TextMesh.fontStyle = style;
+            this.textMesh.fontStyle = style;
             return this;
         }
 
         public TextWidget FontWeight(FontWeight weight)
         {
-            this.TextMesh.fontWeight = weight;
+            this.textMesh.fontWeight = weight;
             return this;
         }
 
         public TextWidget TextAlignment(TextAlignmentOptions alignment)
         {
-            this.TextMesh.alignment = alignment;
+            this.textMesh.alignment = alignment;
             return this;
         }
 
         public TextWidget HorizontalAlignment(HorizontalAlignmentOptions alignment)
         {
-            this.TextMesh.horizontalAlignment = alignment;
+            this.textMesh.horizontalAlignment = alignment;
             return this;
         }
 
         public TextWidget VerticalAlignment(VerticalAlignmentOptions alignment)
         {
-            this.TextMesh.verticalAlignment = alignment;
+            this.textMesh.verticalAlignment = alignment;
             return this;
         }
 
         public TextWidget WordWrapping(bool enabled)
         {
-            this.TextMesh.enableWordWrapping = enabled;
+            this.textMesh.enableWordWrapping = enabled;
             return this;
         }
 
         public TextWidget MinFontSize(float size)
         {
-            this.TextMesh.fontSizeMin = size;
-            this.TextMesh.enableAutoSizing = this.TextMesh.fontSizeMin != this.TextMesh.fontSizeMax;
+            this.textMesh.fontSizeMin = size;
+            this.textMesh.enableAutoSizing = this.textMesh.fontSizeMin != this.textMesh.fontSizeMax;
             return this;
         }
 
         public TextWidget MaxFontSize(float size)
         {
-            this.TextMesh.fontSizeMax = size;
-            this.TextMesh.enableAutoSizing = this.TextMesh.fontSizeMin != this.TextMesh.fontSizeMax;
+            this.textMesh.fontSizeMax = size;
+            this.textMesh.enableAutoSizing = this.textMesh.fontSizeMin != this.textMesh.fontSizeMax;
             return this;
         }
 
         public TextWidget FontSize(float size)
         {
-            this.TextMesh.fontSize = size;
-            this.TextMesh.enableAutoSizing = false;
+            this.textMesh.fontSize = size;
+            this.textMesh.enableAutoSizing = false;
             return this;
         }
 
         public TextWidget Text(string value)
         {
-            this.TextMesh.text = value;
+            this.textMesh.text = value;
             return this;
         }
 
         public TextWidget TextColor(Color color)
         {
-            this.TextMesh.color = color;
+            this.textMesh.color = color;
             return this;
         }
     }

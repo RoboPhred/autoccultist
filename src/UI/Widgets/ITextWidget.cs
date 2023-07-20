@@ -6,7 +6,7 @@ namespace AutoccultistNS.UI
     public interface ITextWidget<TCoreType>
         where TCoreType : ITextWidget<TCoreType>
     {
-        TextMeshProUGUI TextMesh { get; }
+        TextMeshProUGUI TextMeshBehavior { get; }
 
         TCoreType Font(string resourceName);
 

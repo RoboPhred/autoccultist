@@ -14,7 +14,7 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroupWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            this.LayoutGroupBehavior = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
             this.Spacing(0);
 
             // These absolutely must be on, or all our children will be zero-sized.
@@ -26,57 +26,57 @@ namespace AutoccultistNS.UI
             this.SpreadChildrenVertically(false);
         }
 
-        public VerticalLayoutGroup LayoutGroup { get; private set; }
+        public VerticalLayoutGroup LayoutGroupBehavior { get; private set; }
 
         // Fucking stupid name, but this property does both.
         public VerticalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value = true)
         {
-            this.LayoutGroup.childControlWidth = value;
+            this.LayoutGroupBehavior.childControlWidth = value;
             return this;
         }
 
         // Fucking stupid name, but this property does both.
         public VerticalLayoutGroupWidget EnableChildLayoutHeightAndBreakSelfSizing(bool value = true)
         {
-            this.LayoutGroup.childControlHeight = value;
+            this.LayoutGroupBehavior.childControlHeight = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
         public VerticalLayoutGroupWidget SpreadChildrenHorizontally(bool value = true)
         {
-            this.LayoutGroup.childForceExpandWidth = value;
+            this.LayoutGroupBehavior.childForceExpandWidth = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
         public VerticalLayoutGroupWidget SpreadChildrenVertically(bool value = true)
         {
-            this.LayoutGroup.childForceExpandHeight = value;
+            this.LayoutGroupBehavior.childForceExpandHeight = value;
             return this;
         }
 
         public VerticalLayoutGroupWidget Spacing(float value)
         {
-            this.LayoutGroup.spacing = value;
+            this.LayoutGroupBehavior.spacing = value;
             return this;
         }
 
         public VerticalLayoutGroupWidget Padding(int left, int top, int right, int bottom)
         {
-            this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
+            this.LayoutGroupBehavior.padding = new RectOffset(left, right, top, bottom);
             return this;
         }
 
         public VerticalLayoutGroupWidget Padding(int x, int y)
         {
-            this.LayoutGroup.padding = new RectOffset(x, x, y, y);
+            this.LayoutGroupBehavior.padding = new RectOffset(x, x, y, y);
             return this;
         }
 
         public VerticalLayoutGroupWidget Padding(int value)
         {
-            this.LayoutGroup.padding = new RectOffset(value, value, value, value);
+            this.LayoutGroupBehavior.padding = new RectOffset(value, value, value, value);
             return this;
         }
 

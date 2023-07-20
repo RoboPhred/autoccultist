@@ -106,12 +106,6 @@ namespace AutoccultistNS.UI
                                         .FitContentHeight()
                                         .ChildAlignment(TextAnchor.MiddleCenter)
                                         .Spacing(5)
-                                        // Nope, need a real ElementStack for this...
-                                        // .OnPointerClick((e) =>
-                                        // {
-                                        //     NoonUtility.LogWarning($"Clicked on element {element.Label}");
-                                        //     Watchman.Get<Notifier>().ShowCardElementDetails(element, NullElementStack.Create());
-                                        // })
                                         .AddContent(mountPoint =>
                                         {
                                             mountPoint.AddImage("ElementImage")

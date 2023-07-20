@@ -117,10 +117,10 @@ namespace AutoccultistNS.UI
                 return;
             }
 
-            if (this.CurrentResourceConstraint == null && this.currentView is not NewOperationView)
+            if (this.CurrentResourceConstraint == null && this.currentView is not OperationListView)
             {
                 this.Clear();
-                this.currentView = new NewOperationView(this, this.Content, this.Footer);
+                this.currentView = new OperationListView(this, this.Content, this.Footer);
             }
             else if (this.CurrentResourceConstraint is UISituationLockoutConstraint && this.currentView is not LockoutView)
             {

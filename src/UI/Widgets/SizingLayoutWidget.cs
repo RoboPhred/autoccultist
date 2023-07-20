@@ -18,36 +18,33 @@ namespace AutoccultistNS.UI
         public SizingLayoutWidget(GameObject gameObject)
             : base(gameObject)
         {
+            // Always do this, in case we find ourselves in a dreaded childControlsWidth/Height group.
+            this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
+            this.layoutElement.flexibleWidth = 0;
+            this.layoutElement.flexibleHeight = 0;
+            this.layoutElement.minHeight = -1;
+            this.layoutElement.minWidth = -1;
+            this.layoutElement.preferredHeight = -1;
+            this.layoutElement.preferredWidth = -1;
         }
 
-        public LayoutElement LayoutElement
+        public LayoutElement LayoutElementBehavior
         {
             get
             {
-                if (this.layoutElement == null)
-                {
-                    this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
-                    this.layoutElement.flexibleWidth = 0;
-                    this.layoutElement.flexibleHeight = 0;
-                    this.LayoutElement.minHeight = -1;
-                    this.LayoutElement.minWidth = -1;
-                    this.LayoutElement.preferredHeight = -1;
-                    this.LayoutElement.preferredWidth = -1;
-                }
-
                 return this.layoutElement;
             }
         }
 
-        public ContentSizeFitter ContentSizeFitter
+        public ContentSizeFitter ContentSizeFitterBehavior
         {
             get
             {
                 if (this.contentSizeFitter == null)
                 {
                     this.contentSizeFitter = this.GameObject.GetOrAddComponent<ContentSizeFitter>();
-                    this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-                    this.ContentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+                    this.contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+                    this.contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
                 }
 
                 return this.contentSizeFitter;
@@ -74,31 +71,31 @@ namespace AutoccultistNS.UI
 
         public SizingLayoutWidget IgnoreLayout()
         {
-            this.LayoutElement.ignoreLayout = true;
+            this.LayoutElementBehavior.ignoreLayout = true;
             return this;
         }
 
         public SizingLayoutWidget MinWidth(float width)
         {
-            this.LayoutElement.minWidth = width;
+            this.LayoutElementBehavior.minWidth = width;
             return this;
         }
 
         public SizingLayoutWidget MinHeight(float height)
         {
-            this.LayoutElement.minHeight = height;
+            this.LayoutElementBehavior.minHeight = height;
             return this;
         }
 
         public SizingLayoutWidget PreferredWidth(float width)
         {
-            this.LayoutElement.preferredWidth = width;
+            this.LayoutElementBehavior.preferredWidth = width;
             return this;
         }
 
         public SizingLayoutWidget PreferredHeight(float height)
         {
-            this.LayoutElement.preferredHeight = height;
+            this.LayoutElementBehavior.preferredHeight = height;
             return this;
         }
 
@@ -116,25 +113,25 @@ namespace AutoccultistNS.UI
 
         public SizingLayoutWidget ExpandWidth()
         {
-            this.LayoutElement.flexibleWidth = 1;
+            this.LayoutElementBehavior.flexibleWidth = 1;
             return this;
         }
 
         public SizingLayoutWidget ExpandHeight()
         {
-            this.LayoutElement.flexibleHeight = 1;
+            this.LayoutElementBehavior.flexibleHeight = 1;
             return this;
         }
 
         public SizingLayoutWidget FillContentWidth()
         {
-            this.ContentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            this.ContentSizeFitterBehavior.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
         }
 
         public SizingLayoutWidget FillContentHeight()
         {
-            this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            this.ContentSizeFitterBehavior.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
         }
 

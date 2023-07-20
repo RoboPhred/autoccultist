@@ -15,7 +15,7 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroupWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+            this.LayoutGroupBehavior = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
             this.Spacing(0);
             this.ChildControlHeight(true);
             this.ChildControlWidth(true);
@@ -23,53 +23,53 @@ namespace AutoccultistNS.UI
             this.ChildForceExpandHeight(false);
         }
 
-        public VerticalLayoutGroup LayoutGroup { get; private set; }
+        public VerticalLayoutGroup LayoutGroupBehavior { get; private set; }
 
         public TCoreType ChildControlHeight(bool value)
         {
-            this.LayoutGroup.childControlHeight = value;
+            this.LayoutGroupBehavior.childControlHeight = value;
             return this as TCoreType;
         }
 
         public TCoreType ChildControlWidth(bool value)
         {
-            this.LayoutGroup.childControlWidth = value;
+            this.LayoutGroupBehavior.childControlWidth = value;
             return this as TCoreType;
         }
 
         public TCoreType ChildForceExpandHeight(bool value)
         {
-            this.LayoutGroup.childForceExpandHeight = value;
+            this.LayoutGroupBehavior.childForceExpandHeight = value;
             return this as TCoreType;
         }
 
         public TCoreType ChildForceExpandWidth(bool value)
         {
-            this.LayoutGroup.childForceExpandWidth = value;
+            this.LayoutGroupBehavior.childForceExpandWidth = value;
             return this as TCoreType;
         }
 
         public TCoreType Spacing(float value)
         {
-            this.LayoutGroup.spacing = value;
+            this.LayoutGroupBehavior.spacing = value;
             return this as TCoreType;
         }
 
         public TCoreType Padding(int left, int top, int right, int bottom)
         {
-            this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
+            this.LayoutGroupBehavior.padding = new RectOffset(left, right, top, bottom);
             return this as TCoreType;
         }
 
         public TCoreType Padding(int x, int y)
         {
-            this.LayoutGroup.padding = new RectOffset(x, x, y, y);
+            this.LayoutGroupBehavior.padding = new RectOffset(x, x, y, y);
             return this as TCoreType;
         }
 
         public TCoreType Padding(int value)
         {
-            this.LayoutGroup.padding = new RectOffset(value, value, value, value);
+            this.LayoutGroupBehavior.padding = new RectOffset(value, value, value, value);
             return this as TCoreType;
         }
 

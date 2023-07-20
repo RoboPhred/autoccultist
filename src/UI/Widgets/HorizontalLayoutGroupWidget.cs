@@ -14,7 +14,7 @@ namespace AutoccultistNS.UI
         public HorizontalLayoutGroupWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.LayoutGroup = this.GameObject.GetOrAddComponent<HorizontalLayoutGroup>();
+            this.LayoutGroupBehavior = this.GameObject.GetOrAddComponent<HorizontalLayoutGroup>();
             this.ChildAlignment(TextAnchor.UpperLeft);
             this.Spacing(0);
 
@@ -27,63 +27,63 @@ namespace AutoccultistNS.UI
             this.SpreadChildrenHorizontally(false);
         }
 
-        public HorizontalLayoutGroup LayoutGroup { get; private set; }
+        public HorizontalLayoutGroup LayoutGroupBehavior { get; private set; }
 
         public HorizontalLayoutGroupWidget ChildAlignment(TextAnchor value)
         {
-            this.LayoutGroup.childAlignment = value;
+            this.LayoutGroupBehavior.childAlignment = value;
             return this;
         }
 
         // Fucking stupid name, but this property does both.
         public HorizontalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value)
         {
-            this.LayoutGroup.childControlWidth = value;
+            this.LayoutGroupBehavior.childControlWidth = value;
             return this;
         }
 
         // Fucking stupid name, but this property does both.
         public HorizontalLayoutGroupWidget EnableChildLayoutHeightAndBreakSelfSizing(bool value)
         {
-            this.LayoutGroup.childControlHeight = value;
+            this.LayoutGroupBehavior.childControlHeight = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
         public HorizontalLayoutGroupWidget SpreadChildrenHorizontally(bool value = true)
         {
-            this.LayoutGroup.childForceExpandWidth = value;
+            this.LayoutGroupBehavior.childForceExpandWidth = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
         public HorizontalLayoutGroupWidget SpreadChildrenVertically(bool value = true)
         {
-            this.LayoutGroup.childForceExpandHeight = value;
+            this.LayoutGroupBehavior.childForceExpandHeight = value;
             return this;
         }
 
         public HorizontalLayoutGroupWidget Spacing(float value)
         {
-            this.LayoutGroup.spacing = value;
+            this.LayoutGroupBehavior.spacing = value;
             return this;
         }
 
         public HorizontalLayoutGroupWidget Padding(int left, int top, int right, int bottom)
         {
-            this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
+            this.LayoutGroupBehavior.padding = new RectOffset(left, right, top, bottom);
             return this;
         }
 
         public HorizontalLayoutGroupWidget Padding(int x, int y)
         {
-            this.LayoutGroup.padding = new RectOffset(x, x, y, y);
+            this.LayoutGroupBehavior.padding = new RectOffset(x, x, y, y);
             return this;
         }
 
         public HorizontalLayoutGroupWidget Padding(int value)
         {
-            this.LayoutGroup.padding = new RectOffset(value, value, value, value);
+            this.LayoutGroupBehavior.padding = new RectOffset(value, value, value, value);
             return this;
         }
 

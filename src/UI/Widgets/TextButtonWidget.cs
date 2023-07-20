@@ -8,6 +8,12 @@ namespace AutoccultistNS.UI
     {
         private static readonly Color FontColor = new Color(0.2392f, 0.1961f, 0.0667f, 1);
 
+        private Button button;
+
+        private ButtonSoundTrigger soundTrigger;
+
+        private TextWidget textWidget;
+
         public TextButtonWidget(string key)
             : this(new GameObject(key))
         {
@@ -27,11 +33,11 @@ namespace AutoccultistNS.UI
             // along the bottom.
             this.Padding(15, 5);
 
-            this.Button = this.GameObject.GetOrAddComponent<Button>();
-            this.Button.transition = Selectable.Transition.ColorTint;
-            this.Button.colors = IconButtonWidget.ColorBlock;
+            this.button = this.GameObject.GetOrAddComponent<Button>();
+            this.button.transition = Selectable.Transition.ColorTint;
+            this.button.colors = IconButtonWidget.ColorBlock;
 
-            this.SoundTrigger = this.GameObject.gameObject.GetOrAddComponent<ButtonSoundTrigger>();
+            this.soundTrigger = this.GameObject.gameObject.GetOrAddComponent<ButtonSoundTrigger>();
 
             var image = UIFactories.CreateImage("Image", this.GameObject.transform)
                 .Pivot(.5f, .5f)
@@ -43,12 +49,12 @@ namespace AutoccultistNS.UI
                 .Sprite("button")
                 .IgnoreLayout();
 
-            this.Button.image = image.Image;
+            this.button.image = image.ImageBehavior;
 
             this.ChildForceExpandHeight(true);
             this.ChildForceExpandWidth(true);
 
-            this.TextWidget = new TextWidget("Text")
+            this.textWidget = new TextWidget("Text")
                 .Pivot(.5f, .5f)
                 .Left(0, 0)
                 .Top(1, 0)
@@ -62,23 +68,15 @@ namespace AutoccultistNS.UI
                 .MaxFontSize(20);
 
             this.AddExpandingSpacer();
-            this.AddContent(this.TextWidget);
+            this.AddContent(this.textWidget);
             this.AddExpandingSpacer();
         }
 
-        public Button Button { get; private set; }
-
-        public Image Image { get; private set; }
-
-        public ButtonSoundTrigger SoundTrigger { get; private set; }
-
-        public TextWidget TextWidget { get; private set; }
-
-        public TextMeshProUGUI TextMesh => this.TextWidget.TextMesh;
+        public TextMeshProUGUI TextMeshBehavior => this.textWidget.TextMeshBehavior;
 
         public TextButtonWidget SetEnabled(bool enabled)
         {
-            this.Button.interactable = enabled;
+            this.button.interactable = enabled;
             return this;
         }
 
@@ -94,79 +92,79 @@ namespace AutoccultistNS.UI
 
         public TextButtonWidget Text(string value)
         {
-            this.TextWidget.Text(value);
+            this.textWidget.Text(value);
             return this as TextButtonWidget;
         }
 
         public TextButtonWidget TextColor(Color color)
         {
-            this.TextWidget.TextColor(color);
+            this.textWidget.TextColor(color);
             return this as TextButtonWidget;
         }
 
         public TextButtonWidget ClickSound(string soundEffect)
         {
-            Reflection.SetPrivateField(this.SoundTrigger, "soundFXName", soundEffect);
+            Reflection.SetPrivateField(this.soundTrigger, "soundFXName", soundEffect);
             return this as TextButtonWidget;
         }
 
         public TextButtonWidget OnClick(UnityEngine.Events.UnityAction action)
         {
-            this.Button.onClick.AddListener(action);
+            this.button.onClick.AddListener(action);
             return this as TextButtonWidget;
         }
 
         public TextButtonWidget Font(string resourceName)
         {
-            this.TextWidget.Font(resourceName);
+            this.textWidget.Font(resourceName);
             return this;
         }
 
         public TextButtonWidget FontMaterial(string resourceName)
         {
-            this.TextWidget.FontMaterial(resourceName);
+            this.textWidget.FontMaterial(resourceName);
             return this;
         }
 
         public TextButtonWidget FontSize(float size)
         {
-            this.TextWidget.FontSize(size);
+            this.textWidget.FontSize(size);
             return this;
         }
 
         public TextButtonWidget FontStyle(FontStyles style)
         {
-            this.TextWidget.FontStyle(style);
+            this.textWidget.FontStyle(style);
             return this;
         }
 
         public TextButtonWidget FontWeight(FontWeight weight)
         {
-            this.TextWidget.FontWeight(weight);
+            this.textWidget.FontWeight(weight);
             return this;
         }
 
         public TextButtonWidget HorizontalAlignment(HorizontalAlignmentOptions alignment)
         {
-            this.TextWidget.HorizontalAlignment(alignment);
+            this.textWidget.HorizontalAlignment(alignment);
             return this;
         }
 
         public TextButtonWidget MaxFontSize(float size)
         {
-            this.TextWidget.MaxFontSize(size);
+            this.textWidget.MaxFontSize(size);
             return this;
         }
 
         public TextButtonWidget MinFontSize(float size)
         {
-            this.TextWidget.MinFontSize(size);
+            this.textWidget.MinFontSize(size);
             return this;
         }
 
         public TextButtonWidget TextAlignment(TextAlignmentOptions alignment)
         {
-            this.TextWidget.TextAlignment(alignment);
+            this.textWidget.TextAlignment(alignment);
             return this;
         }
     }
