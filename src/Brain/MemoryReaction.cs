@@ -28,7 +28,7 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public event EventHandler Completed;
+        public event EventHandler<ReactionEndedEventArgs> Ended;
 
         /// <inheritdoc/>
         public void Abort()
@@ -47,7 +47,7 @@ namespace AutoccultistNS.Brain
                 Hippocampus.SetMemory(this.id, this.label, this.description, this.value);
             }
 
-            this.Completed?.Invoke(this, EventArgs.Empty);
+            this.Ended?.Invoke(this, new ReactionEndedEventArgs(false));
         }
     }
 }

@@ -16,12 +16,12 @@ namespace AutoccultistNS.UI
             fadeDuration = 0.1f,
         };
 
+        private GameObject background;
+        private GameObject content;
+
         public Button ButtonBehavior { get; private set; }
 
         public ButtonSoundTrigger SoundTriggerBehavior { get; private set; }
-
-        private GameObject background;
-        private GameObject content;
 
         public IconButtonWidget(string key)
             : this(new GameObject(key))

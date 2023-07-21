@@ -23,7 +23,7 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public event EventHandler Completed;
+        public event EventHandler<ReactionEndedEventArgs> Ended;
 
         /// <summary>
         /// Gets the list of reactions that make up this compound reaction.
@@ -33,10 +33,13 @@ namespace AutoccultistNS.Brain
         /// <inheritdoc/>
         public void Abort()
         {
-            foreach (var reaction in this.Reactions)
+            foreach (var reaction in this.incomplete)
             {
+                reaction.Ended -= this.OnReactionEnded;
                 reaction.Abort();
             }
+
+            this.Ended?.Invoke(this, new ReactionEndedEventArgs(true));
         }
 
         /// <inheritdoc/>
@@ -45,7 +48,7 @@ namespace AutoccultistNS.Brain
             foreach (var reaction in this.Reactions)
             {
                 this.incomplete.Add(reaction);
-                reaction.Completed += this.OnReactionComplete;
+                reaction.Ended += this.OnReactionEnded;
                 reaction.Start();
             }
         }
@@ -61,19 +64,25 @@ namespace AutoccultistNS.Brain
             return result;
         }
 
-        private void OnReactionComplete(object sender, EventArgs e)
+        private void OnReactionEnded(object sender, ReactionEndedEventArgs e)
         {
             var reaction = (IReaction)sender;
-            reaction.Completed -= this.OnReactionComplete;
+            reaction.Ended -= this.OnReactionEnded;
 
             if (!this.incomplete.Remove(reaction))
             {
                 return;
             }
 
+            if (e.Aborted)
+            {
+                this.Abort();
+                return;
+            }
+
             if (this.incomplete.Count == 0)
             {
-                this.Completed?.Invoke(this, EventArgs.Empty);
+                this.Ended?.Invoke(this, new ReactionEndedEventArgs(false));
             }
         }
     }

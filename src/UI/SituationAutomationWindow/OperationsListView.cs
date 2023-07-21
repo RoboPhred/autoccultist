@@ -28,11 +28,11 @@ namespace AutoccultistNS.UI
             this.scrollWidget = content.AddScrollRegion("ScrollRect")
                 .Vertical()
                 .AddContent(
-                    transform =>
+                    mountPoint =>
                     {
                         foreach (var op in Library.Operations.Where(x => x.Situation == window.Situation.VerbId))
                         {
-                            this.BuildOperationRow(op, transform);
+                            this.BuildOperationRow(op, mountPoint);
                         }
                     })
                 .ScrollToVertical(1);
@@ -74,10 +74,10 @@ namespace AutoccultistNS.UI
             }
         }
 
-        private void BuildOperationRow(OperationConfig operation, Transform parent)
+        private void BuildOperationRow(OperationConfig operation, WidgetMountPoint mountPoint)
         {
             IconButtonWidget startButton = null;
-            var row = UIFactories.CreateHorizontalLayoutGroup($"operation_${operation.Id}", parent)
+            var row = mountPoint.AddHorizontalLayoutGroup($"operation_${operation.Id}")
                 .SpreadChildrenVertically()
                 .Padding(10, 5)
                 .AddContent(mountPoint =>

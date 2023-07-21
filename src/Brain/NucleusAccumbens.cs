@@ -13,6 +13,8 @@ namespace AutoccultistNS.Brain
     /// </summary>
     public static class NucleusAccumbens
     {
+        private static readonly int AbortsBeforeShutdown = 3;
+
         private static readonly HashSet<IImperative> ActiveImperatives = new();
 
         // These are redundant, but we need efficient lookup of reactions.
@@ -30,6 +32,8 @@ namespace AutoccultistNS.Brain
         private static bool isActive = false;
         private static int lastHash = 0;
 
+        private static int aborts = 0;
+
         private static GameAPI.PauseToken pauseToken;
 
         /// <summary>
@@ -40,7 +44,7 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Gets a list of the current active goals.
         /// </summary>
-        public static IEnumerable<IImperative> CurrentImperatives
+        public static ICollection<IImperative> CurrentImperatives
         {
             get
             {
@@ -91,8 +95,7 @@ namespace AutoccultistNS.Brain
             ActiveImperatives.Add(imperative);
             ActiveReactionsByImperative.Add(imperative, new HashSet<IReaction>());
 
-            // Clear the hash so we re-check all imperatives.
-            lastHash = 0;
+            ReevaluateImpulses();
         }
 
         /// <summary>
@@ -106,7 +109,7 @@ namespace AutoccultistNS.Brain
                 foreach (var reaction in reactions)
                 {
                     ImpulsesByReaction.Remove(reaction);
-                    reaction.Completed -= HandleReactionCompleted;
+                    reaction.Ended -= HandleReactionEnded;
                     reaction.Abort();
                 }
 
@@ -132,7 +135,7 @@ namespace AutoccultistNS.Brain
         {
             foreach (var execution in ActiveReactionsByImperative.Values.SelectMany(r => r).ToArray())
             {
-                execution.Completed -= HandleReactionCompleted;
+                execution.Ended -= HandleReactionEnded;
                 execution.Abort();
             }
 
@@ -381,7 +384,7 @@ namespace AutoccultistNS.Brain
             {
                 foreach (var reaction in reactions.ToArray())
                 {
-                    reaction.Completed -= HandleReactionCompleted;
+                    reaction.Ended -= HandleReactionEnded;
                     reaction.Abort();
 
                     if (ImpulsesByReaction.TryGetValue(reaction, out var impulse))
@@ -420,7 +423,7 @@ namespace AutoccultistNS.Brain
             ActiveReactionsByImperative[imperative].Add(reaction);
             ImpulsesByReaction.Add(reaction, impulse);
 
-            reaction.Completed += HandleReactionCompleted;
+            reaction.Ended += HandleReactionEnded;
 
             reaction.Start();
 
@@ -428,10 +431,10 @@ namespace AutoccultistNS.Brain
             return RunningImpulses.Contains(impulse);
         }
 
-        private static void HandleReactionCompleted(object sender, EventArgs e)
+        private static void HandleReactionEnded(object sender, ReactionEndedEventArgs e)
         {
             var reaction = (IReaction)sender;
-            reaction.Completed -= HandleReactionCompleted;
+            reaction.Ended -= HandleReactionEnded;
 
             // FIXME: More disgusting tracking maps.
             if (ImpulsesByReaction.TryGetValue(reaction, out var impulse))
@@ -445,15 +448,35 @@ namespace AutoccultistNS.Brain
 
             ImpulsesByReaction.Remove(reaction);
 
-            foreach (var executions in ActiveReactionsByImperative.Values)
+            var imperativeFound = false;
+            foreach (var reactions in ActiveReactionsByImperative.Values)
             {
-                if (executions.Remove(reaction))
+                if (reactions.Remove(reaction))
                 {
-                    return;
+                    imperativeFound = true;
+                    break;
                 }
             }
 
-            Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find imperative for execution {reaction}");
+            if (!imperativeFound)
+            {
+                Autoccultist.LogWarn($"NucleusAccumbens.HandleReactionCompleted: Could not find imperative for execution {reaction}");
+            }
+
+            if (e.Aborted)
+            {
+                aborts++;
+                if (aborts >= AbortsBeforeShutdown)
+                {
+                    MechanicalHeart.Stop();
+                    Autoccultist.LogWarn($"Reaction {reaction.ToString()} has failed 3 times.  Stopping Autoccultist.");
+                    GameAPI.Notify("Autoccultist Failure", $"Reaction {reaction.ToString()} has failed to start 3 times.  Did a mod change a recipe?  Shutting down Autoccultist.");
+                }
+            }
+            else
+            {
+                aborts = 0;
+            }
         }
 
         private class EnumeratedImpulse

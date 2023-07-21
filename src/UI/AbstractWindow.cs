@@ -43,6 +43,11 @@ namespace AutoccultistNS.UI
 
         public bool IsClosed => this.canvasGroupFader.IsInvisible();
 
+        // FIXME: Make these updatable.
+        protected virtual int Width => 500;
+
+        protected virtual int Height => 400;
+
         protected WidgetMountPoint Icon { get; private set; }
 
         protected WidgetMountPoint Content { get; private set; }
@@ -52,28 +57,28 @@ namespace AutoccultistNS.UI
         public static T CreateTabletopWindow<T>(string key)
             where T : AbstractWindow
         {
-            var windowSphere = GameObject.Find("TabletopWindowSphere");
-            if (windowSphere == null)
+            var mountPoint = MountPoints.TabletopWindowLayer;
+            if (mountPoint == null)
             {
-                throw new Exception("Cannot find TabletopWindowSphere.");
+                throw new Exception("Cannot find Tabletop window mount point.");
             }
 
             var gameObject = new GameObject(key);
-            gameObject.transform.SetParent(windowSphere.transform, false);
+            gameObject.transform.SetParent(mountPoint, false);
             return gameObject.AddComponent<T>();
         }
 
         public static T CreateMetaWindow<T>(string key)
             where T : AbstractWindow
         {
-            var windowSphere = GameObject.Find("CanvasMeta");
-            if (windowSphere == null)
+            var mountPoint = MountPoints.MetaWindowLayer;
+            if (mountPoint == null)
             {
                 throw new Exception("Cannot find CanvasMeta.");
             }
 
             var gameObject = new GameObject(key);
-            gameObject.transform.SetParent(windowSphere.transform, false);
+            gameObject.transform.SetParent(mountPoint, false);
             return gameObject.AddComponent<T>();
         }
 
@@ -160,8 +165,8 @@ namespace AutoccultistNS.UI
 
             // One day I will refactor this to use dynamic sizing, but until then...
             UIFactories.AddSizingLayout(this.gameObject)
-                .MinWidth(500)
-                .MinHeight(400);
+                .MinWidth(this.Width)
+                .MinHeight(this.Height);
 
             var canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
 

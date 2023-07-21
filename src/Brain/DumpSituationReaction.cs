@@ -48,7 +48,7 @@ namespace AutoccultistNS.Brain
                 Autoccultist.LogWarn(ex, $"Exception while waiting for DumpSituationReaction ${this.SituationId} to abort.");
             }
 
-            this.TryComplete();
+            this.TryComplete(true);
         }
 
         private async Task Dump()

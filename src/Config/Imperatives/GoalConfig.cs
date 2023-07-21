@@ -14,7 +14,7 @@ namespace AutoccultistNS.Config
     /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
     [LibraryConfigObject("goals")]
-    public class GoalConfig : ImperativeConfigBase, IGoal
+    public class GoalConfig : ImperativeConfigBase, IGoalConfig
     {
         /// <summary>
         /// Gets or sets the condition to determine when this goal is completed.

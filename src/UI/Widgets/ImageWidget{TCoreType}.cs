@@ -29,30 +29,20 @@ namespace AutoccultistNS.UI
 
         public TCoreType Sprite(string resourceName)
         {
-            NoonUtility.LogWarning("Loading sprite " + resourceName);
             // This is a partial reimplementation of ResourcesManager.GetSpriteForUI
             // We want to know if the sprite is not found, to use our fallback lookup.
             string uiPath = Path.Combine(Watchman.Get<SecretHistories.Services.Config>().GetConfigValue("imagesdir"), "ui", resourceName);
-            NoonUtility.LogWarning(" - path " + uiPath);
 
             var sprite = Watchman.Get<ModManager>().GetSprite(uiPath);
             if (sprite == null)
             {
-                NoonUtility.LogWarning(" - not found in mod manager, trying basic sprite at " + uiPath);
                 sprite = Resources.Load<Sprite>(uiPath);
             }
 
             if (sprite == null)
             {
-                NoonUtility.LogWarning(" - Still not found, trying ResourceHack");
                 sprite = ResourceHack.FindSprite(resourceName);
             }
-
-            if (sprite == null)
-            {
-                NoonUtility.LogWarning(" - Still not found, giving up");
-            }
-
 
             this.ImageBehavior.sprite = sprite;
 

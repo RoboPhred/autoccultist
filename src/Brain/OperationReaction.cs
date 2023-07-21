@@ -421,7 +421,7 @@ namespace AutoccultistNS.Brain
                 BrainEventSink.OnOperationCompleted(this.Operation);
             }
 
-            this.TryComplete();
+            this.TryComplete(aborted);
         }
 
         public class OperationHistory

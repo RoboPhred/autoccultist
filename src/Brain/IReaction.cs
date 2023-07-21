@@ -7,7 +7,7 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Raised when this reaciton execution completes.
         /// </summary>
-        event EventHandler Completed;
+        event EventHandler<ReactionEndedEventArgs> Ended;
 
         /// <summary>
         /// Abort the execution.

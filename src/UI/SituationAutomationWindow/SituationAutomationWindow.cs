@@ -30,6 +30,10 @@ namespace AutoccultistNS.UI
             }
         }
 
+        protected override int Width => 500;
+
+        protected override int Height => 400;
+
         private IResourceConstraint<ISituationState> CurrentResourceConstraint
         {
             get

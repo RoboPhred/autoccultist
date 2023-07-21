@@ -31,7 +31,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets the collection of loaded arcs.
         /// </summary>
-        public static IReadOnlyCollection<IArc> Arcs
+        public static IReadOnlyCollection<IArcConfig> Arcs
         {
             get
             {
@@ -42,7 +42,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets the collection of loaded goals.
         /// </summary>
-        public static IReadOnlyCollection<IGoal> Goals
+        public static IReadOnlyCollection<IGoalConfig> Goals
         {
             get
             {

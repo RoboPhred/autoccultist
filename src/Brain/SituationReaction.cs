@@ -32,7 +32,7 @@ namespace AutoccultistNS.Brain
         }
 
         /// <inheritdoc/>
-        public event EventHandler Completed;
+        public event EventHandler<ReactionEndedEventArgs> Ended;
 
         /// <inheritdoc/>
         public event EventHandler Disposed;
@@ -99,7 +99,7 @@ namespace AutoccultistNS.Brain
         /// Tries to mark this reaction as completed.
         /// If the reaction is already completed, nothing will happen.
         /// </summary>
-        protected void TryComplete()
+        protected void TryComplete(bool aborted = false)
         {
             if (this.isCompleted)
             {
@@ -109,7 +109,7 @@ namespace AutoccultistNS.Brain
             this.isCompleted = true;
             this.isDisposed = true;
 
-            this.Completed?.Invoke(this, EventArgs.Empty);
+            this.Ended?.Invoke(this, new ReactionEndedEventArgs(aborted));
             this.Disposed?.Invoke(this, EventArgs.Empty);
         }
 

@@ -14,7 +14,7 @@ namespace AutoccultistNS.Brain
             this.followup = followup;
         }
 
-        public event EventHandler Completed;
+        public event EventHandler<ReactionEndedEventArgs> Ended;
 
         private enum FollowupState
         {
@@ -48,7 +48,7 @@ namespace AutoccultistNS.Brain
             }
 
             this.state = FollowupState.First;
-            this.first.Completed += this.OnFirstCompleted;
+            this.first.Ended += this.OnFirstEnded;
             this.first.Start();
         }
 
@@ -66,21 +66,30 @@ namespace AutoccultistNS.Brain
             }
         }
 
-        private void OnFirstCompleted(object sender, EventArgs e)
+        private void OnFirstEnded(object sender, ReactionEndedEventArgs e)
         {
+            this.first.Ended -= this.OnFirstEnded;
+
+            if (e.Aborted)
+            {
+                this.state = FollowupState.Complete;
+                this.Ended?.Invoke(this, e);
+                return;
+            }
+
             this.state = FollowupState.Followup;
 
-            this.first.Completed -= this.OnFirstCompleted;
-
-            this.followup.Completed += this.OnFollowupCompleted;
+            this.followup.Ended += this.OnFollowupEnded;
             this.followup.Start();
         }
 
-        private void OnFollowupCompleted(object sender, EventArgs e)
+        private void OnFollowupEnded(object sender, ReactionEndedEventArgs e)
         {
             this.state = FollowupState.Complete;
-            this.followup.Completed -= this.OnFollowupCompleted;
-            this.Completed?.Invoke(this, EventArgs.Empty);
+
+            this.followup.Ended -= this.OnFollowupEnded;
+
+            this.Ended?.Invoke(this, e);
         }
     }
 }

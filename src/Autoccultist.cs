@@ -126,7 +126,7 @@ public class Autoccultist : MonoBehaviour
         SceneManager.sceneLoaded += new UnityAction<Scene, LoadSceneMode>(this.HandleSceneLoaded);
         SceneManager.sceneUnloaded += new UnityAction<Scene>(this.HandleSceneUnloaded);
 
-        SituationManifestationUIManager.Initialize();
+        UIManager.Initialize();
 
         this.ReloadAll();
 

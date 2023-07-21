@@ -8,7 +8,6 @@ namespace AutoccultistNS.UI
     {
         private LayoutElement layoutElement;
         private ContentSizeFitter contentSizeFitter;
-        private ConstrainedLayoutElement constrainedLayoutElement;
 
         public SizingLayoutWidget(string key)
             : this(new GameObject(key))

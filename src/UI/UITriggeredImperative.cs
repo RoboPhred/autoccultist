@@ -120,7 +120,7 @@ namespace AutoccultistNS.UI
                 }
 
                 this.reaction = this.impulse.GetReaction();
-                this.reaction.Completed += this.OnCompleted;
+                this.reaction.Ended += this.OnCompleted;
                 NoonUtility.Log("Got monitored reaction");
                 return this.reaction;
             }
