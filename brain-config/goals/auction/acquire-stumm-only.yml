@@ -16,7 +16,7 @@ imperatives:
         # Don't peek into the auction when we have yet to exhaust the bookdealer, or it might spawn
         # unique books we want from the dealer that will never appear again.
         - elementId: locationbookdealer
-    operation: auction-purchase-stumm
+    operation: auction/auction-purchase-stumm
   - name: Watch Stumm
     priority: goal
     requirements: !import /conditions/has-slushfund-minor.yml

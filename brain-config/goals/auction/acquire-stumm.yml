@@ -13,7 +13,7 @@ imperatives:
       anyOf:
         - elementId: stumm
         - elementId: ritefollowerconsumeinfluence
-    operation: auction-purchase
+    operation: auction/auction-purchase
   - name: Watch Stumm
     requirements: !import /conditions/has-slushfund-minor.yml
     operation: watch-stumm

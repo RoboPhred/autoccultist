@@ -1,0 +1,9 @@
+name: Sell a Jumble
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+    Sell:
+      oneOf:
+        - elementId: jumble

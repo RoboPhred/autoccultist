@@ -8,28 +8,51 @@ requirements:
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
+    - allOf:
+        - elementId: scholararamaic
+        - elementId: textbookaramaic
+    - allOf:
+        - elementId: scholarfucine
+        - elementId: textbookfucine
+    - allOf:
+        - elementId: scholargreek
+        - elementId: textbookgreek
+    - allOf:
+        - elementId: scholarlatin
+        - elementId: textbooklatin
+    - allOf:
+        - elementId: scholarsanskrit
+        - elementId: textbooksanskrit
 completedWhen:
   noneOf:
     - elementId: jumble
+    # Acquire-everything uses the presence of one genericrubbishbook to indicate that the bookshop is closed
+    #  and two genericrubbishbook to indicate that the auction house is bought out.
     - cardSet:
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
+    - allOf:
+        - elementId: scholararamaic
+        - elementId: textbookaramaic
+    - allOf:
+        - elementId: scholarfucine
+        - elementId: textbookfucine
+    - allOf:
+        - elementId: scholargreek
+        - elementId: textbookgreek
+    - allOf:
+        - elementId: scholarlatin
+        - elementId: textbooklatin
+    - allOf:
+        - elementId: scholarsanskrit
+        - elementId: textbooksanskrit
 imperatives:
-  - name: Sell our rubbish
+  - name: Sell a Jumble
     requirements:
       anyOf:
         - elementId: jumble
-    operation:
-      name: Sell our rubbish
-      situation: explore
-      startingRecipe:
-        slots:
-          explore:
-            elementId: locationauctionhouse
-          Sell:
-            oneOf:
-              - elementId: jumble
+    operation: auction/auction-sell-jumble
 
   - name: Sell a rubbish book
     requirements:
@@ -37,13 +60,39 @@ imperatives:
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
         - elementId: genericrubbishbook
-    operation:
-      name: Sell a rubbish book
-      situation: explore
-      startingRecipe:
-        slots:
-          explore:
-            elementId: locationauctionhouse
-          Sell:
-            oneOf:
-              - elementId: genericrubbishbook
+    operation: auction/auction-sell-genericrubbishbook
+
+  - name: Sell an unneeded Aramaic textbook
+    requirements:
+      allOf:
+        - elementId: scholararamaic
+        - elementId: textbookaramaic
+    operation: auction/auction-sell-textbookaramaic
+
+  - name: Sell an unneeded Fucine textbook
+    requirements:
+      allOf:
+        - elementId: scholarfucine
+        - elementId: textbookfucine
+    operation: auction/auction-sell-textbookfucine
+
+  - name: Sell an unneeded Greek textbook
+    requirements:
+      allOf:
+        - elementId: scholargreek
+        - elementId: textbookgreek
+    operation: auction/auction-sell-textbookgreek
+
+  - name: Sell an unneeded Latin textbook
+    requirements:
+      allOf:
+        - elementId: scholarlatin
+        - elementId: textbooklatin
+    operation: auction/auction-sell-textbooklatin
+
+  - name: Sell an unneeded Sanskrit textbook
+    requirements:
+      allOf:
+        - elementId: scholarsanskrit
+        - elementId: textbooksanskrit
+    operation: auction/auction-sell-textbooksanskrit

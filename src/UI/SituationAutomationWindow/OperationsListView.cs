@@ -8,7 +8,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.GameState;
     using UnityEngine;
 
-    public class OperationListView : IWindowView
+    public class OperationsListView : IWindowView
     {
         private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(.5);
         private readonly SituationAutomationWindow window;
@@ -18,7 +18,7 @@ namespace AutoccultistNS.UI
 
         private DateTime lastUpdate = DateTime.MinValue;
 
-        public OperationListView(SituationAutomationWindow window, WidgetMountPoint content, WidgetMountPoint footer)
+        public OperationsListView(SituationAutomationWindow window, WidgetMountPoint content, WidgetMountPoint footer)
         {
             this.window = window;
             this.contentRoot = content;
@@ -63,7 +63,7 @@ namespace AutoccultistNS.UI
             var orderedOps =
                 from pair in this.operationUIs
                 let op = pair.Key
-                let canExecute = op.IsConditionMet(state)
+                let canExecute = op.IsConditionMet(state) && !op.IsSatisfied(state)
                 orderby canExecute descending, op.Name
                 select new { Operation = op, CanExecute = canExecute, Elements = pair.Value };
 

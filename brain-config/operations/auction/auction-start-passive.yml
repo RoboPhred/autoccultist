@@ -1,0 +1,6 @@
+name: Go to Oriflamme's
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
