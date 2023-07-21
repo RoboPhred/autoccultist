@@ -22,7 +22,7 @@ namespace AutoccultistNS.UI
         {
             base.OnAwake();
             this.Title = "Automations";
-            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForUI("gears"));
+            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForUI("autoccultist_gears"));
 
             this.RebuildContent();
         }
@@ -112,7 +112,7 @@ namespace AutoccultistNS.UI
                         .SetActive(!isRunning)
                         .Disable()
                         .Background()
-                        .Sprite("play_icon")
+                        .Sprite("autoccultist_play_icon")
                         .OnClick(() => this.OnStartImperativeClick(imperative));
                 });
 

@@ -99,12 +99,14 @@ namespace AutoccultistNS.UI
         {
             base.OnAwake();
 
-            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForUI("autoccultist_situation_automation_badge"));
         }
 
         protected override void OnAttach()
         {
             base.OnAttach();
+
+            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForVerbLarge(this.Situation.VerbId));
+
             this.Title = $"{this.Situation.VerbId.Capitalize()} Automations";
         }
 

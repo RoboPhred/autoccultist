@@ -73,7 +73,7 @@ namespace AutoccultistNS.UI
                 .Right(0, 50)
                 .Bottom(1, -50)
                 .Background()
-                .Sprite("gears_icon")
+                .Sprite("autoccultist_gears_icon")
                 .OnClick(() =>
                 {
                     if (this.automationsWindow.IsOpen)

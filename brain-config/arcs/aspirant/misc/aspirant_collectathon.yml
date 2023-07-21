@@ -163,7 +163,11 @@ motivations:
       - hq/move-hq-library
   # End cult establishment
 
-  # Begin lore and rite collection
+  sell_rubbish:
+    name: Sell rubbish
+    primaryGoals:
+      - auction/sell-rubbish
+
   drain_morlands:
     name: Buy all books from Morlands
     requires:

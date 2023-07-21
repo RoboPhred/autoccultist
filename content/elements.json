@@ -3,7 +3,7 @@
     {
       "id": "autoccultist_memory",
       "label": "A Mechanical Memory",
-      "description": "A primitive remembrance of a mechenical contrivance.",
+      "description": "The primitive remembrance of a mechenical contrivance.",
       "icon": "playernote",
       "unique": true
     }

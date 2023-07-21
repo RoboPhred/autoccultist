@@ -100,7 +100,7 @@ namespace AutoccultistNS.UI
                         .PreferredHeight(35)
                         .Disable()
                         .Background()
-                        .Sprite("play_icon")
+                        .Sprite("autoccultist_play_icon")
                         .OnClick(() => this.OnOperationButtonClick(operation));
                 });
 

@@ -195,11 +195,14 @@ namespace AutoccultistNS.UI
                     .SlicedImage()
                     .Color(BgColorHeader);
 
+                var iconSize = 65;
+                var iconOffsetX = -10;
+                var iconOffsetY = 10;
                 this.Icon = mountPoint.AddSizingLayout("IconContainer")
-                    .Top(1, 0)
-                    .Bottom(1, -50)
-                    .Left(0, 3)
-                    .Right(0, 53);
+                    .Top(1, iconOffsetY)
+                    .Bottom(1, iconOffsetY - iconSize)
+                    .Left(0, iconOffsetX)
+                    .Right(0, iconOffsetX + iconSize);
 
                 this.title = mountPoint.AddText("TitleText")
                     .Anchor(Vector2.zero)
