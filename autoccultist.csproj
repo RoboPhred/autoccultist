@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <OutputType>Library</OutputType>
     <LangVersion>preview</LangVersion>
     <RootNamespace>AutoccultistNS</RootNamespace>
@@ -68,6 +68,10 @@
     </Reference>
     <Reference Include="TMPro">
       <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TheRoostMachine">
+      <HintPath>$(STEAMAPPS)\workshop\content\718670\2625527332\dll\TheRoostMachine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

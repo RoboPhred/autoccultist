@@ -98,7 +98,6 @@ namespace AutoccultistNS.UI
         protected override void OnAwake()
         {
             base.OnAwake();
-
         }
 
         protected override void OnAttach()

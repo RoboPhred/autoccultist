@@ -21,6 +21,8 @@ namespace AutoccultistNS.UI
 
         public IImperative Imperative { get; private set; }
 
+        public string Id => this.Imperative.Id;
+
         public string Name => $"{this.Imperative.Name} (One Shot)";
 
         public IReadOnlyCollection<IImperative> Children => new[] { this.Imperative };

@@ -9,7 +9,7 @@ namespace AutoccultistNS.Brain
     /// When active, imperatives can generate a list of impulses they wish to be handled by the bot.
     /// Impulses may not execute immediately, but will be considered by the <see cref="NucleusAccumbens"/> for execution.
     /// </summary>
-    public interface IImperative : IGameStateCondition, INamedObject
+    public interface IImperative : IGameStateCondition, INamedObject, IIdObject
     {
         /// <summary>
         /// Gets the children of this imperative.

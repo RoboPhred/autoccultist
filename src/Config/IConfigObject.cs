@@ -6,13 +6,8 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// Defines a node in the config tree.
     /// </summary>
-    public interface IConfigObject
+    public interface IConfigObject : IIdObject
     {
-        /// <summary>
-        /// Gets the unique identifier for this config object.
-        /// </summary>
-        string Id { get; }
-
         /// <summary>
         /// Gets the path to the file that this object was loaded from.
         /// </summary>

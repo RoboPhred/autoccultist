@@ -14,6 +14,9 @@ namespace AutoccultistNS.Brain
         public TaskPriority Priority => TaskPriority.Critical;
 
         // <inheritdoc/>
+        public string Id => "DumpCompletedSituation";
+
+        // <inheritdoc/>
         public string Name => "Dump Completed Situation";
 
         // <inheritdoc/>

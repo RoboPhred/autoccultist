@@ -19,10 +19,6 @@ namespace AutoccultistNS.UI
         private GameObject background;
         private GameObject content;
 
-        public Button ButtonBehavior { get; private set; }
-
-        public ButtonSoundTrigger SoundTriggerBehavior { get; private set; }
-
         public IconButtonWidget(string key)
             : this(new GameObject(key))
         {
@@ -47,6 +43,10 @@ namespace AutoccultistNS.UI
 
             this.ButtonBehavior.image = this.ImageBehavior;
         }
+
+        public Button ButtonBehavior { get; private set; }
+
+        public ButtonSoundTrigger SoundTriggerBehavior { get; private set; }
 
         public override WidgetMountPoint MountPoint => new WidgetMountPoint(this.content.transform);
 

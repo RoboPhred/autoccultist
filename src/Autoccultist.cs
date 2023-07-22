@@ -8,6 +8,7 @@ using AutoccultistNS.Config;
 using AutoccultistNS.GameResources;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
+using AutoccultistNS.Tokens;
 using AutoccultistNS.UI;
 using AutoccultistNS.Yaml;
 using SecretHistories.Services;
@@ -51,6 +52,9 @@ public class Autoccultist : MonoBehaviour
 
     public static void Initialise()
     {
+        // This needs to be done here, so that the patches are set when the save loads for the first time.
+        AutomationCreationCommand.Initialize();
+
         new GameObject().AddComponent<Autoccultist>();
     }
 
@@ -109,7 +113,6 @@ public class Autoccultist : MonoBehaviour
 
         this.mainThread = Thread.CurrentThread;
 
-        // Run initializations inside a sync context to capture created threads.
         AutoccultistSettings.Initialize();
 
         // Game needs to start first, so it is the first to know if the game starts or stops.

@@ -4,7 +4,6 @@ namespace AutoccultistNS.Config
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using AutoccultistNS.Brain;
     using AutoccultistNS.Yaml;
 
     /// <summary>

@@ -6,6 +6,11 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
+    using AutoccultistNS.Tokens;
+    using SecretHistories.Commands;
+    using SecretHistories.Entities;
+    using SecretHistories.UI;
+    using UnityEngine;
 
     public class AutomationsWindow : AbstractWindow
     {
@@ -131,9 +136,18 @@ namespace AutoccultistNS.UI
                 return;
             }
 
-            NucleusAccumbens.AddImperative(imperative);
+            var tabletop = GameAPI.TabletopSphere;
 
-            lastUpdate = DateTime.MinValue;
+            // NucleusAccumbens.AddImperative(imperative);
+
+            // TODO: Use drop zone.
+            var location = new TokenLocation(Vector3.zero, tabletop);
+            var quickDuration = Watchman.Get<Compendium>().GetSingleEntity<Dictum>().DefaultQuickTravelDuration;
+            var creationCommand = new AutomationCreationCommand(imperative.Id);
+            var zoneTokenCreationCommand = new TokenCreationCommand(creationCommand, location).WithDestination(location, quickDuration);
+            zoneTokenCreationCommand.Execute(Context.Unknown(), tabletop);
+
+            this.lastUpdate = DateTime.MinValue;
         }
 
         private class ImperativeUIElements
