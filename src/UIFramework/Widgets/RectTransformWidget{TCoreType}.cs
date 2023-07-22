@@ -22,6 +22,12 @@ namespace AutoccultistNS.UI
 
         public RectTransform RectTransform { get; private set; }
 
+        public TCoreType Anchor(Vector3 anchor)
+        {
+            this.RectTransform.anchoredPosition = anchor;
+            return this as TCoreType;
+        }
+
         public TCoreType Anchor(Vector2 anchor)
         {
             this.RectTransform.anchoredPosition = anchor;

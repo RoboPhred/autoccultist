@@ -12,7 +12,7 @@ namespace AutoccultistNS.UI
     using SecretHistories.UI;
     using UnityEngine;
 
-    public class AutomationsWindow : AbstractWindow
+    public class ImperativeListWindow : AbstractWindow
     {
         private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(.5);
         private readonly Dictionary<IImperative, ImperativeUIElements> imperativeUIs = new();

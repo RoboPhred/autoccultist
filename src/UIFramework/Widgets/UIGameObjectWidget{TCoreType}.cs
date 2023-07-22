@@ -40,6 +40,13 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
+        public new TCoreType Behavior<T>(Action<T> action)
+            where T : MonoBehaviour
+        {
+            action(this.GameObject.GetOrAddComponent<T>());
+            return this as TCoreType;
+        }
+
         public new TCoreType OnPointerEnter(Action<PointerEventData> action)
         {
             this.GameObject.GetOrAddComponent<PointerEventAdapter>().PointerEnter += (sender, e) => action(e);

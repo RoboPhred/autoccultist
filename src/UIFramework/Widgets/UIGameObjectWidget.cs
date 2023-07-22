@@ -51,6 +51,13 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public UIGameObjectWidget Behavior<T>(Action<T> action)
+            where T : MonoBehaviour
+        {
+            action(this.GameObject.GetOrAddComponent<T>());
+            return this;
+        }
+
         public UIGameObjectWidget OnPointerEnter(Action<PointerEventData> action)
         {
             this.GameObject.GetOrAddComponent<PointerEventAdapter>().PointerEnter += (sender, e) => action(e);

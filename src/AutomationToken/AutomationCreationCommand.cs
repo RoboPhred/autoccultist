@@ -35,15 +35,19 @@ namespace AutoccultistNS.Tokens
         {
             Machine.Patch(
                 original: typeof(PrefabFactory).GetMethodInvariant(nameof(PrefabFactory.CreateManifestationPrefab)),
-                prefix: typeof(AutomationCreationCommand).GetMethodInvariant(nameof(HandleZoneManifestationPrefab))
-            );
+                prefix: typeof(AutomationCreationCommand).GetMethodInvariant(nameof(HandleZoneManifestationPrefab)));
 
             Machine.Patch(
                 original: typeof(EncaustablesSerializationBinder).GetConstructor(new Type[0]),
-                postfix: typeof(AutomationCreationCommand).GetMethodInvariant(nameof(AddCommandToConstructor))
-            );
+                postfix: typeof(AutomationCreationCommand).GetMethodInvariant(nameof(AddCommandToConstructor)));
         }
 
+        public ITokenPayload Execute(Context context)
+        {
+            return new AutomationPayload(this.Id, this.EntityId);
+        }
+
+#pragma warning disable SA1313
         private static bool HandleZoneManifestationPrefab(Type manifestationType, Transform parent, ref IManifestation __result)
         {
             if (manifestationType != typeof(AutomationManifestation))
@@ -59,14 +63,9 @@ namespace AutoccultistNS.Tokens
 
         private static void AddCommandToConstructor(EncaustablesSerializationBinder __instance)
         {
-            NoonUtility.LogWarning("Autoccultist: Adding encaustment type");
             var encaustmentTypes = Reflection.GetPrivateField<HashSet<Type>>(__instance, "encaustmentTypes");
             encaustmentTypes.Add(typeof(AutomationCreationCommand));
         }
-
-        public ITokenPayload Execute(Context context)
-        {
-            return new AutomationPayload(this.Id, this.EntityId);
-        }
+#pragma warning restore SA1313
     }
 }

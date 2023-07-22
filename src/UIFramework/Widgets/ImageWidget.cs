@@ -37,6 +37,11 @@ namespace AutoccultistNS.UI
                 sprite = ResourceHack.FindSprite(resourceName);
             }
 
+            if (sprite == null)
+            {
+                NoonUtility.LogWarning($"Could not find sprite {resourceName}");
+            }
+
             this.ImageBehavior.sprite = sprite;
 
             return this;

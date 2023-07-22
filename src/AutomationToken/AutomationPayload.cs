@@ -2,6 +2,7 @@ namespace AutoccultistNS.Tokens
 {
     using System;
     using System.Collections.Generic;
+    using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using SecretHistories;
     using SecretHistories.Abstract;
@@ -21,11 +22,9 @@ namespace AutoccultistNS.Tokens
     [IsEncaustableClass(typeof(AutomationCreationCommand))]
     public class AutomationPayload : ITokenPayload
     {
-        public static string EntityPrefix = "automation_imperative_";
+        public static readonly string EntityPrefix = "automation_imperative_";
 
         private readonly List<AbstractDominion> dominions = new();
-
-        private readonly IImperativeConfig imperative;
 
         private Token token;
 
@@ -46,7 +45,11 @@ namespace AutoccultistNS.Tokens
                 throw new ArgumentException($"Invalid entity ID for automation: {entityId}");
             }
 
-            this.imperative = Library.GetById<IImperativeConfig>(imperativeId);
+            this.Imperative = Library.GetById<IImperativeConfig>(imperativeId);
+
+            // TODO: Only add when we are on the tabletop sphere.
+            // There doesn't seem to be any events telling us when we got placed in a sphere, however.
+            NucleusAccumbens.AddImperative(this.Imperative);
         }
 
 #pragma warning disable CS0067
@@ -54,6 +57,9 @@ namespace AutoccultistNS.Tokens
 
         public event Action<float> OnLifetimeSpent;
 #pragma warning restore CS0067
+
+        [DontEncaust]
+        public IImperativeConfig Imperative { get; }
 
         [Encaust]
         public string Id { get; private set; }
@@ -84,13 +90,13 @@ namespace AutoccultistNS.Tokens
         }
 
         [DontEncaust]
-        public string Label => this.imperative.Name;
+        public string Label => this.Imperative.Name;
 
         [DontEncaust]
-        public string Description => this.imperative.Name;
+        public string Description => this.Imperative.Name;
 
         [DontEncaust]
-        public string UniquenessGroup => this.imperative.Id;
+        public string UniquenessGroup => this.Imperative.Id;
 
         [DontEncaust]
         public bool Unique => false;
@@ -116,10 +122,6 @@ namespace AutoccultistNS.Tokens
             return false;
         }
 
-        public void AttachSphere(Sphere sphere)
-        {
-        }
-
         public string AudioRefinement(AudioEvent audioEvent)
         {
             return string.Empty;
@@ -143,6 +145,10 @@ namespace AutoccultistNS.Tokens
         public void Conclude()
         {
             // TODO: Destroy self and end automation
+        }
+
+        public void AttachSphere(Sphere sphere)
+        {
         }
 
         public void DetachSphere(Sphere sphere)
@@ -288,6 +294,7 @@ namespace AutoccultistNS.Tokens
 
         public void OnTokenMoved(TokenLocation toLocation)
         {
+
         }
 
         public void OpenAt(TokenLocation location)
@@ -317,6 +324,7 @@ namespace AutoccultistNS.Tokens
 
         public bool Retire(RetirementVFX vfx)
         {
+            NucleusAccumbens.RemoveImperative(this.Imperative);
             return true;
         }
 

@@ -22,6 +22,12 @@ namespace AutoccultistNS.UI
             return widget.RectTransform;
         }
 
+        public RectTransformWidget Anchor(Vector3 anchor)
+        {
+            this.RectTransform.anchoredPosition = anchor;
+            return this;
+        }
+
         public RectTransformWidget Anchor(Vector2 anchor)
         {
             this.RectTransform.anchoredPosition = anchor;

@@ -100,6 +100,12 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public TextWidget OverflowMode(TextOverflowModes mode)
+        {
+            this.textMesh.overflowMode = mode;
+            return this;
+        }
+
         public TextWidget Text(string value)
         {
             this.textMesh.text = value;
