@@ -18,9 +18,61 @@ namespace AutoccultistNS.UI
         {
         }
 
-        public virtual Image ImageBehavior => this.GameObject.GetOrAddComponent<Image>();
+        public virtual Image Image => this.GameObject.GetOrAddComponent<Image>();
 
-        public ImageWidget Sprite(string resourceName)
+        public Sprite Sprite
+        {
+            get
+            {
+                return this.Image.sprite;
+            }
+
+            set
+            {
+                this.Image.sprite = value;
+            }
+        }
+
+        public Color Color
+        {
+            get
+            {
+                return this.Image.color;
+            }
+
+            set
+            {
+                this.Image.color = value;
+            }
+        }
+
+        public bool PreserveAspect
+        {
+            get
+            {
+                return this.Image.preserveAspect;
+            }
+
+            set
+            {
+                this.Image.preserveAspect = value;
+            }
+        }
+
+        public Image.Type ImageType
+        {
+            get
+            {
+                return this.Image.type;
+            }
+
+            set
+            {
+                this.Image.type = value;
+            }
+        }
+
+        public ImageWidget SetSprite(string resourceName)
         {
             // This is a partial reimplementation of ResourcesManager.GetSpriteForUI
             // We want to know if the sprite is not found, to use our fallback lookup.
@@ -42,40 +94,42 @@ namespace AutoccultistNS.UI
                 NoonUtility.LogWarning($"Could not find sprite {resourceName}");
             }
 
-            this.ImageBehavior.sprite = sprite;
+            this.Image.sprite = sprite;
 
             return this;
         }
 
-        public ImageWidget Sprite(Sprite sprite)
+        public ImageWidget SetSprite(Sprite sprite)
         {
-            this.ImageBehavior.sprite = sprite;
+            this.Image.sprite = sprite;
+            return this;
+        }
+
+
+        public ImageWidget SetColor(Color color)
+        {
+            this.Image.color = color;
             return this;
         }
 
         public ImageWidget StretchImage()
         {
-            this.ImageBehavior.type = Image.Type.Simple;
-            this.ImageBehavior.preserveAspect = false;
+            this.Image.type = Image.Type.Simple;
+            this.Image.preserveAspect = false;
             return this;
         }
 
         public ImageWidget CenterImage()
         {
-            this.ImageBehavior.type = Image.Type.Simple;
-            this.ImageBehavior.preserveAspect = true;
+            this.Image.type = Image.Type.Simple;
+            this.Image.preserveAspect = true;
             return this;
         }
 
         public ImageWidget SlicedImage()
         {
-            this.ImageBehavior.type = Image.Type.Sliced;
-            return this;
-        }
-
-        public ImageWidget Color(Color color)
-        {
-            this.ImageBehavior.color = color;
+            this.Image.type = Image.Type.Sliced;
+            this.Image.preserveAspect = true;
             return this;
         }
     }

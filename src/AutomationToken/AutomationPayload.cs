@@ -294,7 +294,6 @@ namespace AutoccultistNS.Tokens
 
         public void OnTokenMoved(TokenLocation toLocation)
         {
-
         }
 
         public void OpenAt(TokenLocation location)

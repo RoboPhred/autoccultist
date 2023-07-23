@@ -19,42 +19,42 @@ namespace AutoccultistNS.UI
             this.Reaction = reaction;
 
             contentMount.AddVerticalLayoutGroup("VerticalLayout")
-                .Padding(10, 2)
+                .SetPadding(10, 2)
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("OperationName")
-                        .ExpandWidth()
-                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                        .MinFontSize(16)
-                        .MaxFontSize(32)
-                        .Text(reaction.Operation.Name);
+                        .SetExpandWidth()
+                        .SetTextAlignment(TMPro.TextAlignmentOptions.Center)
+                        .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                        .SetMinFontSize(16)
+                        .SetMaxFontSize(32)
+                        .SetText(reaction.Operation.Name);
 
                     mountPoint.AddSizingLayout("Spacer")
-                        .PreferredHeight(10);
+                        .SetPreferredHeight(10);
 
                     this.historyScroll = mountPoint.AddScrollRegion("History")
-                        .ExpandWidth()
-                        .ExpandHeight()
-                        .PreferredHeight(100)
-                        .Vertical();
+                        .SetExpandWidth()
+                        .SetExpandHeight()
+                        .SetPreferredHeight(100)
+                        .SetVertical();
 
                     // TODO: Show current recipe text.
                     // It seems CurrentRecipe description is usually ".".  Are they tokens?  Stored in a situation dominion?
                 });
 
             footerMount.AddHorizontalLayoutGroup("FooterButtons")
-                .ChildAlignment(TextAnchor.MiddleRight)
-                .Padding(10, 2)
-                .Spacing(5)
+                .SetChildAlignment(TextAnchor.MiddleRight)
+                .SetPadding(10, 2)
+                .SetSpacing(5)
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddTextButton("AbortButton")
-                        .Text("Abort")
+                        .SetText("Abort")
                         .OnClick(() => reaction.Dispose());
 
                     this.lockoutButton = mountPoint.AddTextButton("LockoutButton")
-                        .Text("Lockout")
+                        .SetText("Lockout")
                         .OnClick(() => window.ToggleLockout());
                 });
         }
@@ -84,38 +84,38 @@ namespace AutoccultistNS.UI
                         var recipe = compendium.GetEntityById<Recipe>(item.SlottedRecipeId);
                         mountPoint.AddVerticalLayoutGroup("HistoryEntry")
                             .SpreadChildrenHorizontally()
-                            .ExpandWidth()
+                            .SetExpandWidth()
                             .FitContentHeight()
-                            .Padding(10, 2)
-                            .Spacing(3)
+                            .SetPadding(10, 2)
+                            .SetSpacing(3)
                             .AddContent(mountPoint =>
                             {
                                 mountPoint.AddText("HistoryItem")
-                                    .ExpandWidth()
-                                    .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                                    .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                                    .FontSize(20)
-                                    .Text(recipe.Label ?? item.SlottedRecipeId);
+                                    .SetExpandWidth()
+                                    .SetTextAlignment(TMPro.TextAlignmentOptions.Center)
+                                    .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                                    .SetFontSize(20)
+                                    .SetText(recipe.Label ?? item.SlottedRecipeId);
 
                                 foreach (var elementId in item.SlottedElements)
                                 {
                                     var element = compendium.GetEntityById<Element>(elementId);
 
                                     mountPoint.AddHorizontalLayoutGroup("Element")
-                                        .ExpandWidth()
+                                        .SetExpandWidth()
                                         .FitContentHeight()
-                                        .ChildAlignment(TextAnchor.MiddleCenter)
-                                        .Spacing(5)
+                                        .SetChildAlignment(TextAnchor.MiddleCenter)
+                                        .SetSpacing(5)
                                         .AddContent(mountPoint =>
                                         {
                                             mountPoint.AddImage("ElementImage")
-                                                .PreferredWidth(30)
-                                                .PreferredHeight(30)
-                                                .Sprite(ResourcesManager.GetAppropriateSpriteForElement(element));
+                                                .SetPreferredWidth(30)
+                                                .SetPreferredHeight(30)
+                                                .SetSprite(ResourcesManager.GetAppropriateSpriteForElement(element));
 
                                             mountPoint.AddText("ElementName")
-                                                .FontSize(16)
-                                                .Text(element.Label);
+                                                .SetFontSize(16)
+                                                .SetText(element.Label);
                                         });
                                 }
                             });

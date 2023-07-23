@@ -7,32 +7,32 @@ namespace AutoccultistNS.UI
         public LockoutView(SituationAutomationWindow window, WidgetMountPoint content)
         {
             content.AddVerticalLayoutGroup("VerticalLayout")
-                .Padding(10, 2)
-                .ExpandWidth()
+                .SetPadding(10, 2)
+                .SetExpandWidth()
                 .SpreadChildrenHorizontally()
                 .FitContentHeight()
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("LockoutText")
-                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                        .FontSize(32)
-                        .Text("Locked out");
+                        .SetTextAlignment(TMPro.TextAlignmentOptions.Center)
+                        .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                        .SetFontSize(32)
+                        .SetText("Locked out");
 
                     mountPoint.AddSizingLayout("Spacer")
-                        .PreferredHeight(10);
+                        .SetPreferredHeight(10);
 
                     mountPoint.AddText("Explainer")
-                        .TextAlignment(TMPro.TextAlignmentOptions.Center)
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                        .FontSize(20)
-                        .Text("Autoccultist will not automate this verb.  You can use it for your own purposes.");
+                        .SetTextAlignment(TMPro.TextAlignmentOptions.Center)
+                        .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                        .SetFontSize(20)
+                        .SetText("Autoccultist will not automate this verb.  You can use it for your own purposes.");
 
                     mountPoint.AddSizingLayout("Spacer")
-                        .PreferredHeight(10);
+                        .SetPreferredHeight(10);
 
                     mountPoint.AddTextButton("Unlock")
-                        .Text("Unlock")
+                        .SetText("Unlock")
                         .OnClick(() =>
                             {
                                 window.ToggleLockout();

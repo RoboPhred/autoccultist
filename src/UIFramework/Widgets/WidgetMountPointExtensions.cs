@@ -2,6 +2,13 @@ namespace AutoccultistNS.UI
 {
     public static class WidgetMountPointExtensions
     {
+        public static RectTransformWidget AddRectTransform(this WidgetMountPoint mountPoint, string key = "RectTransform")
+        {
+            var widget = new RectTransformWidget(key);
+            mountPoint.AddWidget(widget);
+            return widget;
+        }
+
         public static SizingLayoutWidget AddSizingLayout(this WidgetMountPoint mountPoint, string key = "SizingLayout")
         {
             var widget = new SizingLayoutWidget(key);
@@ -54,7 +61,11 @@ namespace AutoccultistNS.UI
         public static ScrollRegionWidget AddScrollRegion(this WidgetMountPoint mountPoint, string key = "ScrollRegion")
         {
             var widget = new ScrollRegionWidget(key);
+            NoonUtility.LogWarning("ScrollRegion pre-add viewport local position is: " + widget.GameObject.transform.Find("Viewport").localPosition);
+            NoonUtility.LogWarning("ScrollRegion pre-add local position is: " + widget.GameObject.transform.localPosition);
             mountPoint.AddWidget(widget);
+            NoonUtility.LogWarning("ScrollRegion post-add viewport local position is: " + widget.GameObject.transform.Find("Viewport").localPosition);
+            NoonUtility.LogWarning("ScrollRegion post-add local position is: " + widget.GameObject.transform.localPosition);
             return widget;
         }
     }

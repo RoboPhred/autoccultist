@@ -21,13 +21,13 @@ namespace AutoccultistNS.UI
             this.layoutElement = this.GameObject.GetOrAddComponent<LayoutElement>();
             this.layoutElement.flexibleWidth = 0;
             this.layoutElement.flexibleHeight = 0;
-            this.LayoutElementBehavior.minHeight = -1;
-            this.LayoutElementBehavior.minWidth = -1;
-            this.LayoutElementBehavior.preferredHeight = -1;
-            this.LayoutElementBehavior.preferredWidth = -1;
+            this.layoutElement.minHeight = -1;
+            this.layoutElement.minWidth = -1;
+            this.layoutElement.preferredHeight = -1;
+            this.layoutElement.preferredWidth = -1;
         }
 
-        public LayoutElement LayoutElementBehavior
+        public LayoutElement LayoutElement
         {
             get
             {
@@ -35,7 +35,7 @@ namespace AutoccultistNS.UI
             }
         }
 
-        public ContentSizeFitter ContentSizeFitterBehavior
+        public ContentSizeFitter ContentSizeFitter
         {
             get
             {
@@ -55,33 +55,117 @@ namespace AutoccultistNS.UI
             return new SizingLayoutWidget(widget.GameObject);
         }
 
-        public TCoreType IgnoreLayout()
+        public bool IgnoreLayout
         {
-            this.LayoutElementBehavior.ignoreLayout = true;
+            get
+            {
+                return this.LayoutElement.ignoreLayout;
+            }
+            set
+            {
+                this.LayoutElement.ignoreLayout = value;
+            }
+        }
+
+        public float MinWidth
+        {
+            get
+            {
+                return this.LayoutElement.minWidth;
+            }
+            set
+            {
+                this.LayoutElement.minWidth = value;
+            }
+        }
+
+        public float MinHeight
+        {
+            get
+            {
+                return this.LayoutElement.minHeight;
+            }
+            set
+            {
+                this.LayoutElement.minHeight = value;
+            }
+        }
+
+        public float PreferredWidth
+        {
+            get
+            {
+                return this.LayoutElement.preferredWidth;
+            }
+            set
+            {
+                this.LayoutElement.preferredWidth = value;
+            }
+        }
+
+        public float PreferredHeight
+        {
+            get
+            {
+                return this.LayoutElement.preferredHeight;
+            }
+            set
+            {
+                this.LayoutElement.preferredHeight = value;
+            }
+        }
+
+        public ContentSizeFitter.FitMode VerticalFit
+        {
+            get
+            {
+                return this.ContentSizeFitter.verticalFit;
+            }
+            set
+            {
+                this.ContentSizeFitter.verticalFit = value;
+            }
+        }
+
+        public ContentSizeFitter.FitMode HorizontalFit
+        {
+            get
+            {
+                return this.ContentSizeFitter.horizontalFit;
+            }
+            set
+            {
+                this.ContentSizeFitter.horizontalFit = value;
+            }
+        }
+
+        public TCoreType SetIgnoreLayout()
+        {
+            this.LayoutElement.ignoreLayout = true;
             return this as TCoreType;
         }
 
-        public TCoreType MinWidth(float width)
+        public TCoreType SetMinWidth(float width)
         {
-            this.LayoutElementBehavior.minWidth = width;
+            this.LayoutElement.minWidth = width;
             return this as TCoreType;
         }
 
-        public TCoreType MinHeight(float height)
+        public TCoreType SetMinHeight(float height)
         {
-            this.LayoutElementBehavior.minHeight = height;
+            this.LayoutElement.minHeight = height;
             return this as TCoreType;
         }
 
-        public TCoreType PreferredWidth(float width)
+        public TCoreType SetPreferredWidth(float width)
         {
-            this.LayoutElementBehavior.preferredWidth = width;
+            this.LayoutElement.preferredWidth = width;
             return this as TCoreType;
         }
 
-        public TCoreType PreferredHeight(float height)
+        public TCoreType SetPreferredHeight(float height)
         {
-            this.LayoutElementBehavior.preferredHeight = height;
+            this.LayoutElement.preferredHeight = height;
             return this as TCoreType;
         }
 
@@ -99,27 +183,27 @@ namespace AutoccultistNS.UI
         }
         */
 
-        public TCoreType ExpandWidth()
+        public TCoreType SetExpandWidth()
         {
-            this.LayoutElementBehavior.flexibleWidth = 1;
+            this.LayoutElement.flexibleWidth = 1;
             return this as TCoreType;
         }
 
-        public TCoreType ExpandHeight()
+        public TCoreType SetExpandHeight()
         {
-            this.LayoutElementBehavior.flexibleHeight = 1;
+            this.LayoutElement.flexibleHeight = 1;
             return this as TCoreType;
         }
 
         public TCoreType FitContentWidth()
         {
-            this.ContentSizeFitterBehavior.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            this.ContentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this as TCoreType;
         }
 
         public TCoreType FitContentHeight()
         {
-            this.ContentSizeFitterBehavior.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this as TCoreType;
         }
     }

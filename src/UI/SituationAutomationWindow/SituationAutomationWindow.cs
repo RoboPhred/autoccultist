@@ -30,9 +30,8 @@ namespace AutoccultistNS.UI
             }
         }
 
-        protected override int Width => 500;
-
-        protected override int Height => 400;
+        protected override int DefaultWidth => 500;
+        protected override int DefaultHeight => 400;
 
         private IResourceConstraint<ISituationState> CurrentResourceConstraint
         {
@@ -93,6 +92,8 @@ namespace AutoccultistNS.UI
                 // Doing something, lock out after the current constraint is done.
                 currentConstraint.Disposed += this.LockOutAfterConstraint;
             }
+
+            NucleusAccumbens.ReevaluateImpulses();
         }
 
         protected override void OnAwake()
@@ -104,7 +105,7 @@ namespace AutoccultistNS.UI
         {
             base.OnAttach();
 
-            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForVerbLarge(this.Situation.VerbId));
+            this.Icon.AddImage().SetSprite(ResourcesManager.GetSpriteForVerbLarge(this.Situation.VerbId));
 
             this.Title = $"{this.Situation.VerbId.Capitalize()} Automations";
         }

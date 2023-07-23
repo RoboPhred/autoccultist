@@ -37,9 +37,19 @@ namespace AutoccultistNS.Brain
         private static GameAPI.PauseToken pauseToken;
 
         /// <summary>
-        /// Raised when a goal is completed.
+        /// Raised when an imperative is completed.
         /// </summary>
-        public static event EventHandler<ImperativeEventArgs> OnImperativeCompleted;
+        public static event EventHandler<ImperativeEventArgs> ImperativeCompleted;
+
+        /// <summary>
+        /// Raised when an impulse is started.
+        /// </summary>
+        public static event EventHandler<ImpulseEventArgs> ImpulseStarted;
+
+        /// <summary>
+        /// Raised when an impulse is completed.
+        /// </summary>
+        public static event EventHandler<ImpulseEventArgs> ImpulseEnded;
 
         /// <summary>
         /// Gets a list of the current active goals.
@@ -403,7 +413,7 @@ namespace AutoccultistNS.Brain
                 return;
             }
 
-            OnImperativeCompleted?.Invoke(null, new ImperativeEventArgs(imperative));
+            ImperativeCompleted?.Invoke(null, new ImperativeEventArgs(imperative));
         }
 
         /// <summary>
@@ -427,6 +437,8 @@ namespace AutoccultistNS.Brain
 
             reaction.Start();
 
+            ImpulseStarted?.Invoke(null, new ImpulseEventArgs(imperative, impulse));
+
             // The impulse might complete synchronously, so return false if it did.
             return RunningImpulses.Contains(impulse);
         }
@@ -449,10 +461,15 @@ namespace AutoccultistNS.Brain
             ImpulsesByReaction.Remove(reaction);
 
             var imperativeFound = false;
-            foreach (var reactions in ActiveReactionsByImperative.Values)
+            foreach (var pair in ActiveReactionsByImperative)
             {
-                if (reactions.Remove(reaction))
+                if (pair.Value.Remove(reaction))
                 {
+                    if (impulse != null)
+                    {
+                        ImpulseEnded?.Invoke(null, new ImpulseEventArgs(pair.Key, impulse));
+                    }
+
                     imperativeFound = true;
                     break;
                 }

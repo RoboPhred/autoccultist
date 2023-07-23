@@ -20,6 +20,9 @@ namespace AutoccultistNS.Tokens
     {
         private const float RotationSpeedPerSecond = -360 / 16;
 
+        private Spinner artworkSpinner;
+        private int runningImpulses = 0;
+
         private Token token;
 
         private ImageWidget glowImage;
@@ -36,6 +39,9 @@ namespace AutoccultistNS.Tokens
         public void Initialise(IManifestable manifestable)
         {
             this.token = manifestable.GetToken();
+
+            NucleusAccumbens.ImpulseStarted += this.OnImpulseStarted;
+            NucleusAccumbens.ImpulseEnded += this.OnImpulseEnded;
 
             this.RectTransform.anchoredPosition = Vector2.zero;
             this.RectTransform.sizeDelta = new Vector2(140, 140);
@@ -58,11 +64,11 @@ namespace AutoccultistNS.Tokens
                 else
                 {
                     this.glowImage = mountPoint.AddImage("Glow")
-                        .Left(0, -8)
-                        .Right(1, 8)
-                        .Top(1, 8)
-                        .Bottom(0, -8)
-                        .Sprite(tokenOutline)
+                        .SetLeft(0, -8)
+                        .SetRight(1, 8)
+                        .SetTop(1, 8)
+                        .SetBottom(0, -8)
+                        .SetSprite(tokenOutline)
                         .SlicedImage()
                         .Behavior<GraphicFader>(fader =>
                         {
@@ -73,35 +79,38 @@ namespace AutoccultistNS.Tokens
 
                 var tokenBody = Reflection.GetPrivateField<Image>(prefab, "tokenBody").sprite;
                 mountPoint.AddImage("Token")
-                    .Sprite(tokenBody);
+                    .SetSprite(tokenBody);
 
                 mountPoint.AddImage("Artwork")
-                    .Anchor(new Vector3(0, 5.5f, -2))
-                    .Left(0.5f, -50)
-                    .Right(0.5f, 50)
-                    .Top(0.5f, 55.5f)
-                    .Bottom(0.5f, -44.5f)
-                    .Size(new Vector2(100, 100))
-                    .Color(new Color(1, 1, 1, 0.25f))
-                    .Sprite("autoccultist_imperative_artwork")
+                    .SetAnchor(new Vector3(0, 5.5f, -2))
+                    .SetLeft(0.5f, -50)
+                    .SetRight(0.5f, 50)
+                    .SetTop(0.5f, 55.5f)
+                    .SetBottom(0.5f, -44.5f)
+                    .SetSize(new Vector2(100, 100))
+                    .SetColor(new Color(1, 1, 1, 0.25f))
+                    .SetSprite("autoccultist_imperative_artwork")
                     .Behavior<Spinner>(spinner =>
                     {
+                        this.artworkSpinner = spinner;
                         spinner.Speed = RotationSpeedPerSecond;
+                        NoonUtility.LogWarning("WTFV stopping spinner");
+                        spinner.StopSpinning();
                     });
 
                 mountPoint.AddText("Label")
-                    .Anchor(new Vector3(0, 5.5f, -2))
-                    .Left(0.5f, -50)
-                    .Right(0.5f, 50)
-                    .Top(0.5f, 55.5f)
-                    .Bottom(0.5f, -44.5f)
-                    .Size(new Vector2(100, 100))
-                    .MinFontSize(16)
-                    .MaxFontSize(32)
-                    .VerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
-                    .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
-                    .OverflowMode(TMPro.TextOverflowModes.Ellipsis)
-                    .Text(this.Imperative.Name);
+                    .SetAnchor(new Vector3(0, 5.5f, -2))
+                    .SetLeft(0.5f, -50)
+                    .SetRight(0.5f, 50)
+                    .SetTop(0.5f, 55.5f)
+                    .SetBottom(0.5f, -44.5f)
+                    .SetSize(new Vector2(100, 100))
+                    .SetMinFontSize(16)
+                    .SetMaxFontSize(32)
+                    .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
+                    .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
+                    .SetOverflowMode(TMPro.TextOverflowModes.Ellipsis)
+                    .SetText(this.Imperative.Name);
             });
         }
 
@@ -112,6 +121,9 @@ namespace AutoccultistNS.Tokens
 
         public override void Retire(RetirementVFX vfx, Action callbackOnRetired)
         {
+            NucleusAccumbens.ImpulseStarted -= this.OnImpulseStarted;
+            NucleusAccumbens.ImpulseEnded -= this.OnImpulseEnded;
+
             if (vfx == RetirementVFX.Default)
             {
                 // TODO: Effect.  Check DoVanishFx on VerbManifestation.
@@ -138,7 +150,7 @@ namespace AutoccultistNS.Tokens
             if (highlightType == HighlightType.Hover)
             {
                 SoundManager.PlaySfx("TokenHover");
-                this.glowImage.Color(UIStyle.GetGlowColor(UIStyle.GlowPurpose.OnHover));
+                this.glowImage.SetColor(UIStyle.GetGlowColor(UIStyle.GlowPurpose.OnHover));
                 this.glowFader.Show();
             }
         }
@@ -180,6 +192,39 @@ namespace AutoccultistNS.Tokens
 
         public void UpdateVisuals(IManifestable manifestable, Sphere sphere)
         {
+        }
+
+        private void OnImpulseStarted(object sender, ImpulseEventArgs e)
+        {
+            if (e.Imperative != this.Imperative)
+            {
+                return;
+            }
+
+            NoonUtility.LogWarning("Impulse started " + e.Imperative.Name + " " + e.Impulse.ToString());
+
+            this.runningImpulses++;
+
+            if (this.runningImpulses == 1)
+            {
+                this.artworkSpinner.StartSpinning();
+            }
+        }
+
+        private void OnImpulseEnded(object sender, ImpulseEventArgs e)
+        {
+            if (e.Imperative != this.Imperative)
+            {
+                return;
+            }
+
+            this.runningImpulses--;
+
+            if (this.runningImpulses <= 0)
+            {
+                this.runningImpulses = 0;
+                this.artworkSpinner.StopSpinning();
+            }
         }
     }
 }

@@ -19,15 +19,14 @@ namespace AutoccultistNS.UI
 
         private DateTime lastUpdate = DateTime.MinValue;
 
-        protected override int Width => 500;
-
-        protected override int Height => 800;
+        protected override int DefaultWidth => 500;
+        protected override int DefaultHeight => 800;
 
         protected override void OnAwake()
         {
             base.OnAwake();
             this.Title = "Automations";
-            this.Icon.AddImage().Sprite(ResourcesManager.GetSpriteForUI("autoccultist_gears"));
+            this.Icon.AddImage().SetSprite(ResourcesManager.GetSpriteForUI("autoccultist_gears"));
 
             this.RebuildContent();
         }
@@ -64,8 +63,8 @@ namespace AutoccultistNS.UI
         {
             this.Content.Clear();
 
-            this.Content.AddScrollRegion("ScrollRect")
-                .Vertical()
+            this.Content.AddScrollRegion("ScrollRegion")
+                .SetVertical()
                 .AddContent(
                     mountPoint =>
                     {
@@ -83,41 +82,41 @@ namespace AutoccultistNS.UI
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"imperative_${imperative.Name}")
                 .SpreadChildrenVertically()
-                .Padding(10, 5)
+                .SetPadding(10, 5)
                 .AddContent(mountPoint =>
                 {
                     var isRunning = NucleusAccumbens.CurrentImperatives.Contains(imperative);
 
                     var nameElement = mountPoint.AddText("Recipe")
-                        .FontSize(14)
-                        .MinFontSize(10)
-                        .MaxFontSize(14)
-                        .ExpandWidth()
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
-                        .VerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
-                        .Text(imperative.Name);
+                        .SetFontSize(14)
+                        .SetMinFontSize(10)
+                        .SetMaxFontSize(14)
+                        .SetExpandWidth()
+                        .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
+                        .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
+                        .SetText(imperative.Name);
 
                     mountPoint.AddSizingLayout("Spacer")
-                        .MinWidth(10)
-                        .ExpandWidth();
+                        .SetMinWidth(10)
+                        .SetExpandWidth();
 
                     runningIcon = mountPoint.AddImage("ActiveIcon")
-                        .Sprite("autoccultist_situation_automation_badge")
+                        .SetSprite("autoccultist_situation_automation_badge")
                         .SetActive(isRunning)
-                        .MinWidth(35)
-                        .MinHeight(35)
-                        .PreferredWidth(35)
-                        .PreferredHeight(35);
+                        .SetMinWidth(35)
+                        .SetMinHeight(35)
+                        .SetPreferredWidth(35)
+                        .SetPreferredHeight(35);
 
                     startButton = mountPoint.AddIconButton("StartButton")
-                        .MinWidth(35)
-                        .MinHeight(35)
-                        .PreferredWidth(35)
-                        .PreferredHeight(35)
+                        .SetMinWidth(35)
+                        .SetMinHeight(35)
+                        .SetPreferredWidth(35)
+                        .SetPreferredHeight(35)
                         .SetActive(!isRunning)
                         .Disable()
-                        .Background()
-                        .Sprite("autoccultist_play_icon")
+                        .SetBackground()
+                        .SetSprite("autoccultist_play_icon")
                         .OnClick(() => this.OnStartImperativeClick(imperative));
                 });
 

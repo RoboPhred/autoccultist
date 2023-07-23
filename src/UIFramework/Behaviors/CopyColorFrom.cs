@@ -3,7 +3,7 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class CopyColorFromBehavior : MonoBehaviour
+    public class CopyColorFrom : MonoBehaviour
     {
         public Image CopyFrom { get; set; }
 

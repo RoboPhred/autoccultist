@@ -6,7 +6,7 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public abstract class AbstractWindow : MonoBehaviour
+    public abstract class AbstractWindowOld : MonoBehaviour
     {
         private static readonly Color BgColorHeader = new Color(0.0314f, 0.0706f, 0.1059f, 0.902f);
         private static readonly Color BgColorBody = new Color(0.0627f, 0.1333f, 0.1922f, 0.902f);
@@ -14,10 +14,9 @@ namespace AutoccultistNS.UI
 
         private CanvasGroupFader canvasGroupFader;
         private WindowPositioner positioner;
-        private SizingLayoutWidget root;
         private TextWidget title;
 
-        public AbstractWindow()
+        public AbstractWindowOld()
         {
             this.BuildWindowFrame();
         }
@@ -44,37 +43,9 @@ namespace AutoccultistNS.UI
 
         public bool IsClosed => this.canvasGroupFader.IsInvisible();
 
-        protected virtual int DefaultWidth => 600;
+        protected virtual int DefaultWidth => 500;
+
         protected virtual int DefaultHeight => 400;
-
-        // FIXME: Not working
-        // protected int Width
-        // {
-        //     get
-        //     {
-        //         return 0;
-
-        //     }
-
-        //     set
-        //     {
-        //         this.root.SetMinWidth(value);
-        //     }
-        // }
-
-        // FIXME: Not working
-        // protected int Height
-        // {
-        //     get
-        //     {
-        //         return 0;
-        //     }
-
-        //     set
-        //     {
-        //         this.root.SetMinHeight(value);
-        //     }
-        // }
 
         protected WidgetMountPoint Icon { get; private set; }
 
@@ -113,7 +84,6 @@ namespace AutoccultistNS.UI
         public void Awake()
         {
             this.canvasGroupFader.HideImmediately();
-
             this.OnAwake();
         }
 
@@ -188,40 +158,35 @@ namespace AutoccultistNS.UI
 
         private void BuildWindowFrame()
         {
-            this.root = new SizingLayoutWidget(this.gameObject)
-                .SetPivot(0.5f, 0.5f)
-                .SetLeft(.5f, 0)
-                .SetTop(.5f, 0)
-                .SetRight(.5f, 0)
-                .SetBottom(.5f, 0)
-                .SetMinWidth(DefaultWidth)
-                .SetMinHeight(DefaultHeight);
+            // Note: We should auto-size from our content.
+            var rectTransform = new RectTransformWidget(this.gameObject)
+                .SetLeft(0.5f, 0)
+                .SetTop(0.5f, 0)
+                .SetRight(0.5f, 0)
+                .SetBottom(0.5f, 0);
+
+            // One day I will refactor this to use dynamic sizing, but until then...
+            new SizingLayoutWidget(this.gameObject)
+                .SetMinWidth(this.DefaultWidth)
+                .SetMinHeight(this.DefaultHeight);
 
             var canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
-            this.positioner = this.gameObject.AddComponent<WindowPositioner>();
-            Reflection.SetPrivateField<CanvasGroup>(this.positioner, "canvasGroup", canvasGroup);
-            Reflection.SetPrivateField<RectTransform>(this.positioner, "rectTrans", this.root.RectTransform);
 
-            // FIXME: Auto size not really working.
-            // Although this might be sizing to the "wrong" rect transform we are inserting.
-            var fitter = this.gameObject.AddComponent<ContentSizeFitter>();
-            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            this.positioner = this.gameObject.AddComponent<WindowPositioner>();
+            Reflection.SetPrivateField<RectTransform>(this.positioner, "rectTrans", rectTransform);
+            Reflection.SetPrivateField<CanvasGroup>(this.positioner, "canvasGroup", canvasGroup);
 
             this.canvasGroupFader = this.gameObject.AddComponent<CanvasGroupFader>();
             this.canvasGroupFader.durationTurnOn = 0.3f;
             this.canvasGroupFader.durationTurnOff = 0.3f;
             this.canvasGroupFader.Hide();
 
+            var fitter = this.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
             WidgetMountPoint.On(this.gameObject, mountPoint =>
             {
-                // Note: We should auto-size from our content.
-                // One day I will refactor this to use dynamic sizing, but until then...
-                // FIXME: This also isnt used at all!
-                this.root = mountPoint.AddSizingLayout("Root")
-                    .SetMinWidth(600)
-                    .SetMinHeight(400);
-
                 mountPoint.AddImage("BG_Top")
                     .SetAnchor(0, 0)
                     .SetLeft(0, 0)
@@ -267,7 +232,7 @@ namespace AutoccultistNS.UI
                     .SetLeft(0, 0)
                     .SetTop(0, 50)
                     .SetRight(1, 0)
-                    .SetBottom(0, 0) // container was 77/27
+                    .SetBottom(0, 0)
                     .AddContent(mountPoint =>
                     {
                         mountPoint.AddImage("BG_Footer")
@@ -286,12 +251,12 @@ namespace AutoccultistNS.UI
                     .SetBottom(1, -37)
                     .SetSize(24, 24)
                     .SetSprite("icon_close")
-                    .CenterImage()
                     .SetColor(new Color(0.3804f, 0.7294f, 0.7922f, 1))
                     .SetHighlightedColor(Color.white)
                     .SetPressedColor(new Color(0.2671f, 0.6328f, 0.6985f, 1))
                     .SetSelectedColor(Color.white)
                     .SetDisabledColor(new Color(0.5368f, 0.5368f, 0.5368f, 0.502f))
+                    .CenterImage()
                     .SetClickSound("UIBUttonClose")
                     .OnClick(() => this.Close());
 
@@ -300,8 +265,7 @@ namespace AutoccultistNS.UI
                     .SetLeft(0, 0)
                     .SetTop(1, -50)
                     .SetRight(1, 0)
-                    .SetBottom(0, 77)
-                    .SetPivot(0.5f, 0.5f);
+                    .SetBottom(0, 77);
             });
         }
     }

@@ -19,15 +19,60 @@ namespace AutoccultistNS.UI
         {
         }
 
-        public virtual Image ImageBehavior
+        public virtual Image Image => this.GameObject.GetOrAddComponent<Image>();
+
+        public Sprite Sprite
         {
             get
             {
-                return this.GameObject.GetOrAddComponent<Image>();
+                return this.Image.sprite;
+            }
+
+            set
+            {
+                this.Image.sprite = value;
             }
         }
 
-        public TCoreType Sprite(string resourceName)
+        public Color Color
+        {
+            get
+            {
+                return this.Image.color;
+            }
+
+            set
+            {
+                this.Image.color = value;
+            }
+        }
+
+        public bool PreserveAspect
+        {
+            get
+            {
+                return this.Image.preserveAspect;
+            }
+
+            set
+            {
+                this.Image.preserveAspect = value;
+            }
+        }
+
+        public Image.Type ImageType
+        {
+            get
+            {
+                return this.Image.type;
+            }
+            set
+            {
+                this.Image.type = value;
+            }
+        }
+
+        public TCoreType SetSprite(string resourceName)
         {
             // This is a partial reimplementation of ResourcesManager.GetSpriteForUI
             // We want to know if the sprite is not found, to use our fallback lookup.
@@ -44,40 +89,47 @@ namespace AutoccultistNS.UI
                 sprite = ResourceHack.FindSprite(resourceName);
             }
 
-            this.ImageBehavior.sprite = sprite;
+            if (sprite == null)
+            {
+                NoonUtility.LogWarning($"Could not find sprite {resourceName}");
+            }
+
+            this.Image.sprite = sprite;
 
             return this as TCoreType;
         }
 
-        public TCoreType Sprite(Sprite sprite)
+        public TCoreType SetSprite(Sprite sprite)
         {
-            this.ImageBehavior.sprite = sprite;
+            this.Image.sprite = sprite;
+            return this as TCoreType;
+        }
+
+
+        public TCoreType SetColor(Color color)
+        {
+            this.Image.color = color;
             return this as TCoreType;
         }
 
         public TCoreType StretchImage()
         {
-            this.ImageBehavior.type = Image.Type.Simple;
-            this.ImageBehavior.preserveAspect = false;
+            this.Image.type = Image.Type.Simple;
+            this.Image.preserveAspect = false;
             return this as TCoreType;
         }
 
         public TCoreType CenterImage()
         {
-            this.ImageBehavior.type = Image.Type.Simple;
-            this.ImageBehavior.preserveAspect = true;
+            this.Image.type = Image.Type.Simple;
+            this.Image.preserveAspect = true;
             return this as TCoreType;
         }
 
-        public TCoreType SliceImage()
+        public TCoreType SlicedImage()
         {
-            this.ImageBehavior.type = Image.Type.Sliced;
-            return this as TCoreType;
-        }
-
-        public TCoreType Color(Color color)
-        {
-            this.ImageBehavior.color = color;
+            this.Image.type = Image.Type.Sliced;
+            this.Image.preserveAspect = true;
             return this as TCoreType;
         }
     }

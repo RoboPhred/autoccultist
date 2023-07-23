@@ -14,86 +14,70 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroupWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.LayoutGroupBehavior = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
-            this.Spacing(0);
+            this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+
+            this.SetSpacing(0);
 
             // These absolutely must be on, or all our children will be zero-sized.
             // Yes, this also fucks up our own size.  Too bad.
-            this.EnableChildLayoutWidthAndBreakSelfSizing(true);
-            this.EnableChildLayoutHeightAndBreakSelfSizing(true);
+            this.EnableLayoutSystemHorizontal(true);
+            this.EnableLayoutSystemVertical(true);
 
             this.SpreadChildrenHorizontally(false);
             this.SpreadChildrenVertically(false);
         }
 
-        public VerticalLayoutGroup LayoutGroupBehavior { get; private set; }
+        public VerticalLayoutGroup LayoutGroup { get; }
 
         // Fucking stupid name, but this property does both.
-        public VerticalLayoutGroupWidget EnableChildLayoutWidthAndBreakSelfSizing(bool value = true)
+        public VerticalLayoutGroupWidget EnableLayoutSystemHorizontal(bool value = true)
         {
-            this.LayoutGroupBehavior.childControlWidth = value;
+            this.LayoutGroup.childControlWidth = value;
             return this;
         }
 
         // Fucking stupid name, but this property does both.
-        public VerticalLayoutGroupWidget EnableChildLayoutHeightAndBreakSelfSizing(bool value = true)
+        public VerticalLayoutGroupWidget EnableLayoutSystemVertical(bool value = true)
         {
-            this.LayoutGroupBehavior.childControlHeight = value;
+            this.LayoutGroup.childControlHeight = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
         public VerticalLayoutGroupWidget SpreadChildrenHorizontally(bool value = true)
         {
-            this.LayoutGroupBehavior.childForceExpandWidth = value;
+            this.LayoutGroup.childForceExpandWidth = value;
             return this;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
         public VerticalLayoutGroupWidget SpreadChildrenVertically(bool value = true)
         {
-            this.LayoutGroupBehavior.childForceExpandHeight = value;
+            this.LayoutGroup.childForceExpandHeight = value;
             return this;
         }
 
-        public VerticalLayoutGroupWidget Spacing(float value)
+        public VerticalLayoutGroupWidget SetSpacing(float value)
         {
-            this.LayoutGroupBehavior.spacing = value;
+            this.LayoutGroup.spacing = value;
             return this;
         }
 
-        public VerticalLayoutGroupWidget Padding(int left, int top, int right, int bottom)
+        public VerticalLayoutGroupWidget SetPadding(int left, int top, int right, int bottom)
         {
-            this.LayoutGroupBehavior.padding = new RectOffset(left, right, top, bottom);
+            this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
             return this;
         }
 
-        public VerticalLayoutGroupWidget Padding(int x, int y)
+        public VerticalLayoutGroupWidget SetPadding(int x, int y)
         {
-            this.LayoutGroupBehavior.padding = new RectOffset(x, x, y, y);
+            this.LayoutGroup.padding = new RectOffset(x, x, y, y);
             return this;
         }
 
-        public VerticalLayoutGroupWidget Padding(int value)
+        public VerticalLayoutGroupWidget SetPadding(int value)
         {
-            this.LayoutGroupBehavior.padding = new RectOffset(value, value, value, value);
-            return this;
-        }
-
-        public VerticalLayoutGroupWidget AddExpandingSpacer()
-        {
-            var spacer = new SizingLayoutWidget("Spacer")
-                .ExpandHeight();
-
-            this.AddContent(spacer);
-            return this;
-        }
-
-        public VerticalLayoutGroupWidget AddSpacer(int height)
-        {
-            var spacer = new SizingLayoutWidget("Spacer");
-            spacer.PreferredHeight(height);
-            this.AddContent(spacer);
+            this.LayoutGroup.padding = new RectOffset(value, value, value, value);
             return this;
         }
 

@@ -8,12 +8,6 @@ namespace AutoccultistNS.UI
     {
         private static readonly Color FontColor = new Color(0.2392f, 0.1961f, 0.0667f, 1);
 
-        private Button button;
-
-        private ButtonSoundTrigger soundTrigger;
-
-        private TextWidget textWidget;
-
         public TextButtonWidget(string key)
             : this(new GameObject(key))
         {
@@ -22,7 +16,7 @@ namespace AutoccultistNS.UI
         public TextButtonWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.Pivot(.5f, .5f);
+            this.SetPivot(.5f, .5f);
 
             this.FitContentWidth();
             this.FitContentHeight();
@@ -31,52 +25,238 @@ namespace AutoccultistNS.UI
             // only our top padding is being applied.
             // The content text is not being squished for the 5 point padding
             // along the bottom.
-            this.Padding(15, 5);
+            this.SetPadding(15, 5);
 
-            this.button = this.GameObject.GetOrAddComponent<Button>();
-            this.button.transition = Selectable.Transition.ColorTint;
-            this.button.colors = IconButtonWidget.ColorBlock;
+            this.Button = this.GameObject.GetOrAddComponent<Button>();
+            this.Button.transition = Selectable.Transition.ColorTint;
+            this.Button.colors = IconButtonWidget.ColorBlock;
 
-            this.soundTrigger = this.GameObject.gameObject.GetOrAddComponent<ButtonSoundTrigger>();
+            this.SoundTrigger = this.GameObject.gameObject.GetOrAddComponent<ButtonSoundTrigger>();
 
-            var image = UIFactories.CreateImage("Image", this.GameObject.transform)
-                .Pivot(.5f, .5f)
-                .Left(0, 0)
-                .Top(1, 0)
-                .Right(1, 0)
-                .Bottom(0, 0)
-                .StretchImage()
-                .Sprite("button")
-                .IgnoreLayout();
+            WidgetMountPoint.On(this.GameObject, mountPoint =>
+            {
+                var image = mountPoint.AddImage("Image")
+                    .SetPivot(.5f, .5f)
+                    .SetLeft(0, 0)
+                    .SetTop(1, 0)
+                    .SetRight(1, 0)
+                    .SetBottom(0, 0)
+                    .StretchImage()
+                    .SetSprite("button")
+                    .SetIgnoreLayout();
+                this.Button.image = image.Image;
+            });
 
-            this.button.image = image.ImageBehavior;
+            this.SpreadChildrenHorizontally(true);
+            this.SpreadChildrenVertically(true);
 
-            this.ChildForceExpandHeight(true);
-            this.ChildForceExpandWidth(true);
+            this.TextWidget = new TextWidget("Text")
+                .SetPivot(.5f, .5f)
+                .SetLeft(0, 0)
+                .SetTop(1, 0)
+                .SetRight(1, 0)
+                .SetBottom(0, 0)
+                .SetColor(FontColor)
+                .SetTextAlignment(TextAlignmentOptions.Center)
+                .SetHorizontalAlignment(HorizontalAlignmentOptions.Center)
+                .SetFontStyle(FontStyles.Bold)
+                .SetMinFontSize(12)
+                .SetMaxFontSize(20);
 
-            this.textWidget = new TextWidget("Text")
-                .Pivot(.5f, .5f)
-                .Left(0, 0)
-                .Top(1, 0)
-                .Right(1, 0)
-                .Bottom(0, 0)
-                .TextColor(FontColor)
-                .TextAlignment(TextAlignmentOptions.Center)
-                .HorizontalAlignment(HorizontalAlignmentOptions.Center)
-                .FontStyle(FontStyles.Bold)
-                .MinFontSize(12)
-                .MaxFontSize(20);
-
-            this.AddExpandingSpacer();
-            this.AddContent(this.textWidget);
-            this.AddExpandingSpacer();
+            this.AddContent(this.TextWidget);
         }
 
-        public TextMeshProUGUI TextMeshBehavior => this.textWidget.TextMeshBehavior;
+        public TextMeshProUGUI TextMesh => this.TextWidget.TextMesh;
+
+        public Button Button { get; }
+
+        public ButtonSoundTrigger SoundTrigger { get; }
+
+        public TextWidget TextWidget { get; }
+
+        public bool Enabled
+        {
+            get
+            {
+                return this.Button.interactable;
+            }
+            set
+            {
+                this.Button.interactable = value;
+            }
+        }
+
+        public string Text
+        {
+            get
+            {
+                return this.TextWidget.Text;
+            }
+            set
+            {
+                this.TextWidget.Text = value;
+            }
+        }
+
+        public Color Color
+        {
+            get
+            {
+                return this.TextWidget.Color;
+            }
+            set
+            {
+                this.TextWidget.Color = value;
+            }
+        }
+
+        public string Font
+        {
+            get
+            {
+                return this.TextWidget.Font;
+            }
+            set
+            {
+                this.TextWidget.Font = value;
+            }
+        }
+
+        public string FontMaterial
+        {
+            get
+            {
+                return this.TextWidget.FontMaterial;
+            }
+            set
+            {
+                this.TextWidget.FontMaterial = value;
+            }
+        }
+
+        public float FontSize
+        {
+            get
+            {
+                return this.TextWidget.FontSize;
+            }
+            set
+            {
+                this.TextWidget.FontSize = value;
+            }
+        }
+
+        public FontStyles FontStyle
+        {
+            get
+            {
+                return this.TextWidget.FontStyle;
+            }
+            set
+            {
+                this.TextWidget.FontStyle = value;
+            }
+        }
+
+        public FontWeight FontWeight
+        {
+            get
+            {
+                return this.TextWidget.FontWeight;
+            }
+            set
+            {
+                this.TextWidget.FontWeight = value;
+            }
+        }
+
+        public HorizontalAlignmentOptions HorizontalAlignment
+        {
+            get
+            {
+                return this.TextWidget.HorizontalAlignment;
+            }
+            set
+            {
+                this.TextWidget.HorizontalAlignment = value;
+            }
+        }
+
+        public VerticalAlignmentOptions VerticalAlignment
+        {
+            get
+            {
+                return this.TextWidget.VerticalAlignment;
+            }
+            set
+            {
+                this.TextWidget.VerticalAlignment = value;
+            }
+        }
+
+        public TextAlignmentOptions TextAlignment
+        {
+            get
+            {
+                return this.TextWidget.TextAlignment;
+            }
+            set
+            {
+                this.TextWidget.TextAlignment = value;
+            }
+        }
+
+        public bool WordWrapping
+        {
+            get
+            {
+                return this.TextWidget.WordWrapping;
+            }
+            set
+            {
+                this.TextWidget.WordWrapping = value;
+            }
+        }
+
+        public TextOverflowModes OverflowMode
+        {
+            get
+            {
+                return this.TextWidget.OverflowMode;
+            }
+            set
+            {
+                this.TextWidget.OverflowMode = value;
+            }
+        }
+
+        public float MaxFontSize
+        {
+            get
+            {
+                return this.TextWidget.MaxFontSize;
+            }
+            set
+            {
+                this.TextWidget.MaxFontSize = value;
+            }
+        }
+
+        public float MinFontSize
+        {
+            get
+            {
+                return this.TextWidget.MinFontSize;
+            }
+            set
+            {
+                this.TextWidget.MinFontSize = value;
+            }
+        }
 
         public TextButtonWidget SetEnabled(bool enabled)
         {
-            this.button.interactable = enabled;
+            this.Button.interactable = enabled;
             return this;
         }
 
@@ -90,82 +270,97 @@ namespace AutoccultistNS.UI
             return this.SetEnabled(false);
         }
 
-        public TextButtonWidget Text(string value)
+        public TextButtonWidget SetText(string value)
         {
-            this.textWidget.Text(value);
+            this.TextWidget.SetText(value);
             return this as TextButtonWidget;
         }
 
-        public TextButtonWidget TextColor(Color color)
+        public TextButtonWidget SetColor(Color color)
         {
-            this.textWidget.TextColor(color);
+            this.TextWidget.SetColor(color);
             return this as TextButtonWidget;
         }
 
-        public TextButtonWidget ClickSound(string soundEffect)
+        public TextButtonWidget SetClickSound(string soundEffect)
         {
-            Reflection.SetPrivateField(this.soundTrigger, "soundFXName", soundEffect);
+            Reflection.SetPrivateField(this.SoundTrigger, "soundFXName", soundEffect);
             return this as TextButtonWidget;
         }
 
+        public TextButtonWidget SetFont(string resourceName)
+        {
+            this.TextWidget.SetFont(resourceName);
+            return this;
+        }
+
+        public TextButtonWidget SetFontMaterial(string resourceName)
+        {
+            this.TextWidget.SetFontMaterial(resourceName);
+            return this;
+        }
+
+        public TextButtonWidget SetFontSize(float size)
+        {
+            this.TextWidget.SetFontSize(size);
+            return this;
+        }
+
+        public TextButtonWidget SetFontStyle(FontStyles style)
+        {
+            this.TextWidget.SetFontStyle(style);
+            return this;
+        }
+
+        public TextButtonWidget SetFontWeight(FontWeight weight)
+        {
+            this.TextWidget.SetFontWeight(weight);
+            return this;
+        }
+
+        public TextButtonWidget SetHorizontalAlignment(HorizontalAlignmentOptions alignment)
+        {
+            this.TextWidget.SetHorizontalAlignment(alignment);
+            return this;
+        }
+
+        public TextButtonWidget SetVerticalAlignment(VerticalAlignmentOptions alignment)
+        {
+            this.TextWidget.SetVerticalAlignment(alignment);
+            return this;
+        }
+
+        public TextButtonWidget SetTextAlignment(TextAlignmentOptions alignment)
+        {
+            this.TextWidget.SetTextAlignment(alignment);
+            return this;
+        }
+
+        public TextButtonWidget SetMaxFontSize(float size)
+        {
+            this.TextWidget.SetMaxFontSize(size);
+            return this;
+        }
+
+        public TextButtonWidget SetMinFontSize(float size)
+        {
+            this.TextWidget.SetMinFontSize(size);
+            return this;
+        }
         public TextButtonWidget OnClick(UnityEngine.Events.UnityAction action)
         {
-            this.button.onClick.AddListener(action);
+            this.Button.onClick.AddListener(action);
             return this as TextButtonWidget;
         }
 
-        public TextButtonWidget Font(string resourceName)
+        public TextButtonWidget SetWordWrapping(bool enabled)
         {
-            this.textWidget.Font(resourceName);
-            return this;
+            throw new System.NotImplementedException();
         }
 
-        public TextButtonWidget FontMaterial(string resourceName)
+        public TextButtonWidget SetOverflowMode(TextOverflowModes mode)
         {
-            this.textWidget.FontMaterial(resourceName);
-            return this;
-        }
-
-        public TextButtonWidget FontSize(float size)
-        {
-            this.textWidget.FontSize(size);
-            return this;
-        }
-
-        public TextButtonWidget FontStyle(FontStyles style)
-        {
-            this.textWidget.FontStyle(style);
-            return this;
-        }
-
-        public TextButtonWidget FontWeight(FontWeight weight)
-        {
-            this.textWidget.FontWeight(weight);
-            return this;
-        }
-
-        public TextButtonWidget HorizontalAlignment(HorizontalAlignmentOptions alignment)
-        {
-            this.textWidget.HorizontalAlignment(alignment);
-            return this;
-        }
-
-        public TextButtonWidget MaxFontSize(float size)
-        {
-            this.textWidget.MaxFontSize(size);
-            return this;
-        }
-
-        public TextButtonWidget MinFontSize(float size)
-        {
-            this.textWidget.MinFontSize(size);
-            return this;
-        }
-
-        public TextButtonWidget TextAlignment(TextAlignmentOptions alignment)
-        {
-            this.textWidget.TextAlignment(alignment);
-            return this;
+            throw new System.NotImplementedException();
         }
     }
 }

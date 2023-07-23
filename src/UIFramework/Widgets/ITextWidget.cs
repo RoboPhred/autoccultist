@@ -6,28 +6,60 @@ namespace AutoccultistNS.UI
     public interface ITextWidget<TCoreType>
         where TCoreType : ITextWidget<TCoreType>
     {
-        TextMeshProUGUI TextMeshBehavior { get; }
+        TextMeshProUGUI TextMesh { get; }
 
-        TCoreType Font(string resourceName);
+        string Font { get; set; }
 
-        TCoreType FontMaterial(string resourceName);
+        string FontMaterial { get; set; }
 
-        TCoreType FontSize(float size);
+        float FontSize { get; set; }
 
-        TCoreType FontStyle(FontStyles style);
+        FontStyles FontStyle { get; set; }
 
-        TCoreType FontWeight(FontWeight weight);
+        FontWeight FontWeight { get; set; }
 
-        TCoreType HorizontalAlignment(HorizontalAlignmentOptions alignment);
+        HorizontalAlignmentOptions HorizontalAlignment { get; set; }
 
-        TCoreType MaxFontSize(float size);
+        VerticalAlignmentOptions VerticalAlignment { get; set; }
 
-        TCoreType MinFontSize(float size);
+        TextAlignmentOptions TextAlignment { get; set; }
 
-        TCoreType Text(string value);
+        bool WordWrapping { get; set; }
 
-        TCoreType TextAlignment(TextAlignmentOptions alignment);
+        TextOverflowModes OverflowMode { get; set; }
 
-        TCoreType TextColor(Color color);
+        float MaxFontSize { get; set; }
+
+        float MinFontSize { get; set; }
+
+        string Text { get; set; }
+
+        Color Color { get; set; }
+
+        TCoreType SetFont(string resourceName);
+
+        TCoreType SetFontMaterial(string resourceName);
+
+        TCoreType SetFontSize(float size);
+
+        TCoreType SetFontStyle(FontStyles style);
+
+        TCoreType SetFontWeight(FontWeight weight);
+
+        TCoreType SetHorizontalAlignment(HorizontalAlignmentOptions alignment);
+        TCoreType SetVerticalAlignment(VerticalAlignmentOptions alignment);
+        TCoreType SetTextAlignment(TextAlignmentOptions alignment);
+
+        TCoreType SetWordWrapping(bool enabled);
+
+        TCoreType SetOverflowMode(TextOverflowModes mode);
+
+        TCoreType SetMaxFontSize(float size);
+
+        TCoreType SetMinFontSize(float size);
+
+        TCoreType SetText(string value);
+
+        TCoreType SetColor(Color color);
     }
 }

@@ -14,14 +14,14 @@ namespace AutoccultistNS.UI
         public UIGameObjectWidget(GameObject target)
         {
             this.GameObject = target;
-            this.CanvasRendererBehavior = this.GameObject.GetOrAddComponent<CanvasRenderer>();
+            this.CanvasRenderer = this.GameObject.GetOrAddComponent<CanvasRenderer>();
         }
 
         public GameObject GameObject { get; private set; }
 
         public virtual WidgetMountPoint MountPoint => new WidgetMountPoint(this.GameObject.transform);
 
-        public CanvasRenderer CanvasRendererBehavior { get; private set; }
+        public CanvasRenderer CanvasRenderer { get; private set; }
 
         public static implicit operator GameObject(UIGameObjectWidget widget)
         {
@@ -32,6 +32,7 @@ namespace AutoccultistNS.UI
         {
             return widget.MountPoint;
         }
+
 
         public UIGameObjectWidget SetActive(bool active)
         {

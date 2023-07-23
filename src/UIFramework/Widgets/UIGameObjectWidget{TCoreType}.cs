@@ -22,6 +22,18 @@ namespace AutoccultistNS.UI
             return widget.GameObject;
         }
 
+        public bool Active
+        {
+            get
+            {
+                return this.GameObject.activeSelf;
+            }
+            set
+            {
+                this.GameObject.SetActive(value);
+            }
+        }
+
         public new TCoreType SetActive(bool active)
         {
             this.GameObject.SetActive(active);

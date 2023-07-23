@@ -25,26 +25,25 @@ namespace AutoccultistNS.UI
 
             // FIXME: We want to let the window expand up to a point then stop.
             // See the nonfunctional ConstrainedLayoutElement
-            this.scrollWidget = content.AddScrollRegion("ScrollRect")
-                .Vertical()
-                .AddContent(
-                    mountPoint =>
+            this.scrollWidget = content.AddScrollRegion("ScrollRegion")
+                .SetVertical()
+                .AddContent(mountPoint =>
+                {
+                    foreach (var op in Library.Operations.Where(x => x.Situation == window.Situation.VerbId))
                     {
-                        foreach (var op in Library.Operations.Where(x => x.Situation == window.Situation.VerbId))
-                        {
-                            this.BuildOperationRow(op, mountPoint);
-                        }
-                    })
+                        this.BuildOperationRow(op, mountPoint);
+                    }
+                })
                 .ScrollToVertical(1);
 
             footer.AddHorizontalLayoutGroup("FooterButtons")
-                .ChildAlignment(TextAnchor.MiddleRight)
-                .Padding(10, 2)
-                .Spacing(5)
+                .SetChildAlignment(TextAnchor.MiddleRight)
+                .SetPadding(10, 2)
+                .SetSpacing(5)
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddTextButton("LockoutButton")
-                        .Text(window.IsLockedOut ? "Unlock" : "Lockout")
+                        .SetText(window.IsLockedOut ? "Unlock" : "Lockout")
                         .OnClick(() => window.ToggleLockout());
                 });
         }
@@ -79,28 +78,28 @@ namespace AutoccultistNS.UI
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"operation_${operation.Id}")
                 .SpreadChildrenVertically()
-                .Padding(10, 5)
+                .SetPadding(10, 5)
                 .AddContent(mountPoint =>
                 {
                     var nameElement = mountPoint.AddText("Recipe")
-                        .FontSize(14)
-                        .MinFontSize(10)
-                        .MaxFontSize(14)
-                        .ExpandWidth()
-                        .HorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
-                        .VerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
-                        .Text(operation.Name);
+                        .SetFontSize(14)
+                        .SetMinFontSize(10)
+                        .SetMaxFontSize(14)
+                        .SetExpandWidth()
+                        .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
+                        .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
+                        .SetText(operation.Name);
 
                     mountPoint.AddSizingLayout("Spacer")
-                        .MinWidth(10)
-                        .ExpandWidth();
+                        .SetMinWidth(10)
+                        .SetExpandWidth();
 
                     startButton = mountPoint.AddIconButton("StartButton")
-                        .PreferredWidth(35)
-                        .PreferredHeight(35)
+                        .SetPreferredWidth(35)
+                        .SetPreferredHeight(35)
                         .Disable()
-                        .Background()
-                        .Sprite("autoccultist_play_icon")
+                        .SetBackground()
+                        .SetSprite("autoccultist_play_icon")
                         .OnClick(() => this.OnOperationButtonClick(operation));
                 });
 

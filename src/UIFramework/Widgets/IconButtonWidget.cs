@@ -1,5 +1,6 @@
 namespace AutoccultistNS.UI
 {
+    using System;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -27,11 +28,12 @@ namespace AutoccultistNS.UI
         public IconButtonWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.ButtonBehavior = this.GameObject.GetOrAddComponent<Button>();
-            this.ButtonBehavior.transition = Selectable.Transition.ColorTint;
-            this.ButtonBehavior.colors = ColorBlock;
+            this.Button = this.GameObject.GetOrAddComponent<Button>();
+            this.Button.transition = Selectable.Transition.ColorTint;
+            this.Button.colors = ColorBlock;
+            this.Button.onClick.AddListener(() => this.Clicked?.Invoke(this, EventArgs.Empty));
 
-            this.SoundTriggerBehavior = this.GameObject.GetOrAddComponent<ButtonSoundTrigger>();
+            this.SoundTrigger = this.GameObject.GetOrAddComponent<ButtonSoundTrigger>();
 
             this.content = new GameObject("Content");
             var contentRt = this.content.AddComponent<RectTransform>();
@@ -41,21 +43,65 @@ namespace AutoccultistNS.UI
             contentRt.offsetMin = Vector2.zero;
             contentRt.offsetMax = Vector2.zero;
 
-            this.ButtonBehavior.image = this.ImageBehavior;
+            this.Button.image = this.Image;
         }
 
-        public Button ButtonBehavior { get; private set; }
+        public event EventHandler Clicked;
 
-        public ButtonSoundTrigger SoundTriggerBehavior { get; private set; }
+        public Button Button { get; private set; }
+
+        public ButtonSoundTrigger SoundTrigger { get; private set; }
 
         public override WidgetMountPoint MountPoint => new WidgetMountPoint(this.content.transform);
 
-        public override Image ImageBehavior => this.content.GetOrAddComponent<Image>();
+        public override Image Image => this.content.GetOrAddComponent<Image>();
 
-        public IconButtonWidget SetEnabled(bool enabled)
+        public bool Enabled
         {
-            this.ButtonBehavior.interactable = enabled;
-            return this;
+            get => this.Button.interactable;
+            set => this.Button.interactable = value;
+        }
+
+        public Sprite Background
+        {
+            get => this.background.GetComponent<Image>()?.sprite ?? null;
+            set => this.SetBackground(value);
+        }
+
+        public string ClickSound
+        {
+            get => Reflection.GetPrivateField<string>(this.SoundTrigger, "soundFXName");
+            set => this.SetClickSound(value);
+        }
+
+        public new Color Color
+        {
+            get => this.Button.colors.normalColor;
+            set => this.SetColor(value);
+        }
+
+        public Color HighlightedColor
+        {
+            get => this.Button.colors.highlightedColor;
+            set => this.SetHighlightedColor(value);
+        }
+
+        public Color PressedColor
+        {
+            get => this.Button.colors.pressedColor;
+            set => this.SetPressedColor(value);
+        }
+
+        public Color SelectedColor
+        {
+            get => this.Button.colors.selectedColor;
+            set => this.SetSelectedColor(value);
+        }
+
+        public Color DisabledColor
+        {
+            get => this.Button.colors.disabledColor;
+            set => this.SetDisabledColor(value);
         }
 
         public IconButtonWidget Enable()
@@ -68,7 +114,13 @@ namespace AutoccultistNS.UI
             return this.SetEnabled(false);
         }
 
-        public IconButtonWidget Background(Sprite sprite)
+        public IconButtonWidget SetEnabled(bool enabled)
+        {
+            this.Button.interactable = enabled;
+            return this;
+        }
+
+        public IconButtonWidget SetBackground(Sprite sprite)
         {
             this.background = new GameObject("Background");
             var backgroundRt = this.background.AddComponent<RectTransform>();
@@ -81,66 +133,66 @@ namespace AutoccultistNS.UI
             var backgroundImage = this.background.AddComponent<Image>();
             backgroundImage.sprite = sprite;
 
-            this.ButtonBehavior.image = backgroundImage;
-            this.content.AddComponent<CopyColorFromBehavior>().CopyFrom = backgroundImage;
+            this.Button.image = backgroundImage;
+            this.content.AddComponent<CopyColorFrom>().CopyFrom = backgroundImage;
 
             return this;
         }
 
-        public IconButtonWidget Background()
+        public IconButtonWidget SetBackground()
         {
-            return this.Background(ResourcesManager.GetSpriteForUI("button_blank"));
+            return this.SetBackground(ResourcesManager.GetSpriteForUI("button_blank"));
         }
 
-        public IconButtonWidget ClickSound(string soundEffect)
+        public IconButtonWidget SetClickSound(string soundEffect)
         {
-            Reflection.SetPrivateField(this.SoundTriggerBehavior, "soundFXName", soundEffect);
+            Reflection.SetPrivateField(this.SoundTrigger, "soundFXName", soundEffect);
             return this as IconButtonWidget;
         }
 
-        public new IconButtonWidget Color(Color color)
+        public new IconButtonWidget SetColor(Color color)
         {
-            var newValue = this.ButtonBehavior.colors.Clone();
+            var newValue = this.Button.colors.Clone();
             newValue.normalColor = color;
-            this.ButtonBehavior.colors = newValue;
+            this.Button.colors = newValue;
             return this as IconButtonWidget;
         }
 
-        public IconButtonWidget HighlightedColor(Color color)
+        public IconButtonWidget SetHighlightedColor(Color color)
         {
-            var newValue = this.ButtonBehavior.colors.Clone();
+            var newValue = this.Button.colors.Clone();
             newValue.highlightedColor = color;
-            this.ButtonBehavior.colors = newValue;
+            this.Button.colors = newValue;
             return this as IconButtonWidget;
         }
 
-        public IconButtonWidget PressedColor(Color color)
+        public IconButtonWidget SetPressedColor(Color color)
         {
-            var newValue = this.ButtonBehavior.colors.Clone();
+            var newValue = this.Button.colors.Clone();
             newValue.pressedColor = color;
-            this.ButtonBehavior.colors = newValue;
+            this.Button.colors = newValue;
             return this as IconButtonWidget;
         }
 
-        public IconButtonWidget SelectedColor(Color color)
+        public IconButtonWidget SetSelectedColor(Color color)
         {
-            var newValue = this.ButtonBehavior.colors.Clone();
+            var newValue = this.Button.colors.Clone();
             newValue.selectedColor = color;
-            this.ButtonBehavior.colors = newValue;
+            this.Button.colors = newValue;
             return this as IconButtonWidget;
         }
 
-        public IconButtonWidget DisabledColor(Color color)
+        public IconButtonWidget SetDisabledColor(Color color)
         {
-            var newValue = this.ButtonBehavior.colors.Clone();
+            var newValue = this.Button.colors.Clone();
             newValue.disabledColor = color;
-            this.ButtonBehavior.colors = newValue;
+            this.Button.colors = newValue;
             return this as IconButtonWidget;
         }
 
         public IconButtonWidget OnClick(UnityEngine.Events.UnityAction action)
         {
-            this.ButtonBehavior.onClick.AddListener(action);
+            this.Clicked += (sender, e) => action();
             return this as IconButtonWidget;
         }
     }

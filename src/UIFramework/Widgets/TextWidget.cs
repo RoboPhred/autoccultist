@@ -21,98 +21,259 @@ namespace AutoccultistNS.UI
             this.textMesh.color = new Color(0.5765f, 0.8824f, 0.9373f, 1);
         }
 
-        public TextMeshProUGUI TextMeshBehavior => this.textMesh;
+        public TextMeshProUGUI TextMesh => this.textMesh;
 
-#pragma warning disable SA1300
-        public string text
+        public string Font
         {
-            get => this.textMesh.text;
-            set => this.textMesh.text = value;
-        }
-#pragma warning restore SA1300
+            get
+            {
+                return this.textMesh.font.name;
+            }
 
-        public TextWidget FontMaterial(string resourceName)
+            set
+            {
+                this.SetFont(value);
+            }
+        }
+
+        public string FontMaterial
+        {
+            get
+            {
+                return this.textMesh.fontMaterial.name;
+            }
+
+            set
+            {
+                this.SetFontMaterial(value);
+            }
+        }
+
+        public float FontSize
+        {
+            get
+            {
+                return this.textMesh.fontSize;
+            }
+            set
+            {
+                this.SetFontSize(value);
+            }
+        }
+
+        public FontStyles FontStyle
+        {
+            get
+            {
+                return this.textMesh.fontStyle;
+            }
+            set
+            {
+                this.SetFontStyle(value);
+            }
+        }
+
+        public FontWeight FontWeight
+        {
+            get
+            {
+                return this.textMesh.fontWeight;
+            }
+            set
+            {
+                this.SetFontWeight(value);
+            }
+        }
+
+        public HorizontalAlignmentOptions HorizontalAlignment
+        {
+            get
+            {
+                return this.textMesh.horizontalAlignment;
+            }
+            set
+            {
+                this.SetHorizontalAlignment(value);
+            }
+        }
+
+        public VerticalAlignmentOptions VerticalAlignment
+        {
+            get
+            {
+                return this.textMesh.verticalAlignment;
+            }
+            set
+            {
+                this.SetVerticalAlignment(value);
+            }
+        }
+
+        public TextAlignmentOptions TextAlignment
+        {
+            get
+            {
+                return this.textMesh.alignment;
+            }
+            set
+            {
+                this.SetTextAlignment(value);
+            }
+        }
+
+        public bool WordWrapping
+        {
+            get
+            {
+                return this.textMesh.enableWordWrapping;
+            }
+            set
+            {
+                this.SetWordWrapping(value);
+            }
+        }
+
+        public TextOverflowModes OverflowMode
+        {
+            get
+            {
+                return this.textMesh.overflowMode;
+            }
+            set
+            {
+                this.SetOverflowMode(value);
+            }
+        }
+
+        public float MaxFontSize
+        {
+            get
+            {
+                return this.textMesh.fontSizeMax;
+            }
+            set
+            {
+                this.SetMaxFontSize(value);
+            }
+        }
+
+        public float MinFontSize
+        {
+            get
+            {
+                return this.textMesh.fontSizeMin;
+            }
+            set
+            {
+                this.SetMinFontSize(value);
+            }
+        }
+
+        public string Text
+        {
+            get
+            {
+                return this.textMesh.text;
+            }
+            set
+            {
+                this.SetText(value);
+            }
+        }
+        public Color Color
+        {
+            get
+            {
+                return this.textMesh.color;
+            }
+            set
+            {
+                this.SetColor(value);
+            }
+        }
+
+        public TextWidget SetFontMaterial(string resourceName)
         {
             this.textMesh.fontMaterial = ResourceHack.FindMaterial(resourceName);
             return this;
         }
 
-        public TextWidget Font(string resourceName)
+        public TextWidget SetFont(string resourceName)
         {
             this.textMesh.font = ResourceHack.FindFont(resourceName);
             return this;
         }
 
-        public TextWidget FontStyle(FontStyles style)
+        public TextWidget SetFontStyle(FontStyles style)
         {
             this.textMesh.fontStyle = style;
             return this;
         }
 
-        public TextWidget FontWeight(FontWeight weight)
+        public TextWidget SetFontWeight(FontWeight weight)
         {
             this.textMesh.fontWeight = weight;
             return this;
         }
 
-        public TextWidget TextAlignment(TextAlignmentOptions alignment)
+        public TextWidget SetTextAlignment(TextAlignmentOptions alignment)
         {
             this.textMesh.alignment = alignment;
             return this;
         }
 
-        public TextWidget HorizontalAlignment(HorizontalAlignmentOptions alignment)
+        public TextWidget SetHorizontalAlignment(HorizontalAlignmentOptions alignment)
         {
             this.textMesh.horizontalAlignment = alignment;
             return this;
         }
 
-        public TextWidget VerticalAlignment(VerticalAlignmentOptions alignment)
+        public TextWidget SetVerticalAlignment(VerticalAlignmentOptions alignment)
         {
             this.textMesh.verticalAlignment = alignment;
             return this;
         }
 
-        public TextWidget WordWrapping(bool enabled)
+        public TextWidget SetWordWrapping(bool enabled)
         {
             this.textMesh.enableWordWrapping = enabled;
             return this;
         }
 
-        public TextWidget MinFontSize(float size)
+        public TextWidget SetMinFontSize(float size)
         {
             this.textMesh.fontSizeMin = size;
             this.textMesh.enableAutoSizing = this.textMesh.fontSizeMin != this.textMesh.fontSizeMax;
             return this;
         }
 
-        public TextWidget MaxFontSize(float size)
+        public TextWidget SetMaxFontSize(float size)
         {
             this.textMesh.fontSizeMax = size;
             this.textMesh.enableAutoSizing = this.textMesh.fontSizeMin != this.textMesh.fontSizeMax;
             return this;
         }
 
-        public TextWidget FontSize(float size)
+        public TextWidget SetFontSize(float size)
         {
             this.textMesh.fontSize = size;
             this.textMesh.enableAutoSizing = false;
             return this;
         }
 
-        public TextWidget OverflowMode(TextOverflowModes mode)
+        public TextWidget SetOverflowMode(TextOverflowModes mode)
         {
             this.textMesh.overflowMode = mode;
             return this;
         }
 
-        public TextWidget Text(string value)
+        public TextWidget SetText(string value)
         {
             this.textMesh.text = value;
             return this;
         }
 
-        public TextWidget TextColor(Color color)
+        public TextWidget SetColor(Color color)
         {
             this.textMesh.color = color;
             return this;

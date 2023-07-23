@@ -68,12 +68,12 @@ namespace AutoccultistNS.UI
             this.automationsWindow = ImperativeListWindow.CreateMetaWindow<ImperativeListWindow>("AutomationsWindow");
 
             this.automationsButton = MountPoints.MetaWindowLayer.AddIconButton("AutomationsWindowButton")
-                .Left(0, 5)
-                .Top(1, -5)
-                .Right(0, 50)
-                .Bottom(1, -50)
-                .Background()
-                .Sprite("autoccultist_gears_icon")
+                .SetLeft(0, 5)
+                .SetTop(1, -5)
+                .SetRight(0, 50)
+                .SetBottom(1, -50)
+                .SetBackground()
+                .SetSprite("autoccultist_gears_icon")
                 .OnClick(() =>
                 {
                     if (this.automationsWindow.IsOpen)

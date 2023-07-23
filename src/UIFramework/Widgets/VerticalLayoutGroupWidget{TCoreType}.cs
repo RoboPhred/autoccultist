@@ -15,78 +15,70 @@ namespace AutoccultistNS.UI
         public VerticalLayoutGroupWidget(GameObject gameObject)
             : base(gameObject)
         {
-            this.LayoutGroupBehavior = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
-            this.Spacing(0);
-            this.ChildControlHeight(true);
-            this.ChildControlWidth(true);
-            this.ChildForceExpandWidth(false);
-            this.ChildForceExpandHeight(false);
+            this.LayoutGroup = this.GameObject.GetOrAddComponent<VerticalLayoutGroup>();
+
+            this.SetSpacing(0);
+
+            // These absolutely must be on, or all our children will be zero-sized.
+            // Yes, this also fucks up our own size.  Too bad.
+            this.EnableLayoutSystemHorizontal(true);
+            this.EnableLayoutSystemVertical(true);
+
+            this.SpreadChildrenHorizontally(false);
+            this.SpreadChildrenVertically(false);
         }
 
-        public VerticalLayoutGroup LayoutGroupBehavior { get; private set; }
+        public VerticalLayoutGroup LayoutGroup { get; }
 
-        public TCoreType ChildControlHeight(bool value)
+        // Fucking stupid name, but this property does both.
+        public TCoreType EnableLayoutSystemHorizontal(bool value = true)
         {
-            this.LayoutGroupBehavior.childControlHeight = value;
+            this.LayoutGroup.childControlWidth = value;
             return this as TCoreType;
         }
 
-        public TCoreType ChildControlWidth(bool value)
+        // Fucking stupid name, but this property does both.
+        public TCoreType EnableLayoutSystemVertical(bool value = true)
         {
-            this.LayoutGroupBehavior.childControlWidth = value;
+            this.LayoutGroup.childControlHeight = value;
             return this as TCoreType;
         }
 
-        public TCoreType ChildForceExpandHeight(bool value)
+        // what the fuck does this even do.  It centers things but leaves other things zero sized.
+        public TCoreType SpreadChildrenHorizontally(bool value = true)
         {
-            this.LayoutGroupBehavior.childForceExpandHeight = value;
+            this.LayoutGroup.childForceExpandWidth = value;
             return this as TCoreType;
         }
 
-        public TCoreType ChildForceExpandWidth(bool value)
+        // what the fuck does this even do.  It centers things but leaves other things zero sized.
+        public TCoreType SpreadChildrenVertically(bool value = true)
         {
-            this.LayoutGroupBehavior.childForceExpandWidth = value;
+            this.LayoutGroup.childForceExpandHeight = value;
             return this as TCoreType;
         }
 
-        public TCoreType Spacing(float value)
+        public TCoreType SetSpacing(float value)
         {
-            this.LayoutGroupBehavior.spacing = value;
+            this.LayoutGroup.spacing = value;
             return this as TCoreType;
         }
 
-        public TCoreType Padding(int left, int top, int right, int bottom)
+        public TCoreType SetPadding(int left, int top, int right, int bottom)
         {
-            this.LayoutGroupBehavior.padding = new RectOffset(left, right, top, bottom);
+            this.LayoutGroup.padding = new RectOffset(left, right, top, bottom);
             return this as TCoreType;
         }
 
-        public TCoreType Padding(int x, int y)
+        public TCoreType SetPadding(int x, int y)
         {
-            this.LayoutGroupBehavior.padding = new RectOffset(x, x, y, y);
+            this.LayoutGroup.padding = new RectOffset(x, x, y, y);
             return this as TCoreType;
         }
 
-        public TCoreType Padding(int value)
+        public TCoreType SetPadding(int value)
         {
-            this.LayoutGroupBehavior.padding = new RectOffset(value, value, value, value);
-            return this as TCoreType;
-        }
-
-        public TCoreType AddExpandingSpacer()
-        {
-            var spacer = new SizingLayoutWidget("Spacer")
-                .ExpandHeight();
-
-            this.AddContent(spacer);
-            return this as TCoreType;
-        }
-
-        public TCoreType AddSpacer(int height)
-        {
-            var spacer = new SizingLayoutWidget("Spacer");
-            spacer.PreferredHeight(height);
-            this.AddContent(spacer);
+            this.LayoutGroup.padding = new RectOffset(value, value, value, value);
             return this as TCoreType;
         }
 

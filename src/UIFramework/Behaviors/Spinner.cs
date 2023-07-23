@@ -11,13 +11,15 @@ namespace AutoccultistNS.UI
 
         public float Speed { get; set; } = 1f;
 
-        public void Start()
+        public void StartSpinning()
         {
+            NoonUtility.LogWarning("Spinner started");
             this.isRunning = true;
         }
 
-        public void Stop()
+        public void StopSpinning()
         {
+            NoonUtility.LogWarning("Spinner stopped");
             this.isRunning = false;
         }
 
@@ -28,6 +30,8 @@ namespace AutoccultistNS.UI
 
         private void Update()
         {
+            NoonUtility.LogWarning("Spinner update " + this.isRunning);
+
             if (!this.isRunning)
             {
                 return;

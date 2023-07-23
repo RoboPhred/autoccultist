@@ -8,7 +8,6 @@ namespace AutoccultistNS.UI
     {
         private LayoutElement layoutElement;
         private ContentSizeFitter contentSizeFitter;
-        private ConstrainedLayoutElement constrainedLayoutElement;
 
         public SizingLayoutWidget(string key)
             : this(new GameObject(key))
@@ -28,7 +27,7 @@ namespace AutoccultistNS.UI
             this.layoutElement.preferredWidth = -1;
         }
 
-        public LayoutElement LayoutElementBehavior
+        public LayoutElement LayoutElement
         {
             get
             {
@@ -36,7 +35,7 @@ namespace AutoccultistNS.UI
             }
         }
 
-        public ContentSizeFitter ContentSizeFitterBehavior
+        public ContentSizeFitter ContentSizeFitter
         {
             get
             {
@@ -51,87 +50,119 @@ namespace AutoccultistNS.UI
             }
         }
 
-        public ConstrainedLayoutElement ConstrainedLayoutElement
+        public bool IgnoreLayout
         {
             get
             {
-                if (this.constrainedLayoutElement == null)
-                {
-                    this.constrainedLayoutElement = this.GameObject.GetOrAddComponent<ConstrainedLayoutElement>();
-                }
-
-                return this.constrainedLayoutElement;
+                return this.LayoutElement.ignoreLayout;
+            }
+            set
+            {
+                this.LayoutElement.ignoreLayout = value;
             }
         }
 
-        public static implicit operator WidgetMountPoint(SizingLayoutWidget widget)
+        public float MinWidth
         {
-            return new WidgetMountPoint(widget.GameObject.transform);
+            get
+            {
+                return this.LayoutElement.minWidth;
+            }
+            set
+            {
+                this.LayoutElement.minWidth = value;
+            }
         }
 
-        public SizingLayoutWidget IgnoreLayout()
+        public float MinHeight
         {
-            this.LayoutElementBehavior.ignoreLayout = true;
+            get
+            {
+                return this.LayoutElement.minHeight;
+            }
+            set
+            {
+                this.LayoutElement.minHeight = value;
+            }
+        }
+
+        public float PreferredWidth
+        {
+            get
+            {
+                return this.LayoutElement.preferredWidth;
+            }
+            set
+            {
+                this.LayoutElement.preferredWidth = value;
+            }
+        }
+
+        public float PreferredHeight
+        {
+            get
+            {
+                return this.LayoutElement.preferredHeight;
+            }
+            set
+            {
+                this.LayoutElement.preferredHeight = value;
+            }
+        }
+
+
+
+        public SizingLayoutWidget SetIgnoreLayout(bool value = true)
+        {
+            this.LayoutElement.ignoreLayout = value;
             return this;
         }
 
-        public SizingLayoutWidget MinWidth(float width)
+        public SizingLayoutWidget SetMinWidth(float width)
         {
-            this.LayoutElementBehavior.minWidth = width;
+            this.LayoutElement.minWidth = width;
             return this;
         }
 
-        public SizingLayoutWidget MinHeight(float height)
+        public SizingLayoutWidget SetMinHeight(float height)
         {
-            this.LayoutElementBehavior.minHeight = height;
+            this.LayoutElement.minHeight = height;
             return this;
         }
 
-        public SizingLayoutWidget PreferredWidth(float width)
+        public SizingLayoutWidget SetPreferredWidth(float width)
         {
-            this.LayoutElementBehavior.preferredWidth = width;
+            this.LayoutElement.preferredWidth = width;
             return this;
         }
 
-        public SizingLayoutWidget PreferredHeight(float height)
+        public SizingLayoutWidget SetPreferredHeight(float height)
         {
-            this.LayoutElementBehavior.preferredHeight = height;
+            this.LayoutElement.preferredHeight = height;
             return this;
         }
 
-        public SizingLayoutWidget MaxWidth(float width)
+        public SizingLayoutWidget SetExpandWidth()
         {
-            this.ConstrainedLayoutElement.MaxWidth = width;
+            this.LayoutElement.flexibleWidth = 1;
             return this;
         }
 
-        public SizingLayoutWidget MaxHeight(float height)
+        public SizingLayoutWidget SetExpandHeight()
         {
-            this.ConstrainedLayoutElement.MaxHeight = height;
+            this.LayoutElement.flexibleHeight = 1;
             return this;
         }
 
-        public SizingLayoutWidget ExpandWidth()
+        public SizingLayoutWidget SetFillContentWidth()
         {
-            this.LayoutElementBehavior.flexibleWidth = 1;
+            this.ContentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
         }
 
-        public SizingLayoutWidget ExpandHeight()
+        public SizingLayoutWidget SetFillContentHeight()
         {
-            this.LayoutElementBehavior.flexibleHeight = 1;
-            return this;
-        }
-
-        public SizingLayoutWidget FillContentWidth()
-        {
-            this.ContentSizeFitterBehavior.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            return this;
-        }
-
-        public SizingLayoutWidget FillContentHeight()
-        {
-            this.ContentSizeFitterBehavior.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
         }
 
