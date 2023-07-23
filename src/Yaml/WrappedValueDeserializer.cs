@@ -40,8 +40,8 @@ namespace AutoccultistNS.Yaml
                 // Record extra information on our failure.
                 throw new YamlFileException(
                     Deserializer.CurrentFilePath,
-                    start,
-                    parser.Current?.Start ?? start,
+                    start ?? Mark.Empty,
+                    parser.Current?.Start ?? start ?? Mark.Empty,
                     $"While trying to deserialize {expectedType.Name}: {ex.Message}",
                     ex);
             }

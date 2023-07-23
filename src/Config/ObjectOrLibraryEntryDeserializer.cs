@@ -42,7 +42,7 @@ namespace AutoccultistNS.Config
 
                 if (data == null)
                 {
-                    throw new SemanticErrorException(start, reader.Current?.End, $"Could not find {subjectType.Name} with name '{providedName}' in the library.");
+                    throw new SemanticErrorException(start ?? Mark.Empty, reader.Current?.End ?? Mark.Empty, $"Could not find {subjectType.Name} with name '{providedName}' in the library.");
                 }
 
                 value = Activator.CreateInstance(expectedType, new[] { data });

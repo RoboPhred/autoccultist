@@ -61,8 +61,9 @@ namespace AutoccultistNS.Yaml
                 filePath,
                 parser =>
                 {
+                    NoonUtility.LogWarning($"Deserializing {filePath} as {typeof(T).FullName}");
                     var deserializer = BuildDeserializer();
-                    return deserializer.Deserialize<T>(parser);
+                    return (T)deserializer.Deserialize(parser, typeof(T));
                 },
                 cache);
         }

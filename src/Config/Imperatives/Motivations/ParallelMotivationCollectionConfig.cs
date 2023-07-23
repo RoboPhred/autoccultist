@@ -123,7 +123,7 @@ namespace AutoccultistNS.Config
                 {
                     if (!this.motivations.ContainsKey(req))
                     {
-                        throw new SemanticErrorException(motivation.Value.Start, motivation.Value.End, $"Motivation {motivation.Key} \"{motivation.Value.Name}\" requires motivation key {req} which does not exist.");
+                        throw new SemanticErrorException(motivation.Value.Start ?? Mark.Empty, motivation.Value.End ?? Mark.Empty, $"Motivation {motivation.Key} \"{motivation.Value.Name}\" requires motivation key {req} which does not exist.");
                     }
                 }
             }
@@ -157,7 +157,7 @@ namespace AutoccultistNS.Config
             {
                 if (status == MotivationStatus.Processing)
                 {
-                    throw new SemanticErrorException(motivation.Start, motivation.End, $"Circular dependency detected in motivation {key} \"{motivation.Name}\".");
+                    throw new SemanticErrorException(motivation.Start ?? Mark.Empty, motivation.End ?? Mark.Empty, $"Circular dependency detected in motivation {key} \"{motivation.Name}\".");
                 }
 
                 return status;

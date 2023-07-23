@@ -16,11 +16,11 @@ namespace AutoccultistNS.Config
 
         /// <inheritdoc/>
         [YamlIgnore]
-        public Mark Start { get; private set; }
+        public Mark? Start { get; private set; }
 
         /// <inheritdoc/>
         [YamlIgnore]
-        public Mark End { get; private set; }
+        public Mark? End { get; private set; }
 
         public override string ToString()
         {
@@ -53,7 +53,7 @@ namespace AutoccultistNS.Config
                 var byId = Library.GetById(this.GetType(), this.Id);
                 if (byId != null)
                 {
-                    throw new YamlException(start, end, $"Duplicate id '{this.Id}' of {this.GetType().Name} found in {this.FilePath}:{start.Line} and {byId.FilePath}:{byId.Start.Line}.");
+                    throw new YamlException(start, end, $"Duplicate id '{this.Id}' of {this.GetType().Name} found in {this.FilePath}:{start.Line} and {byId.FilePath}:{byId.Start?.Line}.");
                 }
             }
         }

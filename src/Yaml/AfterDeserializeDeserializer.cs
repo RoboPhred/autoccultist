@@ -24,17 +24,17 @@ namespace AutoccultistNS.Yaml
         /// <inheritdoc/>
         public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object> nestedObjectDeserializer, out object value)
         {
-            Mark start = null;
+            Mark start = Mark.Empty;
             if (reader.Accept<ParsingEvent>(out var parsingEvent))
             {
-                start = parsingEvent?.Start;
+                start = parsingEvent.Start;
             }
 
             if (this.nodeDeserializer.Deserialize(reader, expectedType, nestedObjectDeserializer, out value))
             {
                 if (value is IAfterYamlDeserialization afterDeserialized)
                 {
-                    afterDeserialized.AfterDeserialized(start, reader.Current?.End);
+                    afterDeserialized.AfterDeserialized(start, reader.Current?.End ?? Mark.Empty);
                 }
 
                 return true;

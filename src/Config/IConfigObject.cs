@@ -18,12 +18,12 @@ namespace AutoccultistNS.Config
         /// Gets the location of the start of this config object in the file.
         /// </summary>
         [YamlIgnore]
-        Mark Start { get; }
+        Mark? Start { get; }
 
         /// <summary>
         /// Gets the location of the end of this config object in the file.
         /// </summary>
         [YamlIgnore]
-        Mark End { get; }
+        Mark? End { get; }
     }
 }
