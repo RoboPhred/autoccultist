@@ -24,11 +24,17 @@ namespace AutoccultistNS.UI
             this.EnableLayoutSystemHorizontal(true);
             this.EnableLayoutSystemVertical(true);
 
-            this.SpreadChildrenHorizontally(false);
-            this.SpreadChildrenVertically(false);
+            this.SetSpreadChildrenHorizontally(false);
+            this.SetSpreadChildrenVertically(false);
         }
 
         public VerticalLayoutGroup LayoutGroup { get; }
+
+        public TCoreType SetChildAlignment(TextAnchor value)
+        {
+            this.LayoutGroup.childAlignment = value;
+            return this as TCoreType;
+        }
 
         // Fucking stupid name, but this property does both.
         public TCoreType EnableLayoutSystemHorizontal(bool value = true)
@@ -45,14 +51,14 @@ namespace AutoccultistNS.UI
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public TCoreType SpreadChildrenHorizontally(bool value = true)
+        public TCoreType SetSpreadChildrenHorizontally(bool value = true)
         {
             this.LayoutGroup.childForceExpandWidth = value;
             return this as TCoreType;
         }
 
         // what the fuck does this even do.  It centers things but leaves other things zero sized.
-        public TCoreType SpreadChildrenVertically(bool value = true)
+        public TCoreType SetSpreadChildrenVertically(bool value = true)
         {
             this.LayoutGroup.childForceExpandHeight = value;
             return this as TCoreType;

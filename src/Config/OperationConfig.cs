@@ -179,6 +179,11 @@ namespace AutoccultistNS.Config
             return Enumerable.Empty<string>();
         }
 
+        public IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return Enumerable.Empty<IImperative>();
+        }
+
         /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {

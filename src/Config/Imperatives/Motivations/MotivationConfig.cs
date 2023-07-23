@@ -82,6 +82,11 @@ namespace AutoccultistNS.Config
             }
         }
 
+        public override IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return this.PrimaryGoals.Select(x => x.Value).Concat(this.SupportingGoals.Select(x => x.Value)).Where(x => !x.IsSatisfied(state));
+        }
+
         /// <inheritdoc/>
         public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {

@@ -9,7 +9,7 @@ namespace AutoccultistNS.UI
             content.AddVerticalLayoutGroup("VerticalLayout")
                 .SetPadding(10, 2)
                 .SetExpandWidth()
-                .SpreadChildrenHorizontally()
+                .SetSpreadChildrenHorizontally()
                 .FitContentHeight()
                 .AddContent(mountPoint =>
                 {

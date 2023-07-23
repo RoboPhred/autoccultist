@@ -38,6 +38,11 @@ namespace AutoccultistNS.Brain
         IEnumerable<string> DescribeCurrentGoals(IGameState state);
 
         /// <summary>
+        /// Gets an enumerable of active child imperatives for the current game state.
+        /// </summary>
+        IEnumerable<IImperative> GetActiveChildren(IGameState state);
+
+        /// <summary>
         /// Gets a list of impulses for the current game state.
         /// </summary>
         IEnumerable<IImpulse> GetImpulses(IGameState state);

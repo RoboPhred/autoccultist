@@ -27,6 +27,9 @@ namespace AutoccultistNS.Config
         }
 
         /// <inheritdoc/>
+        public abstract IEnumerable<IImperative> GetActiveChildren(IGameState state);
+
+        /// <inheritdoc/>
         public virtual ConditionResult IsConditionMet(IGameState state)
         {
             return CacheUtils.Compute(this, $"{nameof(ImperativeConfigBase)}.{nameof(this.IsConditionMet)}", state, () =>

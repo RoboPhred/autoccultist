@@ -5,7 +5,6 @@ using System.Threading;
 using AutoccultistNS;
 using AutoccultistNS.Brain;
 using AutoccultistNS.Config;
-using AutoccultistNS.Cronicle;
 using AutoccultistNS.GameResources;
 using AutoccultistNS.GameState;
 using AutoccultistNS.GUI;
@@ -135,8 +134,6 @@ public class Autoccultist : MonoBehaviour
         this.ReloadAll();
 
         LogInfo("Autoccultist initialized.");
-
-        AutoccultistCronicle.Start("test", "Test cronicle.");
     }
 
     public void EnsureMainThread()

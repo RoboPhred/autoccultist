@@ -45,6 +45,11 @@ namespace AutoccultistNS.UI
             return this.Imperative.DescribeCurrentGoals(state);
         }
 
+        public IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return this.Imperative.GetActiveChildren(state);
+        }
+
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             this.monitoredImpulses.Clear();

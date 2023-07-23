@@ -49,6 +49,11 @@ namespace AutoccultistNS.Config
             return this.Motivations.DescribeCurrentGoals(state);
         }
 
+        public override IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return this.Motivations.GetActiveChildren(state);
+        }
+
         public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             // This uses the base implementation which checks IsSatisfied.

@@ -77,7 +77,7 @@ namespace AutoccultistNS.UI
         {
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"operation_${operation.Id}")
-                .SpreadChildrenVertically()
+                .SetSpreadChildrenVertically()
                 .SetPadding(10, 5)
                 .AddContent(mountPoint =>
                 {

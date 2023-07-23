@@ -102,6 +102,11 @@ namespace AutoccultistNS.Config
             return AddendedConditionResult.Addend(ConditionResult.Failure, "Leaf imperatives cannot be satisfied.");
         }
 
+        public override IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return Enumerable.Empty<IImperative>();
+        }
+
         public override IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             if (!this.IsConditionMet(state))

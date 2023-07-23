@@ -50,6 +50,11 @@ namespace AutoccultistNS.Config
             });
         }
 
+        public virtual IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return this.GetCurrentMotivations(state);
+        }
+
         /// <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {

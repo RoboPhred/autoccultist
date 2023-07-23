@@ -83,7 +83,7 @@ namespace AutoccultistNS.UI
                     {
                         var recipe = compendium.GetEntityById<Recipe>(item.SlottedRecipeId);
                         mountPoint.AddVerticalLayoutGroup("HistoryEntry")
-                            .SpreadChildrenHorizontally()
+                            .SetSpreadChildrenHorizontally()
                             .SetExpandWidth()
                             .FitContentHeight()
                             .SetPadding(10, 2)

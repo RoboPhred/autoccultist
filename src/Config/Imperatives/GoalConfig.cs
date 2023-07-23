@@ -49,9 +49,21 @@ namespace AutoccultistNS.Config
             });
         }
 
+        /// <inheritdoc/>
         public override IEnumerable<string> DescribeCurrentGoals(IGameState gameState)
         {
             return new[] { this.Name };
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            if (this.IsSatisfied(state))
+            {
+                return Enumerable.Empty<IImperative>();
+            }
+
+            return this.Imperatives;
         }
 
         public override IEnumerable<IImpulse> GetImpulses(IGameState state)

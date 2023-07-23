@@ -82,7 +82,7 @@ namespace AutoccultistNS.UI
             ImageWidget runningIcon = null;
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"imperative_${imperative.Name}")
-                .SpreadChildrenVertically()
+                .SetSpreadChildrenVertically()
                 .SetPadding(10, 5)
                 .AddContent(mountPoint =>
                 {

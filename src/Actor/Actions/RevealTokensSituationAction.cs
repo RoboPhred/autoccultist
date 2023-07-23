@@ -16,7 +16,7 @@ namespace AutoccultistNS.Actor.Actions
 
         public string SituationId { get; }
 
-        protected override async Task<bool> OnExecute(CancellationToken cancellationToken)
+        protected override Task<bool> OnExecute(CancellationToken cancellationToken)
         {
             var situation = this.GetSituation();
 
@@ -27,22 +27,18 @@ namespace AutoccultistNS.Actor.Actions
 
             var outputTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).ToList();
 
-            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+            var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
+            if (shroudedTokens.Length > 0)
             {
-                var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
-                if (shroudedTokens.Length > 0)
+                foreach (var token in shroudedTokens)
                 {
-                    foreach (var token in shroudedTokens)
-                    {
-                        token.Unshroud();
-                    }
-
-                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-                    return true;
+                    token.Unshroud();
                 }
+
+                return Task.FromResult(true);
             }
 
-            return false;
+            return Task.FromResult(false);
         }
 
         private Situation GetSituation()

@@ -220,9 +220,9 @@ namespace AutoccultistNS.UI
                     .SetRight(1, -57.5f)
                     .SetBottom(1, -45)
                     .SetPreferredHeight(25)
-                    .SetFontSize(30)
                     .SetMinFontSize(10)
                     .SetMaxFontSize(30)
+                    .SetOverflowMode(TextOverflowModes.Ellipsis)
                     .SetTextAlignment(TextAlignmentOptions.BottomLeft);
 
                 mountPoint.AddImage("BG_Body")
@@ -264,7 +264,7 @@ namespace AutoccultistNS.UI
                     .SetPressedColor(new Color(0.2671f, 0.6328f, 0.6985f, 1))
                     .SetSelectedColor(Color.white)
                     .SetDisabledColor(new Color(0.5368f, 0.5368f, 0.5368f, 0.502f))
-                    .SetClickSound("UIBUttonClose")
+                    .SetClickSound("UIButtonClose")
                     .OnClick(() => this.Close());
 
                 this.Content = mountPoint.AddSizingLayout("Content")

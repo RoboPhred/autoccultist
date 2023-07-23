@@ -41,6 +41,12 @@ namespace AutoccultistNS.Brain
         }
 
         // <inheritdoc/>
+        public IEnumerable<IImperative> GetActiveChildren(IGameState state)
+        {
+            return Enumerable.Empty<IImperative>();
+        }
+
+        // <inheritdoc/>
         public IEnumerable<IImpulse> GetImpulses(IGameState state)
         {
             if (this.GetCompletedSituations(state).Any())

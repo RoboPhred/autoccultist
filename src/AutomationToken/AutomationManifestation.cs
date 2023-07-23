@@ -134,6 +134,7 @@ namespace AutoccultistNS.Tokens
             if (!this.isInitialized)
             {
                 this.isInitialized = true;
+
                 NucleusAccumbens.ReactionStarted += this.OnReactionStarted;
                 NucleusAccumbens.ReactionEnded += this.OnReactionEnded;
                 GameEventSource.GameEnded += this.OnGameEnded;

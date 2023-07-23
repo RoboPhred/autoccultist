@@ -47,8 +47,8 @@ namespace AutoccultistNS.UI
                 this.Button.image = image.Image;
             });
 
-            this.SpreadChildrenHorizontally(true);
-            this.SpreadChildrenVertically(true);
+            this.SetSpreadChildrenHorizontally(true);
+            this.SetSpreadChildrenVertically(true);
 
             this.TextWidget = new TextWidget("Text")
                 .SetPivot(.5f, .5f)

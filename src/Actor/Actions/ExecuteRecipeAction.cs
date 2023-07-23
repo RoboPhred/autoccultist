@@ -72,10 +72,23 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"Failed to fill first slot of recipe {this.RecipeName} in situation {this.SituationId}.");
             }
 
-            var remainingSlots = situation.GetCurrentThresholdSpheres().Where(x => x.Id != firstSlot.Id).ToArray();
-            foreach (var slot in remainingSlots)
+            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
-                await this.FillSlot(slot, cancellationToken);
+                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+            }
+
+            var remainingSlots = situation.GetCurrentThresholdSpheres().Where(x => x.Id != firstSlot.Id).ToArray();
+            for (int i = 0; i < remainingSlots.Length; i++)
+            {
+                var slot = remainingSlots[i];
+
+                if (await this.FillSlot(slot, cancellationToken))
+                {
+                    if (i + 1 != remainingSlots.Length && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                    {
+                        await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+                    }
+                }
             }
         }
 
@@ -120,9 +133,6 @@ namespace AutoccultistNS.Actor.Actions
                 {
                     throw new ActionFailureException(this, $"Timed out waiting for card {stack.Element.Id} to arrive in slot {slotId} in situation {this.SituationId}.  Our token ended up in state {stack.Token.CurrentState} at sphere {stack.Token.Sphere.Id}.");
                 }
-
-                // Wait the full delay after slotting the card.
-                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
             }
             else
             {
@@ -134,9 +144,6 @@ namespace AutoccultistNS.Actor.Actions
 
                 GameStateProvider.Invalidate();
             }
-
-            // Hold us for the next beat, if we are not running live.
-            await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
 
             return true;
         }

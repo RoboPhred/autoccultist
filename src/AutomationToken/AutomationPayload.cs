@@ -4,6 +4,7 @@ namespace AutoccultistNS.Tokens
     using System.Collections.Generic;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
+    using AutoccultistNS.UI;
     using SecretHistories;
     using SecretHistories.Abstract;
     using SecretHistories.Commands;
@@ -26,6 +27,8 @@ namespace AutoccultistNS.Tokens
 
         private readonly List<AbstractDominion> dominions = new();
 
+        private ImperativeAutomationWindow window;
+
         private Token token;
 
         public AutomationPayload(string id, string entityId)
@@ -47,6 +50,9 @@ namespace AutoccultistNS.Tokens
 
             this.Imperative = Library.GetById<IImperativeConfig>(imperativeId);
 
+            this.window = AbstractWindow.CreateTabletopWindow<ImperativeAutomationWindow>($"Automation_${this.Imperative.Id}");
+            this.window.Attach(this.Imperative);
+
             // TODO: Only add when we are on the tabletop sphere.
             // There doesn't seem to be any events telling us when we got placed in a sphere, however.
             NucleusAccumbens.AddImperative(this.Imperative);
@@ -60,6 +66,7 @@ namespace AutoccultistNS.Tokens
 
         [DontEncaust]
         public IImperativeConfig Imperative { get; }
+
 
         [Encaust]
         public string Id { get; private set; }
@@ -112,7 +119,7 @@ namespace AutoccultistNS.Tokens
 
         // TODO: What uses this?  Should we make use of it for our window?
         [DontEncaust]
-        public bool IsOpen => false;
+        public bool IsOpen => this.window.IsOpen;
 
         [DontEncaust]
         public bool IsSealed => false;
@@ -139,7 +146,7 @@ namespace AutoccultistNS.Tokens
 
         public void Close()
         {
-            // TODO: Control window.
+            this.window.Close();
         }
 
         public void Conclude()
@@ -298,7 +305,7 @@ namespace AutoccultistNS.Tokens
 
         public void OpenAt(TokenLocation location)
         {
-            // TODO: Implement window
+            this.window.OpenAt(location.LocalPosition);
         }
 
         public bool ReceiveNote(INotification notification, Context context)
