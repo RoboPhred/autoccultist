@@ -17,11 +17,6 @@ namespace AutoccultistNS.UI
 
         public RectTransform RectTransform { get; private set; }
 
-        public static implicit operator RectTransform(RectTransformWidget widget)
-        {
-            return widget.RectTransform;
-        }
-
         public float AnchorTop
         {
             get
@@ -137,6 +132,11 @@ namespace AutoccultistNS.UI
             {
                 this.RectTransform.sizeDelta = value;
             }
+        }
+
+        public static implicit operator RectTransform(RectTransformWidget widget)
+        {
+            return widget.RectTransform;
         }
 
         public RectTransformWidget SetAnchor(Vector3 anchor)

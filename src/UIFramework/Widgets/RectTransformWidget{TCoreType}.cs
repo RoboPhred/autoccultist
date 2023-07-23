@@ -28,6 +28,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.anchorMax.y;
             }
+
             set
             {
                 this.RectTransform.anchorMax = new Vector2(this.RectTransform.anchorMax.x, value);
@@ -40,6 +41,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.anchorMin.y;
             }
+
             set
             {
                 this.RectTransform.anchorMin = new Vector2(this.RectTransform.anchorMin.x, value);
@@ -52,6 +54,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.anchorMin.x;
             }
+
             set
             {
                 this.RectTransform.anchorMin = new Vector2(value, this.RectTransform.anchorMin.y);
@@ -64,6 +67,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.anchorMax.x;
             }
+
             set
             {
                 this.RectTransform.anchorMax = new Vector2(value, this.RectTransform.anchorMax.y);
@@ -76,6 +80,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.offsetMax.y;
             }
+
             set
             {
                 this.RectTransform.offsetMax = new Vector2(this.RectTransform.offsetMax.x, value);
@@ -88,6 +93,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.offsetMin.y;
             }
+
             set
             {
                 this.RectTransform.offsetMin = new Vector2(this.RectTransform.offsetMin.x, value);
@@ -100,6 +106,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.offsetMin.x;
             }
+
             set
             {
                 this.RectTransform.offsetMin = new Vector2(value, this.RectTransform.offsetMin.y);
@@ -112,6 +119,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.offsetMax.x;
             }
+
             set
             {
                 this.RectTransform.offsetMax = new Vector2(value, this.RectTransform.offsetMax.y);
@@ -124,6 +132,7 @@ namespace AutoccultistNS.UI
             {
                 return this.RectTransform.sizeDelta;
             }
+
             set
             {
                 this.RectTransform.sizeDelta = value;

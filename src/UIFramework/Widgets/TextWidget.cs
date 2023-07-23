@@ -55,6 +55,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.fontSize;
             }
+
             set
             {
                 this.SetFontSize(value);
@@ -67,6 +68,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.fontStyle;
             }
+
             set
             {
                 this.SetFontStyle(value);
@@ -79,6 +81,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.fontWeight;
             }
+
             set
             {
                 this.SetFontWeight(value);
@@ -91,6 +94,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.horizontalAlignment;
             }
+
             set
             {
                 this.SetHorizontalAlignment(value);
@@ -103,6 +107,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.verticalAlignment;
             }
+
             set
             {
                 this.SetVerticalAlignment(value);
@@ -115,6 +120,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.alignment;
             }
+
             set
             {
                 this.SetTextAlignment(value);
@@ -127,6 +133,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.enableWordWrapping;
             }
+
             set
             {
                 this.SetWordWrapping(value);
@@ -139,6 +146,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.overflowMode;
             }
+
             set
             {
                 this.SetOverflowMode(value);
@@ -151,6 +159,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.fontSizeMax;
             }
+
             set
             {
                 this.SetMaxFontSize(value);
@@ -163,6 +172,7 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.fontSizeMin;
             }
+
             set
             {
                 this.SetMinFontSize(value);
@@ -175,17 +185,20 @@ namespace AutoccultistNS.UI
             {
                 return this.textMesh.text;
             }
+
             set
             {
                 this.SetText(value);
             }
         }
+
         public Color Color
         {
             get
             {
                 return this.textMesh.color;
             }
+
             set
             {
                 this.SetColor(value);

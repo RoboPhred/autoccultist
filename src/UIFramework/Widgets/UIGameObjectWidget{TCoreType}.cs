@@ -17,21 +17,22 @@ namespace AutoccultistNS.UI
         {
         }
 
-        public static implicit operator GameObject(UIGameObjectWidget<TCoreType> widget)
-        {
-            return widget.GameObject;
-        }
-
         public bool Active
         {
             get
             {
                 return this.GameObject.activeSelf;
             }
+
             set
             {
                 this.GameObject.SetActive(value);
             }
+        }
+
+        public static implicit operator GameObject(UIGameObjectWidget<TCoreType> widget)
+        {
+            return widget.GameObject;
         }
 
         public new TCoreType SetActive(bool active)

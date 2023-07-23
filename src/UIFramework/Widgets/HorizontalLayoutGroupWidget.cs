@@ -35,6 +35,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutGroup.childAlignment;
             }
+
             set
             {
                 this.LayoutGroup.childAlignment = value;
@@ -47,6 +48,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutGroup.spacing;
             }
+
             set
             {
                 this.LayoutGroup.spacing = value;
@@ -59,6 +61,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutGroup.padding;
             }
+
             set
             {
                 this.LayoutGroup.padding = value;

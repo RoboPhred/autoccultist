@@ -50,17 +50,13 @@ namespace AutoccultistNS.UI
             }
         }
 
-        public static implicit operator SizingLayoutWidget(SizingLayoutWidget<TCoreType> widget)
-        {
-            return new SizingLayoutWidget(widget.GameObject);
-        }
-
         public bool IgnoreLayout
         {
             get
             {
                 return this.LayoutElement.ignoreLayout;
             }
+
             set
             {
                 this.LayoutElement.ignoreLayout = value;
@@ -73,6 +69,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutElement.minWidth;
             }
+
             set
             {
                 this.LayoutElement.minWidth = value;
@@ -85,6 +82,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutElement.minHeight;
             }
+
             set
             {
                 this.LayoutElement.minHeight = value;
@@ -97,6 +95,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutElement.preferredWidth;
             }
+
             set
             {
                 this.LayoutElement.preferredWidth = value;
@@ -109,6 +108,7 @@ namespace AutoccultistNS.UI
             {
                 return this.LayoutElement.preferredHeight;
             }
+
             set
             {
                 this.LayoutElement.preferredHeight = value;
@@ -121,6 +121,7 @@ namespace AutoccultistNS.UI
             {
                 return this.ContentSizeFitter.verticalFit;
             }
+
             set
             {
                 this.ContentSizeFitter.verticalFit = value;
@@ -133,10 +134,16 @@ namespace AutoccultistNS.UI
             {
                 return this.ContentSizeFitter.horizontalFit;
             }
+
             set
             {
                 this.ContentSizeFitter.horizontalFit = value;
             }
+        }
+
+        public static implicit operator SizingLayoutWidget(SizingLayoutWidget<TCoreType> widget)
+        {
+            return new SizingLayoutWidget(widget.GameObject);
         }
 
         public TCoreType SetIgnoreLayout()

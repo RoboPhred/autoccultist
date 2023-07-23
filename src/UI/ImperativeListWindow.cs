@@ -20,6 +20,7 @@ namespace AutoccultistNS.UI
         private DateTime lastUpdate = DateTime.MinValue;
 
         protected override int DefaultWidth => 500;
+
         protected override int DefaultHeight => 800;
 
         protected override void OnAwake()

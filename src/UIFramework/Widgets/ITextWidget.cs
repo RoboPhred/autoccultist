@@ -47,7 +47,9 @@ namespace AutoccultistNS.UI
         TCoreType SetFontWeight(FontWeight weight);
 
         TCoreType SetHorizontalAlignment(HorizontalAlignmentOptions alignment);
+
         TCoreType SetVerticalAlignment(VerticalAlignmentOptions alignment);
+
         TCoreType SetTextAlignment(TextAlignmentOptions alignment);
 
         TCoreType SetWordWrapping(bool enabled);

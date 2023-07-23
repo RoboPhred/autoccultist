@@ -66,6 +66,7 @@ namespace AutoccultistNS.UI
             {
                 return this.Image.type;
             }
+
             set
             {
                 this.Image.type = value;
@@ -104,7 +105,6 @@ namespace AutoccultistNS.UI
             this.Image.sprite = sprite;
             return this as TCoreType;
         }
-
 
         public TCoreType SetColor(Color color)
         {

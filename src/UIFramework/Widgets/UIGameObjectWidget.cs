@@ -33,7 +33,6 @@ namespace AutoccultistNS.UI
             return widget.MountPoint;
         }
 
-
         public UIGameObjectWidget SetActive(bool active)
         {
             this.GameObject.SetActive(active);

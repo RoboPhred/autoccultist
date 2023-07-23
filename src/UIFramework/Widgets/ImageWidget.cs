@@ -105,7 +105,6 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-
         public ImageWidget SetColor(Color color)
         {
             this.Image.color = color;

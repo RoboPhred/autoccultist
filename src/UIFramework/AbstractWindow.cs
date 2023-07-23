@@ -45,36 +45,8 @@ namespace AutoccultistNS.UI
         public bool IsClosed => this.canvasGroupFader.IsInvisible();
 
         protected virtual int DefaultWidth => 600;
+
         protected virtual int DefaultHeight => 400;
-
-        // FIXME: Not working
-        // protected int Width
-        // {
-        //     get
-        //     {
-        //         return 0;
-
-        //     }
-
-        //     set
-        //     {
-        //         this.root.SetMinWidth(value);
-        //     }
-        // }
-
-        // FIXME: Not working
-        // protected int Height
-        // {
-        //     get
-        //     {
-        //         return 0;
-        //     }
-
-        //     set
-        //     {
-        //         this.root.SetMinHeight(value);
-        //     }
-        // }
 
         protected WidgetMountPoint Icon { get; private set; }
 
@@ -194,8 +166,8 @@ namespace AutoccultistNS.UI
                 .SetTop(.5f, 0)
                 .SetRight(.5f, 0)
                 .SetBottom(.5f, 0)
-                .SetMinWidth(DefaultWidth)
-                .SetMinHeight(DefaultHeight);
+                .SetMinWidth(this.DefaultWidth)
+                .SetMinHeight(this.DefaultHeight);
 
             var canvasGroup = this.gameObject.AddComponent<CanvasGroup>();
             this.positioner = this.gameObject.AddComponent<WindowPositioner>();

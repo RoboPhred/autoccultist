@@ -80,6 +80,7 @@ namespace AutoccultistNS.UI
             {
                 return this.Button.interactable;
             }
+
             set
             {
                 this.Button.interactable = value;
@@ -92,6 +93,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.Text;
             }
+
             set
             {
                 this.TextWidget.Text = value;
@@ -104,6 +106,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.Color;
             }
+
             set
             {
                 this.TextWidget.Color = value;
@@ -116,6 +119,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.Font;
             }
+
             set
             {
                 this.TextWidget.Font = value;
@@ -128,6 +132,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.FontMaterial;
             }
+
             set
             {
                 this.TextWidget.FontMaterial = value;
@@ -140,6 +145,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.FontSize;
             }
+
             set
             {
                 this.TextWidget.FontSize = value;
@@ -152,6 +158,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.FontStyle;
             }
+
             set
             {
                 this.TextWidget.FontStyle = value;
@@ -164,6 +171,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.FontWeight;
             }
+
             set
             {
                 this.TextWidget.FontWeight = value;
@@ -176,6 +184,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.HorizontalAlignment;
             }
+
             set
             {
                 this.TextWidget.HorizontalAlignment = value;
@@ -188,6 +197,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.VerticalAlignment;
             }
+
             set
             {
                 this.TextWidget.VerticalAlignment = value;
@@ -200,6 +210,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.TextAlignment;
             }
+
             set
             {
                 this.TextWidget.TextAlignment = value;
@@ -212,6 +223,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.WordWrapping;
             }
+
             set
             {
                 this.TextWidget.WordWrapping = value;
@@ -224,6 +236,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.OverflowMode;
             }
+
             set
             {
                 this.TextWidget.OverflowMode = value;
@@ -236,6 +249,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.MaxFontSize;
             }
+
             set
             {
                 this.TextWidget.MaxFontSize = value;
@@ -248,6 +262,7 @@ namespace AutoccultistNS.UI
             {
                 return this.TextWidget.MinFontSize;
             }
+
             set
             {
                 this.TextWidget.MinFontSize = value;
@@ -347,6 +362,7 @@ namespace AutoccultistNS.UI
             this.TextWidget.SetMinFontSize(size);
             return this;
         }
+
         public TextButtonWidget OnClick(UnityEngine.Events.UnityAction action)
         {
             this.Button.onClick.AddListener(action);

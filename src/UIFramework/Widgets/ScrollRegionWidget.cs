@@ -67,6 +67,7 @@ namespace AutoccultistNS.UI
             {
                 return this.ScrollRect.horizontal;
             }
+
             set
             {
                 this.SetHorizontal(value);
@@ -79,6 +80,7 @@ namespace AutoccultistNS.UI
             {
                 return this.ScrollRect.vertical;
             }
+
             set
             {
                 this.SetVertical(value);
@@ -91,6 +93,7 @@ namespace AutoccultistNS.UI
             {
                 return this.ScrollRect.scrollSensitivity;
             }
+
             set
             {
                 this.SetSensitivity(value);
