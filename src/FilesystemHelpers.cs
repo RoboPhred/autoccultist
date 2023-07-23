@@ -41,6 +41,17 @@ namespace AutoccultistNS
             }
         }
 
+        public static void DeleteDirectory(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                return;
+            }
+
+            WalkDirectory(directoryPath, (path) => File.Delete(path));
+            Directory.Delete(directoryPath);
+        }
+
         // https://weblog.west-wind.com/posts/2010/Dec/20/Finding-a-Relative-Path-in-NET
 
         /// <summary>

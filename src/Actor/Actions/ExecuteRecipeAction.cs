@@ -15,12 +15,11 @@ namespace AutoccultistNS.Actor.Actions
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(3);
 
-        public ExecuteRecipeAction(string situationId, IRecipeSolution recipeSolution, string recipeName, bool leaveOpen = false)
+        public ExecuteRecipeAction(string situationId, IRecipeSolution recipeSolution, string recipeName)
         {
             this.SituationId = situationId;
             this.RecipeSolution = recipeSolution;
             this.RecipeName = recipeName;
-            this.LeaveSituationOpen = leaveOpen;
         }
 
         public string SituationId { get; }
@@ -28,8 +27,6 @@ namespace AutoccultistNS.Actor.Actions
         public string RecipeName { get; }
 
         public IRecipeSolution RecipeSolution { get; }
-
-        public bool LeaveSituationOpen { get; }
 
         public override string ToString()
         {
@@ -50,38 +47,9 @@ namespace AutoccultistNS.Actor.Actions
                 return false;
             }
 
-            await this.PrepareSituation(cancellationToken);
-
             await this.FillSlots(cancellationToken);
 
-            await this.FinalizeSituation(cancellationToken);
-
             return true;
-        }
-
-        private async Task PrepareSituation(CancellationToken cancellationToken)
-        {
-            var situation = this.GetSituation();
-
-            if (!situation.IsOpen)
-            {
-                situation.OpenAt(situation.Token.Location);
-                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-            }
-
-            if (situation.State.Identifier == StateEnum.Unstarted)
-            {
-                if (situation.GetCurrentThresholdSpheres().Any(s => s.GetTokens().Any()))
-                {
-                    situation.DumpUnstartedBusiness();
-                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-                }
-            }
-            else if (situation.State.Identifier == StateEnum.Complete)
-            {
-                situation.Conclude();
-                await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-            }
         }
 
         private async Task FillSlots(CancellationToken cancellationToken)
@@ -172,34 +140,6 @@ namespace AutoccultistNS.Actor.Actions
             await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
 
             return true;
-        }
-
-        private async Task FinalizeSituation(CancellationToken cancellationToken)
-        {
-            var situation = this.GetSituation();
-
-            var doClose = !this.LeaveSituationOpen && situation.IsOpen;
-
-            if (situation.State.Identifier == StateEnum.Unstarted)
-            {
-                situation.TryStart();
-                if (situation.State.Identifier == StateEnum.Unstarted)
-                {
-                    throw new ActionFailureException(this, $"Failed to start situation {this.SituationId} for recipe.");
-                }
-
-                GameStateProvider.Invalidate();
-
-                if (doClose)
-                {
-                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-                }
-            }
-
-            if (doClose)
-            {
-                situation.Close();
-            }
         }
 
         private Situation GetSituation()

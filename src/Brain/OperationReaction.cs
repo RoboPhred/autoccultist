@@ -72,7 +72,7 @@ namespace AutoccultistNS.Brain
 
         private async Task ExecuteOperation()
         {
-            BrainEventSink.OnOperationStarted(this.Operation);
+            BrainEvents.OnOperationStarted(this.Operation);
             try
             {
                 await this.OperationExecutionLoop();
@@ -206,7 +206,16 @@ namespace AutoccultistNS.Brain
                             }
 
                             this.currentRecipeSolution = recipeSolution;
-                            await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe", true).ExecuteAndWait(innerToken);
+
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new OpenSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                await new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+
+                            await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe").ExecuteAndWait(innerToken);
+
+                            await new StartSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
 
                             this.CaptureHistory(true);
 
@@ -214,7 +223,11 @@ namespace AutoccultistNS.Brain
 
                             if (recipeSolution.EndOperation)
                             {
-                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                                {
+                                    await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                }
+
                                 return false;
                             }
 
@@ -223,17 +236,24 @@ namespace AutoccultistNS.Brain
                             if (recipeSolution == null)
                             {
                                 // Don't know what this recipe is, let it continue.
-                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                                {
+                                    await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                }
+
                                 return true;
                             }
 
                             this.currentRecipeSolution = recipeSolution;
 
-                            await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe", true).ExecuteAndWait(innerToken);
+                            await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
                             this.CaptureHistory(false);
 
-                            await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
 
                             return !recipeSolution.EndOperation;
                         },
@@ -295,7 +315,18 @@ namespace AutoccultistNS.Brain
                             }
 
                             this.currentRecipeSolution = recipeSolution;
+
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new OpenSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
+
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
 
                             this.CaptureHistory(false);
 
@@ -414,11 +445,11 @@ namespace AutoccultistNS.Brain
 
             if (aborted)
             {
-                BrainEventSink.OnOperationAborted(this.Operation);
+                BrainEvents.OnOperationAborted(this.Operation);
             }
             else
             {
-                BrainEventSink.OnOperationCompleted(this.Operation);
+                BrainEvents.OnOperationCompleted(this.Operation);
             }
 
             this.TryComplete(aborted);
