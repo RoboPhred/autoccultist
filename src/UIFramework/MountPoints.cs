@@ -8,6 +8,7 @@ namespace AutoccultistNS.UI
         {
             get
             {
+                // TODO: What about FucineRoot.Get().GetWindowsSphere()
                 var windowSphere = GameObject.Find("TabletopWindowSphere");
                 if (windowSphere == null)
                 {

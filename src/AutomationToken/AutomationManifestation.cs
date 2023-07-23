@@ -19,14 +19,20 @@ namespace AutoccultistNS.Tokens
     public class AutomationManifestation : BasicManifestation, IManifestation, IPointerEnterHandler, IPointerExitHandler
     {
         private const float RotationSpeedPerSecond = -360 / 16;
+        private static readonly TimeSpan ArtworkFadeTime = TimeSpan.FromSeconds(2);
 
-        private Spinner artworkSpinner;
-        private int runningImpulses = 0;
+        private bool isInitialized = false;
+
+        private Spinner gearSpinner;
+        private int runningReactions = 0;
 
         private Token token;
 
         private ImageWidget glowImage;
         private GraphicFader glowFader;
+
+        private ImageWidget artworkImage;
+        private DateTime artworkAppearance = DateTime.MinValue;
 
         public bool RequestingNoDrag => false;
 
@@ -40,9 +46,6 @@ namespace AutoccultistNS.Tokens
         {
             this.token = manifestable.GetToken();
 
-            NucleusAccumbens.ImpulseStarted += this.OnImpulseStarted;
-            NucleusAccumbens.ImpulseEnded += this.OnImpulseEnded;
-
             this.RectTransform.anchoredPosition = Vector2.zero;
             this.RectTransform.sizeDelta = new Vector2(140, 140);
 
@@ -55,6 +58,11 @@ namespace AutoccultistNS.Tokens
 
             WidgetMountPoint.On(this.gameObject, mountPoint =>
             {
+                if (this.isInitialized)
+                {
+                    mountPoint.Clear();
+                }
+
                 // We can't rely resourceHack here as we might get spawned in before any verbs.
                 var tokenOutline = prefab.gameObject.transform.Find("Glow")?.GetComponent<Image>()?.sprite;
                 if (tokenOutline == null)
@@ -81,7 +89,17 @@ namespace AutoccultistNS.Tokens
                 mountPoint.AddImage("Token")
                     .SetSprite(tokenBody);
 
-                mountPoint.AddImage("Artwork")
+                NoonUtility.LogWarning("Creating artwork image for automation");
+                this.artworkImage = mountPoint.AddImage("Artwork")
+                    .SetAnchor(new Vector3(0, 5.5f, -2))
+                    .SetLeft(0.5f, -50)
+                    .SetRight(0.5f, 50)
+                    .SetTop(0.5f, 55.5f)
+                    .SetBottom(0.5f, -44.5f)
+                    .SetSize(new Vector2(100, 100))
+                    .SetColor(new Color(1, 1, 1, 0));
+
+                mountPoint.AddImage("Gear")
                     .SetAnchor(new Vector3(0, 5.5f, -2))
                     .SetLeft(0.5f, -50)
                     .SetRight(0.5f, 50)
@@ -92,7 +110,7 @@ namespace AutoccultistNS.Tokens
                     .SetSprite("autoccultist_imperative_artwork")
                     .Behavior<Spinner>(spinner =>
                     {
-                        this.artworkSpinner = spinner;
+                        this.gearSpinner = spinner;
                         spinner.Speed = RotationSpeedPerSecond;
                         NoonUtility.LogWarning("WTFV stopping spinner");
                         spinner.StopSpinning();
@@ -112,6 +130,27 @@ namespace AutoccultistNS.Tokens
                     .SetOverflowMode(TMPro.TextOverflowModes.Ellipsis)
                     .SetText(this.Imperative.Name);
             });
+
+            if (!this.isInitialized)
+            {
+                this.isInitialized = true;
+                NucleusAccumbens.ReactionStarted += this.OnReactionStarted;
+                NucleusAccumbens.ReactionEnded += this.OnReactionEnded;
+                GameEventSource.GameEnded += this.OnGameEnded;
+            }
+        }
+
+        public void Update()
+        {
+            var fade = 1 - ((DateTime.Now - this.artworkAppearance).TotalSeconds / ArtworkFadeTime.TotalSeconds);
+            this.artworkImage.SetColor(new Color(1, 1, 1, (float)fade));
+        }
+
+        public void OnDestory()
+        {
+            // Note: This is not called on scene end.  We use OnGameEnded for that.
+            NucleusAccumbens.ReactionStarted -= this.OnReactionStarted;
+            NucleusAccumbens.ReactionEnded -= this.OnReactionEnded;
         }
 
         public override Vector2 GetGridOffset(Vector2 gridCellSize, Sphere forSphere)
@@ -121,9 +160,6 @@ namespace AutoccultistNS.Tokens
 
         public override void Retire(RetirementVFX vfx, Action callbackOnRetired)
         {
-            NucleusAccumbens.ImpulseStarted -= this.OnImpulseStarted;
-            NucleusAccumbens.ImpulseEnded -= this.OnImpulseEnded;
-
             if (vfx == RetirementVFX.Default)
             {
                 // TODO: Effect.  Check DoVanishFx on VerbManifestation.
@@ -194,36 +230,48 @@ namespace AutoccultistNS.Tokens
         {
         }
 
-        private void OnImpulseStarted(object sender, ImpulseEventArgs e)
+        private void OnGameEnded(object sender, EventArgs e)
+        {
+            // We cannot rely on OnDestory as it is not called when scenes are unloaded.
+            NucleusAccumbens.ReactionStarted -= this.OnReactionStarted;
+            NucleusAccumbens.ReactionEnded -= this.OnReactionEnded;
+        }
+
+        private void OnReactionStarted(object sender, ReactionEventArgs e)
         {
             if (e.Imperative != this.Imperative)
             {
                 return;
             }
 
-            NoonUtility.LogWarning("Impulse started " + e.Imperative.Name + " " + e.Impulse.ToString());
+            this.runningReactions++;
 
-            this.runningImpulses++;
-
-            if (this.runningImpulses == 1)
+            if (this.runningReactions == 1)
             {
-                this.artworkSpinner.StartSpinning();
+                this.gearSpinner.StartSpinning();
+            }
+
+            if (e.Reaction is OperationReaction operation)
+            {
+                this.artworkAppearance = DateTime.Now;
+                this.artworkImage.SetColor(Color.white);
+                this.artworkImage.SetSprite(ResourcesManager.GetSpriteForVerbLarge(operation.SituationId));
             }
         }
 
-        private void OnImpulseEnded(object sender, ImpulseEventArgs e)
+        private void OnReactionEnded(object sender, ReactionEventArgs e)
         {
             if (e.Imperative != this.Imperative)
             {
                 return;
             }
 
-            this.runningImpulses--;
+            this.runningReactions--;
 
-            if (this.runningImpulses <= 0)
+            if (this.runningReactions <= 0)
             {
-                this.runningImpulses = 0;
-                this.artworkSpinner.StopSpinning();
+                this.runningReactions = 0;
+                this.gearSpinner.StopSpinning();
             }
         }
     }

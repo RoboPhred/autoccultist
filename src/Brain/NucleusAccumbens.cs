@@ -44,12 +44,12 @@ namespace AutoccultistNS.Brain
         /// <summary>
         /// Raised when an impulse is started.
         /// </summary>
-        public static event EventHandler<ImpulseEventArgs> ImpulseStarted;
+        public static event EventHandler<ReactionEventArgs> ReactionStarted;
 
         /// <summary>
         /// Raised when an impulse is completed.
         /// </summary>
-        public static event EventHandler<ImpulseEventArgs> ImpulseEnded;
+        public static event EventHandler<ReactionEventArgs> ReactionEnded;
 
         /// <summary>
         /// Gets a list of the current active goals.
@@ -437,7 +437,7 @@ namespace AutoccultistNS.Brain
 
             reaction.Start();
 
-            ImpulseStarted?.Invoke(null, new ImpulseEventArgs(imperative, impulse));
+            ReactionStarted?.Invoke(null, new ReactionEventArgs(imperative, impulse, reaction));
 
             // The impulse might complete synchronously, so return false if it did.
             return RunningImpulses.Contains(impulse);
@@ -467,7 +467,7 @@ namespace AutoccultistNS.Brain
                 {
                     if (impulse != null)
                     {
-                        ImpulseEnded?.Invoke(null, new ImpulseEventArgs(pair.Key, impulse));
+                        ReactionEnded?.Invoke(null, new ReactionEventArgs(pair.Key, impulse, reaction));
                     }
 
                     imperativeFound = true;

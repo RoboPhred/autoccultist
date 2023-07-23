@@ -30,8 +30,6 @@ namespace AutoccultistNS.UI
 
         private void Update()
         {
-            NoonUtility.LogWarning("Spinner update " + this.isRunning);
-
             if (!this.isRunning)
             {
                 return;
