@@ -8,7 +8,6 @@ namespace AutoccultistNS.Actor.Actions
     using AutoccultistNS.GameState;
     using AutoccultistNS.Tasks;
     using SecretHistories.Entities;
-    using SecretHistories.Enums;
     using SecretHistories.Spheres;
 
     public class ExecuteRecipeAction : ActionBase
@@ -72,23 +71,37 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"Failed to fill first slot of recipe {this.RecipeName} in situation {this.SituationId}.");
             }
 
+            var remainingSlots = situation.GetCurrentThresholdSpheres().Where(x => x.Id != firstSlot.Id).ToArray();
+            if (remainingSlots.Length == 0)
+            {
+                return;
+            }
+
             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
                 await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
             }
-
-            var remainingSlots = situation.GetCurrentThresholdSpheres().Where(x => x.Id != firstSlot.Id).ToArray();
-            for (int i = 0; i < remainingSlots.Length; i++)
+            else
             {
-                var slot = remainingSlots[i];
+                await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
+            }
 
-                if (await this.FillSlot(slot, cancellationToken))
+            var slotted = false;
+            foreach (var slot in remainingSlots)
+            {
+                if (slotted)
                 {
-                    if (i + 1 != remainingSlots.Length && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                    if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
                     {
                         await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                     }
+                    else
+                    {
+                        await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
+                    }
                 }
+
+                slotted = await this.FillSlot(slot, cancellationToken);
             }
         }
 
