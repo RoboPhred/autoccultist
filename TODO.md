@@ -1,11 +1,3 @@
-### Hide hidden aspects from bot?
-
-Do we want the bot to play it straight and not to have access to knowledge the player does not?
-
-I used to think apostle trapped elements used hidden aspects, but they in fact do not, so this is probably totally doable.
-
-Update: We only used one hidden aspect. We use it no longer. Go ahead and implement this.
-
 ### Pre-scan configs for validity
 
 Check to make sure aspects and element ids specifid in configs actually exist in the compendium
@@ -50,3 +42,11 @@ This is particularly painful as it stops us ever caching GetImpulses, and leads 
 ### UI Jank
 
 - Padding bottom doesn't work on anything. Buttons are squished.
+
+### Load automations from mods
+
+Should load automation stuff from an automation folder in all mods.
+
+To do this, we will need to fix !import so that / paths are either relative to the current mod, or abstract the path fs so that
+we treat / as the combined contents of all mods and choose the file from the mod that provides it thats farthest along in the load order.
+Crucible filesystem abstractions for zips/directories might give some inspiration here.
