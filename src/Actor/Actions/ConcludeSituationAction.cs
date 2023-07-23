@@ -49,90 +49,38 @@ namespace AutoccultistNS.Actor.Actions
                 throw new ActionFailureException(this, $"Situation {this.SituationId} is not available.");
             }
 
-            if (situation.State.Identifier == StateEnum.Unstarted || situation.State.Identifier == StateEnum.RequiringExecution)
+            if (situation.State.Identifier != StateEnum.Complete)
             {
-                var thresholdTokens = situation.GetCurrentThresholdSpheres().SelectMany(s => s.GetTokens()).ToArray();
-                if (thresholdTokens.Length == 0)
-                {
-                    return false;
-                }
-
-                if (!situation.IsOpen)
-                {
-                    situation.OpenAt(situation.Token.Location);
-                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-                }
-
-                situation.DumpUnstartedBusiness();
-
-                // Wait for the tokens to finish moving.
-                // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
-                try
-                {
-                    await RealtimeDelay.Timeout(c => AwaitConditionTask.From(() => thresholdTokens.TokensAreStable(), c), Timeout, cancellationToken);
-                }
-                catch (TimeoutException)
-                {
-                    throw new ActionFailureException(this, $"Timed out waiting for threshold cards to stabilize from the dumping of situation {this.SituationId}.");
-                }
+                throw new ActionFailureException(this, $"Situation {this.SituationId} is not complete.");
             }
-            else if (situation.State.Identifier == StateEnum.Complete)
+
+            var outputTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).ToList();
+
+            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
-                if (!situation.IsOpen)
+                var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
+                if (shroudedTokens.Length > 0)
                 {
-                    situation.OpenAt(situation.Token.Location);
-                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-                }
-
-                var outputTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).ToList();
-
-                if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
-                {
-                    var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
                     foreach (var token in shroudedTokens)
                     {
                         token.Unshroud();
                     }
 
-                    if (shroudedTokens.Length > 0)
-                    {
-                        await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
-                    }
-                }
-
-                situation.Conclude();
-
-                // Wait for the tokens to finish moving.
-                // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
-                try
-                {
-                    await RealtimeDelay.Timeout(c => AwaitConditionTask.From(() => outputTokens.TokensAreStable(), c), Timeout, cancellationToken);
-                }
-                catch (TimeoutException)
-                {
-                    throw new ActionFailureException(this, $"Timed out waiting for output cards to stabilize from the conclusion of situation {this.SituationId}.");
+                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
                 }
             }
-            else
+
+            situation.Conclude();
+
+            // Wait for the tokens to finish moving.
+            // We used to check if they ended up on the table, but some tokens can be yoinked by greedy slots enroute.
+            try
             {
-                throw new ActionFailureException(this, $"Situation {this.SituationId} cannot be emptied becuase it is in state {situation.State.Identifier}.");
+                await RealtimeDelay.Timeout(c => AwaitConditionTask.From(() => outputTokens.TokensAreStable(), c), Timeout, cancellationToken);
             }
-
-            // Situation might go away when we Conclude
-            if (!situation.Verb.Spontaneous && !situation.Token.Defunct && situation.IsOpen)
+            catch (TimeoutException)
             {
-                // Wait on a heartbeat but dont use any delay, as we waited on the cards
-                await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
-
-                // Note: We had a game exception here once.  But now we gate this behind situation.Verb.Spontanious so I think we are ok now?
-                // Just to be safe, check again.
-                // I'm not confident in this check though, as the above await passes through synchronously when we are not in step mode.
-                // We also have the interesting tidbit that .Conclude queues up a .Retire for spontanious verbs,
-                // but only in a command queue, and it might not have executed yet...
-                if (!situation.Token.Defunct && situation.IsOpen)
-                {
-                    situation.Close();
-                }
+                throw new ActionFailureException(this, $"Timed out waiting for output cards to stabilize from the conclusion of situation {this.SituationId}.");
             }
 
             return true;

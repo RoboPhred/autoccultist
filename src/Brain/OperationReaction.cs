@@ -210,10 +210,16 @@ namespace AutoccultistNS.Brain
                             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
                             {
                                 await new OpenSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
-                                await new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                state = this.GetSituationState();
+                                if (state.State == StateEnum.Unstarted)
+                                {
+                                    await new DumpUnstartedSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                }
                             }
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe").ExecuteAndWait(innerToken);
+
+                            BrainEvents.OnOperationRecipeExecuted(this.Operation, this.GetSituationState().CurrentRecipe, this.GetSituationState().RecipeSlots.ToDictionary(x => x.SpecId, x => x.Card));
 
                             await new StartSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
 
@@ -247,6 +253,8 @@ namespace AutoccultistNS.Brain
                             this.currentRecipeSolution = recipeSolution;
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
+
+                            BrainEvents.OnOperationRecipeExecuted(this.Operation, this.GetSituationState().CurrentRecipe, this.GetSituationState().RecipeSlots.ToDictionary(x => x.SpecId, x => x.Card));
 
                             this.CaptureHistory(false);
 
@@ -323,6 +331,8 @@ namespace AutoccultistNS.Brain
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
+                            BrainEvents.OnOperationRecipeExecuted(this.Operation, this.GetSituationState().CurrentRecipe, this.GetSituationState().RecipeSlots.ToDictionary(x => x.SpecId, x => x.Card));
+
                             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
                             {
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
@@ -368,7 +378,19 @@ namespace AutoccultistNS.Brain
                     await Cerebellum.Coordinate(
                         async (innerToken) =>
                         {
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new OpenSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                                await new RevealTokensSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+
+                            BrainEvents.OnOperationCompleted(this.Operation, this.GetSituationState().OutputCards);
+
                             await new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
                         },
                         this.cancellationSource.Token);
                 },
@@ -396,7 +418,27 @@ namespace AutoccultistNS.Brain
                 if (situation.State == StateEnum.Unstarted || situation.State == StateEnum.RequiringExecution || situation.State == StateEnum.Complete)
                 {
                     await Cerebellum.Coordinate(
-                        (innerToken) => new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken),
+                        async (innerToken) =>
+                        {
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new OpenSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+
+                            if (situation.State == StateEnum.Complete)
+                            {
+                                await new ConcludeSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+                            else
+                            {
+                                await new DumpUnstartedSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+
+                            if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+                            {
+                                await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
+                            }
+                        },
                         this.cancellationSource.Token);
                 }
             }
@@ -447,10 +489,8 @@ namespace AutoccultistNS.Brain
             {
                 BrainEvents.OnOperationAborted(this.Operation);
             }
-            else
-            {
-                BrainEvents.OnOperationCompleted(this.Operation);
-            }
+
+            BrainEvents.OnOperationEnded(this.Operation);
 
             this.TryComplete(aborted);
         }

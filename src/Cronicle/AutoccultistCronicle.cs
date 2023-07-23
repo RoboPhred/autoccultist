@@ -2,6 +2,8 @@ namespace AutoccultistNS.Cronicle
 {
     using System;
     using System.IO;
+    using System.Text;
+    using System.Threading.Tasks;
     using AutoccultistNS.Brain;
     using SecretHistories.Entities;
     using SecretHistories.UI;
@@ -46,7 +48,7 @@ namespace AutoccultistNS.Cronicle
                 File.AppendAllText(CroniclePath("description", "txt"), description + "\n");
             }
 
-            BrainEvents.OperationStarted += OnOperationStarted;
+            BrainEvents.OperationRecipeExecuted += OnOperationRecipeExecuted;
             BrainEvents.OperationCompleted += OnOperationCompleted;
             BrainEvents.OperationAborted += OnOperationAborted;
         }
@@ -55,19 +57,55 @@ namespace AutoccultistNS.Cronicle
         {
             activeFolder = null;
 
-            BrainEvents.OperationStarted -= OnOperationStarted;
+            BrainEvents.OperationRecipeExecuted -= OnOperationRecipeExecuted;
             BrainEvents.OperationCompleted -= OnOperationCompleted;
             BrainEvents.OperationAborted -= OnOperationAborted;
         }
 
-        private static void OnOperationStarted(object sender, OperationEventArgs e)
+        private static void OnOperationRecipeExecuted(object sender, OperationRecipeEventArgs e)
         {
-            Snapshot($"{e.Operation.Id}_start");
+            Snapshot($"{e.Operation.Id}_recipe_{e.RecipeName}");
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Operation: {e.Operation.Name} [{e.Operation.Id}]");
+            sb.AppendLine($"Recipe: {e.RecipeName}");
+            sb.AppendLine("Input Cards");
+            foreach (var pair in e.SlottedCards)
+            {
+                sb.AppendLine($"  {pair.Key}");
+                if (pair.Value == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    sb.AppendLine($"    {pair.Value.ElementId}");
+                    foreach (var aspect in pair.Value.Aspects)
+                    {
+                        sb.AppendLine($"      {aspect.Key}: {aspect.Value}");
+                    }
+                }
+            }
+
+            File.WriteAllText(CroniclePath($"{e.Operation.Id}_recipe_{e.RecipeName}", "txt"), sb.ToString());
         }
 
-        private static void OnOperationCompleted(object sender, OperationEventArgs e)
+        private static void OnOperationCompleted(object sender, OperationCompletedEventArgs e)
         {
             Snapshot($"{e.Operation.Id}_complete");
+
+            var sb = new StringBuilder();
+            sb.AppendLine("Output cards:");
+            foreach (var output in e.OutputCards)
+            {
+                sb.AppendLine("  " + output.ElementId);
+                foreach (var pair in output.Aspects)
+                {
+                    sb.AppendLine($"    {pair.Key}: {pair.Value}");
+                }
+            }
+
+            File.WriteAllText(CroniclePath($"{e.Operation.Id}_complete", "txt"), sb.ToString());
         }
 
         private static void OnOperationAborted(object sender, OperationEventArgs e)
@@ -77,7 +115,17 @@ namespace AutoccultistNS.Cronicle
 
         private static void Snapshot(string addendum)
         {
-            ScreenCapture.CaptureScreenshot(CroniclePath(addendum, "png"));
+            // This seems to be delayed a few frames.
+            // We want a screenshot immediately.
+            // ScreenCapture.CaptureScreenshot(CroniclePath(addendum, "png"));
+            var texture = PerfMonitor.Monitor("Snapshot.CaptureScreenshotAsTexture", () => ScreenCapture.CaptureScreenshotAsTexture());
+
+            // This is slow.
+            Task.Run(() =>
+            {
+                var encoded = ImageConversion.EncodeToPNG(texture);
+                File.WriteAllBytes(CroniclePath(addendum, "png"), encoded);
+            });
         }
 
         private static string CroniclePath(string name, string ext)

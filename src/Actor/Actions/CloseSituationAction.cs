@@ -33,7 +33,7 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
-            if (situation == null || !situation.IsOpen)
+            if (situation == null || situation.Token.Defunct || !situation.IsOpen)
             {
                 return false;
             }

@@ -136,7 +136,6 @@ namespace AutoccultistNS.Actor.Actions
             }
 
             // Hold us for the next beat, if we are not running live.
-            // ActionDelay either would have been waited due to the itinerary, or it will be zero.
             await MechanicalHeart.AwaitBeatIfStopped(cancellationToken);
 
             return true;

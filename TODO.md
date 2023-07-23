@@ -50,3 +50,12 @@ Should load automation stuff from an automation folder in all mods.
 To do this, we will need to fix !import so that / paths are either relative to the current mod, or abstract the path fs so that
 we treat / as the combined contents of all mods and choose the file from the mod that provides it thats farthest along in the load order.
 Crucible filesystem abstractions for zips/directories might give some inspiration here.
+
+### Cronicle stuff
+
+- Snapshot after unshrouding cards from verb completion.
+  - Might have to make OperationReaction call out to Chronicler to tell it what to cronicle / snapshot
+- Snapshot and chronicle unknown recipes from OperationReaction
+- Screenshots happen on a frame delay, so snapshots for starting recipe cards are happening after the cards were submitted. Definitely need to have OpReaction reach out to chronicler as this is now an async issue.
+
+Its messy that OperationReaction now has broken down its actions into smaller unit and has timing issues in calling BrainEvents only when the screen is in a proper state to be screenshotted.
