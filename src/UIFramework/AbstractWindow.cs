@@ -235,6 +235,14 @@ namespace AutoccultistNS.UI
                     .SlicedImage()
                     .SetColor(BgColorBody);
 
+                this.Content = mountPoint.AddSizingLayout("Content")
+                    .SetAnchor(0, -50)
+                    .SetLeft(0, 0)
+                    .SetTop(1, -50)
+                    .SetRight(1, 0)
+                    .SetBottom(0, 50)
+                    .SetPivot(0.5f, 0.5f);
+
                 mountPoint.AddSizingLayout("Footer")
                     .SetLeft(0, 0)
                     .SetTop(0, 50)
@@ -266,14 +274,6 @@ namespace AutoccultistNS.UI
                     .SetDisabledColor(new Color(0.5368f, 0.5368f, 0.5368f, 0.502f))
                     .SetClickSound("UIButtonClose")
                     .OnClick(() => this.Close());
-
-                this.Content = mountPoint.AddSizingLayout("Content")
-                    .SetAnchor(0, -50)
-                    .SetLeft(0, 0)
-                    .SetTop(1, -50)
-                    .SetRight(1, 0)
-                    .SetBottom(0, 77)
-                    .SetPivot(0.5f, 0.5f);
             });
         }
     }

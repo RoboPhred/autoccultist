@@ -117,6 +117,11 @@ namespace AutoccultistNS.UI
 
         protected override void OnUpdate()
         {
+            if (!this.IsVisible)
+            {
+                return;
+            }
+
             if (this.CurrentResourceConstraint == null && this.View is not OperationsListView)
             {
                 this.View = new OperationsListView();

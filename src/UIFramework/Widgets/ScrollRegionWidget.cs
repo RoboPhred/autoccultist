@@ -122,7 +122,7 @@ namespace AutoccultistNS.UI
                 var handle = new GameObject("Handle");
                 var handleRt = handle.AddComponent<RectTransform>();
                 handleRt.anchorMax = new Vector2(1, 1);
-                handleRt.anchorMin = new Vector2(0, 0.47f);
+                handleRt.anchorMin = new Vector2(0, 0);
                 handleRt.offsetMin = Vector2.zero;
                 handleRt.offsetMax = Vector2.zero;
                 handleRt.pivot = new Vector2(0.5f, 0.5f);

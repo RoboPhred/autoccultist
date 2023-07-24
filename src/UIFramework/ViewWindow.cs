@@ -7,6 +7,7 @@ namespace AutoccultistNS.UI
         where TWindowHost : class, IWindowViewHost<TWindowHost>
     {
         private IWindowView<TWindowHost> view;
+        private IWindowView<TWindowHost> persistedView;
 
         private Stack<IWindowView<TWindowHost>> viewStack = new();
 
@@ -18,7 +19,7 @@ namespace AutoccultistNS.UI
 
         protected virtual IWindowView<TWindowHost> DefaultView { get; } = null;
 
-        protected virtual bool DetatchOnClose { get; } = false;
+        protected virtual bool PersistViewOnClose { get; } = false;
 
         protected IWindowView<TWindowHost> View
         {
@@ -29,11 +30,17 @@ namespace AutoccultistNS.UI
 
             set
             {
+                if (!this.IsVisible)
+                {
+                    this.persistedView = value;
+                    return;
+                }
+
                 this.DetatchView();
 
                 this.view = value;
 
-                if (this.IsOpen)
+                if (this.IsVisible)
                 {
                     this.AttachView();
                 }
@@ -76,28 +83,36 @@ namespace AutoccultistNS.UI
             {
                 this.View = this.viewStack.Pop();
             }
+            else
+            {
+                this.View = DefaultView;
+            }
         }
 
         protected override void OnOpen()
         {
+            base.OnOpen();
+
             if (this.view == null)
             {
-                this.view = this.DefaultView;
+                this.view = this.persistedView ?? this.DefaultView;
             }
 
-            this.AttachView();
+            this.persistedView = null;
 
-            base.OnOpen();
+            this.AttachView();
         }
 
         protected override void OnClose()
         {
             base.OnClose();
 
-            if (this.DetatchOnClose)
+            if (this.PersistViewOnClose)
             {
-                this.DetatchView();
+                this.persistedView = this.view;
             }
+
+            this.DetatchView();
         }
 
         protected override void OnUpdate()

@@ -28,6 +28,8 @@ namespace AutoccultistNS.UI
             // FIXME: We want to let the window expand up to a point then stop.
             // See the nonfunctional ConstrainedLayoutElement
             this.scrollWidget = window.Content.AddScrollRegion("ScrollRegion")
+                .SetExpandWidth()
+                .SetExpandHeight()
                 .SetVertical()
                 .AddContent(mountPoint =>
                 {

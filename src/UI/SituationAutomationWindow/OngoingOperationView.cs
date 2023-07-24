@@ -28,7 +28,7 @@ namespace AutoccultistNS.UI
             this.window = window;
 
             window.Content.AddVerticalLayoutGroup("VerticalLayout")
-                .SetPadding(10, 2)
+                .SetPadding(10, 5, 10, 0)
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("OperationName")
