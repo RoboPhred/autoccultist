@@ -1,4 +1,7 @@
 name: Find Miss Morland's
+ui:
+  homeSituation: explore
+  icon: verb:explore
 completedWhen:
   anyOf:
     - elementId: locationbookdealer

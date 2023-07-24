@@ -1,4 +1,7 @@
 name: Promote Glover & Glover Career from Junior
+ui:
+  homeSituation: work
+  icon: element:gloverandgloverjob
 requirements:
   elementId: gloverandgloverjuniorjob
 completedWhen:

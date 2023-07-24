@@ -1,4 +1,7 @@
 name: Promote Grail believers, by invoking Grail
+ui:
+  homeSituation: talk
+  icon: aspect:grail
 requirements:
   aspects:
     society: 1

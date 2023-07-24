@@ -4,5 +4,9 @@ namespace AutoccultistNS.Config
 
     public interface IImperativeConfig : INamedConfigObject, IImperative
     {
+        /// <summary>
+        /// Configures the settings for this imperative's UI.
+        /// </summary>
+        UISettingsConfig UI { get; }
     }
 }

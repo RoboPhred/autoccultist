@@ -1,4 +1,7 @@
 name: Recruit away negative Influences
+ui:
+  homeSituation: cult
+  icon: element:dread
 requirements:
   allOf:
     - aspects:

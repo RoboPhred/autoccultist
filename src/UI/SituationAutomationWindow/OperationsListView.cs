@@ -31,7 +31,7 @@ namespace AutoccultistNS.UI
                 .SetVertical()
                 .AddContent(mountPoint =>
                 {
-                    foreach (var op in Library.Operations.Where(x => x.Situation == window.Situation.VerbId))
+                    foreach (var op in Library.Operations.Where(this.FilterOperation))
                     {
                         this.BuildOperationRow(op, mountPoint);
                     }
@@ -83,14 +83,23 @@ namespace AutoccultistNS.UI
         {
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"operation_${operation.Id}")
-                .SetSpreadChildrenVertically()
+                .SetChildAlignment(TextAnchor.MiddleLeft)
                 .SetPadding(10, 5)
                 .AddContent(mountPoint =>
                 {
-                    var nameElement = mountPoint.AddText("Recipe")
-                        .SetFontSize(14)
-                        .SetMinFontSize(10)
-                        .SetMaxFontSize(14)
+                    mountPoint.AddImage("Icon")
+                        .SetMinWidth(40)
+                        .SetMinHeight(40)
+                        .SetPreferredWidth(40)
+                        .SetPreferredHeight(40)
+                        .SetSprite(operation.UI.GetIcon() ?? ResourceResolver.GetSprite("empty_bg"));
+
+                    mountPoint.AddSizingLayout("Spacer")
+                    .SetMinWidth(10)
+                    .SetPreferredWidth(10);
+
+                    var nameElement = mountPoint.AddText("OperationName")
+                        .SetFontSize(16)
                         .SetExpandWidth()
                         .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
                         .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
@@ -101,6 +110,8 @@ namespace AutoccultistNS.UI
                         .SetExpandWidth();
 
                     startButton = mountPoint.AddIconButton("StartButton")
+                        .SetMinWidth(35)
+                        .SetMinHeight(35)
                         .SetPreferredWidth(35)
                         .SetPreferredHeight(35)
                         .Disable()
@@ -129,6 +140,21 @@ namespace AutoccultistNS.UI
             {
                 NucleusAccumbens.AddImperative(new UITriggeredImperative(operation));
             }
+        }
+
+        private bool FilterOperation(OperationConfig operation)
+        {
+            if (operation.Situation != window.Situation.VerbId)
+            {
+                return false;
+            }
+
+            if (!operation.UI.Visible)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private class OperationUIElements

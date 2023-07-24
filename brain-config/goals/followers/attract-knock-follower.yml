@@ -1,4 +1,7 @@
 name: Find a Knock follower
+ui:
+  homeSituation: explore
+  icon: aspect:knock
 completedWhen:
   allOf:
     # Stop if we have a Knock follower, but its possible for followers to die, so we also need to check if the deck is exhausted.

@@ -1,4 +1,7 @@
 name: Promote a Grail believer, by invoking Forge
+ui:
+  homeSituation: talk
+  icon: aspect:forge
 requirements:
   aspects:
     society: 1

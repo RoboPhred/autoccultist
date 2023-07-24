@@ -1,4 +1,7 @@
 name: Acquire Stumm
+ui:
+  homeSituation: explore
+  icon: element:stumm
 requirements:
   allOf:
     - elementId: locationauctionhouse

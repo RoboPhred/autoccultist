@@ -1,4 +1,7 @@
 name: Find the Ecdysis Club
+ui:
+  homeSituation: explore
+  icon: verb:explore
 requirements:
   allOf:
     - situation: explore

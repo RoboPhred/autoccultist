@@ -210,6 +210,17 @@ namespace AutoccultistNS.UI
                 .SetPadding(20, 5)
                 .AddContent(mountPoint =>
                 {
+                    mountPoint.AddImage("Icon")
+                        .SetMinWidth(40)
+                        .SetMinHeight(40)
+                        .SetPreferredWidth(40)
+                        .SetPreferredHeight(40)
+                        .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("empty_bg"));
+
+                    mountPoint.AddSizingLayout("Spacer")
+                    .SetMinWidth(10)
+                    .SetPreferredWidth(10);
+
                     var nameElement = mountPoint.AddText("ImperativeName")
                         .SetFontSize(14)
                         .SetMinFontSize(16)
@@ -220,7 +231,7 @@ namespace AutoccultistNS.UI
                         .SetText(imperative.Name);
 
                     mountPoint.AddSizingLayout("Spacer")
-                        .SetMinWidth(10)
+                        .SetMinWidth(20)
                         .SetExpandWidth();
 
                     runningIcon = mountPoint.AddImage("ActiveIcon")
@@ -254,6 +265,11 @@ namespace AutoccultistNS.UI
 
         private bool FilterImperative(IImperativeConfig imperative, bool exactFolder)
         {
+            if (!imperative.UI.Visible)
+            {
+                return false;
+            }
+
             if (!imperative.Name.ToLower().Contains(this.searchFilter))
             {
                 return false;

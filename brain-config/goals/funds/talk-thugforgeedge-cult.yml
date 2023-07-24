@@ -1,4 +1,7 @@
 name: Produce funds with the bombmaker
+ui:
+  homeSituation: talk
+  icon: element:thugforgeedge
 requirements:
   allOf:
     - elementId: locationauctionhouse

@@ -1,4 +1,7 @@
 name: Begin the Intro
+ui:
+  homeSituation: work
+  icon: element:introjob
 requirements:
   elementId: introjob
 completedWhen:

@@ -1,4 +1,7 @@
 name: Find Grail lore at Morlands
+ui:
+  homeSituation: explore
+  icon: aspect:grail
 requirements:
   elementId: locationbookdealer
 completedWhen:

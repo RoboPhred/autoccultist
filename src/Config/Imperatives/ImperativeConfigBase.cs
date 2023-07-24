@@ -5,10 +5,16 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config.Conditions;
     using AutoccultistNS.GameState;
+    using YamlDotNet.Core;
+    using YamlDotNet.Serialization;
 
     public abstract class ImperativeConfigBase : NamedConfigObject, IImperativeConfig
     {
         public abstract IReadOnlyCollection<IImperative> Children { get; }
+
+        /// <inheritdoc/>
+        [YamlMember(Alias = "ui")]
+        public UISettingsConfig UI { get; set; } = null;
 
         /// <summary>
         /// Gets or sets a condition which must be met before this impulse can activate.
@@ -19,6 +25,24 @@ namespace AutoccultistNS.Config
         /// Gets or sets a condition on which to prevent this impulse from activating.
         /// </summary>
         public IGameStateConditionConfig Forbidders { get; set; }
+
+        public override void AfterDeserialized(Mark start, Mark end)
+        {
+            base.AfterDeserialized(start, end);
+
+            if (this.UI == null)
+            {
+                var operations = this.GetChildrenDeep().OfType<OperationConfig>().ToArray();
+                var situationCount = operations.Select(x => x.Situation).Distinct().Count();
+                var copyFromOp = situationCount == 1 ? operations[0] : null;
+                this.UI = new UISettingsConfig
+                {
+                    Visible = true,
+                    HomeSituation = copyFromOp?.Situation,
+                    Icon = copyFromOp != null ? $"verb:{copyFromOp.Situation}" : null,
+                };
+            }
+        }
 
         /// <inheritdoc/>
         public virtual IEnumerable<string> DescribeCurrentGoals(IGameState state)

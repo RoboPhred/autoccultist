@@ -1,4 +1,7 @@
 name: Sell our rubbish
+ui:
+  homeSituation: auction
+  icon: element:jumble
 requirements:
   anyOf:
     - elementId: jumble

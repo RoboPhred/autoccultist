@@ -5,10 +5,14 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
     using AutoccultistNS.Yaml;
+    using YamlDotNet.Serialization;
 
     [CustomDeserializer(typeof(MotivationCollectionConfigDeserializer))]
     public abstract class MotivationCollectionConfig : NamedConfigObject, IImperativeConfig
     {
+        [YamlIgnore]
+        public UISettingsConfig UI { get; set; } = new UISettingsConfig { Visible = false };
+
         /// <summary>
         /// Gets the total number of motivations in this config
         /// </summary>

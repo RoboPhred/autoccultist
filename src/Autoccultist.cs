@@ -101,6 +101,12 @@ public class Autoccultist : MonoBehaviour
             message = $"{ex.Message}\n{ex.ToString()}";
         }
 
+        var interestingException = ex.GetInterestingException();
+        if (interestingException != null && interestingException != ex)
+        {
+            message = $"{message}\n{interestingException.Message}\n{interestingException.ToString()}";
+        }
+
         NoonUtility.LogWarning(message);
     }
 

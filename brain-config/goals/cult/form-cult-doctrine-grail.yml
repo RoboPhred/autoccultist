@@ -1,4 +1,7 @@
 name: Form the Order of the Bloody Cup
+ui:
+  homeSituation: talk
+  icon: element:cultgrail_1
 requirements:
   aspects: { acquaintance: 1 }
 completedWhen:

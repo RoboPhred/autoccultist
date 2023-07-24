@@ -1,4 +1,7 @@
 name: Find a Heart follower
+ui:
+  homeSituation: explore
+  icon: aspect:heart
 completedWhen:
   allOf:
     # Stop if we have a Heart follower, but its possible for followers to die, so we also need to check if the deck is exhausted.

@@ -1,4 +1,7 @@
 name: Go to Oriflamme's
+ui:
+  homeSituation: explore
+  icon: element:locationauctionhouse
 requirements:
   elementId: locationauctionhouse
 imperatives:

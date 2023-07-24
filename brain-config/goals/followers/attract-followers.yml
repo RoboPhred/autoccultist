@@ -1,7 +1,11 @@
 name: Find all acquaintances and patrons (Ungated)
+
+ui: false
+
 # Note: This goal will re-activate if we loose any followers or patrons, and get stuck
 # trying to re-find them (as the mistakenidentity decays)
 # See attract-followers-memory if this is an issue.
+
 completedWhen:
   allOf:
     - !import /conditions/has-all-patrons.yml
@@ -9,6 +13,7 @@ completedWhen:
     - anyOf:
         - !import /conditions/has-all-followers.yml
         - elementId: mistakenidentity
+
 imperatives:
   - name: Speak of esoteric matters
     # Leave this at normal so that indoctrinating members takes priority.

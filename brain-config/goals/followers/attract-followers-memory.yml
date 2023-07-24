@@ -1,5 +1,9 @@
 name: Find all acquaintances and patrons
 
+ui:
+  homeSituation: explore
+  icon: element:rumour
+
 completedWhen:
   memory: has_all_followers
   value: 1

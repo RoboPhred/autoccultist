@@ -1,6 +1,9 @@
 name: Remove Alden by seduction
+ui:
+  homeSituation: talk
+  icon: aspect:grail
 requirements:
-  - elementId: gloverandglover_difficultbossa_job
+  elementId: gloverandglover_difficultbossa_job
 completedWhen:
   anyOf:
     - elementId: gloverandglover_difficultbossa_gone_job

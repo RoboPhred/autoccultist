@@ -1,4 +1,7 @@
 name: Study Bequest with Passion
+ui:
+  homeSituation: study
+  icon: element:bequestintro
 requirements:
   elementId: bequestintro
 completedWhen:

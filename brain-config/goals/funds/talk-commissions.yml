@@ -1,4 +1,7 @@
 name: Get commissions from, and submit them to, patrons
+ui:
+  homeSituation: talk
+  icon: aspect:compensationvalue
 requirements: !import /conditions/has-any-patrons.yml
 imperatives:
   # Get Commissions

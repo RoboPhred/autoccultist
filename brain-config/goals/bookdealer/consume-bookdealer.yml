@@ -1,4 +1,7 @@
 name: Purchase Morland books
+ui:
+  homeSituation: explore
+  icon: element:locationbookdealer
 requirements:
   elementId: locationbookdealer
 completedWhen:

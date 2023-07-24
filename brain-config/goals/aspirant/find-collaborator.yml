@@ -1,4 +1,7 @@
 name: Find a Collaborator
+ui:
+  homeSituation: study
+  icon: element:contactintro
 requirements:
   elementId: contactintro
 completedWhen:

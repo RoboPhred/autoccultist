@@ -1,4 +1,7 @@
 name: Work at Glover & Glover
+ui:
+  homeSituation: work
+  icon: element:gloverandgloverjob
 requirements:
   anyOf:
     - allOf:

@@ -1,4 +1,7 @@
 name: Acquire everything from Oriflamme
+ui:
+  homeSituation: explore
+  icon: element:locationauctionhouse
 requirements:
   allOf:
     - elementId: locationauctionhouse

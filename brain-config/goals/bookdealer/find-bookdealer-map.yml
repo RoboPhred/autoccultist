@@ -1,4 +1,7 @@
 name: Study the map to Morlands
+ui:
+  homeSituation: explore
+  icon: element:mapbookdealer
 requirements:
   elementId: mapbookdealer
 completedWhen:

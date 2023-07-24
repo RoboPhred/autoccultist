@@ -1,4 +1,5 @@
 name: Recruit acquaintances, meet patrons, and accept Poppy's offer
+ui: false
 requirements:
   allOf:
     - elementId: reason

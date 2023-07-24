@@ -5,6 +5,7 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameResources;
     using AutoccultistNS.GameState;
+    using YamlDotNet.Core;
 
     /// <summary>
     /// Defines a combination operation reactor / impulse / imperative.
@@ -36,6 +37,9 @@ namespace AutoccultistNS.Config
             /// </summary>
             IgnoreRecipes,
         }
+
+        /// <inheritdoc/>
+        public UISettingsConfig UI { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the operation that this operation inherits from.
@@ -75,6 +79,20 @@ namespace AutoccultistNS.Config
 
         /// <inheritdoc/>
         public IReadOnlyCollection<IImperative> Children => new IImperative[0];
+
+        public override void AfterDeserialized(Mark start, Mark end)
+        {
+            base.AfterDeserialized(start, end);
+
+            if (this.UI == null)
+            {
+                this.UI = new UISettingsConfig
+                {
+                    Visible = true,
+                    HomeSituation = this.Situation,
+                };
+            }
+        }
 
         /// <inheritdoc/>
         public override ConditionResult IsConditionMet(IGameState state)

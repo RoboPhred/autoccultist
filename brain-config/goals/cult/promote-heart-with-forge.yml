@@ -1,4 +1,7 @@
 name: Promote Heart believers, by invoking Forge
+ui:
+  homeSituation: talk
+  icon: aspect:forge
 requirements:
   allOf:
     - aspects: { society: 1, venerationforge: 1 }

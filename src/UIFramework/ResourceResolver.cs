@@ -11,6 +11,13 @@ namespace AutoccultistNS.UI
 
         public static Sprite GetSprite(string resourceName)
         {
+            if (string.IsNullOrEmpty(resourceName))
+            {
+                return null;
+            }
+
+            NoonUtility.Log($"Loading sprite {resourceName}");
+
             var parts = resourceName.Split(':');
             if (parts.Length == 1)
             {
@@ -47,6 +54,11 @@ namespace AutoccultistNS.UI
             if (sprite == null)
             {
                 sprite = Resources.Load<Sprite>(uiPath);
+            }
+
+            if (sprite == null)
+            {
+                Autoccultist.LogWarn($"Could not find sprite {folder}/{resourceName} at {uiPath}");
             }
 
             return sprite;

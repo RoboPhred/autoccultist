@@ -1,4 +1,7 @@
 name: Find Oriflamme's
+ui:
+  homeSituation: explore
+  icon: element:locationauctionhouse
 requirements:
   allOf:
     - situation: explore

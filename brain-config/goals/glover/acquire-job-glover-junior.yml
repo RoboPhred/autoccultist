@@ -1,4 +1,7 @@
 name: Find Clerical Work
+ui:
+  homeSituation: work
+  icon: element:gloverandgloverjuniorjob
 completedWhen:
   anyOf:
     - elementId: gloverandgloverjuniorjob

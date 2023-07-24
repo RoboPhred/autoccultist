@@ -1,4 +1,7 @@
 name: Promote a believer, by invoking Forge
+ui:
+  homeSituation: talk
+  icon: aspect:forge
 requirements:
   aspects: { society: 1, venerationforge: 1 }
 completedWhen:

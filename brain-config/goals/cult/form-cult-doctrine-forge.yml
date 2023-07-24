@@ -1,4 +1,7 @@
 name: Form the Unflinching Order
+ui:
+  homeSituation: talk
+  icon: element:cultforge_1
 requirements:
   aspects: { acquaintance: 1 }
 completedWhen:

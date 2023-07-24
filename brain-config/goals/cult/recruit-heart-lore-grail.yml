@@ -1,4 +1,7 @@
 name: Recruit Heart acquaintances, by invoking Grail
+ui:
+  homeSituation: talk
+  icon: aspect:grail
 requirements:
   aspects:
     society: 1
