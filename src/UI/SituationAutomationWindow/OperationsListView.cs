@@ -8,24 +8,26 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.GameState;
     using UnityEngine;
 
-    public class OperationsListView : IWindowView
+    public class OperationsListView : IWindowView<SituationAutomationWindow.IWindowContext>
     {
-        private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(.5);
-        private readonly SituationAutomationWindow window;
-        private readonly Transform contentRoot;
+        private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(.5);
+
         private readonly Dictionary<OperationConfig, OperationUIElements> operationUIs = new();
-        private readonly ScrollRegionWidget scrollWidget;
+
+        private SituationAutomationWindow.IWindowContext window;
+        private ScrollRegionWidget scrollWidget;
 
         private DateTime lastUpdate = DateTime.MinValue;
 
-        public OperationsListView(SituationAutomationWindow window, WidgetMountPoint content, WidgetMountPoint footer)
+        public Sprite Icon => null;
+
+        public void Attach(SituationAutomationWindow.IWindowContext window)
         {
             this.window = window;
-            this.contentRoot = content;
 
             // FIXME: We want to let the window expand up to a point then stop.
             // See the nonfunctional ConstrainedLayoutElement
-            this.scrollWidget = content.AddScrollRegion("ScrollRegion")
+            this.scrollWidget = window.Content.AddScrollRegion("ScrollRegion")
                 .SetVertical()
                 .AddContent(mountPoint =>
                 {
@@ -36,7 +38,7 @@ namespace AutoccultistNS.UI
                 })
                 .ScrollToVertical(1);
 
-            footer.AddHorizontalLayoutGroup("FooterButtons")
+            window.Footer.AddHorizontalLayoutGroup("FooterButtons")
                 .SetChildAlignment(TextAnchor.MiddleRight)
                 .SetPadding(10, 2)
                 .SetSpacing(5)
@@ -48,9 +50,9 @@ namespace AutoccultistNS.UI
                 });
         }
 
-        public void UpdateContent()
+        public void Update()
         {
-            if (DateTime.UtcNow - this.lastUpdate < this.updateInterval)
+            if (DateTime.UtcNow - this.lastUpdate < UpdateInterval)
             {
                 return;
             }
@@ -71,6 +73,10 @@ namespace AutoccultistNS.UI
                 pair.Elements.Row.GameObject.transform.SetAsLastSibling();
                 pair.Elements.StartButton.SetEnabled(pair.CanExecute);
             }
+        }
+
+        public void Detatch()
+        {
         }
 
         private void BuildOperationRow(OperationConfig operation, WidgetMountPoint mountPoint)

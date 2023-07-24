@@ -6,13 +6,23 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.GameResources;
     using AutoccultistNS.GameState;
     using SecretHistories.Entities;
+    using UnityEngine;
 
-    public class SituationAutomationWindow : SituationWindow
+    public class SituationAutomationWindow : ViewWindow<SituationAutomationWindow.IWindowContext>, SituationAutomationWindow.IWindowContext
     {
-        private IWindowView currentView;
-
         private IResourceConstraint<ISituationState> lockOutAfterConstraint;
         private UISituationLockoutConstraint lockoutConstraint;
+
+        public interface IWindowContext : IWindowViewHost<IWindowContext>
+        {
+            Situation Situation { get; }
+
+            bool IsLockedOut { get; }
+
+            void ToggleLockout();
+        }
+
+        public Situation Situation { get; private set; }
 
         public bool IsAutomating
         {
@@ -34,6 +44,8 @@ namespace AutoccultistNS.UI
 
         protected override int DefaultHeight => 400;
 
+        protected override Sprite DefaultIcon => ResourcesManager.GetSpriteForVerbLarge(this.Situation?.VerbId ?? "x");
+
         private IResourceConstraint<ISituationState> CurrentResourceConstraint
         {
             get
@@ -45,9 +57,15 @@ namespace AutoccultistNS.UI
 
         public static SituationAutomationWindow CreateWindow(Situation situation)
         {
-            var window = SituationWindow.CreateTabletopWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
+            var window = AbstractWindow.CreateTabletopWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
             window.Attach(situation);
             return window;
+        }
+
+        public void Attach(Situation situation)
+        {
+            this.Situation = situation;
+            this.Title = $"{situation.VerbId.Capitalize()} Automations";
         }
 
         public void ToggleLockout()
@@ -97,53 +115,22 @@ namespace AutoccultistNS.UI
             NucleusAccumbens.ReevaluateImpulses();
         }
 
-        protected override void OnAwake()
-        {
-            base.OnAwake();
-        }
-
-        protected override void OnAttach()
-        {
-            base.OnAttach();
-
-            this.Icon.AddImage().SetSprite(ResourcesManager.GetSpriteForVerbLarge(this.Situation.VerbId));
-
-            this.Title = $"{this.Situation.VerbId.Capitalize()} Automations";
-        }
-
         protected override void OnUpdate()
         {
-            if (this.IsClosed)
+            if (this.CurrentResourceConstraint == null && this.View is not OperationsListView)
             {
-                if (this.currentView != null)
-                {
-                    this.Clear();
-                    this.currentView = null;
-                }
-
-                return;
+                this.View = new OperationsListView();
+            }
+            else if (this.CurrentResourceConstraint is UISituationLockoutConstraint && this.View is not LockoutView)
+            {
+                this.View = new LockoutView();
+            }
+            else if (this.CurrentResourceConstraint is OperationReaction reaction && (this.View is not OngoingOperationView view || view.Reaction != reaction))
+            {
+                this.View = new OngoingOperationView(reaction);
             }
 
-            if (this.CurrentResourceConstraint == null && this.currentView is not OperationsListView)
-            {
-                this.Clear();
-                this.currentView = new OperationsListView(this, this.Content, this.Footer);
-            }
-            else if (this.CurrentResourceConstraint is UISituationLockoutConstraint && this.currentView is not LockoutView)
-            {
-                this.Clear();
-                this.currentView = new LockoutView(this, this.Content);
-            }
-            else if (this.CurrentResourceConstraint is OperationReaction reaction && (this.currentView is not OngoingOperationView view || view.Reaction != reaction))
-            {
-                this.Clear();
-                this.currentView = new OngoingOperationView(this, reaction, this.Content, this.Footer);
-            }
-
-            if (this.currentView != null)
-            {
-                this.currentView.UpdateContent();
-            }
+            base.OnUpdate();
         }
 
         private void LockOutAfterConstraint(object sender, EventArgs e)

@@ -5,20 +5,29 @@ namespace AutoccultistNS.UI
     using SecretHistories.UI;
     using UnityEngine;
 
-    public class OngoingOperationView : IWindowView
+    public class OngoingOperationView : IWindowView<SituationAutomationWindow.IWindowContext>
     {
         private int cachedHistoryItems = -1;
 
-        private SituationAutomationWindow window;
+        private SituationAutomationWindow.IWindowContext window;
+
         private TextButtonWidget lockoutButton;
         private ScrollRegionWidget historyScroll;
 
-        public OngoingOperationView(SituationAutomationWindow window, OperationReaction reaction, WidgetMountPoint contentMount, WidgetMountPoint footerMount)
+        public OngoingOperationView(OperationReaction reaction)
+        {
+            this.Reaction = reaction;
+        }
+
+        public OperationReaction Reaction { get; }
+
+        public Sprite Icon => null;
+
+        public void Attach(SituationAutomationWindow.IWindowContext window)
         {
             this.window = window;
-            this.Reaction = reaction;
 
-            contentMount.AddVerticalLayoutGroup("VerticalLayout")
+            window.Content.AddVerticalLayoutGroup("VerticalLayout")
                 .SetPadding(10, 2)
                 .AddContent(mountPoint =>
                 {
@@ -28,7 +37,7 @@ namespace AutoccultistNS.UI
                         .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
                         .SetMinFontSize(16)
                         .SetMaxFontSize(32)
-                        .SetText(reaction.Operation.Name);
+                        .SetText(this.Reaction.Operation.Name);
 
                     mountPoint.AddSizingLayout("Spacer")
                         .SetPreferredHeight(10);
@@ -43,7 +52,7 @@ namespace AutoccultistNS.UI
                     // It seems CurrentRecipe description is usually ".".  Are they tokens?  Stored in a situation dominion?
                 });
 
-            footerMount.AddHorizontalLayoutGroup("FooterButtons")
+            window.Footer.AddHorizontalLayoutGroup("FooterButtons")
                 .SetChildAlignment(TextAnchor.MiddleRight)
                 .SetPadding(10, 2)
                 .SetSpacing(5)
@@ -51,7 +60,7 @@ namespace AutoccultistNS.UI
                 {
                     mountPoint.AddTextButton("AbortButton")
                         .SetText("Abort")
-                        .OnClick(() => reaction.Dispose());
+                        .OnClick(() => this.Reaction.Dispose());
 
                     this.lockoutButton = mountPoint.AddTextButton("LockoutButton")
                         .SetText("Lockout")
@@ -59,9 +68,7 @@ namespace AutoccultistNS.UI
                 });
         }
 
-        public OperationReaction Reaction { get; private set; }
-
-        public void UpdateContent()
+        public void Update()
         {
             this.lockoutButton.SetEnabled(!this.window.IsLockedOut);
 
@@ -122,6 +129,10 @@ namespace AutoccultistNS.UI
                     }
                 })
                 .ScrollToVertical(0);
+        }
+
+        public void Detatch()
+        {
         }
     }
 }

@@ -1,7 +1,16 @@
 namespace AutoccultistNS.UI
 {
-    public interface IWindowView
+    using UnityEngine;
+
+    public interface IWindowView<TWindowContext>
+        where TWindowContext : IWindowViewHost<TWindowContext>
     {
-        void UpdateContent();
+        Sprite Icon { get; }
+
+        void Attach(TWindowContext window);
+
+        void Update();
+
+        void Detatch();
     }
 }

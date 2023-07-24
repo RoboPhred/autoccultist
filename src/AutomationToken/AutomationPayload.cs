@@ -67,7 +67,6 @@ namespace AutoccultistNS.Tokens
         [DontEncaust]
         public IImperativeConfig Imperative { get; }
 
-
         [Encaust]
         public string Id { get; private set; }
 

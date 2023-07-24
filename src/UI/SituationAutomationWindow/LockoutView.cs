@@ -2,11 +2,13 @@ namespace AutoccultistNS.UI
 {
     using UnityEngine;
 
-    public class LockoutView : IWindowView
+    public class LockoutView : IWindowView<SituationAutomationWindow.IWindowContext>
     {
-        public LockoutView(SituationAutomationWindow window, WidgetMountPoint content)
+        public Sprite Icon => null;
+
+        public void Attach(SituationAutomationWindow.IWindowContext window)
         {
-            content.AddVerticalLayoutGroup("VerticalLayout")
+            window.Content.AddVerticalLayoutGroup("VerticalLayout")
                 .SetPadding(10, 2)
                 .SetExpandWidth()
                 .SetSpreadChildrenHorizontally()
@@ -40,7 +42,11 @@ namespace AutoccultistNS.UI
                 });
         }
 
-        public void UpdateContent()
+        public void Detatch()
+        {
+        }
+
+        public void Update()
         {
         }
     }
