@@ -59,7 +59,7 @@ motivations:
     requires:
       - study_bequest
     primaryGoals:
-      - discover-bookdealer
+      - bookdealer/find-bookdealer-map
       - aspirant/find-collaborator
 
   # Begin skills
@@ -115,8 +115,8 @@ motivations:
       - get_buff
       - get_scholarship_major
     primaryGoals:
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
 
   drain_auctionhouse:
     name: Buy and read books from Oriflamme
@@ -126,7 +126,7 @@ motivations:
       # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
       - drain_morlands
     primaryGoals:
-      - find-auctionhouse
+      - auction/find-auctionhouse
       - auction/acquire-everything
       - name: Watch Stumm
         completedWhen:

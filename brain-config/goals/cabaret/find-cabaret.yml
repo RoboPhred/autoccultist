@@ -1,0 +1,16 @@
+name: Find the Ecdysis Club
+requirements:
+  allOf:
+    - situation: explore
+    - anyOf:
+        - aspects: { follower: 1 }
+        - elementId: health
+completedWhen:
+  anyOf:
+    - elementId: locationcabaret
+    - elementId: locationcabaretclosed
+imperatives:
+  - name: Explore the city with a follower
+    operation: explore/explore-city-follower
+  - name: Explore the city with health
+    operation: explore/explore-city-health

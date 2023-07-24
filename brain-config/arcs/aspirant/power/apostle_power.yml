@@ -129,7 +129,7 @@ motivations:
       - begin_game
     primaryGoals:
       # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
-      - consume-bookdealer
+      - bookdealer/consume-bookdealer
 
   read_all_lore:
     name: Read all lore books
@@ -139,7 +139,7 @@ motivations:
       - get_buff
       - get_scholarship_major
     primaryGoals:
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
 
   get_auction_items:
     name: Find Items from Oriflamme
@@ -147,7 +147,7 @@ motivations:
       # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
       - drain_morlands
     primaryGoals:
-      - find-auctionhouse
+      - auction/find-auctionhouse
       - auction/acquire-stumm-passive
       - auction/acquire-asclepian-passive
     supportingGoals:
@@ -178,8 +178,8 @@ motivations:
     requires:
       - begin_game
     primaryGoals:
-      - find-auctionhouse
-      - find-bookdealer
+      - auction/find-auctionhouse
+      - bookdealer/find-bookdealer-explore
 
   upgrade_forge_lore:
     name: Upgrade forge lore

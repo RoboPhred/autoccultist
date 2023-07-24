@@ -3,29 +3,29 @@ legacy: aspirant
 motivations:
   - name: Begin the game
     primaryGoals:
-      - !import /goals/aspirant/begin-intro.yml
+      - aspirant/begin-intro
   - name: Hit the gym
     primaryGoals:
       # Just need 2 to fend off sickness.
-      - !import /goals/health/acquire-skillhealtha.yml
+      - health/acquire-skillhealtha
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Hit the books
     primaryGoals:
       # Our reason actually refreshes right as alden demands more, so we are fine with 2
-      - !import /goals/reason/acquire-skillreasona.yml
-      # - !import /goals/reason/acquire-skillreasonb.yml
-      # - !import /goals/reason/acquire-skillreasonc.yml
+      - reason/acquire-skillreasona
+      # - reason/acquire-skillreasonb
+      # - reason/acquire-skillreasonc
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Get a job, await Alden
     primaryGoals:
-      - !import /goals/glover/acquire-job-glover-junior.yml
-      - !import /goals/glover/acquire-job-glover-standard.yml
+      - glover/acquire-job-glover-junior
+      - glover/acquire-job-glover-standard
     supportingGoals:
-      - !import /goals/survive.yml
+      - survive
   - name: This is my life, now
     primaryGoals:
       - name: Such as it is
@@ -34,5 +34,5 @@ motivations:
             priority: goal
             operation: glover/work-glover-acceptance
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - survive
+      - glover/work-glover

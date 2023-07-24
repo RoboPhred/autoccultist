@@ -11,7 +11,7 @@ motivations:
   counter_suspicion:
     name: Counteract suspicion
     primaryGoals:
-      - counter-suspicion
+      - hunters/counter-suspicion
 
   # Begin jobs
   get_gg:
@@ -61,7 +61,7 @@ motivations:
     requires:
       - study_bequest
     primaryGoals:
-      - discover-bookdealer
+      - bookdealer/find-bookdealer-map
       - aspirant/find-collaborator
 
   # Begin skills
@@ -175,7 +175,7 @@ motivations:
       - study_bequest_contents
     primaryGoals:
       # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
-      - consume-bookdealer
+      - bookdealer/consume-bookdealer
 
   drain_auctionhouse:
     name: Buy and read books from Oriflamme
@@ -185,7 +185,7 @@ motivations:
       # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
       - drain_morlands
     primaryGoals:
-      - find-auctionhouse
+      - auction/find-auctionhouse
       - auction/acquire-everything
       - name: Watch Stumm
         completedWhen:
@@ -203,7 +203,7 @@ motivations:
       - get_scholarship_major
     requirePrimaryGoals: true
     primaryGoals:
-      - consume-lore
+      - lore/consume-lore
 
   acquire_early_doors:
     name: Acquire the Wood and White Door

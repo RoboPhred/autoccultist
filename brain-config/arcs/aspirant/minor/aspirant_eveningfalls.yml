@@ -3,39 +3,39 @@ legacy: aspirant
 motivations:
   - name: Begin the game
     primaryGoals:
-      - !import /goals/aspirant/begin-intro.yml
+      - aspirant/begin-intro
   - name: Study the bequest and unlock verbs
     # Note: Not needed for crime free. Needed here to unlock explore
     primaryGoals:
       # Need the two below
-      - !import /goals/aspirant/study-bequest-passion.yml
+      - aspirant/study-bequest-passion
       # Need explore to find a hireling
-      - !import /goals/discover-bookdealer.yml
+      - bookdealer/find-bookdealer-map
       # Need talk to set them on alden
-      - !import /goals/aspirant/find-collaborator.yml
+      - aspirant/find-collaborator
   - name: Hit the gym
     primaryGoals:
       # 3 health so we can explore
-      - !import /goals/health/acquire-skillhealtha.yml
-      - !import /goals/health/acquire-skillhealthb.yml
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Hit the books
     primaryGoals:
-      - !import /goals/reason/acquire-skillreasona.yml
+      - reason/acquire-skillreasona
       # Our reason actually refreshes right as alden demands more, so we are fine with 2
-      # - !import /goals/reason/acquire-skillreasonb.yml
-      # - !import /goals/reason/acquire-skillreasonc.yml
+      # - reason/acquire-skillreasonb
+      # - reason/acquire-skillreasonc
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - survive
+      - funds/work-labor
   - name: Get a job, await Alden
     primaryGoals:
-      - !import /goals/glover/acquire-job-glover-junior.yml
-      - !import /goals/glover/acquire-job-glover-standard.yml
+      - glover/acquire-job-glover-junior
+      - glover/acquire-job-glover-standard
     supportingGoals:
-      - !import /goals/survive.yml
+      - survive
   - name: Dispose of alden
     primaryGoals:
       - name: Dispose of Alden
@@ -65,8 +65,8 @@ motivations:
             priority: goal
             operation: annoyance/murder-annoyance
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - survive
+      - glover/work-glover
   - name: This is my life, now
     primaryGoals:
       - name: Such as it is
@@ -75,5 +75,5 @@ motivations:
             priority: goal
             operation: glover/work-glover-acceptance
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - survive
+      - glover/work-glover

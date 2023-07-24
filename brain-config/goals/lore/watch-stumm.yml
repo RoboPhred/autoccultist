@@ -1,4 +1,6 @@
 name: Watch Stumm
+requirements:
+  elementId: stumm
 completedWhen:
   elementId: ritefollowerconsumeinfluence
 imperatives:

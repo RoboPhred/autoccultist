@@ -1,8 +1,12 @@
 name: Read and translate lore books and Stumm
-requirements: !import /conditions/readable-or-translatable-books.yml
+requirements:
+  anyOf:
+    - !import /conditions/readable-or-translatable-books.yml
+    - elementId: stumm
 completedWhen:
   noneOf:
     - !import /conditions/readable-or-translatable-books.yml
+    - elementId: stumm
 imperatives:
   - !import /impulses/books/maint-read-lore.yml
   - !import /impulse-sets/learn-languages.yml

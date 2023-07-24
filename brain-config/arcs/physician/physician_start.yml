@@ -6,8 +6,8 @@ selectionHint:
 motivations:
   - name: Begin the Game
     primaryGoals:
-      - !import /goals/legacy/physician/work-institute.yml
-      - !import /goals/legacy/physician/study-notes.yml
-      - !import /goals/discover-bookdealer.yml
+      - legacy/physician/work-institute
+      - legacy/physician/study-notes
+      - bookdealer/find-bookdealer-map
     supportingGoals:
-      - !import /goals/survive.yml
+      - survive

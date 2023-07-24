@@ -1,7 +1,0 @@
-name: Explore the city with followers
-completedWhen:
-  allOf:
-    - elementId: locationcabaret
-    - elementId: locationauctionhouse
-imperatives:
-  - !import /impulses/explore-city-follower.yml

@@ -1,4 +1,10 @@
-name: Find the Auction House
+name: Find Oriflamme's
+requirements:
+  allOf:
+    - situation: explore
+    - anyOf:
+        - aspects: { follower: 1 }
+        - elementId: health
 completedWhen:
   elementId: locationauctionhouse
 imperatives:

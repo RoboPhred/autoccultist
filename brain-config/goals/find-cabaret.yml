@@ -1,8 +1,0 @@
-name: Find the Ecdysis Club
-completedWhen:
-  anyOf:
-    - elementId: locationcabaret
-    - elementId: locationcabaretclosed
-imperatives:
-  - name: Explore the city
-    operation: explore/explore-city-follower

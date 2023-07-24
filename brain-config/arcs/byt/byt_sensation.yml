@@ -51,24 +51,24 @@ motivations:
       - followers/attract-followers-memory
       - survive
       - glover/work-glover
-      - find-bookdealer
+      - bookdealer/find-bookdealer-explore
   - name: Be sure we've got that book dealer
     primaryGoals:
-      - find-bookdealer
+      - bookdealer/find-bookdealer-explore
     supportingGoals:
       - followers/attract-followers-memory
       - survive
       - glover/work-glover
   - name: Find grail lore, get passionate
     primaryGoals:
-      - bookdealer/find-bookdealer-grail
+      - bookdealer/consume-bookdealer-grail
       - passion/acquire-skillpassiona
       - passion/acquire-skillpassionb
     supportingGoals:
       - survive
       - glover/work-glover
-      - consume-books-lore-waitmorland
-      - consume-bookdealer
+      - lore/consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
       - followers/attract-grail-follower
       - patrons/find-sulochana
       - cult/recruit-grail-lore-grail
@@ -79,8 +79,8 @@ motivations:
       - patrons/find-sulochana
     supportingGoals:
       - cult/recruit-lore-grail
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
       - survive
       - glover/work-glover
   - name: Recruit all Grail and Heart followers
@@ -88,8 +88,8 @@ motivations:
       - cult/recruit-grail-lore-grail
       - cult/recruit-heart-lore-grail
     supportingGoals:
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
       - survive
       - glover/work-glover
   - name: Dispose of Alden
@@ -98,25 +98,25 @@ motivations:
     supportingGoals:
       - funds/work-labor
       - survive
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
   - name: Go on a date
     primaryGoals:
       - romance/gain-relationship-grail
     supportingGoals:
       - glover/work-glover
       - survive
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
   - name: Finish Morlands
     primaryGoals:
-      - consume-bookdealer
+      - bookdealer/consume-bookdealer
     supportingGoals:
       - survive
       - glover/work-glover
       - romance/maintain-relationships
       - cult/recruit-away-influences
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
       - mansus/acquire-way-wood
       - mansus/acquire-way-whitedoor
   - name: Find STUMM!
@@ -129,7 +129,7 @@ motivations:
       - cult/recruit-away-influences
       - mansus/acquire-way-wood
       - mansus/acquire-way-whitedoor
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
       - auction/attend-auction
   - name: Watch STUMM!
     primaryGoals:
@@ -145,7 +145,7 @@ motivations:
       - cult/recruit-away-influences
       - mansus/acquire-way-wood
       - mansus/acquire-way-whitedoor
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
   - name: Acquire the Wood and White Door
     primaryGoals:
       - mansus/acquire-way-wood
@@ -155,7 +155,7 @@ motivations:
       - glover/work-glover
       - romance/maintain-relationships
       - cult/recruit-away-influences
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
   - name: Raid the hospital
     primaryGoals:
       - vaults/st-agnes-hospital
@@ -164,7 +164,7 @@ motivations:
       - glover/work-glover
       - romance/maintain-relationships
       - cult/recruit-away-influences
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
   - name: Move into Morlands
     primaryGoals:
       - hq/move-hq-library
@@ -173,10 +173,10 @@ motivations:
       - romance/maintain-relationships
       - glover/work-glover
       - cult/recruit-away-influences
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
   - name: Read the books from St. Agnes
     primaryGoals:
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
     supportingGoals:
       - survive
       - glover/work-glover

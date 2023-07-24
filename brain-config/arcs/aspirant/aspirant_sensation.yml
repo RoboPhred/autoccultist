@@ -25,7 +25,7 @@ motivations:
       - survive
   - name: Study bequest contents
     primaryGoals:
-      - discover-bookdealer
+      - bookdealer/find-bookdealer-map
       - aspirant/find-collaborator
     supportingGoals:
       - survive
@@ -54,13 +54,13 @@ motivations:
       - glover/work-glover
   - name: Find grail lore, get passionate
     primaryGoals:
-      - bookdealer/find-bookdealer-grail
+      - bookdealer/consume-bookdealer-grail
       - passion/acquire-skillpassiona
       - passion/acquire-skillpassionb
     supportingGoals:
       - survive
       - glover/work-glover
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
   - name: Establish the Order of the Bloody Cup
     primaryGoals:
       - cult/form-cult-doctrine-grail
@@ -72,12 +72,12 @@ motivations:
     primaryGoals:
       - followers/attract-grail-follower
       - patrons/find-sulochana
-      - find-auctionhouse
-      - find-cabaret
+      - auction/find-auctionhouse
+      - cabaret/find-cabaret
     supportingGoals:
       - cult/recruit-lore-grail
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
       - survive
       - glover/work-glover
   - name: Recruit all Grail and Heart followers
@@ -85,8 +85,8 @@ motivations:
       - cult/recruit-grail-lore-grail
       - cult/recruit-heart-lore-grail
     supportingGoals:
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
       - survive
       - glover/work-glover
   - name: Dispose of Alden
@@ -103,8 +103,8 @@ motivations:
       - survive
   - name: Finish Morlands, collect rites
     primaryGoals:
-      - consume-bookdealer
-      - consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
     supportingGoals:
       - survive
       - glover/work-glover
@@ -164,7 +164,7 @@ motivations:
       - cult/recruit-away-influences
   - name: Read the books from St. Agnes
     primaryGoals:
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
     supportingGoals:
       - survive
       - glover/work-glover

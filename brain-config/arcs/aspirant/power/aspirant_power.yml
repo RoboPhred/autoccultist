@@ -66,7 +66,7 @@ motivations:
     requires:
       - study_bequest
     primaryGoals:
-      - discover-bookdealer
+      - bookdealer/find-bookdealer-map
       - aspirant/find-collaborator
 
   # Begin skills
@@ -169,7 +169,7 @@ motivations:
     requires:
       - establish_cult
     primaryGoals:
-      - find-auctionhouse
+      - auction/find-auctionhouse
 
   # Begin lore and rite collection
   drain_morlands:
@@ -179,7 +179,7 @@ motivations:
       - study_bequest_contents
     primaryGoals:
       # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
-      - consume-bookdealer
+      - bookdealer/consume-bookdealer
 
   read_all_lore:
     name: Read all lore books
@@ -189,7 +189,7 @@ motivations:
       - get_buff
       - get_scholarship_major
     primaryGoals:
-      - consume-books-lore-waitmorland
+      - lore/consume-books-lore-waitmorland
 
   buy_stumm:
     name: Buy Stumm from Oriflamme
@@ -209,7 +209,7 @@ motivations:
     requires:
       - buy_stumm
     primaryGoals:
-      - watch-stumm
+      - lore/watch-stumm
   # End lore and rite collection
 
   acquire_early_doors:
