@@ -329,6 +329,7 @@ namespace AutoccultistNS.Tokens
 
         public bool Retire(RetirementVFX vfx)
         {
+            SoundManager.PlaySfx("SituationTokenRetire");
             NucleusAccumbens.RemoveImperative(this.Imperative);
             return true;
         }

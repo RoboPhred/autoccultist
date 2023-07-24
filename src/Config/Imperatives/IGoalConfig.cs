@@ -2,7 +2,7 @@ namespace AutoccultistNS.Config
 {
     using AutoccultistNS.Brain;
 
-    public interface IGoalConfig : INamedConfigObject, IGoal
+    public interface IGoalConfig : IImperativeConfig, IGoal
     {
     }
 }

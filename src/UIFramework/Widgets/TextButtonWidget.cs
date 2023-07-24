@@ -18,8 +18,8 @@ namespace AutoccultistNS.UI
         {
             this.SetPivot(.5f, .5f);
 
-            this.FitContentWidth();
-            this.FitContentHeight();
+            this.SetFitContentWidth();
+            this.SetFitContentHeight();
 
             // FIXME: While this looks generally good,
             // only our top padding is being applied.
@@ -371,12 +371,14 @@ namespace AutoccultistNS.UI
 
         public TextButtonWidget SetWordWrapping(bool enabled)
         {
-            throw new System.NotImplementedException();
+            this.TextWidget.SetWordWrapping(enabled);
+            return this;
         }
 
         public TextButtonWidget SetOverflowMode(TextOverflowModes mode)
         {
-            throw new System.NotImplementedException();
+            this.TextWidget.SetOverflowMode(mode);
+            return this;
         }
     }
 }

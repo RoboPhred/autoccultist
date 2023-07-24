@@ -11,7 +11,7 @@ namespace AutoccultistNS.Config
     /// This config object defines both the conditions on which to perform an operation, and the operation itself.
     /// </summary>
     [LibraryConfigObject("operations")]
-    public class OperationConfig : OperationReactorConfig, IImperativeConfig, IImpulse
+    public class OperationConfig : OperationReactorConfig, IChildImperativeConfig, IImpulse
     {
         /// <summary>
         /// Defines options for when to consider this operation startable.

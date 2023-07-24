@@ -51,6 +51,13 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public UIGameObjectWidget Behavior<T>()
+            where T : MonoBehaviour
+        {
+            this.GameObject.GetOrAddComponent<T>();
+            return this;
+        }
+
         public UIGameObjectWidget Behavior<T>(Action<T> action)
             where T : MonoBehaviour
         {

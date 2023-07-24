@@ -53,6 +53,13 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
+        public new TCoreType Behavior<T>()
+            where T : MonoBehaviour
+        {
+            this.GameObject.GetOrAddComponent<T>();
+            return this as TCoreType;
+        }
+
         public new TCoreType Behavior<T>(Action<T> action)
             where T : MonoBehaviour
         {

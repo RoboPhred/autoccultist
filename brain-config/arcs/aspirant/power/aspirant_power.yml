@@ -117,7 +117,7 @@ motivations:
       - get_scholarship_major
     blocks:
       # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
-      - get_stumm
+      - watch_stumm
       - read_all_lore
     primaryGoals:
       - reason/acquire-skillreasond-illumination
@@ -164,6 +164,13 @@ motivations:
       - hq/move-hq-library
   # End cult establishment
 
+  find_auction:
+    name: Find Oriflamme
+    requires:
+      - establish_cult
+    primaryGoals:
+      - find-auctionhouse
+
   # Begin lore and rite collection
   drain_morlands:
     name: Buy all books from Morlands
@@ -184,18 +191,25 @@ motivations:
     primaryGoals:
       - consume-books-lore-waitmorland
 
-  get_stumm:
-    name: Find Stumm from Oriflamme
+  buy_stumm:
+    name: Buy Stumm from Oriflamme
     requires:
       # We need explore
       - study_bequest_contents
       # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
       - drain_morlands
+      - find_auction
     primaryGoals:
-      - find-auctionhouse
       - auction/acquire-stumm-passive
     supportingGoals:
       - auction/attend-auction
+
+  watch_stumm:
+    name: Watch Stumm
+    requires:
+      - buy_stumm
+    primaryGoals:
+      - watch-stumm
   # End lore and rite collection
 
   acquire_early_doors:

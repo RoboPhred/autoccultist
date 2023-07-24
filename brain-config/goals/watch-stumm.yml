@@ -1,0 +1,5 @@
+name: Watch Stumm
+completedWhen:
+  elementId: ritefollowerconsumeinfluence
+imperatives:
+  - operation: watch-stumm

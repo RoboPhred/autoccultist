@@ -1,7 +1,9 @@
 namespace AutoccultistNS
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// Helpers for filesystem operations.
@@ -50,6 +52,39 @@ namespace AutoccultistNS
 
             WalkDirectory(directoryPath, (path) => File.Delete(path));
             Directory.Delete(directoryPath);
+        }
+
+        public static List<string> GetDirectories(string directoryPath)
+        {
+            var items = from item in Directory.GetDirectories(directoryPath)
+                        where !Path.GetFileName(item).StartsWith(".")
+                        orderby item.ToLower()
+                        select item;
+            return items.ToList();
+        }
+
+        public static string GetDirectorySiblingPrevious(string directoryPath)
+        {
+            var items = GetDirectories(directoryPath);
+            var index = items.IndexOf(directoryPath);
+            if (index == -1)
+            {
+                return null;
+            }
+
+            return items[(index + items.Count - 1) % items.Count];
+        }
+
+        public static string GetDirectorySiblingNext(string directoryPath)
+        {
+            var items = GetDirectories(directoryPath);
+            var index = items.IndexOf(directoryPath);
+            if (index == -1)
+            {
+                return null;
+            }
+
+            return items[(index + 1) % items.Count];
         }
 
         // https://weblog.west-wind.com/posts/2010/Dec/20/Finding-a-Relative-Path-in-NET

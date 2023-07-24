@@ -12,7 +12,7 @@ namespace AutoccultistNS.UI
                 .SetPadding(10, 2)
                 .SetExpandWidth()
                 .SetSpreadChildrenHorizontally()
-                .FitContentHeight()
+                .SetFitContentHeight()
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddText("LockoutText")

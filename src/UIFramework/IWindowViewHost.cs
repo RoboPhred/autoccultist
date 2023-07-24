@@ -8,5 +8,9 @@ namespace AutoccultistNS.UI
         WidgetMountPoint Footer { get; }
 
         void ReplaceView(IWindowView<TWindowContext> view);
+
+        void PushView(IWindowView<TWindowContext> view);
+
+        void PopView();
     }
 }

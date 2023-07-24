@@ -1,5 +1,6 @@
 namespace AutoccultistNS.UI
 {
+    using System.Collections.Generic;
     using UnityEngine;
 
     public class ViewWindow<TWindowHost> : AbstractWindow, IWindowViewHost<TWindowHost>
@@ -7,11 +8,17 @@ namespace AutoccultistNS.UI
     {
         private IWindowView<TWindowHost> view;
 
+        private Stack<IWindowView<TWindowHost>> viewStack = new();
+
         WidgetMountPoint IWindowViewHost<TWindowHost>.Content => this.Content;
 
         WidgetMountPoint IWindowViewHost<TWindowHost>.Footer => this.Footer;
 
         protected virtual Sprite DefaultIcon { get; } = null;
+
+        protected virtual IWindowView<TWindowHost> DefaultView { get; } = null;
+
+        protected virtual bool DetatchOnClose { get; } = false;
 
         protected IWindowView<TWindowHost> View
         {
@@ -35,25 +42,62 @@ namespace AutoccultistNS.UI
 
         void IWindowViewHost<TWindowHost>.ReplaceView(IWindowView<TWindowHost> view)
         {
+            this.ReplaceView(view);
+        }
+
+        void IWindowViewHost<TWindowHost>.PushView(IWindowView<TWindowHost> view)
+        {
+            this.PushView(view);
+        }
+
+        void IWindowViewHost<TWindowHost>.PopView()
+        {
+            this.PopView();
+        }
+
+        protected void ReplaceView(IWindowView<TWindowHost> view)
+        {
             this.View = view;
+        }
+
+        protected void PushView(IWindowView<TWindowHost> view)
+        {
+            if (this.View != null)
+            {
+                this.viewStack.Push(this.View);
+            }
+
+            this.View = view;
+        }
+
+        protected void PopView()
+        {
+            if (this.viewStack.Count > 0)
+            {
+                this.View = this.viewStack.Pop();
+            }
         }
 
         protected override void OnOpen()
         {
-            base.OnOpen();
+            if (this.view == null)
+            {
+                this.view = this.DefaultView;
+            }
 
             this.AttachView();
+
+            base.OnOpen();
         }
 
         protected override void OnClose()
         {
             base.OnClose();
 
-            this.view?.Detatch();
-            this.Content.Clear();
-            this.Footer.Clear();
-
-            // Preserve this.view so we can re-attach it on open.
+            if (this.DetatchOnClose)
+            {
+                this.DetatchView();
+            }
         }
 
         protected override void OnUpdate()
@@ -70,20 +114,24 @@ namespace AutoccultistNS.UI
                 this.view.Detatch();
                 this.view = null;
             }
+
+            this.Icon.Clear();
+            this.Content.Clear();
+            this.Footer.Clear();
         }
 
         private void AttachView()
         {
             this.Icon.Clear();
+            this.Content.Clear();
+            this.Footer.Clear();
+
             var sprite = this.view?.Icon ?? this.DefaultIcon;
             if (sprite != null)
             {
                 this.Icon.AddImage("Icon")
                     .SetSprite(sprite);
             }
-
-            this.Content.Clear();
-            this.Footer.Clear();
 
             if (this.view != null)
             {

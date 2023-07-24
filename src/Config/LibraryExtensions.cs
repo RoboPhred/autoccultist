@@ -5,16 +5,17 @@ namespace AutoccultistNS.Config
 
     public static class LibraryExtensions
     {
-        public static string GetLibraryPath(this IImperative goal)
+        public static string GetLibraryPath(this IImperative imperative)
         {
-            if (goal is not IConfigObject configObject)
+            if (imperative is not IConfigObject configObject)
             {
                 return null;
             }
 
-            var libraryPath = LibraryConfigObjectAttribute.GetLibraryPath(goal.GetType());
+            var libraryPath = LibraryConfigObjectAttribute.GetLibraryPath(imperative.GetType());
             if (libraryPath == null)
             {
+                NoonUtility.LogWarning("Unable to determine library path for " + imperative.GetType().FullName);
                 return null;
             }
 

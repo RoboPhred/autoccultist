@@ -14,7 +14,7 @@ namespace AutoccultistNS.Config
     /// Goals are made out of multiple impulses, which trigger the actual actions against the game.
     /// </summary>
     [LibraryConfigObject("goals")]
-    public class GoalConfig : ImperativeConfigBase, IGoalConfig
+    public class GoalConfig : ImperativeConfigBase, IGoalConfig, IChildImperativeConfig
     {
         /// <summary>
         /// Gets or sets the condition to determine when this goal is completed.
@@ -29,7 +29,7 @@ namespace AutoccultistNS.Config
         /// <summary>
         /// Gets or sets a list of imperatives this goal provides.
         /// </summary>
-        public FlatList<IImperativeConfig> Imperatives { get; set; } = new();
+        public FlatList<IChildImperativeConfig> Imperatives { get; set; } = new();
 
         /// <inheritdoc/>
         public override IReadOnlyCollection<IImperative> Children => this.Imperatives;

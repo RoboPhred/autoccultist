@@ -6,7 +6,7 @@ namespace AutoccultistNS.Config
     using AutoccultistNS.GameState;
     using YamlDotNet.Core;
 
-    public class MotivationalImperativeConfig : ImperativeConfigBase
+    public class MotivationalImperativeConfig : ImperativeConfigBase, IChildImperativeConfig
     {
         /// <summary>
         /// Gets or sets a list of motivations that will drive the execution of this arc.

@@ -92,7 +92,7 @@ namespace AutoccultistNS.UI
                         mountPoint.AddVerticalLayoutGroup("HistoryEntry")
                             .SetSpreadChildrenHorizontally()
                             .SetExpandWidth()
-                            .FitContentHeight()
+                            .SetFitContentHeight()
                             .SetPadding(10, 2)
                             .SetSpacing(3)
                             .AddContent(mountPoint =>
@@ -110,7 +110,7 @@ namespace AutoccultistNS.UI
 
                                     mountPoint.AddHorizontalLayoutGroup("Element")
                                         .SetExpandWidth()
-                                        .FitContentHeight()
+                                        .SetFitContentHeight()
                                         .SetChildAlignment(TextAnchor.MiddleCenter)
                                         .SetSpacing(5)
                                         .AddContent(mountPoint =>

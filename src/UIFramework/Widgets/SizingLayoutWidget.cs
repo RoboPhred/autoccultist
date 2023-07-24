@@ -157,13 +157,13 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public SizingLayoutWidget SetFillContentWidth()
+        public SizingLayoutWidget SetFitContentWidth()
         {
             this.ContentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
         }
 
-        public SizingLayoutWidget SetFillContentHeight()
+        public SizingLayoutWidget SetFitContentHeight()
         {
             this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;

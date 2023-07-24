@@ -202,13 +202,13 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
-        public TCoreType FitContentWidth()
+        public TCoreType SetFitContentWidth()
         {
             this.ContentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this as TCoreType;
         }
 
-        public TCoreType FitContentHeight()
+        public TCoreType SetFitContentHeight()
         {
             this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this as TCoreType;

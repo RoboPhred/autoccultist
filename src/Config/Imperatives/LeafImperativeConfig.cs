@@ -10,7 +10,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// An imperative that triggers impulses based on a set of conditions.
     /// </summary>
-    public class LeafImperativeConfig : ImperativeConfigBase
+    public class LeafImperativeConfig : ImperativeConfigBase, IChildImperativeConfig
     {
         /// <summary>
         /// Gets or sets the impulse that this impulse inherits from.

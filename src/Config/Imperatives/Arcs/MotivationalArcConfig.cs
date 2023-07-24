@@ -18,6 +18,7 @@ namespace AutoccultistNS.Config
     /// <summary>
     /// The configuration for an <see cref="IArc"/>.
     /// </summary>
+    [LibraryConfigObject("arcs")]
     public class MotivationalArcConfig : MotivationalImperativeConfig, IArcConfig
     {
         private string arcFolder;

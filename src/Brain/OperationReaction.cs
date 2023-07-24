@@ -219,11 +219,11 @@ namespace AutoccultistNS.Brain
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => startingRecipe").ExecuteAndWait(innerToken);
 
+                            this.CaptureHistory();
+
                             BrainEvents.OnOperationRecipeExecuted(this.Operation, this.GetSituationState().CurrentRecipe, this.GetSituationState().RecipeSlots.ToDictionary(x => x.SpecId, x => x.Card));
 
                             await new StartSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
-
-                            this.CaptureHistory(true);
 
                             state = this.GetSituationState();
 
@@ -256,7 +256,7 @@ namespace AutoccultistNS.Brain
 
                             BrainEvents.OnOperationRecipeExecuted(this.Operation, this.GetSituationState().CurrentRecipe, this.GetSituationState().RecipeSlots.ToDictionary(x => x.SpecId, x => x.Card));
 
-                            this.CaptureHistory(false);
+                            this.CaptureHistory();
 
                             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
                             {
@@ -279,18 +279,21 @@ namespace AutoccultistNS.Brain
             // Remember what this was, in case it somehow ends up changing.
             var pinnedRecipe = state.CurrentRecipe;
 
+            // FIXME: If there are magnet slots, wait for some time until they grab something.
+            // Ideally, we would wait ALL the time, so we can record that they never get what they are looking for
+
             var recipeSolution = this.Operation.GetRecipeSolution(state);
             if (recipeSolution == null)
             {
                 // Don't know what this recipe is, let it continue.
-                this.CaptureHistory(false);
+                this.CaptureHistory();
                 return true;
             }
 
             if (state.RecipeSlots.Count == 0)
             {
                 // Nothing to slot, no need to coordinate anything.
-                this.CaptureHistory(false);
+                this.CaptureHistory();
                 return !recipeSolution.EndOperation;
             }
 
@@ -331,6 +334,8 @@ namespace AutoccultistNS.Brain
 
                             await new ExecuteRecipeAction(this.Operation.Situation, recipeSolution, $"{this.Operation.Name} => ongoingRecipe").ExecuteAndWait(innerToken);
 
+                            this.CaptureHistory();
+
                             BrainEvents.OnOperationRecipeExecuted(this.Operation, this.GetSituationState().CurrentRecipe, this.GetSituationState().RecipeSlots.ToDictionary(x => x.SpecId, x => x.Card));
 
                             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
@@ -338,7 +343,6 @@ namespace AutoccultistNS.Brain
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
                             }
 
-                            this.CaptureHistory(false);
 
                             return !recipeSolution.EndOperation;
                         },
@@ -397,11 +401,11 @@ namespace AutoccultistNS.Brain
                 this.cancellationSource.Token);
         }
 
-        private void CaptureHistory(bool fromStoredCards)
+        private void CaptureHistory()
         {
             var state = this.GetSituationState();
 
-            var cards = fromStoredCards ? state.StoredCards : state.GetSlottedCards();
+            var cards = state.GetSlottedCards();
             var history = new OperationHistory(state.CurrentRecipe, state.SlottedRecipe, cards.Select(x => x.ElementId).ToArray());
 
             this.history.Add(history);
