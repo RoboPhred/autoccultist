@@ -18,6 +18,8 @@ namespace AutoccultistNS.UI
 
         private ImperativeListWindow.IWindowContext window;
 
+        private float scrollY = 1;
+
         private string searchFilter = string.Empty;
 
         public ImperativeFolderView(IReadOnlyCollection<IImperativeConfig> collection, string folder)
@@ -30,6 +32,20 @@ namespace AutoccultistNS.UI
 
         public string Folder { get; }
 
+        public string Title
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.Folder))
+                {
+                    return "Automations";
+                }
+
+                var captialized = string.Join("/", this.Folder.Split("\\").Select(x => x.Capitalize()));
+                return "Automations: " + captialized.Substring(0, captialized.Length - 1);
+            }
+        }
+
         public Sprite Icon => null;
 
         public void Attach(ImperativeListWindow.IWindowContext window)
@@ -41,10 +57,6 @@ namespace AutoccultistNS.UI
                 .SetChildAlignment(TextAnchor.MiddleCenter)
                 .AddContent(mountPoint =>
                 {
-                    // mountPoint.AddTextButton("Previous")
-                    //     .OnClick(() => window.ReplaceView(new ImperativeFolderView(this.Collection, FilesystemHelpers.GetDirectorySiblingPrevious(this.Folder))))
-                    //     .SetText("Previous");
-
                     mountPoint.AddSizingLayout("Spacer")
                         .SetExpandWidth();
 
@@ -54,10 +66,6 @@ namespace AutoccultistNS.UI
 
                     mountPoint.AddSizingLayout("Spacer")
                         .SetExpandWidth();
-
-                    // mountPoint.AddTextButton("Next")
-                    //     .OnClick(() => window.ReplaceView(new ImperativeFolderView(this.Collection, FilesystemHelpers.GetDirectorySiblingNext(this.Folder))))
-                    //     .SetText("Next");
                 });
 
             this.RebuildContent();
@@ -119,7 +127,7 @@ namespace AutoccultistNS.UI
                 select imperative;
 
             this.window.Content.Clear();
-            this.window.Content.AddScrollRegion("ScrollRegion")
+            var scrollRegion = this.window.Content.AddScrollRegion("ScrollRegion")
                 .SetExpandWidth()
                 .SetExpandHeight()
                 .SetVertical()
@@ -155,6 +163,9 @@ namespace AutoccultistNS.UI
                             }
                         });
                 });
+
+            scrollRegion.ScrollToVertical(this.scrollY);
+            scrollRegion.OnScrollValueChanged(v => this.scrollY = v.y);
         }
 
         private void BuildFolderItem(string folder, WidgetMountPoint mountPoint)
@@ -188,19 +199,23 @@ namespace AutoccultistNS.UI
 
         private void BuildImperativeRow(IImperativeConfig imperative, WidgetMountPoint mountPoint)
         {
+            var state = GameStateProvider.Current;
+            var canExecute = imperative.IsConditionMet(state) && !imperative.IsSatisfied(state);
+            var isRunning = NucleusAccumbens.CurrentImperatives.Contains(imperative);
+
             ImageWidget runningIcon = null;
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"imperative_${imperative.Name}")
-                .SetSpreadChildrenVertically()
-                .SetPadding(10, 5)
+                .SetChildAlignment(TextAnchor.MiddleCenter)
+                .SetExpandWidth()
+                .SetFitContentHeight()
+                .SetPadding(20, 5)
                 .AddContent(mountPoint =>
                 {
-                    var isRunning = NucleusAccumbens.CurrentImperatives.Contains(imperative);
-
-                    var nameElement = mountPoint.AddText("Recipe")
+                    var nameElement = mountPoint.AddText("ImperativeName")
                         .SetFontSize(14)
-                        .SetMinFontSize(10)
-                        .SetMaxFontSize(14)
+                        .SetMinFontSize(16)
+                        .SetMaxFontSize(32)
                         .SetExpandWidth()
                         .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
                         .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
@@ -213,17 +228,18 @@ namespace AutoccultistNS.UI
                     runningIcon = mountPoint.AddImage("ActiveIcon")
                         .SetSprite("autoccultist_situation_automation_badge")
                         .SetActive(isRunning)
-                        .SetMinWidth(35)
-                        .SetMinHeight(35)
-                        .SetPreferredWidth(35)
-                        .SetPreferredHeight(35);
+                        .SetMinWidth(50)
+                        .SetMinHeight(50)
+                        .SetPreferredWidth(50)
+                        .SetPreferredHeight(50)
+                        .WithBehavior<Spinner>();
 
                     startButton = mountPoint.AddIconButton("StartButton")
-                        .SetMinWidth(35)
-                        .SetMinHeight(35)
-                        .SetPreferredWidth(35)
-                        .SetPreferredHeight(35)
-                        .Disable()
+                        .SetMinWidth(40)
+                        .SetMinHeight(40)
+                        .SetPreferredWidth(40)
+                        .SetPreferredHeight(40)
+                        .SetEnabled(canExecute)
                         .SetBackground()
                         .SetSprite("autoccultist_play_icon")
                         .SetActive(!isRunning)

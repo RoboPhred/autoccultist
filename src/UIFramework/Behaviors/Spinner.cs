@@ -5,22 +5,30 @@ namespace AutoccultistNS.UI
     [RequireComponent(typeof(RectTransform))]
     public class Spinner : MonoBehaviour
     {
+        public const float DefaultSpeed = -360 / 16;
+
         private bool isRunning = true;
 
         private RectTransform rectTransform;
 
-        public float Speed { get; set; } = 1f;
+        public float Speed { get; set; } = DefaultSpeed;
 
-        public void StartSpinning()
+        public Spinner SetSpeed(float speed)
         {
-            NoonUtility.LogWarning("Spinner started");
-            this.isRunning = true;
+            this.Speed = speed;
+            return this;
         }
 
-        public void StopSpinning()
+        public Spinner StartSpinning()
         {
-            NoonUtility.LogWarning("Spinner stopped");
+            this.isRunning = true;
+            return this;
+        }
+
+        public Spinner StopSpinning()
+        {
             this.isRunning = false;
+            return this;
         }
 
         private void Awake()

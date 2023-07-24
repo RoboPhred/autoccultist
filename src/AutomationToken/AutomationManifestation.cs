@@ -18,7 +18,6 @@ namespace AutoccultistNS.Tokens
     [RequireComponent(typeof(RectTransform))]
     public class AutomationManifestation : BasicManifestation, IManifestation, IPointerEnterHandler, IPointerExitHandler
     {
-        private const float RotationSpeedPerSecond = -360 / 16;
         private static readonly TimeSpan ArtworkFadeTime = TimeSpan.FromSeconds(2);
 
         private bool isInitialized = false;
@@ -111,8 +110,6 @@ namespace AutoccultistNS.Tokens
                     .WithBehavior<Spinner>(spinner =>
                     {
                         this.gearSpinner = spinner;
-                        spinner.Speed = RotationSpeedPerSecond;
-                        NoonUtility.LogWarning("WTFV stopping spinner");
                         spinner.StopSpinning();
                     });
 

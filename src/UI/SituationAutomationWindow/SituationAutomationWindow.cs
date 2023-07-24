@@ -44,6 +44,8 @@ namespace AutoccultistNS.UI
 
         protected override int DefaultHeight => 400;
 
+        protected override string DefaultTitle => $"{this.Situation?.VerbId.Capitalize()} Automations";
+
         protected override Sprite DefaultIcon => ResourcesManager.GetSpriteForVerbLarge(this.Situation?.VerbId ?? "x");
 
         private IResourceConstraint<ISituationState> CurrentResourceConstraint
@@ -65,7 +67,6 @@ namespace AutoccultistNS.UI
         public void Attach(Situation situation)
         {
             this.Situation = situation;
-            this.Title = $"{situation.VerbId.Capitalize()} Automations";
         }
 
         public void ToggleLockout()

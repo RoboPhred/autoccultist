@@ -1,4 +1,6 @@
 name: Go to Oriflamme's
+requirements:
+  elementId: locationauctionhouse
 imperatives:
   - name: Go to Oriflamme's
     requirements: !import /conditions/has-slushfund-major.yml

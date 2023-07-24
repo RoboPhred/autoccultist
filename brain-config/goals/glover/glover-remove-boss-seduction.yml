@@ -1,4 +1,6 @@
 name: Remove Alden by seduction
+requirements:
+  - elementId: gloverandglover_difficultbossa_job
 completedWhen:
   anyOf:
     - elementId: gloverandglover_difficultbossa_gone_job

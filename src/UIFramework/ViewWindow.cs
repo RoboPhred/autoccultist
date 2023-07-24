@@ -3,7 +3,7 @@ namespace AutoccultistNS.UI
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class ViewWindow<TWindowHost> : AbstractWindow, IWindowViewHost<TWindowHost>
+    public abstract class ViewWindow<TWindowHost> : AbstractWindow, IWindowViewHost<TWindowHost>
         where TWindowHost : class, IWindowViewHost<TWindowHost>
     {
         private IWindowView<TWindowHost> view;
@@ -14,6 +14,8 @@ namespace AutoccultistNS.UI
         WidgetMountPoint IWindowViewHost<TWindowHost>.Content => this.Content;
 
         WidgetMountPoint IWindowViewHost<TWindowHost>.Footer => this.Footer;
+
+        protected abstract string DefaultTitle { get; }
 
         protected virtual Sprite DefaultIcon { get; } = null;
 
@@ -85,7 +87,7 @@ namespace AutoccultistNS.UI
             }
             else
             {
-                this.View = DefaultView;
+                this.View = this.DefaultView;
             }
         }
 
@@ -147,6 +149,8 @@ namespace AutoccultistNS.UI
                 this.Icon.AddImage("Icon")
                     .SetSprite(sprite);
             }
+
+            this.Title = this.view?.Title ?? this.DefaultTitle;
 
             if (this.view != null)
             {

@@ -404,6 +404,7 @@ namespace AutoccultistNS.Tokens
             {
                 return;
             }
+
             // TODO: Show idle, and let the user click a button to dismiss us.
             // TODO: Is CardLightDramatic the fancy ascension one?
             this.Retire(RetirementVFX.CardLightDramatic);

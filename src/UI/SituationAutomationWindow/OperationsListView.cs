@@ -19,6 +19,8 @@ namespace AutoccultistNS.UI
 
         private DateTime lastUpdate = DateTime.MinValue;
 
+        public string Title => null;
+
         public Sprite Icon => null;
 
         public void Attach(SituationAutomationWindow.IWindowContext window)

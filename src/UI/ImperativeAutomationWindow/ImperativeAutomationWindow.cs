@@ -43,13 +43,6 @@ namespace AutoccultistNS.UI
                 return;
             }
 
-            // // TODO: Let it remain open with a "This imperative has completed" message
-            // if (!NucleusAccumbens.CurrentImperatives.Contains(this.Imperative))
-            // {
-            //     this.Close();
-            //     return;
-            // }
-
             if (DateTime.UtcNow - this.lastUpdate < UpdateInterval)
             {
                 return;

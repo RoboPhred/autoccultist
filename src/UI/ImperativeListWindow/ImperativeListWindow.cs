@@ -20,6 +20,8 @@ namespace AutoccultistNS.UI
 
         protected override int DefaultHeight => 800;
 
+        protected override string DefaultTitle => "Automations";
+
         protected override Sprite DefaultIcon => ResourcesManager.GetSpriteForUI("autoccultist_gears");
 
         protected override IWindowView<IWindowContext> DefaultView => new ImperativeArcsGoalsView();
@@ -47,12 +49,6 @@ namespace AutoccultistNS.UI
             {
                 SoundManager.PlaySfx("SituationTokenSpawn");
             }
-        }
-
-        protected override void OnAwake()
-        {
-            base.OnAwake();
-            this.Title = "Automations";
         }
     }
 }

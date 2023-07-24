@@ -1,4 +1,5 @@
 name: Get commissions from, and submit them to, patrons
+requirements: !import /conditions/has-any-patrons.yml
 imperatives:
   # Get Commissions
   - name: Get a commission from Poppy

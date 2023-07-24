@@ -46,7 +46,11 @@ namespace AutoccultistNS.UI
             viewportRt.offsetMax = Vector2.zero;
 
             viewport.AddComponent<RectMask2D>();
+
+            this.ScrollRect.onValueChanged.AddListener((value) => this.ScrollValueChanged?.Invoke(this, new ScrollValueChangedEventArgs(value)));
         }
+
+        public event EventHandler<ScrollValueChangedEventArgs> ScrollValueChanged;
 
         public ScrollRect ScrollRect { get; private set; }
 
@@ -212,8 +216,16 @@ namespace AutoccultistNS.UI
             return this;
         }
 
+        public ScrollRegionWidget OnScrollValueChanged(Action<Vector2> onChange)
+        {
+            this.ScrollValueChanged += (sender, args) => onChange(args.Value);
+            return this;
+        }
+
         private IEnumerator JankfestScrollHorizontal(float value)
         {
+            this.ScrollRect.horizontalNormalizedPosition = value;
+
             // Unity's UI is a total jankfest, and it wants to scroll to a random position somewhere in the middle
             // whenever it opens.
             // We have to wait for that jank scroll to happen in order to override it.
@@ -235,6 +247,8 @@ namespace AutoccultistNS.UI
 
         private IEnumerator JankfestScrollVertical(float value)
         {
+            this.ScrollRect.verticalNormalizedPosition = value;
+
             // Unity's UI is a total jankfest, and it wants to scroll to a random position somewhere in the middle
             // whenever it opens.
             // We have to wait for that jank scroll to happen in order to override it.
@@ -316,6 +330,16 @@ namespace AutoccultistNS.UI
             }
 
             this.SetContent(content);
+        }
+
+        public class ScrollValueChangedEventArgs : EventArgs
+        {
+            public ScrollValueChangedEventArgs(Vector2 value)
+            {
+                this.Value = value;
+            }
+
+            public Vector2 Value { get; }
         }
     }
 }

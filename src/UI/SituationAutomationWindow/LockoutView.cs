@@ -4,6 +4,8 @@ namespace AutoccultistNS.UI
 
     public class LockoutView : IWindowView<SituationAutomationWindow.IWindowContext>
     {
+        public string Title => null;
+
         public Sprite Icon => null;
 
         public void Attach(SituationAutomationWindow.IWindowContext window)
