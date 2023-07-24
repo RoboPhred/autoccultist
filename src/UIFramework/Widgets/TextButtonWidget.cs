@@ -41,7 +41,7 @@ namespace AutoccultistNS.UI
                     .SetTop(1, 0)
                     .SetRight(1, 0)
                     .SetBottom(0, 0)
-                    .SetSprite("button")
+                    .SetSprite("internal:button")
                     .SetIgnoreLayout();
                 this.Button.image = background.Image;
 

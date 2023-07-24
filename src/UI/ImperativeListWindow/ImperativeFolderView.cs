@@ -9,7 +9,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.GameState;
     using UnityEngine;
 
-    public class ImperativeFolderView : IWindowView<ImperativeListWindow.IWindowContext>
+    public class ImperativeFolderView : IWindowView<ImperativeListWindow.IWindowContext>, IViewHasTitle
     {
         private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(1);
         private readonly Dictionary<IImperative, ImperativeUIElements> imperativeUIs = new();
@@ -45,8 +45,6 @@ namespace AutoccultistNS.UI
                 return "Automations: " + captialized.Substring(0, captialized.Length - 1);
             }
         }
-
-        public Sprite Icon => null;
 
         public void Attach(ImperativeListWindow.IWindowContext window)
         {

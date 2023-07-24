@@ -74,21 +74,7 @@ namespace AutoccultistNS.UI
 
         public ImageWidget SetSprite(string resourceName)
         {
-            // This is a partial reimplementation of ResourcesManager.GetSpriteForUI
-            // We want to know if the sprite is not found, to use our fallback lookup.
-            string uiPath = Path.Combine(Watchman.Get<SecretHistories.Services.Config>().GetConfigValue("imagesdir"), "ui", resourceName);
-
-            var sprite = Watchman.Get<ModManager>().GetSprite(uiPath);
-            if (sprite == null)
-            {
-                sprite = Resources.Load<Sprite>(uiPath);
-            }
-
-            if (sprite == null)
-            {
-                sprite = ResourceHack.FindSprite(resourceName);
-            }
-
+            var sprite = ResourceResolver.GetSprite(resourceName);
             if (sprite == null)
             {
                 NoonUtility.LogWarning($"Could not find sprite {resourceName}");

@@ -21,10 +21,6 @@ namespace AutoccultistNS.UI
 
         public OperationReaction Reaction { get; }
 
-        public string Title => null;
-
-        public Sprite Icon => null;
-
         public void Attach(SituationAutomationWindow.IWindowContext window)
         {
             this.window = window;

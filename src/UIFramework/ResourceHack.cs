@@ -1,4 +1,4 @@
-namespace AutoccultistNS
+namespace AutoccultistNS.UI
 {
     using System.Collections.Generic;
     using System.Linq;

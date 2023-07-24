@@ -6,10 +6,6 @@ namespace AutoccultistNS.UI
 
     public class ImperativeArcsGoalsView : IWindowView<ImperativeListWindow.IWindowContext>
     {
-        public string Title => null;
-
-        public Sprite Icon => null;
-
         public void Attach(ImperativeListWindow.IWindowContext window)
         {
             window.Content.AddHorizontalLayoutGroup("Buttons")

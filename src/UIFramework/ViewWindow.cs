@@ -143,14 +143,25 @@ namespace AutoccultistNS.UI
             this.Content.Clear();
             this.Footer.Clear();
 
-            var sprite = this.view?.Icon ?? this.DefaultIcon;
-            if (sprite != null)
+            if (this.view is IViewHasIcon iconView && iconView.Icon != null)
             {
                 this.Icon.AddImage("Icon")
-                    .SetSprite(sprite);
+                    .SetSprite(iconView.Icon);
+            }
+            else if (this.DefaultIcon)
+            {
+                this.Icon.AddImage("Icon")
+                    .SetSprite(this.DefaultIcon);
             }
 
-            this.Title = this.view?.Title ?? this.DefaultTitle;
+            if (this.view is IViewHasTitle titleView && !string.IsNullOrEmpty(titleView.Title))
+            {
+                this.Title = titleView.Title;
+            }
+            else if (!string.IsNullOrEmpty(this.DefaultTitle))
+            {
+                this.Title = this.DefaultTitle;
+            }
 
             if (this.view != null)
             {

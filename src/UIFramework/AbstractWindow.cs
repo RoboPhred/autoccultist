@@ -200,7 +200,7 @@ namespace AutoccultistNS.UI
                     .SetTop(1, 0)
                     .SetRight(1, 0)
                     .SetBottom(1, -50)
-                    .SetSprite("window_bg_top")
+                    .SetSprite("internal:window_bg_top")
                     .SlicedImage()
                     .SetColor(BgColorHeader);
 
@@ -231,7 +231,7 @@ namespace AutoccultistNS.UI
                     .SetTop(1, -50)
                     .SetRight(1, 0)
                     .SetBottom(0, 50)
-                    .SetSprite("window_bg_middle")
+                    .SetSprite("internal:window_bg_middle")
                     .SlicedImage()
                     .SetColor(BgColorBody);
 
@@ -251,7 +251,7 @@ namespace AutoccultistNS.UI
                     .AddContent(mountPoint =>
                     {
                         mountPoint.AddImage("BG_Footer")
-                            .SetSprite("window_bg_bottom")
+                            .SetSprite("internal:window_bg_bottom")
                             .SlicedImage()
                             .SetColor(BgColorFooter);
 
@@ -265,7 +265,7 @@ namespace AutoccultistNS.UI
                     .SetRight(1, -13)
                     .SetBottom(1, -37)
                     .SetSize(24, 24)
-                    .SetSprite("icon_close")
+                    .SetSprite("internal:icon_close")
                     .CenterImage()
                     .SetColor(new Color(0.3804f, 0.7294f, 0.7922f, 1))
                     .SetHighlightedColor(Color.white)
