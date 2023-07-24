@@ -1,4 +1,4 @@
 name: Explore the city with a follower
 priority: goal
 # We require passion to find an acquaintance, and reason to find a patron
-operation: explore-city-follower
+operation: explore/explore-city-follower

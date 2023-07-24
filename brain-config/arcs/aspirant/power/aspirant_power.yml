@@ -193,7 +193,9 @@ motivations:
       - drain_morlands
     primaryGoals:
       - find-auctionhouse
-      - auction/acquire-stumm-only
+      - auction/acquire-stumm-passive
+    supportingGoals:
+      - auction/attend-auction
   # End lore and rite collection
 
   acquire_early_doors:

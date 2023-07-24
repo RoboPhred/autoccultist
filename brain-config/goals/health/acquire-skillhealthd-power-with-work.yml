@@ -1,4 +1,4 @@
-name: Acquire a Matchless Physique
+name: Acquire a Matchless Physique through Labor
 requirements:
   aspects: { healthskill: 3 }
 completedWhen:

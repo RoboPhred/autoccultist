@@ -1,4 +1,4 @@
-name: Acquire a Steely Physique
+name: Acquire a Steely Physique through Excersize
 requirements:
   aspects: { healthskill: 2 }
 completedWhen:

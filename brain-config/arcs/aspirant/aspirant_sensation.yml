@@ -14,215 +14,230 @@ selectionHint:
 motivations:
   - name: Begin the game
     primaryGoals:
-      - !import /goals/aspirant/begin-intro.yml
+      - aspirant/begin-intro
   - name: Activate power temptation
     primaryGoals:
-      - !import /goals/aspirant/study-bequest-passion.yml
+      - aspirant/study-bequest-passion
   - name: Get a job
     primaryGoals:
-      - !import /goals/glover/acquire-job-glover-junior.yml
+      - glover/acquire-job-glover-junior
     supportingGoals:
-      - !import /goals/survive.yml
+      - survive
   - name: Study bequest contents
     primaryGoals:
-      - !import /goals/discover-bookdealer.yml
-      - !import /goals/aspirant/find-collaborator.yml
+      - discover-bookdealer
+      - aspirant/find-collaborator
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/victories/sensation/acquire-temptation-sensation.yml
+      - survive
+      - glover/work-glover
+      - victories/sensation/acquire-temptation-sensation
   - name: Get horny, get beefy
     primaryGoals:
-      - !import /goals/victories/sensation/acquire-temptation-sensation.yml
-      - !import /goals/health/acquire-skillhealtha.yml
-      - !import /goals/health/acquire-skillhealthb.yml
-      - !import /goals/health/acquire-skillhealthc.yml
+      - victories/sensation/acquire-temptation-sensation
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
     supportingGoals:
-      - !import /goals/followers/attract-followers-memory.yml
-      - !import /goals/survive.yml
-      - !import /goals/funds/work-labor.yml
+      - followers/attract-followers-memory
+      - survive
+      - funds/work-labor
   - name: Get smart
     primaryGoals:
       # Get skillreasona to make Alden easier to deal with
       # We need all the way up to c, as we expect dry soul curse to steal one.
-      - !import /goals/reason/acquire-skillreasona.yml
-      - !import /goals/reason/acquire-skillreasonb.yml
-      - !import /goals/reason/acquire-skillreasonc.yml
+      - reason/acquire-skillreasona
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
     supportingGoals:
-      - !import /goals/followers/attract-followers-memory.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - followers/attract-followers-memory
+      - survive
+      - glover/work-glover
   - name: Find grail lore, get passionate
     primaryGoals:
-      - !import /goals/bookdealer/find-bookdealer-grail.yml
-      - !import /goals/passion/acquire-skillpassiona.yml
-      - !import /goals/passion/acquire-skillpassionb.yml
+      - bookdealer/find-bookdealer-grail
+      - passion/acquire-skillpassiona
+      - passion/acquire-skillpassionb
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
+      - survive
+      - glover/work-glover
+      - consume-books-lore-waitmorland
   - name: Establish the Order of the Bloody Cup
     primaryGoals:
-      - !import /goals/cult/form-cult-doctrine-grail.yml
+      - cult/form-cult-doctrine-grail
     supportingGoals:
-      - !import /goals/followers/attract-followers-memory.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - followers/attract-followers-memory
+      - survive
+      - glover/work-glover
   - name: Find a Grail believer, meet Sulochana, explore the city
     primaryGoals:
-      - !import /goals/followers/attract-grail-follower.yml
-      - !import /goals/patrons/find-sulochana.yml
-      - !import /goals/find-auctionhouse.yml
-      - !import /goals/find-cabaret.yml
+      - followers/attract-grail-follower
+      - patrons/find-sulochana
+      - find-auctionhouse
+      - find-cabaret
     supportingGoals:
-      - !import /goals/cult/recruit-lore-grail.yml
-      - !import /goals/consume-bookdealer.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - cult/recruit-lore-grail
+      - consume-bookdealer
+      - consume-books-lore-waitmorland
+      - survive
+      - glover/work-glover
   - name: Recruit all Grail and Heart followers
     primaryGoals:
-      - !import /goals/cult/recruit-grail-lore-grail.yml
-      - !import /goals/cult/recruit-heart-lore-grail.yml
+      - cult/recruit-grail-lore-grail
+      - cult/recruit-heart-lore-grail
     supportingGoals:
-      - !import /goals/consume-bookdealer.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
+      - consume-bookdealer
+      - consume-books-lore-waitmorland
+      - survive
+      - glover/work-glover
   - name: Dispose of Alden
     primaryGoals:
-      - !import /goals/glover/glover-remove-boss-seduction.yml
+      - glover/glover-remove-boss-seduction
     supportingGoals:
-      - !import /goals/funds/work-labor.yml
-      - !import /goals/survive.yml
+      - funds/work-labor
+      - survive
   - name: Go on a date
     primaryGoals:
-      - !import /goals/romance/gain-relationship-grail.yml
+      - romance/gain-relationship-grail
     supportingGoals:
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/survive.yml
+      - glover/work-glover
+      - survive
   - name: Finish Morlands, collect rites
     primaryGoals:
-      - !import /goals/consume-bookdealer.yml
-      - !import /goals/consume-books-lore-waitmorland.yml
+      - consume-bookdealer
+      - consume-books-lore-waitmorland
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
   - name: Find STUMM!
     primaryGoals:
-      - !import /goals/auction/acquire-stumm.yml
+      - auction/acquire-stumm-passive
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+      - auction/attend-auction
+  - name: Watch STUMM!
+    primaryGoals:
+      - name: Watch Stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        imperatives:
+          - operation: watch-stumm
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
   - name: Acquire the Wood and White Door
     primaryGoals:
-      - !import /goals/mansus/acquire-way-wood.yml
-      - !import /goals/mansus/acquire-way-whitedoor.yml
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
   - name: Raid the hospital
     primaryGoals:
-      - !import /goals/vaults/st-agnes-hospital.yml
+      - vaults/st-agnes-hospital
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
   # Wait until after the Hospital to move into Morland's so that the notoriety gets consumed by the HQ-move.
   - name: Move into Morlands
     primaryGoals:
-      - !import /goals/hq/move-hq-library.yml
+      - hq/move-hq-library
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/cult/recruit-away-influences.yml
+      - survive
+      - glover/work-glover
+      - cult/recruit-away-influences
   - name: Read the books from St. Agnes
     primaryGoals:
-      - !import /goals/consume-books-lore-waitmorland.yml
+      - consume-books-lore-waitmorland
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
   - name: Acquire the Stag Door
     primaryGoals:
-      #      - !import /goals/victories/sensation/victory-temptation-sensation-lore-stag.yml
-      - !import /goals/victories/sensation/acquire-lore-stag.yml
+      #      - victories/sensation/victory-temptation-sensation-lore-stag
+      - victories/sensation/acquire-lore-stag
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
   - name: Subvert all Edge lore to Winter
     primaryGoals:
-      - !import /goals/lore/subvert-all-edge-to-winter.yml
+      - lore/subvert-all-edge-to-winter
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
   - name: Subvert all Winter lore to Heart
     primaryGoals:
-      - !import /goals/lore/subvert-all-winter-to-heart.yml
+      - lore/subvert-all-winter-to-heart
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
   - name: Subvert all Heart lore to Grail
     primaryGoals:
-      - !import /goals/lore/subvert-all-heart-to-grail.yml
+      - lore/subvert-all-heart-to-grail
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers-memory.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - followers/attract-followers-memory
   - name: Upgrade all Grail lore to the highest we can
     primaryGoals:
-      - !import /goals/lore/upgrade-all-grail.yml
+      - lore/upgrade-all-grail
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
-      - !import /goals/cult/recruit-away-influences.yml
-      - !import /goals/followers/attract-followers-memory.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - followers/attract-followers-memory
   - name: Promote Grail believers, dedicate to horny
     primaryGoals:
-      - !import /goals/cult/promote-grail-with-grail.yml
-      - !import /goals/victories/sensation/acquire-dedication-sensation.yml
+      - cult/promote-grail-with-grail
+      - victories/sensation/acquire-dedication-sensation
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
   - name: Honour our Interested Disciple
     primaryGoals:
-      - !import /goals/victories/sensation/honour-interested-disciple.yml
+      - victories/sensation/honour-interested-disciple
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
   - name: Prepare a Cyprian and achieve the Marks of Sensation
     primaryGoals:
-      - !import /goals/cult/exalt-grail-special.yml
-      - !import /goals/victories/sensation/acquire-ascension-sensation.yml
+      - cult/exalt-grail-special
+      - victories/sensation/acquire-ascension-sensation
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/glover/work-glover.yml
-      - !import /goals/romance/maintain-relationships.yml
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
   - name: Acquire the Seventh mark of Sensation
     primaryGoals:
-      - !import /goals/victories/sensation/acquire-mark-sensation-7.yml
+      - victories/sensation/acquire-mark-sensation-7
     supportingGoals:
-      - !import /goals/survive.yml
-      - !import /goals/romance/maintain-relationships.yml
+      - survive
+      - romance/maintain-relationships

@@ -1,4 +1,4 @@
-name: Heal injury
+name: Heal an Injury with Vitality
 situation: dream
 startingRecipe:
   slots:
