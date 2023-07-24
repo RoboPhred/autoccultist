@@ -39,7 +39,7 @@ namespace AutoccultistNS.UI
                         .SetBottom(0, -8)
                         .SetSprite(tokenOutline)
                         .SlicedImage()
-                        .Behavior<GraphicFader>(fader =>
+                        .WithBehavior<GraphicFader>(fader =>
                         {
                             this.glowFader = fader;
                             fader.Hide(true);

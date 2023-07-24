@@ -78,7 +78,7 @@ namespace AutoccultistNS.Tokens
                         .SetBottom(0, -8)
                         .SetSprite(tokenOutline)
                         .SlicedImage()
-                        .Behavior<GraphicFader>(fader =>
+                        .WithBehavior<GraphicFader>(fader =>
                         {
                             this.glowFader = fader;
                             fader.Hide(true);
@@ -108,7 +108,7 @@ namespace AutoccultistNS.Tokens
                     .SetSize(new Vector2(100, 100))
                     .SetColor(new Color(1, 1, 1, 0.25f))
                     .SetSprite("autoccultist_imperative_artwork")
-                    .Behavior<Spinner>(spinner =>
+                    .WithBehavior<Spinner>(spinner =>
                     {
                         this.gearSpinner = spinner;
                         spinner.Speed = RotationSpeedPerSecond;

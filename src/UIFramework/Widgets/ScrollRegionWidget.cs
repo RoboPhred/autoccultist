@@ -201,16 +201,6 @@ namespace AutoccultistNS.UI
         }
 
         /// <summary>
-        /// Allows adding children to the scrolled area.
-        /// For best results, Horizontal() or Vertical() should be called before this.
-        /// </summary>
-        public ScrollRegionWidget AddContent(Action<WidgetMountPoint> contentFactory)
-        {
-            contentFactory(new WidgetMountPoint(this.ContentGameObject.transform));
-            return this;
-        }
-
-        /// <summary>
         /// Overrides the scrolling content directly
         /// This can be used to directly control the scrolled content object, without
         /// going through the default layout wrapper.

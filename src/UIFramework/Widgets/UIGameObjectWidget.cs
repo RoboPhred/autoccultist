@@ -51,14 +51,14 @@ namespace AutoccultistNS.UI
             return this;
         }
 
-        public UIGameObjectWidget Behavior<T>()
+        public UIGameObjectWidget WithBehavior<T>()
             where T : MonoBehaviour
         {
             this.GameObject.GetOrAddComponent<T>();
             return this;
         }
 
-        public UIGameObjectWidget Behavior<T>(Action<T> action)
+        public UIGameObjectWidget WithBehavior<T>(Action<T> action)
             where T : MonoBehaviour
         {
             action(this.GameObject.GetOrAddComponent<T>());
@@ -108,6 +108,18 @@ namespace AutoccultistNS.UI
                 GameObject.Destroy(child.gameObject);
             }
 
+            return this;
+        }
+
+        public UIGameObjectWidget AddContent(GameObject gameObject)
+        {
+            gameObject.transform.SetParent(this.MountPoint, false);
+            return this;
+        }
+
+        public UIGameObjectWidget AddContent(Action<WidgetMountPoint> factory)
+        {
+            factory(this.MountPoint);
             return this;
         }
     }

@@ -26,7 +26,7 @@ namespace AutoccultistNS.UI
                             mountPoint.AddSizingLayout("ArcsButton")
                                 .SetPreferredWidth(100)
                                 .SetPreferredHeight(100)
-                                .Behavior<HoverGlow>()
+                                .WithBehavior<HoverGlow>()
                                 .AddContent(mountPoint =>
                                 {
                                     mountPoint.AddImage("ArcsIcon")
@@ -51,7 +51,7 @@ namespace AutoccultistNS.UI
                             mountPoint.AddSizingLayout("GoalsButton")
                                 .SetPreferredWidth(100)
                                 .SetPreferredHeight(100)
-                                .Behavior<HoverGlow>()
+                                .WithBehavior<HoverGlow>()
                                 .AddContent(mountPoint =>
                                 {
                                     mountPoint.AddImage("GoalsIcon")

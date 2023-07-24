@@ -4,9 +4,9 @@ namespace AutoccultistNS.UI
     using UnityEngine;
     using UnityEngine.UI;
 
-    public class TextButtonWidget : VerticalLayoutGroupWidget<TextButtonWidget>, ITextWidget<TextButtonWidget>
+    public class TextButtonWidget : SizingLayoutWidget<TextButtonWidget>, ITextWidget<TextButtonWidget>
     {
-        private static readonly Color FontColor = new Color(0.2392f, 0.1961f, 0.0667f, 1);
+        private static readonly Color DefaultFontColor = new Color(0.2392f, 0.1961f, 0.0667f, 1);
 
         public TextButtonWidget(string key)
             : this(new GameObject(key))
@@ -18,14 +18,13 @@ namespace AutoccultistNS.UI
         {
             this.SetPivot(.5f, .5f);
 
-            this.SetFitContentWidth();
-            this.SetFitContentHeight();
+            // Would be nice if the button dynamically sized, but the image
+            // is not a splice.
+            this.SetMinWidth(120);
+            this.SetMinHeight(45);
 
-            // FIXME: While this looks generally good,
-            // only our top padding is being applied.
-            // The content text is not being squished for the 5 point padding
-            // along the bottom.
-            this.SetPadding(15, 5);
+            this.SetPreferredWidth(120);
+            this.SetPreferredHeight(45);
 
             this.Button = this.GameObject.GetOrAddComponent<Button>();
             this.Button.transition = Selectable.Transition.ColorTint;
@@ -33,37 +32,35 @@ namespace AutoccultistNS.UI
 
             this.SoundTrigger = this.GameObject.gameObject.GetOrAddComponent<ButtonSoundTrigger>();
 
-            WidgetMountPoint.On(this.GameObject, mountPoint =>
+            TextWidget textWidget = null;
+            this.AddContent(mountPoint =>
             {
-                var image = mountPoint.AddImage("Image")
+                var background = mountPoint.AddImage("Background")
                     .SetPivot(.5f, .5f)
                     .SetLeft(0, 0)
                     .SetTop(1, 0)
                     .SetRight(1, 0)
                     .SetBottom(0, 0)
-                    .StretchImage()
                     .SetSprite("button")
                     .SetIgnoreLayout();
-                this.Button.image = image.Image;
+                this.Button.image = background.Image;
+
+                textWidget = mountPoint.AddText("Text")
+                   .SetPivot(.5f, .5f)
+                   .SetLeft(0, 9)
+                   .SetRight(1, -9)
+                   .SetTop(1, -4)
+                   .SetBottom(0, 12)
+                   .SetColor(DefaultFontColor)
+                   //    .SetTextAlignment(TextAlignmentOptions.Center)
+                   .SetHorizontalAlignment(HorizontalAlignmentOptions.Center)
+                   .SetVerticalAlignment(VerticalAlignmentOptions.Middle)
+                   .SetFontStyle(FontStyles.Bold)
+                   .SetMinFontSize(12)
+                   .SetMaxFontSize(20);
             });
 
-            this.SetSpreadChildrenHorizontally(true);
-            this.SetSpreadChildrenVertically(true);
-
-            this.TextWidget = new TextWidget("Text")
-                .SetPivot(.5f, .5f)
-                .SetLeft(0, 0)
-                .SetTop(1, 0)
-                .SetRight(1, 0)
-                .SetBottom(0, 0)
-                .SetColor(FontColor)
-                .SetTextAlignment(TextAlignmentOptions.Center)
-                .SetHorizontalAlignment(HorizontalAlignmentOptions.Center)
-                .SetFontStyle(FontStyles.Bold)
-                .SetMinFontSize(12)
-                .SetMaxFontSize(20);
-
-            this.AddContent(this.TextWidget);
+            this.TextWidget = textWidget;
         }
 
         public TextMeshProUGUI TextMesh => this.TextWidget.TextMesh;

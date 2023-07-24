@@ -168,17 +168,5 @@ namespace AutoccultistNS.UI
             this.ContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             return this;
         }
-
-        public SizingLayoutWidget AddContent(GameObject gameObject)
-        {
-            gameObject.transform.SetParent(this.GameObject.transform, false);
-            return this;
-        }
-
-        public SizingLayoutWidget AddContent(Action<WidgetMountPoint> contentFactory)
-        {
-            contentFactory(new WidgetMountPoint(this.GameObject.transform));
-            return this;
-        }
     }
 }

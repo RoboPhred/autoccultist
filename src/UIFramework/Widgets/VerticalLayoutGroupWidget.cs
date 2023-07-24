@@ -86,17 +86,5 @@ namespace AutoccultistNS.UI
             this.LayoutGroup.padding = new RectOffset(value, value, value, value);
             return this;
         }
-
-        public VerticalLayoutGroupWidget AddContent(GameObject gameObject)
-        {
-            gameObject.transform.SetParent(this.GameObject.transform, false);
-            return this;
-        }
-
-        public VerticalLayoutGroupWidget AddContent(Action<WidgetMountPoint> factory)
-        {
-            factory(new WidgetMountPoint(this.GameObject.transform));
-            return this;
-        }
     }
 }

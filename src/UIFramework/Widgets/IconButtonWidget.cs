@@ -123,8 +123,6 @@ namespace AutoccultistNS.UI
         public IconButtonWidget SetBackground(Sprite sprite)
         {
             // HACK: Our colors are not properly set if we are disabled before opting into backgrounds.
-            // I tried copying the color from this.Button.image.color, but that seems to still be white even though
-            // we have been disabled.
             var prevInteractable = this.Button.interactable;
             this.Button.interactable = true;
             try
@@ -141,7 +139,6 @@ namespace AutoccultistNS.UI
 
                 var backgroundImage = this.background.AddComponent<Image>();
                 backgroundImage.sprite = sprite;
-                // This attempts to fix the disabled color not being applied if background is added after disable, but it does not work.
                 backgroundImage.color = this.Image.color;
 
                 var colorCopy = this.content.AddComponent<CopyGraphicCanvasColor>();

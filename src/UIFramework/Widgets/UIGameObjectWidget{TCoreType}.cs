@@ -53,14 +53,14 @@ namespace AutoccultistNS.UI
             return this as TCoreType;
         }
 
-        public new TCoreType Behavior<T>()
+        public new TCoreType WithBehavior<T>()
             where T : MonoBehaviour
         {
             this.GameObject.GetOrAddComponent<T>();
             return this as TCoreType;
         }
 
-        public new TCoreType Behavior<T>(Action<T> action)
+        public new TCoreType WithBehavior<T>(Action<T> action)
             where T : MonoBehaviour
         {
             action(this.GameObject.GetOrAddComponent<T>());
@@ -110,6 +110,18 @@ namespace AutoccultistNS.UI
                 GameObject.Destroy(child.gameObject);
             }
 
+            return this as TCoreType;
+        }
+
+        public new TCoreType AddContent(GameObject gameObject)
+        {
+            gameObject.transform.SetParent(this.MountPoint, false);
+            return this as TCoreType;
+        }
+
+        public new TCoreType AddContent(Action<WidgetMountPoint> factory)
+        {
+            factory(this.MountPoint);
             return this as TCoreType;
         }
     }

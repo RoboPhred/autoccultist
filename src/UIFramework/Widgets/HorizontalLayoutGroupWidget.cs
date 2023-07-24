@@ -125,11 +125,5 @@ namespace AutoccultistNS.UI
             this.LayoutGroup.padding = new RectOffset(value, value, value, value);
             return this;
         }
-
-        public HorizontalLayoutGroupWidget AddContent(Action<WidgetMountPoint> contentFactory)
-        {
-            contentFactory(new WidgetMountPoint(this.GameObject.transform));
-            return this;
-        }
     }
 }

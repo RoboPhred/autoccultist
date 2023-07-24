@@ -87,17 +87,5 @@ namespace AutoccultistNS.UI
             this.LayoutGroup.padding = new RectOffset(value, value, value, value);
             return this as TCoreType;
         }
-
-        public TCoreType AddContent(GameObject gameObject)
-        {
-            gameObject.transform.SetParent(this.GameObject.transform, false);
-            return this as TCoreType;
-        }
-
-        public TCoreType AddContent(Action<WidgetMountPoint> factory)
-        {
-            factory(new WidgetMountPoint(this.GameObject.transform));
-            return this as TCoreType;
-        }
     }
 }

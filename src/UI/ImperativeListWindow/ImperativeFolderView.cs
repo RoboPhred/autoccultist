@@ -37,7 +37,7 @@ namespace AutoccultistNS.UI
             this.window = window;
 
             window.Footer.AddHorizontalLayoutGroup("Footer")
-                .SetSpreadChildrenHorizontally()
+                .SetExpandWidth()
                 .SetChildAlignment(TextAnchor.MiddleCenter)
                 .AddContent(mountPoint =>
                 {
@@ -167,7 +167,7 @@ namespace AutoccultistNS.UI
                     mountPoint.AddSizingLayout("IconContainer")
                         .SetPreferredWidth(100)
                         .SetPreferredHeight(100)
-                        .Behavior<HoverGlow>()
+                        .WithBehavior<HoverGlow>()
                         .AddContent(mountPoint =>
                         {
                             mountPoint.AddImage("IconImage")

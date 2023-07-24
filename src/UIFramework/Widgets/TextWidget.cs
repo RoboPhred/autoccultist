@@ -5,6 +5,8 @@ namespace AutoccultistNS.UI
 
     public class TextWidget : SizingLayoutWidget<TextWidget>, ITextWidget<TextWidget>
     {
+        private static readonly Color DefaultFontColor = new Color(0.5765f, 0.8824f, 0.9373f, 1);
+
         private TextMeshProUGUI textMesh;
 
         public TextWidget(string key)
@@ -18,7 +20,7 @@ namespace AutoccultistNS.UI
             this.textMesh = this.GameObject.GetOrAddComponent<TextMeshProUGUI>();
             this.textMesh.fontMaterial = ResourceHack.FindMaterial("Philosopher-Regular optimum Material");
             this.textMesh.font = ResourceHack.FindFont("Text_Philosopher");
-            this.textMesh.color = new Color(0.5765f, 0.8824f, 0.9373f, 1);
+            this.textMesh.color = DefaultFontColor;
         }
 
         public TextMeshProUGUI TextMesh => this.textMesh;
