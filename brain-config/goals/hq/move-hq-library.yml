@@ -1,4 +1,7 @@
 name: Change Premises to Library
+ui:
+  homeSituation: explore
+  icon: element:hq.bookshop
 requirements:
   cardSet:
     - elementId: locationbookdealer_exhausted

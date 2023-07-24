@@ -1,4 +1,7 @@
 name: Acquire a Rarefied Mind
+ui:
+  homeSituation: study
+  icon: element:skillreasonc
 requirements:
   allOf:
     # We need the reason skill to be as high as it can go without lore

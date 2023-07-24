@@ -1,4 +1,7 @@
 name: Upgrade all Grail lore
+ui:
+  homeSituation: study
+  icon: aspect:grail
 completedWhen:
   anyOf:
     - elementId: fragmentgrailg

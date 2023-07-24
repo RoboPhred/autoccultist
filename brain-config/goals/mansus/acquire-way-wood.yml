@@ -1,4 +1,7 @@
 name: "Acquire Way: The wood"
+ui:
+  homeSituation: dream
+  icon: element:waywood
 requirements:
   allOf:
     - elementId: passion

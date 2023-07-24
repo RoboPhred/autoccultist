@@ -16,8 +16,6 @@ namespace AutoccultistNS.UI
                 return null;
             }
 
-            NoonUtility.Log($"Loading sprite {resourceName}");
-
             var parts = resourceName.Split(':');
             if (parts.Length == 1)
             {

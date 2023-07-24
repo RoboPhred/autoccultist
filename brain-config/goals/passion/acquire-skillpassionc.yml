@@ -1,4 +1,7 @@
 name: Acquire a Fevered Imagination
+ui:
+  homeSituation: study
+  icon: element:skillpassionc
 requirements:
   aspects: { passionskill: 2 }
 completedWhen:

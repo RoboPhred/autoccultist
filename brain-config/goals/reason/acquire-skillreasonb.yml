@@ -1,4 +1,7 @@
 name: Acquire Notable Scholarship
+ui:
+  homeSituation: study
+  icon: element:skillreasonb
 requirements:
   elementId: skillreasona
 completedWhen:

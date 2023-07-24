@@ -1,4 +1,7 @@
 name: Acquire a Strong Physique through Excersize
+ui:
+  homeSituation: work
+  icon: element:skillhealtha
 requirements:
   elementId: health
 completedWhen:

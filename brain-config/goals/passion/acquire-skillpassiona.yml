@@ -1,4 +1,7 @@
 name: Acquire a Vivid Imagination
+ui:
+  homeSituation: study
+  icon: element:skillpassiona
 requirements:
   elementId: passion
 completedWhen:

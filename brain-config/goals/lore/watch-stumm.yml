@@ -1,4 +1,7 @@
 name: Watch Stumm
+ui:
+  homeSituation: study
+  icon: element:stumm
 requirements:
   elementId: stumm
 completedWhen:

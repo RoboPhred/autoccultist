@@ -1,4 +1,7 @@
 name: Upgrade all Forge lore
+ui:
+  homeSituation: study
+  icon: aspect:forge
 completedWhen:
   anyOf:
     # We have the highest level already

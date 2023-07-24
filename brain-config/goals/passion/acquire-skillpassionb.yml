@@ -1,4 +1,7 @@
 name: Acquire a Wild Imagination
+ui:
+  homeSituation: study
+  icon: element:skillpassionb
 requirements:
   aspects: { passionskill: 1 }
 completedWhen:

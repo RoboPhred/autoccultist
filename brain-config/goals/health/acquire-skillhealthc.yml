@@ -1,4 +1,7 @@
 name: Acquire a Steely Physique through Excersize
+ui:
+  homeSituation: work
+  icon: element:skillhealthc
 requirements:
   aspects: { healthskill: 2 }
 completedWhen:

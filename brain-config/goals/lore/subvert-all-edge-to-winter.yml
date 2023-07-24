@@ -1,4 +1,7 @@
 name: "Subvert all lore: Edge to Winter"
+ui:
+  homeSituation: study
+  icon: aspect:winter
 completedWhen:
   noneOf:
     - elementId: fragmentedge

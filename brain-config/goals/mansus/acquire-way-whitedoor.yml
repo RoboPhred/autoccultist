@@ -1,4 +1,7 @@
 name: "Acquire Way: The White Door"
+ui:
+  homeSituation: dream
+  icon: element:waywhite
 requirements:
   allOf:
     - elementId: waywood

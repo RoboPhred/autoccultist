@@ -1,4 +1,7 @@
 name: Read and translate lore books and Stumm
+ui:
+  homeSituation: study
+  icon: aspect:text
 requirements:
   anyOf:
     - !import /conditions/readable-or-translatable-books.yml

@@ -1,4 +1,7 @@
 name: Acquire a Hardened Physique through Labor
+ui:
+  homeSituation: work
+  icon: element:skillhealthb
 requirements:
   aspects: { healthskill: 1 }
 completedWhen:

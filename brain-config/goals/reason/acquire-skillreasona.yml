@@ -1,4 +1,7 @@
 name: Acquire Scholarship
+ui:
+  homeSituation: study
+  icon: element:skillreasona
 requirements:
   elementId: reason
 completedWhen:

@@ -1,4 +1,7 @@
 name: "Subvert all lore: Heart to Grail"
+ui:
+  homeSituation: study
+  icon: aspect:grail
 completedWhen:
   noneOf:
     - elementId: fragmentheart

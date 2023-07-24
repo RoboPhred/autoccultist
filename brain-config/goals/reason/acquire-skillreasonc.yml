@@ -1,4 +1,7 @@
 name: Acquire Profound Scholarship
+ui:
+  homeSituation: study
+  icon: element:skillreasonc
 requirements:
   elementId: skillreasonb
 completedWhen:

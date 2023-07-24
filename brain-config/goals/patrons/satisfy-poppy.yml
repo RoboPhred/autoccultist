@@ -1,4 +1,7 @@
 name: Satisfy Poppy
+ui:
+  homeSituation: poppytime
+  icon: element:poppyready
 requirements:
   situation: poppytime
 completedWhen:

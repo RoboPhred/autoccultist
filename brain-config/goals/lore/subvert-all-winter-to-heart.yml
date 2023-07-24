@@ -1,4 +1,7 @@
 name: "Subvert all lore: Winter to Heart"
+ui:
+  homeSituation: study
+  icon: aspect:heart
 completedWhen:
   noneOf:
     - elementId: fragmentwinter

@@ -1,4 +1,7 @@
-name: Counter Suspicion
+name: Counter Notariety with Heart
+ui:
+  homeSituation: explore
+  icon: element:notoriety
 imperatives:
   - name: Counter Notariety with Heart
     priority: maintenance

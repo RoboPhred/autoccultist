@@ -1,4 +1,6 @@
 name: Read and translate lore books until Morland is closed
+# This is a specialist goal that is intended not to turn off until both morlands is exhausted and we have no more books to read
+ui: false
 requirements: !import /conditions/readable-or-translatable-books.yml
 completedWhen:
   allOf:

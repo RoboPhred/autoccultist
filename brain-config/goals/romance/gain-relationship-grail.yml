@@ -1,4 +1,7 @@
 name: Date a Grail Follower
+ui:
+  homeSituation: talk
+  icon: aspect:grail
 requirements:
   anyOf:
     - elementId: renira_b

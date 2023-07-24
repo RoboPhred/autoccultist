@@ -1,4 +1,7 @@
 name: Find Sulochana
+ui:
+  homeSituation: explore
+  icon: element:sulochana
 completedWhen:
   # Sulochana is immortal and cannot die.
   # However, there is ONE circumstance in which she might leave....
