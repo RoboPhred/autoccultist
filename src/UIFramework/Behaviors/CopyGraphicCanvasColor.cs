@@ -6,6 +6,7 @@ namespace AutoccultistNS.UI
     public class CopyGraphicCanvasColor : MonoBehaviour
     {
         public Graphic CopyFrom { get; set; }
+
         public Graphic CopyTo { get; set; }
 
         public void Update()

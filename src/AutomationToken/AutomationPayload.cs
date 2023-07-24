@@ -4,6 +4,7 @@ namespace AutoccultistNS.Tokens
     using System.Collections.Generic;
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
+    using AutoccultistNS.GameState;
     using AutoccultistNS.UI;
     using SecretHistories;
     using SecretHistories.Abstract;
@@ -56,6 +57,9 @@ namespace AutoccultistNS.Tokens
             // TODO: Only add when we are on the tabletop sphere.
             // There doesn't seem to be any events telling us when we got placed in a sphere, however.
             NucleusAccumbens.AddImperative(this.Imperative);
+
+            NucleusAccumbens.ImperativeRemoved += this.OnImperativeCompleted;
+            NucleusAccumbens.ImperativeRemoved += this.OnImperativeRemoved;
         }
 
 #pragma warning disable CS0067
@@ -75,6 +79,9 @@ namespace AutoccultistNS.Tokens
 
         [Encaust]
         public int Quantity => 1;
+
+        [Encaust]
+        public bool Defunct { get; protected set; }
 
         [Encaust]
         public List<AbstractDominion> Dominions => this.dominions;
@@ -151,6 +158,7 @@ namespace AutoccultistNS.Tokens
         public void Conclude()
         {
             // TODO: Destroy self and end automation
+            this.Retire(RetirementVFX.Default);
         }
 
         public void AttachSphere(Sphere sphere)
@@ -281,7 +289,7 @@ namespace AutoccultistNS.Tokens
 
         public bool IsValid()
         {
-            return true;
+            return !this.Defunct;
         }
 
         public bool IsValidElementStack()
@@ -329,8 +337,28 @@ namespace AutoccultistNS.Tokens
 
         public bool Retire(RetirementVFX vfx)
         {
-            SoundManager.PlaySfx("SituationTokenRetire");
-            NucleusAccumbens.RemoveImperative(this.Imperative);
+            if (this.Defunct)
+            {
+                return false;
+            }
+
+            this.Defunct = true;
+
+            this.window.Retire();
+
+            NucleusAccumbens.ImperativeCompleted -= this.OnImperativeCompleted;
+            NucleusAccumbens.ImperativeRemoved -= this.OnImperativeRemoved;
+
+            if (NucleusAccumbens.CurrentImperatives.Contains(this.Imperative))
+            {
+                NucleusAccumbens.RemoveImperative(this.Imperative);
+            }
+
+            // This starts the process that will ultimately destroy our game object.
+            var args = new TokenPayloadChangedArgs(this, PayloadChangeType.Retirement);
+            args.VFX = vfx;
+            this.OnChanged?.Invoke(args);
+
             return true;
         }
 
@@ -357,6 +385,28 @@ namespace AutoccultistNS.Tokens
 
         public void StorePopulateDominionCommand(PopulateDominionCommand populateDominionCommand)
         {
+        }
+
+        private void OnImperativeRemoved(object sender, ImperativeEventArgs e)
+        {
+            if (e.Imperative != this.Imperative)
+            {
+                return;
+            }
+
+            // TODO: Show idle, and let the user click a button to dismiss us.
+            this.Retire(RetirementVFX.Default);
+        }
+
+        private void OnImperativeCompleted(object sender, ImperativeEventArgs e)
+        {
+            if (e.Imperative != this.Imperative)
+            {
+                return;
+            }
+            // TODO: Show idle, and let the user click a button to dismiss us.
+            // TODO: Is CardLightDramatic the fancy ascension one?
+            this.Retire(RetirementVFX.CardLightDramatic);
         }
     }
 }

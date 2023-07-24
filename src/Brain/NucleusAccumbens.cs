@@ -42,6 +42,11 @@ namespace AutoccultistNS.Brain
         public static event EventHandler<ImperativeEventArgs> ImperativeCompleted;
 
         /// <summary>
+        /// Raised when an imperative is removed.
+        /// </summary>
+        public static event EventHandler<ImperativeEventArgs> ImperativeRemoved;
+
+        /// <summary>
         /// Raised when an impulse is started.
         /// </summary>
         public static event EventHandler<ReactionEventArgs> ReactionStarted;
@@ -125,12 +130,11 @@ namespace AutoccultistNS.Brain
 
                 ActiveReactionsByImperative.Remove(imperative);
             }
-            else
-            {
-                Autoccultist.LogWarn($"NucleusAccumbens.RemoveImperative: Could not find imperative {imperative} to remove.");
-            }
 
-            ActiveImperatives.Remove(imperative);
+            if (ActiveImperatives.Remove(imperative))
+            {
+                ImperativeRemoved?.Invoke(null, new ImperativeEventArgs(imperative));
+            }
         }
 
         public static void ReevaluateImpulses()
@@ -414,6 +418,7 @@ namespace AutoccultistNS.Brain
             }
 
             ImperativeCompleted?.Invoke(null, new ImperativeEventArgs(imperative));
+            ImperativeRemoved?.Invoke(null, new ImperativeEventArgs(imperative));
         }
 
         /// <summary>

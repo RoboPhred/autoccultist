@@ -43,6 +43,13 @@ namespace AutoccultistNS.UI
                 return;
             }
 
+            // // TODO: Let it remain open with a "This imperative has completed" message
+            // if (!NucleusAccumbens.CurrentImperatives.Contains(this.Imperative))
+            // {
+            //     this.Close();
+            //     return;
+            // }
+
             if (DateTime.UtcNow - this.lastUpdate < UpdateInterval)
             {
                 return;
@@ -64,6 +71,7 @@ namespace AutoccultistNS.UI
         private void RebuildContent()
         {
             this.Content.Clear();
+            this.Footer.Clear();
 
             if (this.Imperative == null)
             {
@@ -87,6 +95,16 @@ namespace AutoccultistNS.UI
                                 this.AddImperativeRow(mountPoint, child);
                             }
                         });
+                });
+
+            this.Footer.AddHorizontalLayoutGroup("FooterButtons")
+                .SetExpandWidth()
+                .SetChildAlignment(UnityEngine.TextAnchor.MiddleRight)
+                .AddContent(mountPoint =>
+                {
+                    mountPoint.AddTextButton("AbortButton")
+                        .OnClick(() => NucleusAccumbens.RemoveImperative(this.Imperative))
+                        .SetText("Abort");
                 });
         }
 

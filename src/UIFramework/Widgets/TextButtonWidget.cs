@@ -52,7 +52,6 @@ namespace AutoccultistNS.UI
                    .SetTop(1, -4)
                    .SetBottom(0, 12)
                    .SetColor(DefaultFontColor)
-                   //    .SetTextAlignment(TextAlignmentOptions.Center)
                    .SetHorizontalAlignment(HorizontalAlignmentOptions.Center)
                    .SetVerticalAlignment(VerticalAlignmentOptions.Middle)
                    .SetFontStyle(FontStyles.Bold)

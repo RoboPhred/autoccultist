@@ -281,7 +281,6 @@ namespace AutoccultistNS.Brain
 
             // FIXME: If there are magnet slots, wait for some time until they grab something.
             // Ideally, we would wait ALL the time, so we can record that they never get what they are looking for
-
             var recipeSolution = this.Operation.GetRecipeSolution(state);
             if (recipeSolution == null)
             {
@@ -342,7 +341,6 @@ namespace AutoccultistNS.Brain
                             {
                                 await new CloseSituationAction(this.Operation.Situation).ExecuteAndWait(innerToken);
                             }
-
 
                             return !recipeSolution.EndOperation;
                         },

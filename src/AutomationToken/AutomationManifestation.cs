@@ -161,6 +161,8 @@ namespace AutoccultistNS.Tokens
 
         public override void Retire(RetirementVFX vfx, Action callbackOnRetired)
         {
+            SoundManager.PlaySfx("SituationTokenRetire");
+
             if (vfx == RetirementVFX.Default)
             {
                 // TODO: Effect.  Check DoVanishFx on VerbManifestation.
