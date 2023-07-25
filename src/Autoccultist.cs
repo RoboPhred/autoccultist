@@ -52,10 +52,17 @@ public class Autoccultist : MonoBehaviour
 
     public static void Initialise()
     {
-        // This needs to be done here, so that the patches are set when the save loads for the first time.
-        AutomationCreationCommand.Initialize();
+        try
+        {
+            // This needs to be done here, so that the patches are set when the save loads for the first time.
+            AutomationCreationCommand.Initialize();
 
-        new GameObject().AddComponent<Autoccultist>();
+            new GameObject().AddComponent<Autoccultist>();
+        }
+        catch (Exception ex)
+        {
+            LogWarn(ex, "Failed to initialize Autoccultist");
+        }
     }
 
     /// <summary>

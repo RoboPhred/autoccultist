@@ -4,6 +4,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.Brain;
     using AutoccultistNS.GameState;
     using AutoccultistNS.Tokens;
+    using Roost.Piebald;
     using SecretHistories.Commands;
     using SecretHistories.Entities;
     using SecretHistories.UI;

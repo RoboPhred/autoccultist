@@ -7,6 +7,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
+    using Roost.Piebald;
     using UnityEngine;
 
     public class ImperativeFolderView : IWindowView<ImperativeListWindow.IWindowContext>, IViewHasTitle
@@ -171,7 +172,7 @@ namespace AutoccultistNS.UI
             mountPoint.AddVerticalLayoutGroup($"Folder_{folder}")
                 .SetSpacing(10)
                 .SetChildAlignment(TextAnchor.MiddleCenter)
-                .WithBehavior<ButtonSoundTrigger>()
+                .WithPointerSounds()
                 .OnPointerClick((e) =>
                 {
                     this.window.PushView(new ImperativeFolderView(this.Collection, this.Folder + folder + Path.DirectorySeparatorChar));
@@ -181,7 +182,7 @@ namespace AutoccultistNS.UI
                     mountPoint.AddSizingLayout("IconContainer")
                         .SetPreferredWidth(100)
                         .SetPreferredHeight(100)
-                        .WithBehavior<HoverGlow>()
+                        .WithBehavior<GlowOnHover>()
                         .AddContent(mountPoint =>
                         {
                             this.BuildFolderIcon(folder, mountPoint);
@@ -338,7 +339,7 @@ namespace AutoccultistNS.UI
                         .SetMinHeight(40)
                         .SetPreferredWidth(40)
                         .SetPreferredHeight(40)
-                        .WithBehavior<Glow>(g => glow = g)
+                        .WithGlow(g => glow = g)
                         .AddContent(mountPoint =>
                         {
                             mountPoint.AddImage("Icon")
@@ -373,7 +374,7 @@ namespace AutoccultistNS.UI
                         .SetMinHeight(50)
                         .SetPreferredWidth(50)
                         .SetPreferredHeight(50)
-                        .WithBehavior<Spinner>();
+                        .WithSpinAnimation(-360 / 16);
 
                     startButton = mountPoint.AddIconButton("StartButton")
                         .SetMinWidth(40)

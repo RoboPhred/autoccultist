@@ -2,6 +2,7 @@ namespace AutoccultistNS.UI
 {
     using System;
     using System.Linq;
+    using Roost.Piebald;
     using SecretHistories.Entities;
     using SecretHistories.Enums;
     using SecretHistories.Events;

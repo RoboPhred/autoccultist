@@ -2,6 +2,7 @@ namespace AutoccultistNS.Config
 {
     using System;
     using AutoccultistNS.UI;
+    using Roost.Piebald;
     using UnityEngine;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;

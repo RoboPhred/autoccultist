@@ -6,6 +6,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
+    using Roost.Piebald;
 
     public class ImperativeAutomationWindow : AbstractWindow
     {

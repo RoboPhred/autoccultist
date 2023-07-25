@@ -2,6 +2,7 @@ namespace AutoccultistNS.UI
 {
     using System.Linq;
     using AutoccultistNS.Config;
+    using Roost.Piebald;
     using UnityEngine;
 
     public class ImperativeArcsGoalsView : IWindowView<ImperativeListWindow.IWindowContext>
@@ -18,14 +19,14 @@ namespace AutoccultistNS.UI
                 {
                     mountPoint.AddVerticalLayoutGroup("Arcs")
                         .SetSpacing(10)
-                        .WithBehavior<ButtonSoundTrigger>()
+                        .WithPointerSounds()
                         .OnPointerClick(e => window.PushView(new ImperativeFolderView(Library.Arcs.OfType<IImperativeConfig>().ToList(), string.Empty)))
                         .AddContent(mountPoint =>
                         {
                             mountPoint.AddSizingLayout("ArcsButton")
                                 .SetPreferredWidth(100)
                                 .SetPreferredHeight(100)
-                                .WithBehavior<HoverGlow>()
+                                .WithBehavior<GlowOnHover>()
                                 .AddContent(mountPoint =>
                                 {
                                     mountPoint.AddImage("ArcsIcon")
@@ -44,14 +45,14 @@ namespace AutoccultistNS.UI
 
                     mountPoint.AddVerticalLayoutGroup("Goals")
                         .SetSpacing(10)
-                        .WithBehavior<ButtonSoundTrigger>()
+                        .WithPointerSounds()
                         .OnPointerClick(e => window.PushView(new ImperativeFolderView(Library.Goals.OfType<IImperativeConfig>().ToList(), string.Empty)))
                         .AddContent(mountPoint =>
                         {
                             mountPoint.AddSizingLayout("GoalsButton")
                                 .SetPreferredWidth(100)
                                 .SetPreferredHeight(100)
-                                .WithBehavior<HoverGlow>()
+                                .WithBehavior<GlowOnHover>()
                                 .AddContent(mountPoint =>
                                 {
                                     mountPoint.AddImage("GoalsIcon")

@@ -79,13 +79,13 @@
       <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\SecretHistories.Main.dll'))</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.CoreModule.dll'))</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.dll'))</HintPath>
       <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.CoreModule.dll'))</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">

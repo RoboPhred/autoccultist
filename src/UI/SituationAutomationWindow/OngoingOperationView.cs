@@ -1,6 +1,7 @@
 namespace AutoccultistNS.UI
 {
     using AutoccultistNS.Brain;
+    using Roost.Piebald;
     using SecretHistories.Entities;
     using SecretHistories.UI;
     using UnityEngine;

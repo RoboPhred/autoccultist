@@ -2,7 +2,7 @@ namespace AutoccultistNS.Tokens
 {
     using System;
     using AutoccultistNS.Brain;
-    using AutoccultistNS.UI;
+    using Roost.Piebald;
     using SecretHistories;
     using SecretHistories.Abstract;
     using SecretHistories.Enums;
@@ -22,7 +22,7 @@ namespace AutoccultistNS.Tokens
 
         private bool isInitialized = false;
 
-        private Spinner gearSpinner;
+        private SpinAnimation gearSpinner;
         private int runningReactions = 0;
 
         private Token token;
@@ -76,7 +76,7 @@ namespace AutoccultistNS.Tokens
                         .SetTop(1, 8)
                         .SetBottom(0, -8)
                         .SetSprite(tokenOutline)
-                        .SlicedImage()
+                        .SliceImage()
                         .WithBehavior<GraphicFader>(fader =>
                         {
                             this.glowFader = fader;
@@ -107,10 +107,10 @@ namespace AutoccultistNS.Tokens
                     .SetSize(new Vector2(100, 100))
                     .SetColor(new Color(1, 1, 1, 0.25f))
                     .SetSprite("autoccultist_imperative_artwork")
-                    .WithBehavior<Spinner>(spinner =>
+                    .WithSpinAnimation(-360 / 16, spinner =>
                     {
                         this.gearSpinner = spinner;
-                        spinner.StopSpinning();
+                        spinner.Stop();
                     });
 
                 mountPoint.AddText("Label")
@@ -248,7 +248,7 @@ namespace AutoccultistNS.Tokens
 
             if (this.runningReactions == 1)
             {
-                this.gearSpinner.StartSpinning();
+                this.gearSpinner.Start();
             }
 
             if (e.Reaction is OperationReaction operation)
@@ -271,7 +271,7 @@ namespace AutoccultistNS.Tokens
             if (this.runningReactions <= 0)
             {
                 this.runningReactions = 0;
-                this.gearSpinner.StopSpinning();
+                this.gearSpinner.Stop();
             }
         }
     }

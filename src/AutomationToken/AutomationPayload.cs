@@ -6,6 +6,7 @@ namespace AutoccultistNS.Tokens
     using AutoccultistNS.Config;
     using AutoccultistNS.GameState;
     using AutoccultistNS.UI;
+    using Roost.Piebald;
     using SecretHistories;
     using SecretHistories.Abstract;
     using SecretHistories.Commands;
