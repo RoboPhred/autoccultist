@@ -29,6 +29,8 @@ namespace AutoccultistNS.Tokens
 
         public int Quantity { get; set; }
 
+        public bool Defunct { get; protected set; }
+
         public List<PopulateDominionCommand> Dominions { get; set; } = new();
 
         public static void Initialize()
