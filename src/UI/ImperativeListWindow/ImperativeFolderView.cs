@@ -170,9 +170,10 @@ namespace AutoccultistNS.UI
         {
             mountPoint.AddVerticalLayoutGroup($"Folder_{folder}")
                 .SetSpacing(10)
+                .SetChildAlignment(TextAnchor.MiddleCenter)
+                .WithBehavior<ButtonSoundTrigger>()
                 .OnPointerClick((e) =>
                 {
-                    SoundManager.PlaySfx("UIButtonClick");
                     this.window.PushView(new ImperativeFolderView(this.Collection, this.Folder + folder + Path.DirectorySeparatorChar));
                 })
                 .AddContent(mountPoint =>
@@ -188,7 +189,7 @@ namespace AutoccultistNS.UI
 
                     mountPoint.AddText()
                         .SetFontSize(20)
-                        .SetPreferredWidth(100)
+                        .SetPreferredWidth(120)
                         .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
                         .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
                         .SetText(folder.Capitalize());

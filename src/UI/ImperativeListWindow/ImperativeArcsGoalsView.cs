@@ -18,6 +18,7 @@ namespace AutoccultistNS.UI
                 {
                     mountPoint.AddVerticalLayoutGroup("Arcs")
                         .SetSpacing(10)
+                        .WithBehavior<ButtonSoundTrigger>()
                         .OnPointerClick(e => window.PushView(new ImperativeFolderView(Library.Arcs.OfType<IImperativeConfig>().ToList(), string.Empty)))
                         .AddContent(mountPoint =>
                         {
@@ -43,6 +44,7 @@ namespace AutoccultistNS.UI
 
                     mountPoint.AddVerticalLayoutGroup("Goals")
                         .SetSpacing(10)
+                        .WithBehavior<ButtonSoundTrigger>()
                         .OnPointerClick(e => window.PushView(new ImperativeFolderView(Library.Goals.OfType<IImperativeConfig>().ToList(), string.Empty)))
                         .AddContent(mountPoint =>
                         {
