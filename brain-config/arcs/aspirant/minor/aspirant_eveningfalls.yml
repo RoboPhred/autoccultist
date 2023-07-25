@@ -3,16 +3,16 @@ legacy: aspirant
 motivations:
   - name: Begin the game
     primaryGoals:
-      - aspirant/begin-intro
+      - legacy/aspirant/begin-intro
   - name: Study the bequest and unlock verbs
     # Note: Not needed for crime free. Needed here to unlock explore
     primaryGoals:
       # Need the two below
-      - aspirant/study-bequest-passion
+      - legacy/aspirant/study-bequest-passion
       # Need explore to find a hireling
       - bookdealer/find-bookdealer-map
       # Need talk to set them on alden
-      - aspirant/find-collaborator
+      - legacy/aspirant/find-collaborator
   - name: Hit the gym
     primaryGoals:
       # 3 health so we can explore

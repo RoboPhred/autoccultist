@@ -3,7 +3,7 @@ legacy: aspirant
 motivations:
   - name: Begin the game
     primaryGoals:
-      - aspirant/begin-intro
+      - legacy/aspirant/begin-intro
   - name: Hit the gym
     primaryGoals:
       # Just need 2 to fend off sickness.

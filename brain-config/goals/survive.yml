@@ -1,4 +1,7 @@
 name: Survive
+ui:
+  homeSituation: dream
+  icon: element:health
 requirements:
   situation: time
 imperatives:

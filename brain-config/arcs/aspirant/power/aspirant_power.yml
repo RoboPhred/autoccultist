@@ -52,14 +52,14 @@ motivations:
   begin_game:
     name: Begin the game
     primaryGoals:
-      - aspirant/begin-intro
+      - legacy/aspirant/begin-intro
 
   study_bequest:
     name: Study bequest with Passion
     requires:
       - begin_game
     primaryGoals:
-      - aspirant/study-bequest-passion
+      - legacy/aspirant/study-bequest-passion
 
   study_bequest_contents:
     name: Study bequest contents
@@ -67,7 +67,7 @@ motivations:
       - study_bequest
     primaryGoals:
       - bookdealer/find-bookdealer-map
-      - aspirant/find-collaborator
+      - legacy/aspirant/find-collaborator
 
   # Begin skills
   get_buff:

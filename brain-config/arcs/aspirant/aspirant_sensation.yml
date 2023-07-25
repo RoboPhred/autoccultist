@@ -14,10 +14,10 @@ selectionHint:
 motivations:
   - name: Begin the game
     primaryGoals:
-      - aspirant/begin-intro
+      - legacy/aspirant/begin-intro
   - name: Activate power temptation
     primaryGoals:
-      - aspirant/study-bequest-passion
+      - legacy/aspirant/study-bequest-passion
   - name: Get a job
     primaryGoals:
       - glover/acquire-job-glover-junior
@@ -26,7 +26,7 @@ motivations:
   - name: Study bequest contents
     primaryGoals:
       - bookdealer/find-bookdealer-map
-      - aspirant/find-collaborator
+      - legacy/aspirant/find-collaborator
     supportingGoals:
       - survive
       - glover/work-glover

@@ -92,9 +92,9 @@ namespace AutoccultistNS.UI
                 orderby canExecute descending, imperative.Name
                 select new { Imperative = imperative, IsRunning = isRunning, CanExecute = canExecute, Elements = pair.Value };
 
-            foreach (var pair in orderedOps)
+            foreach (var pair in orderedOps.Reverse())
             {
-                pair.Elements.Row.GameObject.transform.SetAsLastSibling();
+                pair.Elements.Row.GameObject.transform.SetAsFirstSibling();
 
                 pair.Elements.StartButton.SetActive(!pair.IsRunning);
                 pair.Elements.StartButton.SetEnabled(pair.CanExecute);
@@ -139,6 +139,11 @@ namespace AutoccultistNS.UI
                         .SetSpacing(30)
                         .AddContent(mountPoint =>
                         {
+                            foreach (var imperative in imperatives)
+                            {
+                                this.BuildImperativeRow(imperative, mountPoint);
+                            }
+
                             foreach (var partition in folders.Partition(3))
                             {
                                 mountPoint.AddHorizontalLayoutGroup()
@@ -153,11 +158,6 @@ namespace AutoccultistNS.UI
                                             this.BuildFolderItem(item, mountPoint);
                                         }
                                     });
-                            }
-
-                            foreach (var imperative in imperatives)
-                            {
-                                this.BuildImperativeRow(imperative, mountPoint);
                             }
                         });
                 });
@@ -201,6 +201,7 @@ namespace AutoccultistNS.UI
             var canExecute = imperative.IsConditionMet(state) && !imperative.IsSatisfied(state);
             var isRunning = NucleusAccumbens.CurrentImperatives.Contains(imperative);
 
+            Glow glow = null;
             ImageWidget runningIcon = null;
             IconButtonWidget startButton = null;
             var row = mountPoint.AddHorizontalLayoutGroup($"imperative_${imperative.Name}")
@@ -208,14 +209,25 @@ namespace AutoccultistNS.UI
                 .SetExpandWidth()
                 .SetFitContentHeight()
                 .SetPadding(20, 5)
+                .OnPointerEnter(e => glow.Show())
+                .OnPointerExit(e => glow.Hide())
                 .AddContent(mountPoint =>
                 {
-                    mountPoint.AddImage("Icon")
+                    mountPoint.AddSizingLayout("IconGlow")
                         .SetMinWidth(40)
                         .SetMinHeight(40)
                         .SetPreferredWidth(40)
                         .SetPreferredHeight(40)
-                        .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("empty_bg"));
+                        .WithBehavior<Glow>(g => glow = g)
+                        .AddContent(mountPoint =>
+                        {
+                            mountPoint.AddImage("Icon")
+                                .SetMinWidth(40)
+                                .SetMinHeight(40)
+                                .SetPreferredWidth(40)
+                                .SetPreferredHeight(40)
+                                .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("empty_bg"));
+                        });
 
                     mountPoint.AddSizingLayout("Spacer")
                     .SetMinWidth(10)
