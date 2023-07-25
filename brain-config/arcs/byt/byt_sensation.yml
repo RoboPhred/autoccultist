@@ -167,7 +167,7 @@ motivations:
       - lore/consume-books-lore-waitmorland
   - name: Move into Morlands
     primaryGoals:
-      - hq/move-hq-library
+      - headquarters/move-hq-library
     supportingGoals:
       - survive
       - romance/maintain-relationships

@@ -1,4 +1,9 @@
 name: Find and explore St. Agnes Hospital
+requirements:
+  allOf:
+    - situation: explore
+    - elementId: waywood
+    - elementId: passion
 # Because the Hospital is absolutely garbage as am HQ, it's reasonably safe to say the player won't move in.
 # Nonetheless, there's no perfect way to know whether the vault has been done.
 # We fall back on toolgrailb and hq.hospital, just to be safe.

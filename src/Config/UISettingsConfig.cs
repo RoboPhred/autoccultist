@@ -27,6 +27,7 @@ namespace AutoccultistNS.Config
                 {
                     return this.icon;
                 }
+
                 if (!string.IsNullOrEmpty(this.HomeSituation))
                 {
                     return $"verb:{this.HomeSituation}";
@@ -34,6 +35,7 @@ namespace AutoccultistNS.Config
 
                 return null;
             }
+
             set
             {
                 this.icon = value;

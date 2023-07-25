@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
 namespace AutoccultistNS.Brain
 {
+    using System.Collections.Generic;
+
     public static class ImperativeExtensions
     {
         public static IEnumerable<IImperative> GetChildrenDeep(this IImperative imperative)

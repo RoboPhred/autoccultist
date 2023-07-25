@@ -144,7 +144,7 @@ namespace AutoccultistNS.UI
 
         private bool FilterOperation(OperationConfig operation)
         {
-            if (operation.Situation != window.Situation.VerbId)
+            if (operation.Situation != this.window.Situation.VerbId)
             {
                 return false;
             }

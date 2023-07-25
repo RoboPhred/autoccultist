@@ -1,4 +1,7 @@
 name: Begin the Bright Young Thing Legacy
+ui:
+  homeSituation: work
+  icon: element:legacybytjob
 requirements:
   anyOf:
     - elementId: legacybytjob

@@ -160,7 +160,7 @@ motivations:
       - establish_cult
       - drain_morlands
     primaryGoals:
-      - hq/move-hq-library
+      - headquarters/move-hq-library
   # End cult establishment
 
   sell_rubbish:

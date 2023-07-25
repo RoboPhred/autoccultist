@@ -170,7 +170,11 @@ namespace AutoccultistNS.UI
         {
             mountPoint.AddVerticalLayoutGroup($"Folder_{folder}")
                 .SetSpacing(10)
-                .OnPointerClick((e) => this.window.PushView(new ImperativeFolderView(this.Collection, this.Folder + folder + Path.DirectorySeparatorChar)))
+                .OnPointerClick((e) =>
+                {
+                    SoundManager.PlaySfx("UIButtonClick");
+                    this.window.PushView(new ImperativeFolderView(this.Collection, this.Folder + folder + Path.DirectorySeparatorChar));
+                })
                 .AddContent(mountPoint =>
                 {
                     mountPoint.AddSizingLayout("IconContainer")
@@ -179,11 +183,7 @@ namespace AutoccultistNS.UI
                         .WithBehavior<HoverGlow>()
                         .AddContent(mountPoint =>
                         {
-                            mountPoint.AddImage("IconImage")
-                                .SetPreferredWidth(100)
-                                .SetPreferredHeight(100)
-                                .CenterImage()
-                                .SetSprite(ResourcesManager.GetSpriteForAspect("memory"));
+                            this.BuildFolderIcon(folder, mountPoint);
                         });
 
                     mountPoint.AddText()
@@ -192,6 +192,125 @@ namespace AutoccultistNS.UI
                         .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Center)
                         .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
                         .SetText(folder.Capitalize());
+                });
+        }
+
+        private void BuildFolderIcon(string folder, WidgetMountPoint mountPoint)
+        {
+            var imperativesForFolder = this.Collection.Where(x => x.UI.Visible && (x.GetLibraryPath()?.StartsWith(this.Folder + folder) ?? false));
+            var iconsForFolder = imperativesForFolder.Select(x => x.UI.Icon).Distinct().Take(4).Select(x => ResourceResolver.GetSprite(x) ?? ResourceResolver.GetSprite("aspect:memory")).Distinct().ToArray();
+
+            if (iconsForFolder.Length == 0)
+            {
+                iconsForFolder = new[] { ResourceResolver.GetSprite("aspect:memory") };
+            }
+
+            mountPoint.AddSizingLayout("Icon")
+                .SetMinWidth(100)
+                .SetMinHeight(100)
+                .SetPreferredWidth(100)
+                .SetPreferredHeight(100)
+                .AddContent(mountPoint =>
+                {
+                    if (iconsForFolder.Length == 1)
+                    {
+                        mountPoint.AddImage("Icon")
+                            .SetIgnoreLayout()
+                            .SetSprite(iconsForFolder[0]);
+                    }
+                    else if (iconsForFolder.Length == 2)
+                    {
+                        mountPoint.AddImage("Icon1")
+                            .SetIgnoreLayout()
+                            .SetLeft(0, 0)
+                            .SetRight(0, 50)
+                            .SetBottom(1, -50)
+                            .SetTop(1, 0)
+                            .SetSprite(iconsForFolder[0]);
+                        mountPoint.AddImage("Icon2")
+                            .SetIgnoreLayout()
+                            .SetLeft(1, -50)
+                            .SetRight(1, 0)
+                            .SetBottom(1, -50)
+                            .SetTop(1, 0)
+                            .SetSprite(iconsForFolder[1]);
+                        mountPoint.AddImage("Icon3")
+                            .SetIgnoreLayout()
+                            .SetLeft(0, 0)
+                            .SetRight(0, 50)
+                            .SetBottom(0, 0)
+                            .SetTop(0, 50)
+                            .SetSprite(iconsForFolder[1]);
+                        mountPoint.AddImage("Icon4")
+                            .SetIgnoreLayout()
+                            .SetLeft(1, -50)
+                            .SetRight(1, 0)
+                            .SetBottom(0, 0)
+                            .SetTop(0, 50)
+                            .SetSprite(iconsForFolder[0]);
+                    }
+                    else if (iconsForFolder.Length == 3)
+                    {
+                        mountPoint.AddImage("Icon1")
+                            .SetIgnoreLayout()
+                            .SetLeft(0, 0)
+                            .SetRight(0, 50)
+                            .SetBottom(1, -50)
+                            .SetTop(1, 0)
+                            .SetSprite(iconsForFolder[0]);
+                        mountPoint.AddImage("Icon2")
+                            .SetIgnoreLayout()
+                            .SetLeft(1, -50)
+                            .SetRight(1, 0)
+                            .SetBottom(1, -50)
+                            .SetTop(1, 0)
+                            .SetSprite(iconsForFolder[1]);
+                        mountPoint.AddImage("Icon3")
+                            .SetIgnoreLayout()
+                            .SetLeft(0, 0)
+                            .SetRight(0, 50)
+                            .SetBottom(0, 0)
+                            .SetTop(0, 50)
+                            .SetSprite(iconsForFolder[2]);
+                        mountPoint.AddImage("Icon4")
+                            .SetIgnoreLayout()
+                            .SetLeft(1, -50)
+                            .SetRight(1, 0)
+                            .SetBottom(0, 0)
+                            .SetTop(0, 50)
+                            .SetSprite(iconsForFolder[0]);
+                    }
+                    else
+                    {
+                        mountPoint.AddImage("Icon1")
+                            .SetIgnoreLayout()
+                            .SetLeft(0, 0)
+                            .SetRight(0, 50)
+                            .SetBottom(1, -50)
+                            .SetTop(1, 0)
+                            .SetSprite(iconsForFolder[0]);
+                        mountPoint.AddImage("Icon2")
+                            .SetIgnoreLayout()
+                            .SetLeft(1, -50)
+                            .SetRight(1, 0)
+                            .SetBottom(1, -50)
+                            .SetTop(1, 0)
+                            .SetSprite(iconsForFolder[1]);
+                        mountPoint.AddImage("Icon3")
+                            .SetIgnoreLayout()
+                            .SetLeft(0, 0)
+                            .SetRight(0, 50)
+                            .SetBottom(0, 0)
+                            .SetTop(0, 50)
+                            .SetSprite(iconsForFolder[2]);
+                        mountPoint.AddImage("Icon4")
+                            .SetIgnoreLayout()
+                            .SetLeft(1, -50)
+                            .SetRight(1, 0)
+                            .SetBottom(0, 0)
+                            .SetTop(0, 50)
+                            .SetSprite(iconsForFolder[3]);
+                    }
                 });
         }
 
@@ -204,7 +323,7 @@ namespace AutoccultistNS.UI
             Glow glow = null;
             ImageWidget runningIcon = null;
             IconButtonWidget startButton = null;
-            var row = mountPoint.AddHorizontalLayoutGroup($"imperative_${imperative.Name}")
+            var row = mountPoint.AddHorizontalLayoutGroup($"imperative_{imperative.Name}")
                 .SetChildAlignment(TextAnchor.MiddleCenter)
                 .SetExpandWidth()
                 .SetFitContentHeight()
@@ -226,7 +345,7 @@ namespace AutoccultistNS.UI
                                 .SetMinHeight(40)
                                 .SetPreferredWidth(40)
                                 .SetPreferredHeight(40)
-                                .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("empty_bg"));
+                                .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("aspect:memory"));
                         });
 
                     mountPoint.AddSizingLayout("Spacer")

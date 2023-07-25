@@ -7,6 +7,7 @@ namespace AutoccultistNS.UI
     public class HoverGlow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         private Glow glow;
+
         public void Awake()
         {
             this.glow = this.GetComponent<Glow>();

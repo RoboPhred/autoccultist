@@ -157,7 +157,7 @@ motivations:
   # Wait until after the Hospital to move into Morland's so that the notoriety gets consumed by the HQ-move.
   - name: Move into Morlands
     primaryGoals:
-      - hq/move-hq-library
+      - headquarters/move-hq-library
     supportingGoals:
       - survive
       - glover/work-glover

@@ -161,11 +161,11 @@ namespace AutoccultistNS.Yaml
 
         private static IDeserializer BuildDeserializer()
         {
+            // TODO: Use CustomDeserializer attribute instead of FlatListDeserializer.  Tried to do it but got errors.
             var valueDeserializer = new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
                     .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     .WithNodeDeserializer(new CustomDeserializer(), s => s.OnTop())
-                    // TODO: Use CustomDeserializer attribute for this.  Tried to do it but got errors.
                     .WithNodeDeserializer(new FlatListDeserializer(), s => s.After<CustomDeserializer>())
                     .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.After<FlatListDeserializer>())
                     .WithNodeDeserializer(new ImportDeserializer(), s => s.After<DuckTypeDeserializer>())
