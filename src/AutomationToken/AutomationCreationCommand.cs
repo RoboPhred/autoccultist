@@ -29,7 +29,7 @@ namespace AutoccultistNS.Tokens
 
         public int Quantity { get; set; }
 
-        public bool Defunct { get; protected set; }
+        public bool Defunct { get; set; }
 
         public List<PopulateDominionCommand> Dominions { get; set; } = new();
 
