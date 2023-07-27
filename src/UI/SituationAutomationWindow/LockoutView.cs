@@ -19,7 +19,7 @@ namespace AutoccultistNS.UI
                         .SetFontSize(32)
                         .SetText("Locked out");
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetPreferredHeight(10);
 
                     mountPoint.AddText("Explainer")
@@ -28,7 +28,7 @@ namespace AutoccultistNS.UI
                         .SetFontSize(20)
                         .SetText("Autoccultist will not automate this verb.  You can use it for your own purposes.");
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetPreferredHeight(10);
 
                     mountPoint.AddTextButton("Unlock")

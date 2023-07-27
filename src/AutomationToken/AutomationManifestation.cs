@@ -88,23 +88,18 @@ namespace AutoccultistNS.Tokens
                 mountPoint.AddImage("Token")
                     .SetSprite(tokenBody);
 
-                NoonUtility.LogWarning("Creating artwork image for automation");
                 this.artworkImage = mountPoint.AddImage("Artwork")
-                    .SetAnchor(new Vector3(0, 5.5f, -2))
                     .SetLeft(0.5f, -50)
                     .SetRight(0.5f, 50)
                     .SetTop(0.5f, 55.5f)
                     .SetBottom(0.5f, -44.5f)
-                    .SetSize(new Vector2(100, 100))
                     .SetColor(new Color(1, 1, 1, 0));
 
                 mountPoint.AddImage("Gear")
-                    .SetAnchor(new Vector3(0, 5.5f, -2))
                     .SetLeft(0.5f, -50)
                     .SetRight(0.5f, 50)
                     .SetTop(0.5f, 55.5f)
                     .SetBottom(0.5f, -44.5f)
-                    .SetSize(new Vector2(100, 100))
                     .SetColor(new Color(1, 1, 1, 0.25f))
                     .SetSprite("autoccultist_imperative_artwork")
                     .WithSpinAnimation(-360 / 16, spinner =>
@@ -114,12 +109,10 @@ namespace AutoccultistNS.Tokens
                     });
 
                 mountPoint.AddText("Label")
-                    .SetAnchor(new Vector3(0, 5.5f, -2))
                     .SetLeft(0.5f, -50)
                     .SetRight(0.5f, 50)
                     .SetTop(0.5f, 55.5f)
                     .SetBottom(0.5f, -44.5f)
-                    .SetSize(new Vector2(100, 100))
                     .SetMinFontSize(16)
                     .SetMaxFontSize(32)
                     .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)

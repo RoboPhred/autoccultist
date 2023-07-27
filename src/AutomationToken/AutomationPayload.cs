@@ -52,7 +52,7 @@ namespace AutoccultistNS.Tokens
 
             this.Imperative = Library.GetById<IImperativeConfig>(imperativeId);
 
-            this.window = AbstractWindow.CreateTabletopWindow<ImperativeAutomationWindow>($"Automation_${this.Imperative.Id}");
+            this.window = WindowFactory.CreateWindow<ImperativeAutomationWindow>($"Window_automation_{this.Imperative.Id}");
             this.window.Attach(this.Imperative);
 
             // TODO: Only add when we are on the tabletop sphere.
@@ -110,7 +110,7 @@ namespace AutoccultistNS.Tokens
         public string Description => this.Imperative.Name;
 
         [DontEncaust]
-        public string UniquenessGroup => this.Imperative.Id;
+        public string UniquenessGroup => $"autoccultist_imperative_{this.Imperative.Id}";
 
         [DontEncaust]
         public bool Unique => false;

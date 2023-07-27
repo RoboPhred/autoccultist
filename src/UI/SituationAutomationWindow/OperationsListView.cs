@@ -36,8 +36,7 @@ namespace AutoccultistNS.UI
                     {
                         this.BuildOperationRow(op, mountPoint);
                     }
-                })
-                .ScrollToVertical(1);
+                });
 
             window.Footer.AddHorizontalLayoutGroup("FooterButtons")
                 .SetChildAlignment(TextAnchor.MiddleRight)
@@ -95,7 +94,7 @@ namespace AutoccultistNS.UI
                         .SetPreferredHeight(40)
                         .SetSprite(operation.UI.GetIcon() ?? ResourceResolver.GetSprite("empty_bg"));
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                     .SetMinWidth(10)
                     .SetPreferredWidth(10);
 
@@ -106,7 +105,7 @@ namespace AutoccultistNS.UI
                         .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
                         .SetText(operation.Name);
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetMinWidth(10)
                         .SetExpandWidth();
 

@@ -9,7 +9,7 @@ namespace AutoccultistNS.UI
     using SecretHistories.Entities;
     using UnityEngine;
 
-    public class SituationAutomationWindow : ViewWindow<SituationAutomationWindow.IWindowContext>, SituationAutomationWindow.IWindowContext
+    public class SituationAutomationWindow : AbstractTableViewWindow<SituationAutomationWindow.IWindowContext>, SituationAutomationWindow.IWindowContext
     {
         private IResourceConstraint<ISituationState> lockOutAfterConstraint;
         private UISituationLockoutConstraint lockoutConstraint;
@@ -60,7 +60,7 @@ namespace AutoccultistNS.UI
 
         public static SituationAutomationWindow CreateWindow(Situation situation)
         {
-            var window = AbstractWindow.CreateTabletopWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
+            var window = WindowFactory.CreateWindow<SituationAutomationWindow>($"Window_{situation.VerbId}_automation");
             window.Attach(situation);
             return window;
         }

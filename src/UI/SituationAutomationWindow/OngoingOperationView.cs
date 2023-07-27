@@ -38,7 +38,7 @@ namespace AutoccultistNS.UI
                         .SetMaxFontSize(32)
                         .SetText(this.Reaction.Operation.Name);
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetPreferredHeight(10);
 
                     this.historyScroll = mountPoint.AddScrollRegion("History")

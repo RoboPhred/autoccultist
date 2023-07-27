@@ -56,14 +56,14 @@ namespace AutoccultistNS.UI
                 .SetChildAlignment(TextAnchor.MiddleCenter)
                 .AddContent(mountPoint =>
                 {
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetExpandWidth();
 
                     mountPoint.AddTextButton("BackButton")
                         .SetText("Back")
                         .OnClick(() => this.window.PopView());
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetExpandWidth();
                 });
 
@@ -179,7 +179,7 @@ namespace AutoccultistNS.UI
                 })
                 .AddContent(mountPoint =>
                 {
-                    mountPoint.AddSizingLayout("IconContainer")
+                    mountPoint.AddLayoutItem("IconContainer")
                         .SetPreferredWidth(100)
                         .SetPreferredHeight(100)
                         .WithBehavior<GlowOnHover>()
@@ -207,7 +207,7 @@ namespace AutoccultistNS.UI
                 iconsForFolder = new[] { ResourceResolver.GetSprite("aspect:memory") };
             }
 
-            mountPoint.AddSizingLayout("Icon")
+            mountPoint.AddLayoutItem("Icon")
                 .SetMinWidth(100)
                 .SetMinHeight(100)
                 .SetPreferredWidth(100)
@@ -334,7 +334,7 @@ namespace AutoccultistNS.UI
                 .OnPointerExit(e => glow.Hide())
                 .AddContent(mountPoint =>
                 {
-                    mountPoint.AddSizingLayout("IconGlow")
+                    mountPoint.AddLayoutItem("IconGlow")
                         .SetMinWidth(40)
                         .SetMinHeight(40)
                         .SetPreferredWidth(40)
@@ -350,7 +350,7 @@ namespace AutoccultistNS.UI
                                 .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("aspect:memory"));
                         });
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                     .SetMinWidth(10)
                     .SetPreferredWidth(10);
 
@@ -363,7 +363,7 @@ namespace AutoccultistNS.UI
                         .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
                         .SetText(imperative.Name);
 
-                    mountPoint.AddSizingLayout("Spacer")
+                    mountPoint.AddLayoutItem("Spacer")
                         .SetMinWidth(20)
                         .SetExpandWidth();
 

@@ -8,7 +8,7 @@ namespace AutoccultistNS.UI
     using AutoccultistNS.GameState;
     using Roost.Piebald;
 
-    public class ImperativeAutomationWindow : AbstractWindow
+    public class ImperativeAutomationWindow : AbstractMetaWindow
     {
         private static readonly TimeSpan UpdateInterval = TimeSpan.FromSeconds(1);
         private DateTime lastUpdate = DateTime.MinValue;

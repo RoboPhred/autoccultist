@@ -66,7 +66,7 @@ namespace AutoccultistNS.UI
                 this.SituationAdded(situation);
             }
 
-            this.automationsWindow = ImperativeListWindow.CreateMetaWindow<ImperativeListWindow>("AutomationsWindow");
+            this.automationsWindow = WindowFactory.CreateWindow<ImperativeListWindow>("AutomationsWindow");
 
             this.automationsButton = MountPoints.MetaWindowLayer.AddIconButton("AutomationsWindowButton")
                 .SetLeft(0, 5)

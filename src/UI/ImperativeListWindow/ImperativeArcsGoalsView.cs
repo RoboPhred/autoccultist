@@ -23,7 +23,7 @@ namespace AutoccultistNS.UI
                         .OnPointerClick(e => window.PushView(new ImperativeFolderView(Library.Arcs.OfType<IImperativeConfig>().ToList(), string.Empty)))
                         .AddContent(mountPoint =>
                         {
-                            mountPoint.AddSizingLayout("ArcsButton")
+                            mountPoint.AddLayoutItem("ArcsButton")
                                 .SetPreferredWidth(100)
                                 .SetPreferredHeight(100)
                                 .WithBehavior<GlowOnHover>()
@@ -49,7 +49,7 @@ namespace AutoccultistNS.UI
                         .OnPointerClick(e => window.PushView(new ImperativeFolderView(Library.Goals.OfType<IImperativeConfig>().ToList(), string.Empty)))
                         .AddContent(mountPoint =>
                         {
-                            mountPoint.AddSizingLayout("GoalsButton")
+                            mountPoint.AddLayoutItem("GoalsButton")
                                 .SetPreferredWidth(100)
                                 .SetPreferredHeight(100)
                                 .WithBehavior<GlowOnHover>()
