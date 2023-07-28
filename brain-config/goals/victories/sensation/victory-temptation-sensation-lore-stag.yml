@@ -1,4 +1,5 @@
 name: Acquire the Stag Door and prepare for the Thiatic Invocation
+ui: false
 requirements:
   cardSet:
     - elementId: waywhite

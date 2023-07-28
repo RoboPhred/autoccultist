@@ -1,7 +1,14 @@
 name: Find a Forge follower
+
+requirements:
+  allOf:
+    - situation: talk
+    - aspects: { lore: 1 }
+
 ui:
   homeSituation: talk
   icon: aspect:forge
+
 completedWhen:
   allOf:
     # Stop if we have a Forge follower, but its possible for followers to die, so we also need to check if the deck is exhausted.

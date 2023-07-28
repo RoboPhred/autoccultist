@@ -1,6 +1,10 @@
-name: "Aspirant: Aestuant Victory"
+name: "Aestuant Victory"
 legacy: apostleforge
 startFromSave: ./.saves/apostle_power.json
+
+ui:
+  homeSituation: null
+  icon: element:apostleforge.pillar2
 
 motivations:
   survive:

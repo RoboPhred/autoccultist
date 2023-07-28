@@ -2,6 +2,11 @@
 # Should look into rushing high passion and using painting.
 name: "Bright Young Thing: Sensation Ascension"
 legacy: brightyoungthing
+
+ui:
+  homeSituation: null
+  icon: element:ascensionsensationf
+
 #TODO: Improve selection hint?
 selectionHint:
   anyOf:
@@ -15,6 +20,7 @@ selectionHint:
     - elementId: ascensionsensationd
     - elementId: ascensionsensatione
     - elementId: ascensionsensationf
+
 motivations:
   - name: Begin the game
     primaryGoals:

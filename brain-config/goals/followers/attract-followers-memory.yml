@@ -4,6 +4,11 @@ ui:
   homeSituation: explore
   icon: element:rumour
 
+requirements:
+  allOf:
+    - situation: talk
+    - aspects: { lore: 1 }
+
 completedWhen:
   memory: has_all_followers
   value: 1

@@ -1,6 +1,10 @@
 name: "Aspirant: Power Ascension"
 legacy: aspirant
 
+ui:
+  homeSituation: null
+  icon: element:ascensionpowerf
+
 selectionHint:
   anyOf:
     - elementId: introjob

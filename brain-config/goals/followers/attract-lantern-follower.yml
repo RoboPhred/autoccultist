@@ -1,13 +1,21 @@
 name: Find a Lantern follower
+
 ui:
   homeSituation: explore
   icon: aspect:lantern
+
+requirements:
+  allOf:
+    - situation: talk
+    - aspects: { lore: 1 }
+
 completedWhen:
   allOf:
     # Stop if we have a Lantern follower, but its possible for followers to die, so we also need to check if the deck is exhausted.
     - anyOf:
         - !import /conditions/has-lantern-follower.yml
         - elementId: mistakenidentity
+
 imperatives:
   - name: Speak of esoteric matters
     # Leave this at normal so that indoctrinating members takes priority.

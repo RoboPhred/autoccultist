@@ -4,17 +4,15 @@ namespace AutoccultistNS.UI
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using AutoccultistNS.Brain;
     using AutoccultistNS.Config;
-    using AutoccultistNS.GameState;
     using Roost.Piebald;
     using UnityEngine;
 
     public class ImperativeFolderView : IWindowView<ImperativeListWindow.IWindowContext>, IViewHasTitle
     {
         private readonly TimeSpan updateInterval = TimeSpan.FromSeconds(1);
-        private readonly Dictionary<IImperative, ImperativeUIElements> imperativeUIs = new();
-
+        private readonly Dictionary<IImperativeConfig, ImperativeRowFactory.ImperativeUIElements> imperativeUIs = new();
+        private readonly string rootTitle;
         private DateTime lastUpdate = DateTime.MinValue;
 
         private ImperativeListWindow.IWindowContext window;
@@ -23,8 +21,9 @@ namespace AutoccultistNS.UI
 
         private string searchFilter = string.Empty;
 
-        public ImperativeFolderView(IReadOnlyCollection<IImperativeConfig> collection, string folder)
+        public ImperativeFolderView(string rootTitle, IReadOnlyCollection<IImperativeConfig> collection, string folder)
         {
+            this.rootTitle = rootTitle;
             this.Collection = collection;
             this.Folder = folder;
         }
@@ -39,11 +38,11 @@ namespace AutoccultistNS.UI
             {
                 if (string.IsNullOrEmpty(this.Folder))
                 {
-                    return "Automations";
+                    return this.rootTitle;
                 }
 
                 var captialized = string.Join("/", this.Folder.Split("\\").Select(x => x.Capitalize()));
-                return "Automations: " + captialized.Substring(0, captialized.Length - 1);
+                return $"{this.rootTitle}: {captialized.Substring(0, captialized.Length - 1)}";
             }
         }
 
@@ -83,24 +82,7 @@ namespace AutoccultistNS.UI
 
             this.lastUpdate = DateTime.UtcNow;
 
-            var state = GameStateProvider.Current;
-
-            var orderedOps =
-                from pair in this.imperativeUIs
-                let imperative = pair.Key
-                let canExecute = imperative.IsConditionMet(state) && !imperative.IsSatisfied(state)
-                let isRunning = NucleusAccumbens.CurrentImperatives.Contains(imperative)
-                orderby canExecute descending, imperative.Name
-                select new { Imperative = imperative, IsRunning = isRunning, CanExecute = canExecute, Elements = pair.Value };
-
-            foreach (var pair in orderedOps.Reverse())
-            {
-                pair.Elements.Row.GameObject.transform.SetAsFirstSibling();
-
-                pair.Elements.StartButton.SetActive(!pair.IsRunning);
-                pair.Elements.StartButton.SetEnabled(pair.CanExecute);
-                pair.Elements.RunningIcon.SetActive(pair.IsRunning);
-            }
+            ImperativeRowFactory.UpdateImperatives(this.imperativeUIs);
         }
 
         private void RebuildContent()
@@ -142,7 +124,7 @@ namespace AutoccultistNS.UI
                         {
                             foreach (var imperative in imperatives)
                             {
-                                this.BuildImperativeRow(imperative, mountPoint);
+                                ImperativeRowFactory.BuildImperativeRow(imperative, mountPoint, this.window.StartImperative);
                             }
 
                             foreach (var partition in folders.Partition(3))
@@ -175,7 +157,7 @@ namespace AutoccultistNS.UI
                 .WithPointerSounds()
                 .OnPointerClick((e) =>
                 {
-                    this.window.PushView(new ImperativeFolderView(this.Collection, this.Folder + folder + Path.DirectorySeparatorChar));
+                    this.window.PushView(new ImperativeFolderView(this.rootTitle, this.Collection, this.Folder + folder + Path.DirectorySeparatorChar));
                 })
                 .AddContent(mountPoint =>
                 {
@@ -316,86 +298,6 @@ namespace AutoccultistNS.UI
                 });
         }
 
-        private void BuildImperativeRow(IImperativeConfig imperative, WidgetMountPoint mountPoint)
-        {
-            var state = GameStateProvider.Current;
-            var canExecute = imperative.IsConditionMet(state) && !imperative.IsSatisfied(state);
-            var isRunning = NucleusAccumbens.CurrentImperatives.Contains(imperative);
-
-            Glow glow = null;
-            ImageWidget runningIcon = null;
-            IconButtonWidget startButton = null;
-            var row = mountPoint.AddHorizontalLayoutGroup($"imperative_{imperative.Name}")
-                .SetChildAlignment(TextAnchor.MiddleCenter)
-                .SetExpandWidth()
-                .SetFitContentHeight()
-                .SetPadding(20, 5)
-                .OnPointerEnter(e => glow.Show())
-                .OnPointerExit(e => glow.Hide())
-                .AddContent(mountPoint =>
-                {
-                    mountPoint.AddLayoutItem("IconGlow")
-                        .SetMinWidth(40)
-                        .SetMinHeight(40)
-                        .SetPreferredWidth(40)
-                        .SetPreferredHeight(40)
-                        .WithGlow(g => glow = g)
-                        .AddContent(mountPoint =>
-                        {
-                            mountPoint.AddImage("Icon")
-                                .SetMinWidth(40)
-                                .SetMinHeight(40)
-                                .SetPreferredWidth(40)
-                                .SetPreferredHeight(40)
-                                .SetSprite(imperative.UI.GetIcon() ?? ResourceResolver.GetSprite("aspect:memory"));
-                        });
-
-                    mountPoint.AddLayoutItem("Spacer")
-                    .SetMinWidth(10)
-                    .SetPreferredWidth(10);
-
-                    var nameElement = mountPoint.AddText("ImperativeName")
-                        .SetFontSize(14)
-                        .SetMinFontSize(16)
-                        .SetMaxFontSize(32)
-                        .SetExpandWidth()
-                        .SetHorizontalAlignment(TMPro.HorizontalAlignmentOptions.Left)
-                        .SetVerticalAlignment(TMPro.VerticalAlignmentOptions.Middle)
-                        .SetText(imperative.Name);
-
-                    mountPoint.AddLayoutItem("Spacer")
-                        .SetMinWidth(20)
-                        .SetExpandWidth();
-
-                    runningIcon = mountPoint.AddImage("ActiveIcon")
-                        .SetSprite("autoccultist_situation_automation_badge")
-                        .SetActive(isRunning)
-                        .SetMinWidth(50)
-                        .SetMinHeight(50)
-                        .SetPreferredWidth(50)
-                        .SetPreferredHeight(50)
-                        .WithSpinAnimation(-360 / 16);
-
-                    startButton = mountPoint.AddIconButton("StartButton")
-                        .SetMinWidth(40)
-                        .SetMinHeight(40)
-                        .SetPreferredWidth(40)
-                        .SetPreferredHeight(40)
-                        .SetEnabled(canExecute)
-                        .SetBackground()
-                        .SetSprite("autoccultist_play_icon")
-                        .SetActive(!isRunning)
-                        .OnClick(() => this.window.StartImperative(imperative));
-                });
-
-            this.imperativeUIs.Add(imperative, new ImperativeUIElements
-            {
-                Row = row,
-                StartButton = startButton,
-                RunningIcon = runningIcon,
-            });
-        }
-
         private bool FilterImperative(IImperativeConfig imperative, bool exactFolder)
         {
             if (!imperative.UI.Visible)
@@ -440,15 +342,6 @@ namespace AutoccultistNS.UI
             }
 
             return true;
-        }
-
-        private class ImperativeUIElements
-        {
-            public HorizontalLayoutGroupWidget Row { get; set; }
-
-            public IconButtonWidget StartButton { get; set; }
-
-            public ImageWidget RunningIcon { get; set; }
         }
     }
 }

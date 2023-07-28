@@ -1,5 +1,10 @@
 name: "Aspirant: Evening Falls"
 legacy: aspirant
+
+ui:
+  homeSituation: null
+  icon: element:gloverandgloverjob
+
 motivations:
   - name: Begin the game
     primaryGoals:

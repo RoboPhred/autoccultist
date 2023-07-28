@@ -2,6 +2,11 @@ name: Find all acquaintances and patrons (Ungated)
 
 ui: false
 
+requirements:
+  allOf:
+    - situation: talk
+    - aspects: { lore: 1 }
+
 # Note: This goal will re-activate if we loose any followers or patrons, and get stuck
 # trying to re-find them (as the mistakenidentity decays)
 # See attract-followers-memory if this is an issue.

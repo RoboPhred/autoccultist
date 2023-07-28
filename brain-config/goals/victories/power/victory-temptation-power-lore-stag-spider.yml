@@ -1,5 +1,5 @@
 name: Acquire the Stag Door, Spider Door, and prepare for the Formula Fissive
-
+ui: false
 requirements:
   cardSet:
     - elementId: waywhite

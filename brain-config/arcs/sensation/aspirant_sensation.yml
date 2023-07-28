@@ -2,6 +2,11 @@
 # Should look into rushing high passion and using painting.
 name: "Aspirant: Sensation Ascension"
 legacy: aspirant
+
+ui:
+  homeSituation: null
+  icon: element:ascensionsensationf
+
 selectionHint:
   anyOf:
     - elementId: ascensionsensationa
@@ -11,6 +16,7 @@ selectionHint:
     - elementId: ascensionsensationd
     - elementId: ascensionsensatione
     - elementId: ascensionsensationf
+
 motivations:
   - name: Begin the game
     primaryGoals:

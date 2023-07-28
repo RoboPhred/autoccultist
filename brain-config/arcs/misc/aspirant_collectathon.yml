@@ -1,6 +1,9 @@
 name: "Aspirant: Collectathon"
-
 legacy: aspirant
+
+ui:
+  homeSituation: null
+  icon: element:toolknockf
 
 motivations:
   survive:
