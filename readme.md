@@ -2,7 +2,7 @@
 
 An experimental automaton for playing Cultist Simulator.
 
-Previous descriptions called this an "AI".  That was true enough when it was written, but now with the advent of neural networks, it should be clarified that this is NOT an AI in the modern tensor-and-neuron sense, but rather a state machine "AI" that have traditionally driven NPCs in earl games.  \
+Previous descriptions called this an "AI".  That was true enough when it was written, but now with the advent of neural networks, it should be clarified that this is NOT an AI in the modern tensor-and-neuron sense, but rather a state machine "AI" that have traditionally driven NPCs in earl games.
 
 Essentially, this project contains a massive tree of conditions matching game states to desired actions.  Every frame, the bot scans the entire game state, and tries to match it against its library of actions to take.  It then takes the highest priority action it is able to.
 
