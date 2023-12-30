@@ -1,0 +1,16 @@
+name: "Acquire Way: The White Door"
+ui:
+  homeSituation: dream
+  icon: element:waywhite
+requirements:
+  allOf:
+    - elementId: waywood
+    - anyOf:
+        - aspects: { lore: 1, lantern: 4 }
+        - aspects: { lore: 1, winter: 4 }
+        - aspects: { lore: 1, knock: 4 }
+completedWhen:
+  elementId: waywhite
+imperatives:
+  - name: "Acquire Way: The White Door"
+    operation: mansus/acquire-way-whitedoor

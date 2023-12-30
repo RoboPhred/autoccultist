@@ -1,6 +1,6 @@
 name: Counter despair with Opium
 priority: critical
-requirements: !import ../../conditions/despair-unsatisfied.yml
+requirements: !import /conditions/despair-unsatisfied.yml
 operation:
   name: Buy a Tincture of Opium
   situation: dream

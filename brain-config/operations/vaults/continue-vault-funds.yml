@@ -1,0 +1,9 @@
+name: Fund an exploration
+situation: explore
+targetOngoing: true
+startCondition: currentRecipeSatisfied
+conditionalRecipes:
+  - endOperation: true
+    slots:
+      Assistance:
+        elementId: funds

@@ -1,0 +1,13 @@
+name: "Physician: Startup"
+legacy: physician
+selectionHint:
+  anyOf:
+    - elementId: legacyphysicianjob
+motivations:
+  - name: Begin the Game
+    primaryGoals:
+      - legacy/physician/work-institute
+      - legacy/physician/study-notes
+      - bookdealer/find-bookdealer-map
+    supportingGoals:
+      - survive

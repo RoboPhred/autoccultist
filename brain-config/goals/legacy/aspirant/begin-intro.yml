@@ -1,0 +1,14 @@
+name: Begin the Intro
+ui:
+  homeSituation: work
+  icon: element:introjob
+requirements:
+  elementId: introjob
+completedWhen:
+  anyOf:
+    - elementId: bequestintro
+    - situation: time
+imperatives:
+  - name: Work the intro job
+    priority: goal
+    operation: legacy/aspirant/begin-introjob

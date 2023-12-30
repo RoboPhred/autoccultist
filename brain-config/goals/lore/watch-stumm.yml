@@ -1,0 +1,10 @@
+name: Watch Stumm
+ui:
+  homeSituation: study
+  icon: element:stumm
+requirements:
+  elementId: stumm
+completedWhen:
+  elementId: ritefollowerconsumeinfluence
+imperatives:
+  - operation: watch-stumm

@@ -1,0 +1,15 @@
+name: Acquire the Third Mark of Sensation
+situation: work
+startingRecipe:
+  slots:
+    work:
+      oneOf:
+        - elementId: ascensionsensationbf
+        - elementId: ascensionsensationbm
+    Know:
+      elementId: waystag_after
+    Power:
+      aspects:
+        lore: 1
+        grail:
+          greaterThanOrEqualTo: 6

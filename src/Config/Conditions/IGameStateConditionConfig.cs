@@ -1,6 +1,6 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Yaml;
 
     /// <summary>
     /// Defines a config node that checks for a game state condition.
@@ -9,7 +9,10 @@ namespace Autoccultist.Config.Conditions
     [DuckTypeCandidate(typeof(SituationCondition))]
     [DuckTypeCandidate(typeof(CardSetCondition))]
     [DuckTypeCandidate(typeof(CardExistsCondition))]
-    public interface IGameStateConditionConfig : IConfigObject, IGameStateCondition
+    [DuckTypeCandidate(typeof(MemoryCondition))]
+    [DuckTypeCandidate(typeof(AspectValueCondition))]
+    [DuckTypeCandidate(typeof(ValueComparisonCondition))]
+    public interface IGameStateConditionConfig : INamedConfigObject, IGameStateCondition
     {
     }
 }

@@ -1,7 +1,7 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
-    using Assets.CS.TabletopUI;
+    using SecretHistories.UI;
 
     /// <summary>
     /// Represents the state of a card in game.
@@ -29,6 +29,11 @@ namespace Autoccultist.GameState
         CardLocation Location { get; }
 
         /// <summary>
+        /// Gets the situation this card is stored or slotted in.
+        /// </summary>
+        string Situation { get; }
+
+        /// <summary>
         /// Gets a value indicating whether this card can be slotted.
         /// </summary>
         bool IsSlottable { get; }
@@ -38,13 +43,18 @@ namespace Autoccultist.GameState
         /// </summary>
         IReadOnlyDictionary<string, int> Aspects { get; }
 
-        // FIXME: Temporary.  We need to have a consumption system which removes the card from the state list.
-        //  as it is, we can keep calling ToElementStack forever and consume all cards of this type without ever touching any other card state
+        /// <summary>
+        /// Gets a signature for this card.
+        /// </summary>
+        /// <remarks>
+        /// This is a string that reflects all attributes of this card, and can be used to find if two cards are effectively identical.
+        /// </remarks>
+        string Signature { get; }
 
         /// <summary>
         /// Gets the element stack of this card.
         /// </summary>
         /// <returns>An element stack of this singular card.</returns>
-        ElementStackToken ToElementStack();
+        ElementStack ToElementStack();
     }
 }

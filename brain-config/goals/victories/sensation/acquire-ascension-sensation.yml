@@ -1,0 +1,14 @@
+name: Acquire the Third Mark
+requirements:
+  anyOf:
+    - elementId: ascensionsensationbf
+    - elementId: ascensionsensationbm
+completedWhen:
+  aspects: { desire: 3 }
+imperatives:
+  - name: Acquire the Third Mark
+    forbidders:
+      aspects:
+        sensationmarks:
+          greaterThan: 2
+    operation: victories/sensation/acquire-ascension-sensation

@@ -1,0 +1,8 @@
+name: Work with physical labor
+ui:
+  homeSituation: work
+  icon: element:health
+completedWhen: !import /conditions/has-enough-funds.yml
+imperatives:
+  - !import /impulses/maint-refresh-health.yml
+  - !import /impulse-sets/procure-funds-labor.yml

@@ -1,0 +1,19 @@
+name: Rescue a failing expedition with Funds
+priority: maintenance
+requirements:
+  anyOf:
+    - situation: explore
+      containsAspects: { peril: 1 }
+    - situation: explore
+      containsAspects: { guardian: 1 }
+    - situation: explore
+      containsAspects: { seal: 1 }
+    - situation: explore
+      containsAspects: { curse: 1 }
+forbidders:
+  anyOf:
+    - situation: explore
+      storedCardsMatch:
+        cardSet:
+          - elementId: funds
+operation: vaults/continue-vault-funds

@@ -1,0 +1,67 @@
+name: Upgrade all Forge lore
+ui:
+  homeSituation: study
+  icon: aspect:forge
+completedWhen:
+  anyOf:
+    # We have the highest level already
+    - elementId: fragmentforgeg
+    # We can't combine any more.
+    - noneOf:
+        - cardSet:
+            - elementId: fragmentforge
+            - elementId: fragmentforge
+        - cardSet:
+            - elementId: fragmentforgeb
+            - elementId: fragmentforgeb
+        - cardSet:
+            - elementId: fragmentforgec
+            - elementId: fragmentforgec
+        - cardSet:
+            - elementId: fragmentforged
+            - elementId: fragmentforged
+        - allOf:
+            - cardSet:
+                - elementId: fragmentforgee
+                - elementId: fragmentforgee
+            - anyOf:
+                - elementId: skillreasond_illumination
+                - aspects: { library: 1 }
+        - allOf:
+            - cardSet:
+                - elementId: fragmentforgef
+                - elementId: fragmentforgef
+            - anyOf:
+                - elementId: skillreasond_illumination
+                - aspects: { library: 1 }
+imperatives:
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: reason/study-reason
+
+  - name: Combine Forge F
+    requirements: !import /conditions/can-answer-challenge-knowledge.yml
+    forbidders:
+      elementId: fragmentforgeg
+    operation: lore/forge/lore-combine-forge-f
+
+  - name: Combine Forge E
+    requirements: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/forge/lore-combine-forge-e
+
+  - name: Combine Forge D
+    requirements: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/forge/lore-combine-forge-d
+
+  - name: Combine Forge C
+    requirements: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/forge/lore-combine-forge-c
+
+  - name: Combine Forge B
+    requirements: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/forge/lore-combine-forge-b
+
+  - name: Combine Forge A
+    requirements: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/forge/lore-combine-forge-a

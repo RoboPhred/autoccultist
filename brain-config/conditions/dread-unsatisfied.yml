@@ -1,11 +1,34 @@
 allOf:
-  # TODO: Might want to make this take into account decay time:
-  #  Should only trigger if seasondespair is pending, or we have multiple dreads.
-  - elementId: dread
-    location: tabletop
-  - noneOf:
-      - elementId: contentment
-  - noneOf:
-      - situation: visions
+  - anyOf:
+      - situation: despair
+      - situation: time
         storedCardsMatch:
-          elementId: fascination
+          elementId: seasondespair
+  - anyOf:
+      - situation: despair
+        storedCardsMatch:
+          cardSet:
+            - elementId: dread
+            - elementId: dread
+      - cardSet:
+          - elementId: dread
+            location: tabletop
+            lifetimeRemaining:
+              greaterThan: 60
+          - elementId: dread
+            location: tabletop
+            lifetimeRemaining:
+              greaterThan: 60
+      - allOf:
+          - situation: despair
+            storedCardsMatch:
+              elementId: dread
+          - elementId: dread
+            location: tabletop
+            lifetimeRemaining:
+              greaterThan: 60
+  - noneOf:
+      - situation: despair
+        slottedCardsMatch:
+          elementId: contentment
+      - elementId: contentment

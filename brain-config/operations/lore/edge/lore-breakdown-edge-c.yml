@@ -1,0 +1,8 @@
+name: "Break down lore: An Operation of the Labhite"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentedgec
+    with:
+      elementId: reason

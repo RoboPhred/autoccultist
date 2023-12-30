@@ -1,0 +1,63 @@
+name: Refine the Fiercest Alchemy
+
+requirements:
+  allOf:
+    - elementId: riteinfluenceconsumeingredient
+    - anyOf:
+        - elementId: ingredientforgeb
+        - elementId: ingredientforged
+        - elementId: ingredientforgef
+
+completedWhen:
+  elementId: apostleforge.pillar3
+
+imperatives:
+  - name: Refine Bitterblack Salts to Xanthotic Essence
+    priority: goal
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders:
+      anyOf:
+        - elementId: ingredientforged
+        - elementId: ingredientforgef
+        - elementId: apostleforge.pillar3
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: riteinfluenceconsumeingredient
+          Influence:
+            elementId: apostleforge.pillarfuel
+          Offering:
+            elementId: ingredientforgeb
+  - name: Refine Xanthotic Essence to Iotic Essence
+    priority: goal
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders:
+      elementId: ingredientforgef
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: riteinfluenceconsumeingredient
+          Influence:
+            elementId: apostleforge.pillarfuel
+          Offering:
+            elementId: ingredientforged
+  - name: Refine Iotic Essence to Blue Gold
+    priority: goal
+    requirements:
+      allOf:
+        - !import /conditions/has-slushfund-major.yml
+        - !import /conditions/legacy/apostle-power/begin-great-work.yml
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: riteinfluenceconsumeingredient
+          Influence:
+            elementId: apostleforge.pillarfuel
+          Offering:
+            elementId: ingredientforgef

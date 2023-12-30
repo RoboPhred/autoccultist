@@ -1,14 +1,20 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Assets.Core.Entities;
-    using Assets.Core.Interfaces;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi;
-    using Assets.TabletopUi.Scripts.Infrastructure;
-    using Assets.TabletopUi.Scripts.Interfaces;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoccultistNS.Tasks;
+    using SecretHistories.Assets.Scripts.Application.UI;
+    using SecretHistories.Entities;
+    using SecretHistories.Entities.NullEntities;
+    using SecretHistories.Enums;
+    using SecretHistories.Fucine;
+    using SecretHistories.Spheres;
+    using SecretHistories.Spheres.Choreographers;
+    using SecretHistories.Tokens.Payloads;
+    using SecretHistories.UI;
     using UnityEngine;
 
     /// <summary>
@@ -16,8 +22,8 @@ namespace Autoccultist
     /// </summary>
     public static class GameAPI
     {
-        private static GameSpeed prePauseSpeed = GameSpeed.Normal;
         private static int pauseDepth = 0;
+        private static bool isPaused = false;
 
         /// <summary>
         /// Gets a value indicating whether the game is running.
@@ -31,7 +37,30 @@ namespace Autoccultist
         {
             get
             {
-                return IsRunning && DraggableToken.draggingEnabled && (!IsInMansus || IsMansusInteractable);
+                if (!IsRunning)
+                {
+                    return false;
+                }
+
+                // Mansus sets delays using this, so this might be a good check instead of IsMansusInteractable
+                if (Watchman.Get<LocalNexus>().PlayerInputDisabled())
+                {
+                    return false;
+                }
+
+                // Apparently the above isn't good enough to wait on the mansus, so let's wait for the cards to appear.
+                if (IsInMansus)
+                {
+                    var ingress = GetActiveIngress();
+                    var hasChoices = GetMansusChoices(out var _) != null;
+                    var hasOutput = ingress != null && ingress.GetEgressOutputSphere().GetTokens().Any();
+                    if (!hasChoices && !hasOutput)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         }
 
@@ -42,23 +71,7 @@ namespace Autoccultist
         {
             get
             {
-                return TabletopManager.IsInMansus();
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the mansus is ready for interaction.
-        /// </summary>
-        public static bool IsMansusInteractable
-        {
-            get
-            {
-                // We need to wait out mansus animations.  There are two of them.
-                // 1: Mansus screen fade-in (turns off DraggableToken.draggingEnabled while fading)
-                // 2: Mansus token container fade-in (detected by alpha changing)
-                var fader = Reflection.GetPrivateField<CanvasGroupFader>(TabletopManager.mapTokenContainer, "canvasGroupFader");
-                var faderGroup = fader.GetComponent<CanvasGroup>();
-                return IsInMansus && DraggableToken.draggingEnabled && faderGroup.alpha == 1;
+                return Watchman.Get<Numa>().IsOtherworldActive();
             }
         }
 
@@ -72,39 +85,45 @@ namespace Autoccultist
                 var heartGo = GameObject.Find("Heart");
                 if (heartGo == null)
                 {
-                    AutoccultistPlugin.Instance.LogWarn("Could not find Heart.");
+                    Autoccultist.LogWarn("Could not find Heart.");
                     return GameSpeed.Paused;
                 }
 
-                var heartBehavior = heartGo.GetComponent<Heart>();
-
-                var speedState = Reflection.GetPrivateField<GameSpeedState>(heartBehavior, "gameSpeedState");
-                return speedState.GetEffectiveGameSpeed();
+                var heart = heartGo.GetComponent<Heart>();
+                return heart.GetEffectiveGameSpeed();
             }
         }
 
         /// <summary>
-        /// Gets the tabletop manager.
+        /// Gets the tabletop sphere.
         /// </summary>
-        public static TabletopManager TabletopManager
+        public static Sphere TabletopSphere
         {
             get
             {
-                var tabletopManager = Registry.Get<TabletopManager>();
-                if (tabletopManager == null)
+                if (!IsRunning)
                 {
-                    AutoccultistPlugin.Instance.Fatal("Could not retrieve ITabletopManager");
+                    throw new Exception("GameAPI.TabletopSphere: Game is not running.");
                 }
 
-                return tabletopManager;
+                Sphere tabletopSphere = Watchman.Get<HornedAxe>().GetSpheres().OfType<TabletopSphere>().FirstOrDefault();
+
+                // When resetting the game, it is possible for GameStateProvider to try and generate a game state during the dissolution process
+                // of the current save before the scene is unloaded.  This results in no tabletop sphere.
+                return tabletopSphere ?? new NullSphere();
             }
         }
 
-        private static TabletopTokenContainer TabletopTokenContainer
+        public static Sphere CodexSphere
         {
             get
             {
-                return TabletopManager._tabletop;
+                if (!IsRunning)
+                {
+                    throw new Exception("GameAPI.CodexSphere: Game is not running.");
+                }
+
+                return Watchman.Get<HornedAxe>().GetSphereByAbsolutePath(new FucinePath("*/codex")) ?? new NullSphere();
             }
         }
 
@@ -115,146 +134,368 @@ namespace Autoccultist
         /// </summary>
         public static void Initialize()
         {
-            GameEventSource.GameStarted += OnGameStarted;
-            GameEventSource.GameEnded += OnGameEnded;
+            GameEventSource.GameStarted += (_, __) =>
+            {
+                IsRunning = true;
+            };
+
+            GameEventSource.GameEnded += (_, __) =>
+            {
+                // What do we do about all our pause tokens?
+                IsRunning = false;
+            };
+
+            // Unlock the game if the heart is stopped.  Re-lock on start.
+            MechanicalHeart.OnStart += (_, __) =>
+            {
+                if (isPaused)
+                {
+                    Watchman.Get<LocalNexus>().ForcePauseGame(false);
+                }
+            };
+            MechanicalHeart.OnStop += (_, __) =>
+            {
+                if (isPaused)
+                {
+                    Watchman.Get<LocalNexus>().PauseGame(false);
+                    Watchman.Get<LocalNexus>().UnForcePauseGame(false);
+                }
+            };
+
+            // We wait until the next frame to unpause, in case anything re-pauses us on the same frame.
+            Autoccultist.GlobalUpdate += (_, __) =>
+            {
+                // Only unpause if the bot itself is running.
+                // We might be getting unpause requests from steps.
+                if (isPaused && pauseDepth == 0 && MechanicalHeart.IsRunning)
+                {
+                    Watchman.Get<LocalNexus>().UnForcePauseGame(true);
+                    isPaused = false;
+                }
+            };
+        }
+
+        public static Task AwaitInteractable(CancellationToken cancellationToken)
+        {
+            if (IsInteractable)
+            {
+                return Task.FromResult(true);
+            }
+
+            return AwaitConditionTask.From(() => IsInteractable, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets all EnRoute spheres.
+        /// </summary>
+        public static IEnumerable<Sphere> GetEnRouteSpheres()
+        {
+            if (!IsRunning)
+            {
+                return Enumerable.Empty<Sphere>();
+            }
+
+            return Watchman.Get<HornedAxe>().GetSpheres().OfType<EnRouteSphere>();
+        }
+
+        /// <summary>
+        /// Gets all situations.
+        /// </summary>
+        public static IEnumerable<Situation> GetSituations()
+        {
+            if (!IsRunning)
+            {
+                return Enumerable.Empty<Situation>();
+            }
+
+            return Watchman.Get<HornedAxe>().GetRegisteredSituations();
+        }
+
+        /// <summary>
+        /// Gets the situation with the given id.
+        /// </summary>
+        /// <param name="situationId">The id of the situation to get.</param>
+        /// <returns>The situation with the given id, or null if no such situation exists.</returns>
+        public static Situation GetSituation(string situationId)
+        {
+            return GetSituations().FirstOrDefault(x => x.VerbId == situationId);
+        }
+
+        /// <summary>
+        /// Gets the active ingress.
+        /// </summary>
+        /// <returns>The active ingress, or null if there is no active ingress.</returns>
+        public static Ingress GetActiveIngress()
+        {
+            if (!IsRunning)
+            {
+                return null;
+            }
+
+            // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
+            // of the visit.
+            var tabletopIngress = GetTabletopIngress();
+            if (tabletopIngress != null)
+            {
+                return tabletopIngress;
+            }
+
+            // Not on the table... If we have an active otherworld visit, we might have one there.
+            var otherworld = GetActiveOtherworld();
+            if (otherworld != null)
+            {
+                return Reflection.GetPrivateField<Ingress>(otherworld, "_activeIngress");
+            }
+
+            // Note: There is a small period of time between the overworld concluding and the tabletop ingress appearing.
+            return null;
+        }
+
+        public static Ingress GetTabletopIngress()
+        {
+            if (!IsRunning)
+            {
+                return null;
+            }
+
+            // Ingress exists on the tabletop as a token when the overworld concludes and we are presented with the results
+            // of the visit.
+            return TabletopSphere.GetTokens().Select(x => x.Payload).OfType<Ingress>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the active ingress, awaiting it if necessary.
+        /// </summary>
+        public static async Task<Ingress> AwaitTabletopIngress(CancellationToken cancellationToken)
+        {
+            var existingIngress = GetTabletopIngress();
+            if (existingIngress != null)
+            {
+                return existingIngress;
+            }
+
+            await AwaitConditionTask.From(() => GetTabletopIngress() != null, cancellationToken);
+            return GetTabletopIngress();
+        }
+
+        public static Otherworld GetActiveOtherworld()
+        {
+            if (!IsRunning)
+            {
+                return null;
+            }
+
+            var numa = Watchman.Get<Numa>();
+
+            return Reflection.GetPrivateField<Otherworld>(numa, "_currentOtherworld");
+        }
+
+        /// <summary>
+        /// Gets the various card choices available in the mansus, if any
+        /// </summary>
+        /// <param name="faceUpDeckName">The name of the face up deck.</param>
+        /// <returns>A dictionary of deck name to card.  If the mansus is not open, `null` is returned.</returns>
+        public static IReadOnlyDictionary<string, ElementStack> GetMansusChoices(out string faceUpDeckName)
+        {
+            faceUpDeckName = null;
+
+            try
+            {
+                var spheres = GetMansusSpheres(out faceUpDeckName);
+
+                if (spheres == null)
+                {
+                    return null;
+                }
+
+                var value = new Dictionary<string, ElementStack>();
+
+                foreach (var sphere in spheres)
+                {
+                    var token = sphere.Value.GetTokens().FirstOrDefault();
+                    if (token == null)
+                    {
+                        // Mansus isn't ready.
+                        // This could be because we have not drawn yet, or because the user has made a choice and we are now idle.
+                        return null;
+                    }
+
+                    var elementStack = token.Payload as ElementStack;
+                    if (elementStack == null)
+                    {
+                        throw new Exception($"Could not get ElementStack from token with payload id {token.PayloadId}");
+                    }
+
+                    value.Add(sphere.Key, token.Payload as ElementStack);
+                }
+
+                return spheres.ToDictionary(x => x.Key, x => x.Value.GetTokens().First().Payload as ElementStack);
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.LogWarn($"Exception in GameAPI.GetMansusChoices: {ex.ToString()}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Chooses a card from the deck in the mansus.
+        /// </summary>
+        /// <param name="deckName">The name of the deck to choose from.</param>
+        /// <returns>True if the card was chosen, False otherwise.</returns>
+        public static bool ChooseMansusDeck(string deckName)
+        {
+            try
+            {
+                var otherworld = GetActiveOtherworld();
+                var ingress = GetActiveIngress();
+
+                if (ingress == null || otherworld == null)
+                {
+                    return false;
+                }
+
+                var spheres = GetMansusSpheres(out var _);
+                if (!spheres.TryGetValue(deckName, out var sphere))
+                {
+                    return false;
+                }
+
+                var dominions = Reflection.GetPrivateField<List<OtherworldDominion>>(otherworld, "_dominions");
+
+                var dominion = dominions.FirstOrDefault(x => x.MatchesEgress(ingress.GetEgressId()));
+                if (dominion == null)
+                {
+                    throw new Exception($"Could not find dominion for ingress {ingress.Id} in otherworld {otherworld.Id}");
+                }
+
+                var token = sphere.GetTokens().First();
+
+                // Is this its own special thing?  Can we just try to drag it to ingress.GetEgressSphere()?
+                if (!dominion.EgressSphere.TryAcceptToken(token, new Context(Context.ActionSource.PlayerDrag)))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.LogWarn($"Exception in GameAPI.ChooseMansusDeck: {ex.ToString()}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the output card sphere from the mansus.
+        /// </summary>
+        public static Sphere GetMansusEgressSphere()
+        {
+            var ingress = GetActiveIngress();
+            if (ingress == null)
+            {
+                return null;
+            }
+
+            var output = ingress.GetEgressOutputSphere();
+            if (output == null)
+            {
+                return null;
+            }
+
+            return output;
+        }
+
+        public static Task AwaitNotInMansus(CancellationToken cancellationToken)
+        {
+            if (!IsInMansus)
+            {
+                return Task.CompletedTask;
+            }
+
+            return AwaitConditionTask.From(() => !IsInMansus, cancellationToken);
+        }
+
+        /// <summary>
+        /// Marks the user speed level as being unpaused.
+        /// </summary>
+        public static void UserUnpause()
+        {
+            Watchman.Get<LocalNexus>().UnPauseGame(true);
+        }
+
+        /// <summary>
+        /// Re-applies the current GameAPI pause state into the game.
+        /// </summary>
+        public static void ReassertPause()
+        {
+            if (isPaused)
+            {
+                // FIXME: Use a higher level pause depth (probably 4) so we don't have to fight the mansus for control.
+                Watchman.Get<LocalNexus>().ForcePauseGame(false);
+            }
         }
 
         /// <summary>
         /// Sets the pause state of the game.
         /// </summary>
+        /// <param name="name">The name of this token, for leak detection.</param>
         /// <returns>A token to unpause the game.</returns>
-        public static PauseToken Pause()
+        public static PauseToken Pause(string name = null)
         {
             if (pauseDepth == 0)
             {
-                prePauseSpeed = GameSpeed;
-                if (prePauseSpeed != GameSpeed.Paused)
+                if (IsRunning && MechanicalHeart.IsRunning)
                 {
-                    Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
-                    {
-                        ControlPriorityLevel = 1,
-                        GameSpeed = GameSpeed.Paused,
-                        WithSFX = true,
-                    });
+                    Watchman.Get<LocalNexus>().ForcePauseGame(true);
+                    isPaused = true;
                 }
             }
 
             pauseDepth++;
 
-            return new PauseToken();
+            return new PauseToken(name);
         }
 
-        /// <summary>
-        /// Gets a situation by a situation id.
-        /// </summary>
-        /// <param name="situationId">The situation id to retrieve the situation for.</param>
-        /// <returns>The situation for the given situation id, or null.</returns>
-        public static SituationController GetSituation(string situationId)
+        public static Task WhilePaused(Func<Task> action, CancellationToken cancellationToken)
         {
-            return Registry.Get<SituationsCatalogue>().GetRegisteredSituations().Find(x => x.situationToken.EntityId == situationId);
+            return WhilePaused(null, action, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets a recipe by recipe id.
-        /// </summary>
-        /// <param name="recipeId">The recipe id of the recipe to get.</param>
-        /// <returns>The recipe matching the recipe id.</returns>
-        public static Recipe GetRecipe(string recipeId)
+        public static Task<T> WhilePaused<T>(Func<Task<T>> action, CancellationToken cancellationToken)
         {
-            return Registry.Get<ICompendium>().GetEntityById<Recipe>(recipeId);
+            return WhilePaused(null, action, cancellationToken);
         }
 
-        /// <summary>
-        /// Gets all situations currently existing.
-        /// </summary>
-        /// <returns>A collection of all situations.</returns>
-        public static ICollection<SituationController> GetAllSituations()
+        public static async Task WhilePaused(string name, Func<Task> action, CancellationToken cancellationToken)
         {
-            return Registry.Get<SituationsCatalogue>().GetRegisteredSituations();
-        }
-
-        /// <summary>
-        /// Gets all cards on the tabletop.
-        /// </summary>
-        /// <returns>A collection of all cards on the tabletop.</returns>
-        public static IReadOnlyCollection<ElementStackToken> GetTabletopCards()
-        {
-            var candidates =
-                from token in TabletopTokenContainer.GetTokens()
-                let card = token as ElementStackToken
-                where card != null && IsCardAccessable(card)
-                select card;
-            return candidates.ToArray();
-        }
-
-        /// <summary>
-        /// Takes a stack of a single card from an existing stack.
-        /// </summary>
-        /// <param name="stack">The stack to obtain a card from.</param>
-        /// <returns>A stack of a single card.</returns>
-        public static ElementStackToken TakeOneCard(ElementStackToken stack)
-        {
-            if (stack.Quantity > 1)
+            using (Pause(name))
             {
-                return stack.SplitAllButNCardsToNewStack(stack.Quantity - 1, new Context(Context.ActionSource.PlayerDrag));
+                await action();
             }
-
-            if (stack.Quantity == 1)
-            {
-                return stack;
-            }
-
-            return null;
         }
 
-        /// <summary>
-        /// Slots a card into the given slot.
-        /// If card is a stack of cards, only one card will be slotted.
-        /// </summary>
-        /// <param name="slot">The slot to place the card into.</param>
-        /// <param name="stack">The card stack to pick a card from.</param>
-        public static void SlotCard(RecipeSlot slot, ElementStackToken stack)
+        public static async Task<T> WhilePaused<T>(string name, Func<Task<T>> action, CancellationToken cancellationToken)
         {
-            var singleCard = TakeOneCard(stack);
-            if (singleCard == null)
+            using (Pause(name))
+            {
+                return await action();
+            }
+        }
+
+        public static void SortTable()
+        {
+            if (!IsRunning)
             {
                 return;
             }
 
-            slot.AcceptStack(singleCard, new Context(Context.ActionSource.PlayerDrag));
+            (TabletopSphere.Choreographer as TabletopChoreographer).GroupAllStacks();
         }
 
-        /// <summary>
-        /// Choose a card from the mansus.
-        /// </summary>
-        /// <param name="card">The card on the mansus to choose.</param>
-        /// <remarks>Throws <see cref="InvalidOperationException"/> if the mansus is not active.</remarks>
-        public static void ChooseMansusCard(ElementStackToken card)
+        public static IEnumerable<Token> GetTokens()
         {
-            if (!IsInMansus)
-            {
-                throw new InvalidOperationException("Mansus is not active.");
-            }
-
-            if (!IsMansusInteractable)
-            {
-                throw new InvalidOperationException("Mansus is not interactable.");
-            }
-
-            var mapController = Registry.Get<MapController>();
-            var tokenContainer = mapController ? Reflection.GetPrivateField<MapTokenContainer>(mapController, "_mapTokenContainer") : null;
-            if (mapController == null || tokenContainer == null)
-            {
-                throw new ApplicationException("Failed to get map token controller.");
-            }
-
-            var activeDoor = Reflection.GetPrivateField<DoorSlot>(tokenContainer, "activeSlot");
-            if (activeDoor == null)
-            {
-                throw new InvalidOperationException("Mansus is not active.");
-            }
-
-            mapController.HideMansusMap(activeDoor.transform, card);
+            return Watchman.Get<HornedAxe>().GetSpheres().SelectMany(x => x.GetTokens());
         }
 
         /// <summary>
@@ -264,7 +505,7 @@ namespace Autoccultist
         /// <param name="message">The message of the toast.</param>
         public static void Notify(string title, string message)
         {
-            var notifier = Registry.Get<INotifier>(false);
+            var notifier = Watchman.Get<Notifier>();
             if (notifier == null)
             {
                 return;
@@ -273,24 +514,64 @@ namespace Autoccultist
             notifier.ShowNotificationWindow(title, message, false);
         }
 
-        private static void OnGameStarted(object sender, EventArgs e)
+        private static IReadOnlyDictionary<string, Sphere> GetMansusSpheres(out string faceUpDeckName)
         {
-            IsRunning = true;
-        }
+            var ingress = GetActiveIngress();
+            var otherworld = GetActiveOtherworld();
+            faceUpDeckName = null;
 
-        private static void OnGameEnded(object sender, EventArgs e)
-        {
-            IsRunning = false;
-        }
-
-        private static bool IsCardAccessable(ElementStackToken card)
-        {
-            if (card.Defunct)
+            if (ingress == null || otherworld == null)
             {
-                return false;
+                return null;
             }
 
-            return true;
+            var numa = Watchman.Get<Numa>();
+            var compendium = Watchman.Get<Compendium>();
+
+            var spheres = otherworld.GetSpheres();
+
+            var consequences = ingress.GetConsequences();
+
+            var faceUpDeck = compendium.GetEntityById<Recipe>(consequences[0].Id);
+            var deckOne = compendium.GetEntityById<Recipe>(consequences[1].Id);
+            var deckTwo = compendium.GetEntityById<Recipe>(consequences[2].Id);
+
+            if (faceUpDeck == null || faceUpDeck.DeckEffects.Keys.Count == 0)
+            {
+                throw new Exception("GetMansusSpheres: FaceUpDeck is null or has no DeckEffects");
+            }
+
+            if (deckOne == null || deckOne.DeckEffects.Keys.Count == 0)
+            {
+                throw new Exception("GetMansusSpheres: DeckOne is null or has no DeckEffects");
+            }
+
+            if (deckTwo == null || deckTwo.DeckEffects.Keys.Count == 0)
+            {
+                throw new Exception("GetMansusSpheres: DeckTwo is null or has no DeckEffects");
+            }
+
+            faceUpDeckName = faceUpDeck.DeckEffects.Keys.First();
+            var deckOneName = deckOne.DeckEffects.Keys.First();
+            var deckTwoName = deckTwo.DeckEffects.Keys.First();
+
+            // FIXME: This is nasty, but HornexAxe.GetSphereByPath(FromPath, overworld) doesn't find these.
+            // Which is strange, as the error message it gives contains the exact same path as we see from sphere.GetAbsolutePath().Path
+            var faceUpSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[0].ToPath.Path);
+            var deckOneSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[1].ToPath.Path);
+            var deckTwoSphere = spheres.FirstOrDefault(x => "/" + x.Id == consequences[2].ToPath.Path);
+
+            if (faceUpSphere == null || deckOneSphere == null || deckTwoSphere == null)
+            {
+                throw new Exception("GetMansusSpheres: Could not find all spheres.");
+            }
+
+            return new Dictionary<string, Sphere>
+            {
+                { faceUpDeckName, faceUpSphere },
+                { deckOneName, deckOneSphere },
+                { deckTwoName, deckTwoSphere },
+            };
         }
 
         /// <summary>
@@ -300,13 +581,20 @@ namespace Autoccultist
         {
             private bool isDisposed = false;
 
+            public PauseToken(string name)
+            {
+                this.Name = name;
+            }
+
             /// <summary>
             /// Finalizes an instance of the <see cref="PauseToken"/> class.
             /// </summary>
             ~PauseToken()
             {
-                AutoccultistPlugin.Instance.LogWarn("Leaked PauseToken");
+                Autoccultist.LogWarn($"Leaked PauseToken {this.Name}");
             }
+
+            public string Name { get; }
 
             /// <inheritdoc/>
             public void Dispose()
@@ -318,15 +606,9 @@ namespace Autoccultist
 
                 this.isDisposed = true;
                 GC.SuppressFinalize(this);
-                pauseDepth--;
-                if (pauseDepth == 0 && prePauseSpeed != GameSpeed.Paused)
+                if (pauseDepth > 0)
                 {
-                    Registry.Get<LocalNexus>().SpeedControlEvent.Invoke(new SpeedControlEventArgs()
-                    {
-                        ControlPriorityLevel = 1,
-                        GameSpeed = prePauseSpeed,
-                        WithSFX = true,
-                    });
+                    pauseDepth--;
                 }
             }
         }

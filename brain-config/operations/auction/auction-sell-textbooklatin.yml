@@ -1,0 +1,8 @@
+name: Sell a textbook on Latin
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+    Sell:
+      elementId: textbooklatin

@@ -1,0 +1,14 @@
+name: "Use the Stag Door"
+situation: dream
+startingRecipe:
+  slots:
+    dream:
+      elementId: waystag_after
+ongoingRecipes:
+  dreamusestagway:
+    slots:
+      Ascent:
+        elementId: reason
+  dreamenterstag:
+    mansusChoice:
+      deck: mansus_stagdoor

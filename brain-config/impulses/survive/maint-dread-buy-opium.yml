@@ -2,10 +2,14 @@ name: Counter dread with Opium
 priority: maintenance
 requirements:
   allOf:
-    - !import ../../conditions/dread-unsatisfied.yml
+    - !import /conditions/dread-unsatisfied.yml
     - cardSet:
         - elementId: funds
+          location: tabletop
         - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
 operation:
   name: Buy a Tincture of Opium
   situation: dream

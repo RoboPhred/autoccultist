@@ -1,0 +1,235 @@
+name: "Aestuant Victory"
+legacy: apostleforge
+startFromSave: ./.saves/apostle_power.json
+
+ui:
+  homeSituation: null
+  icon: element:apostleforge.pillar2
+
+motivations:
+  survive:
+    name: Survival
+    primaryGoals:
+      - survive
+
+  # Begin jobs
+  get_gg:
+    name: Get a job
+    requires:
+      - begin_game
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+
+  work_gg:
+    name: Work at Glover and Glover
+    requires:
+      - get_gg
+    blocks:
+      # glover and glover is more lucrative than labor, so stop doing labor when it is available.
+      - work_labor
+    # We must be able to actually do our goals.
+    # If not, we will fall back to work_labor
+    requirePrimaryGoals: true
+    primaryGoals:
+      - glover/work-glover
+      - glover/acquire-job-glover-standard
+
+  work_labor:
+    name: Work with physical labor
+    requires:
+      - begin_game
+    primaryGoals:
+      - funds/work-labor
+  # End jobs
+
+  # Begin Skills
+  get_buff:
+    name: Get a stronger physique
+    requires:
+      - begin_game
+    blocks:
+      # Block GG while doing this, so we fall back on labor for the extra vitality.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
+
+  get_scholarship_minor:
+    name: Get a scholarship
+    requires:
+      # Wait until we finish leveling up our health skill so we dont conflict over study.
+      - get_buff
+    blocks:
+      # Block GG while doing this, so we dont fight for our limited reason.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - reason/acquire-skillreasona
+
+  get_scholarship_major:
+    name: Get a profound scholarship
+    requires:
+      - get_scholarship_minor
+    primaryGoals:
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+
+  get_rarefied_mind:
+    name: Get a Rarefied Mind
+    # Do this whenever we end up with the right amount of textbooks
+    # This is so we can keep our study verb busy when we are waiting to get enough money to spend at morlands.
+    # Danger: if our goal requirements drop off, this can disable and stop the motivation, which deadlocks the bot.
+    # Even a brief moment of disabling can allow read_all_lore to trigger again, taking over the study verb and causing our
+    # precious eruditionplus to decay.
+    # If this is unreliable, remove this, and require read_all_lore and drain_morland instead
+    requirePrimaryGoals: true
+    requires:
+      - get_scholarship_major
+    blocks:
+      # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
+      - read_all_lore
+      # There's a rare chance this can suck up the only lore we can use to get illumination.
+      - recruit_everyone
+    primaryGoals:
+      - reason/acquire-skillreasond-illumination
+
+  # TODO: Level up passion, as a curse might eat it.
+
+  # End Skills
+
+  begin_game:
+    name: Begin the game
+    primaryGoals:
+      - victories/power/apostle/begin-power-apostle
+
+  # Begin recruitment
+  recruit_everyone:
+    # Once we get close to ascending, go ham and make sure we have everyone recruited as fodder for the spider door.
+    name: Find and recruit everyone
+    requires:
+      - begin_game
+    primaryGoals:
+      - cult/attract-recruit-poppyeat
+
+  satisfy_poppy:
+    name: Satisfy Poppy
+    requires:
+      - recruit_everyone
+    primaryGoals:
+      - patrons/satisfy-poppy
+
+  disciple_all_followers:
+    name: Disciple all followers
+    primaryGoals:
+      - cult/promote-any-with-forge
+  # End recruitment
+
+  # Begin lore and rite collection
+  drain_morlands:
+    name: Buy all books from Morlands
+    requires:
+      - begin_game
+    primaryGoals:
+      # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
+      - bookdealer/consume-bookdealer
+
+  read_all_lore:
+    name: Read all lore books
+    requires:
+      # Don't do this until we have the skills so we are not monopolizing the study verb
+      # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
+      - get_buff
+      - get_scholarship_major
+    primaryGoals:
+      - lore/consume-books-lore-waitmorland
+
+  get_auction_items:
+    name: Find Items from Oriflamme
+    requires:
+      # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
+      - drain_morlands
+    primaryGoals:
+      - auction/find-auctionhouse
+      - auction/acquire-stumm-passive
+      - auction/acquire-asclepian-passive
+    supportingGoals:
+      - auction/attend-auction
+
+  watch_stumm:
+    name: Watch Stumm
+    requirePrimaryGoals: true
+    primaryGoals:
+      - name: Watch Stumm
+        requirements:
+          elementId: stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        imperatives:
+          - operation: watch-stumm
+  # End lore and rite collection
+
+  move_into_library:
+    name: Move into the bookshop
+    requires:
+      - drain_morlands
+    primaryGoals:
+      - headquarters/move-hq-library
+
+  find_places_of_interest:
+    name: Find places of interest
+    requires:
+      - begin_game
+    primaryGoals:
+      - auction/find-auctionhouse
+      - bookdealer/find-bookdealer-explore
+
+  upgrade_forge_lore:
+    name: Upgrade forge lore
+    requires:
+      - get_rarefied_mind
+      - move_into_library
+    primaryGoals:
+      - lore/upgrade-all-forge
+
+  find_vaults:
+    name: Find particular vaults
+    requires:
+      # Need bookshop for lore combination
+      - move_into_library
+      # Need illumination for lore combination
+      - get_rarefied_mind
+    primaryGoals:
+      # FIXME: Need Vak
+      # The Journal of Alessandro LaCroce (Fucine textbook, english version)
+      - vaults/find-vaults-capital-strathcoyne
+      # The Vanderschaaf Collection (vaultcontinent4) => The Geminiad (in Fucine, Rite of the Crow's Quenching), THE MAGUS VON... (Armaic textbook)
+      - vaults/find-vaults-continent-vanderschaaf
+      # Bitterblack Salts, The August Stone (in Armaic, Deep Mandaic textbook)
+      - vaults/find-vaults-rendingmountains-hunterspits
+      # Carcas Spark, a Furnace Paean (in Fucine), Time of Division (in Deep Mandaic, Rite Intercalate)
+      - vaults/find-vaults-eveningisles-geryk
+      # Mysteries of Opening
+      # Note: alternatively, any other eveningisles vaults (aside from geryk, whose output we use) can provide an f level lore,
+      # which we can use in a subversion chain to get the Mysteries of Opening (in Vak).
+      - vaults/find-vaults-eveningisles-raven
+
+  explore_vaults:
+    name: Explore particular vaults
+    requires:
+      - disciple_all_followers
+    primaryGoals:
+      - vaults/explore-vaults-capital-strathcoyne
+      - vaults/explore-vaults-continent-vanderschaaf
+      - vaults/explore-vaults-rendingmountains-hunterspits
+      - vaults/explore-vaults-eveningisles-geryk
+      - vaults/explore-vaults-eveningisles-raven
+
+  begin_great_work:
+    name: Begin the Great Work
+    requirePrimaryGoals: true
+    primaryGoals:
+      - legacy/apostle-power/refine-fiercest-alchemy
+      - legacy/apostle-power/craft-dawnbreaker-core
+      - legacy/apostle-power/awaken-dawnbreaker-core

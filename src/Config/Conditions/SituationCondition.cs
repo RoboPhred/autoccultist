@@ -1,15 +1,14 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
     using YamlDotNet.Core;
 
     /// <summary>
     /// A condition dealing with matching the state of situations.
     /// </summary>
-    public class SituationCondition : IGameStateConditionConfig, IAfterYamlDeserialization
+    public class SituationCondition : ConditionConfig
     {
         /// <summary>
         /// Possible states to check situations against.
@@ -81,65 +80,65 @@ namespace Autoccultist.Config.Conditions
         public Dictionary<string, ValueCondition> ContainsAspects { get; set; }
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
-        {
-            if (string.IsNullOrEmpty(this.Situation))
-            {
-                throw new InvalidConfigException("SituationCondition must have a situationId.");
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
             var situation = state.Situations.FirstOrDefault(x => x.SituationId == this.Situation);
             if (situation == null)
             {
-                return this.State == SituationStateConfig.Missing;
+                if (this.State == SituationStateConfig.Missing)
+                {
+                    return ConditionResult.Success;
+                }
+
+                return SituationConditionResult.ForFailure(this.Situation, "Situation is expected to be missing, but it is not.");
             }
 
             if (this.Recipe != null && situation.CurrentRecipe != this.Recipe)
             {
-                return false;
+                return SituationConditionResult.ForFailure(this.Situation, $"is not performing recipe {this.Recipe}");
             }
 
-            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0)))
+            if (this.TimeRemaining != null && (!situation.IsOccupied || !this.TimeRemaining.IsConditionMet(situation.RecipeTimeRemaining ?? 0, state)))
             {
-                return false;
+                return SituationConditionResult.ForFailure(this.Situation, $"has {situation.RecipeTimeRemaining} time remaining, which does not match {this.TimeRemaining}");
             }
 
             if (this.State == SituationStateConfig.Idle || this.State == SituationStateConfig.Ongoing)
             {
                 if (situation.IsOccupied != (this.State == SituationStateConfig.Ongoing))
                 {
-                    return false;
+                    return SituationConditionResult.ForFailure(this.Situation, $"is {(situation.IsOccupied ? "not " : string.Empty)}ongoing");
                 }
             }
 
             if (this.StoredCardsMatch != null)
             {
                 var cards = situation.StoredCards;
-                if (!this.StoredCardsMatch.CardsMatchSet(cards))
+                var matchResult = this.StoredCardsMatch.CardsMatchSet(cards, state);
+                if (!matchResult)
                 {
-                    return false;
+                    return AddendedConditionResult.Addend(matchResult, $"when looking at stored cards for situation {this.Situation}");
                 }
             }
 
+            var slottedCards = situation.GetSlottedCards().ToList();
+
             if (this.SlottedCardsMatch != null)
             {
-                var cards = situation.SlottedCards;
-                if (!this.SlottedCardsMatch.CardsMatchSet(cards))
+                var matchResult = this.SlottedCardsMatch.CardsMatchSet(slottedCards, state);
+                if (!matchResult)
                 {
-                    return false;
+                    return AddendedConditionResult.Addend(matchResult, $"when looking at slotted cards for situation {this.Situation}");
                 }
             }
 
             if (this.ContainedCardsMatch != null)
             {
-                var cards = situation.StoredCards.Concat(situation.SlottedCards).ToList();
-                if (!this.ContainedCardsMatch.CardsMatchSet(cards))
+                var cards = situation.StoredCards.Concat(slottedCards);
+                var matchResult = this.ContainedCardsMatch.CardsMatchSet(cards, state);
+                if (!matchResult)
                 {
-                    return false;
+                    return AddendedConditionResult.Addend(matchResult, $"when looking at all cards for situation {this.Situation}");
                 }
             }
 
@@ -150,13 +149,25 @@ namespace Autoccultist.Config.Conditions
                 // Damned lack of covariance on IReadOnlyDictionary
                 var containedAspects = this.ContainsAspects.ToDictionary(entry => entry.Key, entry => (IValueCondition)entry.Value);
 
-                if (!aspects.HasAspects(containedAspects))
+                if (!aspects.HasAspects(containedAspects, state))
                 {
-                    return false;
+                    // TODO: ConditionFailure for HasAspects / IValueCondition
+                    return SituationConditionResult.ForFailure(this.Situation, $"does not match required aspect conditions {string.Join(", ", this.ContainsAspects.Keys)}");
                 }
             }
 
-            return true;
+            return ConditionResult.Success;
+        }
+
+        /// <inheritdoc/>
+        public override void AfterDeserialized(Mark start, Mark end)
+        {
+            base.AfterDeserialized(start, end);
+
+            if (string.IsNullOrEmpty(this.Situation))
+            {
+                throw new InvalidConfigException("SituationCondition must have a situationId.");
+            }
         }
     }
 }

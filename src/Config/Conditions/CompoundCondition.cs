@@ -1,10 +1,9 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Yaml;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
@@ -14,7 +13,7 @@ namespace Autoccultist.Config.Conditions
     /// require either all to match, at least one to match, or none to match.
     /// </summary>
     [DuckTypeKeys(new[] { "allOf", "anyOf", "noneOf" })]
-    public class CompoundCondition : IGameStateConditionConfig, IYamlConvertible, IAfterYamlDeserialization
+    public class CompoundCondition : ConditionConfig, IYamlConvertible
     {
         /// <summary>
         /// A mode by which CompoundCondition resolves the relationship between its child conditions.
@@ -47,34 +46,60 @@ namespace Autoccultist.Config.Conditions
         /// </summary>
         public List<IGameStateConditionConfig> Requirements { get; set; } = new List<IGameStateConditionConfig>();
 
-        /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override string ToString()
         {
-            if (this.Requirements == null || this.Requirements.Count == 0)
-            {
-                throw new InvalidConfigException("CompoundCondition must have requirements.");
-            }
+            return $"CompoundCondition({this.Mode}, Name = \"{this.Name}\")";
         }
 
         /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
-            switch (this.Mode)
+            var recordedFailures = new List<ConditionResult>();
+            foreach (var condition in this.Requirements)
             {
-                case ConditionMode.AllOf:
-                    return this.Requirements.All(condition => condition.IsConditionMet(state));
-                case ConditionMode.AnyOf:
-                    return this.Requirements.Any(condition => condition.IsConditionMet(state));
-                case ConditionMode.NoneOf:
-                    return !this.Requirements.Any(condition => condition.IsConditionMet(state));
-                default:
-                    throw new NotSupportedException($"Condition mode {this.Mode} is not implemented.");
+                var matched = condition.IsConditionMet(state);
+                switch (this.Mode)
+                {
+                    case ConditionMode.AllOf:
+                        if (!matched)
+                        {
+                            return matched;
+                        }
+
+                        break;
+
+                    case ConditionMode.AnyOf:
+                        if (matched)
+                        {
+                            return ConditionResult.Success;
+                        }
+
+                        recordedFailures.Add(matched);
+                        break;
+
+                    case ConditionMode.NoneOf:
+                        if (matched)
+                        {
+                            return GameStateConditionResult.ForFailure(condition, matched);
+                        }
+
+                        break;
+                }
             }
+
+            if (this.Mode == ConditionMode.AnyOf)
+            {
+                return CompoundConditionResult.ForFailure(recordedFailures);
+            }
+
+            return ConditionResult.Success;
         }
 
         /// <inheritdoc/>
         void IYamlConvertible.Read(IParser parser, Type expectedType, ObjectDeserializer nestedObjectDeserializer)
         {
+            var start = parser.Current.Start;
+
             parser.Consume<MappingStart>();
 
             var key = parser.Consume<Scalar>();
@@ -100,13 +125,27 @@ namespace Autoccultist.Config.Conditions
                 throw new YamlException(key.Start, key.End, "GameStateCondition must only have one property.");
             }
 
-            parser.Consume<MappingEnd>();
+            var end = parser.Consume<MappingEnd>();
+
+            // FIXME: AfterDeserialized isnt being called?
+            this.AfterDeserialized(start, end.End);
         }
 
         /// <inheritdoc/>
         void IYamlConvertible.Write(IEmitter emitter, ObjectSerializer nestedObjectSerializer)
         {
             throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public override void AfterDeserialized(Mark start, Mark end)
+        {
+            base.AfterDeserialized(start, end);
+
+            if (this.Requirements == null || this.Requirements.Count == 0)
+            {
+                throw new InvalidConfigException("CompoundCondition must have requirements.");
+            }
         }
     }
 }

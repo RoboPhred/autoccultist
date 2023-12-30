@@ -1,0 +1,16 @@
+name: "Acquire Way: The wood"
+ui:
+  homeSituation: dream
+  icon: element:waywood
+requirements:
+  allOf:
+    - elementId: passion
+    - anyOf:
+        - aspects: { lore: 1, lantern: 2 }
+        - aspects: { lore: 1, moth: 2 }
+        - aspects: { lore: 1, knock: 2 }
+completedWhen:
+  elementId: waywood
+imperatives:
+  - name: "Acquire Way: The wood"
+    operation: mansus/acquire-way-wood

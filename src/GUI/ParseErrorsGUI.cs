@@ -1,8 +1,8 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
-    using Autoccultist.Config;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Config;
+    using AutoccultistNS.Yaml;
     using UnityEngine;
 
     /// <summary>
@@ -10,7 +10,7 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class ParseErrorsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
         private static Vector2 errorsScrollPosition = default;
 
@@ -29,24 +29,26 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var width = Mathf.Min(Screen.width, 500);
-            var height = Mathf.Min(Screen.height, 700);
-            var offsetX = Screen.width - DiagnosticGUI.Width - width - 10;
-            var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, width, height), ParseErrorsWindow, "Autoccultist Parse Errors");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 700), ParseErrorsWindow, "Autoccultist Parse Errors");
         }
 
         private static void ParseErrorsWindow(int id)
         {
-            errorsScrollPosition = GUILayout.BeginScrollView(errorsScrollPosition, GUILayout.Height(600));
+            if (GUILayout.Button("Reload All Configs"))
+            {
+                Autoccultist.Instance.ReloadAll();
+            }
+
+            errorsScrollPosition = GUILayout.BeginScrollView(errorsScrollPosition);
 
             foreach (var ex in Library.ParseErrors)
             {
-                GUILayout.Label($"{FilesystemHelpers.GetRelativePath(ex.FilePath, AutoccultistPlugin.AssemblyDirectory)}:{ex.Start.Line}");
+                var target = ex.GetInnermostFileException() ?? ex;
+                GUILayout.Label($"{FilesystemHelpers.GetRelativePath(target.FilePath, Autoccultist.AssemblyDirectory)}:{target.Start.Line}");
                 GUILayout.Label(ex.GetInnermostMessage());
                 if (GUILayout.Button("Copy to clipboard"))
                 {
-                    TextEditor textEditor = new TextEditor { text = ex.ToString() };
+                    var textEditor = new TextEditor { text = ex.ToString() };
 
                     textEditor.SelectAll();
                     textEditor.Copy();

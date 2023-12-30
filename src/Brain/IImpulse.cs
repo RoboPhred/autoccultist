@@ -1,34 +1,14 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
     /// <summary>
-    /// Describes an impulse to perform an operation.
+    /// An impulse is a desired action by the bot.
+    /// Impulses have priority, and higher priority impulses will be executed before lower priority impulses.
     /// </summary>
-    public interface IImpulse
+    public interface IImpulse : IReactor
     {
         /// <summary>
-        /// Gets the human-friendly display name for this impulse.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Gets the priority for this impulse.
-        /// Impulses with a higher priority will run before lower priority impulses.
+        /// Gets the priority of this impulse.
         /// </summary>
         TaskPriority Priority { get; }
-
-        /// <summary>
-        /// Gets the condition which must be met before this impulse can activate, if any.
-        /// </summary>
-        IGameStateCondition Requirements { get; }
-
-        /// <summary>
-        /// Gets the condition on which to prevent this impulse from activating, if any.
-        /// </summary>
-        IGameStateCondition Forbidders { get; }
-
-        /// <summary>
-        /// Gets the operation to perform when this impulse is triggered.
-        /// </summary>
-        IOperation Operation { get; }
     }
 }

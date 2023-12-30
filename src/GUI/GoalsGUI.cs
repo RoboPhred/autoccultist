@@ -1,10 +1,11 @@
-namespace Autoccultist.GUI
+namespace AutoccultistNS.GUI
 {
     using System;
+    using System.IO;
     using System.Linq;
-    using Autoccultist.Brain;
-    using Autoccultist.Config;
-    using Autoccultist.GameState;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.Config;
+    using AutoccultistNS.GameState;
     using UnityEngine;
 
     /// <summary>
@@ -12,24 +13,20 @@ namespace Autoccultist.GUI
     /// </summary>
     public static class GoalsGUI
     {
-        private static readonly Lazy<int> WindowId = new(() => GUIUtility.GetControlID(FocusType.Passive));
+        private static readonly Lazy<int> WindowId = new(() => WindowManager.GetNextWindowID());
 
-        private static Vector2 scrollPosition = default;
+        private static Vector2 scrollPositionNewGoals = default;
+
+        private static string searchFilter = string.Empty;
+
+        private static string folderFilter = string.Empty;
+
+        private static bool filterConditionMet = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether the Goals gui is being shown.
         /// </summary>
         public static bool IsShowing { get; set; }
-
-        /// <summary>
-        /// Gets the width of the window.
-        /// </summary>
-        public static float Width => Mathf.Min(Screen.width, 500);
-
-        /// <summary>
-        /// Gets the height of the window.
-        /// </summary>
-        public static float Height => Mathf.Min(Screen.height, 900);
 
         /// <summary>
         /// Draw the gui.
@@ -41,66 +38,162 @@ namespace Autoccultist.GUI
                 return;
             }
 
-            var offsetX = Screen.width - DiagnosticGUI.Width - Width - 10;
-            var offsetY = 10;
-            GUILayout.Window(WindowId.Value, new Rect(offsetX, offsetY, Width, Height), GoalsWindow, "Autoccultist Goals");
+            GUILayout.Window(WindowId.Value, WindowManager.GetWindowRect(500, 900), GoalsWindow, "Autoccultist Goals");
+        }
+
+        private static bool FilterGoal(IGoal goal, bool exactFolder)
+        {
+            if (!goal.Name.ToLower().Contains(searchFilter))
+            {
+                return false;
+            }
+
+            var path = goal.GetLibraryPath();
+            if (path == null && !string.IsNullOrEmpty(folderFilter))
+            {
+                return false;
+            }
+
+            if (exactFolder)
+            {
+                if (path == null)
+                {
+                    return false;
+                }
+
+                var endOfFolder = path.LastIndexOf(Path.DirectorySeparatorChar);
+                if (endOfFolder == -1)
+                {
+                    if (!string.IsNullOrEmpty(folderFilter))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    var fullPath = path.Substring(0, endOfFolder + 1);
+
+                    if (fullPath.ToLower() != folderFilter.ToLower())
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (!path.ToLower().StartsWith(folderFilter.ToLower()))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static void GoalsWindow(int id)
         {
-            GUILayout.Label("Current Goals");
+            searchFilter = GUILayout.TextField(searchFilter, GUILayout.ExpandWidth(true)).ToLower();
+            filterConditionMet = GUILayout.Toggle(filterConditionMet, "Can Activate");
 
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            scrollPositionNewGoals = GUILayout.BeginScrollView(scrollPositionNewGoals);
 
-            foreach (var goal in NucleusAccumbens.CurrentGoals)
+            GUILayout.Label(string.IsNullOrEmpty(folderFilter) ? "/" : folderFilter);
+
+            if (!string.IsNullOrEmpty(folderFilter))
             {
                 GUILayout.BeginHorizontal();
+                GUILayout.Space(20);
 
-                if (GUILayout.Button("Cancel", GUILayout.Width(75)))
+                if (GUILayout.Button("../"))
                 {
-                    NucleusAccumbens.RemoveGoal(goal);
-                }
-
-                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
-
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.Label("Available Goals");
-
-            foreach (var goal in Library.Goals)
-            {
-                if (goal.IsSatisfied(GameStateProvider.Current) || NucleusAccumbens.CurrentGoals.Contains(goal))
-                {
-                    continue;
-                }
-
-                GUILayout.BeginHorizontal();
-
-                if (GUILayout.Button("Activate", GUILayout.Width(75)))
-                {
-                    NucleusAccumbens.AddGoal(goal);
-                }
-
-                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
-
-                if (goal.CanActivate(GameStateProvider.Current))
-                {
-                    GUILayout.Label("[CanActivate]", GUILayout.ExpandWidth(false));
+                    var index = folderFilter.Substring(0, folderFilter.Length - 1).LastIndexOf(Path.DirectorySeparatorChar);
+                    if (index == -1)
+                    {
+                        folderFilter = string.Empty;
+                    }
+                    else
+                    {
+                        folderFilter = folderFilter.Substring(0, index + 1);
+                    }
                 }
 
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Label("Satisfied Goals");
-            foreach (var goal in Library.Goals)
+            var folders =
+                from goal in Library.Goals
+                where FilterGoal(goal, false)
+                let path = goal.GetLibraryPath()
+                where path != null
+                let relative = path.Substring(folderFilter.Length)
+                let split = relative.IndexOf(Path.DirectorySeparatorChar)
+                where split != -1
+                let folder = relative.Substring(0, split)
+                group goal by folder.ToLower() into g
+                orderby g.Key
+                select g.Key;
+
+            foreach (var folder in folders)
             {
-                if (!goal.IsSatisfied(GameStateProvider.Current))
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Space(20);
+
+                if (GUILayout.Button(folder))
                 {
-                    continue;
+                    folderFilter = folderFilter + folder + Path.DirectorySeparatorChar;
                 }
 
-                GUILayout.Label(goal.Name, GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+            }
+
+            var goals =
+                from goal in Library.Goals
+                where FilterGoal(goal, string.IsNullOrEmpty(searchFilter))
+                let conditionMet = goal.IsConditionMet(GameStateProvider.Current)
+                let satisfied = goal.IsSatisfied(GameStateProvider.Current)
+                let active = NucleusAccumbens.CurrentImperatives.Contains(goal)
+                where filterConditionMet == false || conditionMet
+                orderby goal.Name.ToLower()
+                select new { Goal = goal, Satisfied = satisfied, CanActivate = conditionMet, Active = active };
+
+            foreach (var pair in goals)
+            {
+                var goal = pair.Goal;
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Space(20);
+
+                var prepend = string.Empty;
+                if (!string.IsNullOrEmpty(searchFilter))
+                {
+                    // When searching, we show deep folders.  So show the path
+                    var path = goal.GetLibraryPath();
+                    var lastMarker = path.LastIndexOf(Path.DirectorySeparatorChar);
+                    path = path.Substring(0, lastMarker + 1);
+                    path = path.Substring(folderFilter.Length);
+                    prepend = path;
+                }
+
+                GUILayout.Label(prepend + goal.Name, GUILayout.ExpandWidth(false));
+
+                GUILayout.Label(string.Empty, GUILayout.ExpandWidth(true));
+
+                if (pair.Active)
+                {
+                    GUILayout.Label("[Active]");
+                }
+                else if (pair.CanActivate)
+                {
+                    if (GUILayout.Button("Activate", GUILayout.ExpandWidth(false)))
+                    {
+                        NucleusAccumbens.AddImperative(goal);
+                    }
+                }
+                else if (pair.Satisfied)
+                {
+                    GUILayout.Label("[Satisfied]");
+                }
+
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndScrollView();

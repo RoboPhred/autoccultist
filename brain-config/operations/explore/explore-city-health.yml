@@ -1,0 +1,6 @@
+name: Explore the city with health
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: health

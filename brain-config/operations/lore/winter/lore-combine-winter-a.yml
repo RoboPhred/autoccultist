@@ -1,0 +1,21 @@
+name: "Combine lore: A Sexton's Secret"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - elementId: fragmentwinter
+    with:
+      oneOf:
+        - elementId: fragmentwinter
+          aspects: { challenge.knowledge: -1 }
+        - elementId: fragmentwinter
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.knowledge:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { library: 1 }
+          - elementId: erudition

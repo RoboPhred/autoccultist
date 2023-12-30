@@ -1,0 +1,101 @@
+name: Find Vaults in the Evening Isles
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waystag_after
+
+completedWhen:
+  memory: has_all_vaults_eveningisles
+  value: 1
+
+imperatives:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaulteveningislesdefault
+    reactions:
+      - remember: has_all_vaults_eveningisles
+        label: Has All Vaults in the Evening Isles
+        description: We have found everything of interest in the Evening Isles.
+
+  # TODO: Peacock door would be a perfect source, but we have to implement the mirror and commission loop
+  # There is the spider door, but sacrifices are more limiting than bronze spintra
+  - name: Collect Secret Histories from the Stag Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesg
+              - aspects: { vaulteveningisles: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 5
+    # Stag door stops at c, so don't bother going past that.
+    # We will re-activate if these are combined, and we have plenty of time to find more
+    forbidders:
+      cardSet:
+        - elementId: fragmentsecrethistoriesc
+        - elementId: fragmentsecrethistoriesc
+        - elementId: fragmentsecrethistoriesc
+        - elementId: fragmentsecrethistoriesc
+    operation: mansus/use-stag-secrethistories
+
+  # Get a glimmering so we can combine secret histories c and d
+  - extends: !import /impulses/norm-glimmering-from-passion.yml
+    priority: maintenance
+    requirements:
+      allOf:
+        - *has-needed-secret-histories
+        - anyOf:
+            - cardSet:
+                - elementId: fragmentsecrethistoriesc
+                - elementId: fragmentsecrethistoriesc
+            - cardSet:
+                - elementId: fragmentsecrethistoriesd
+                - elementId: fragmentsecrethistoriesd
+            - cardSet:
+                - elementId: fragmentsecrethistoriese
+                - elementId: fragmentsecrethistoriese
+            - cardSet:
+                - elementId: fragmentsecrethistoriesf
+                - elementId: fragmentsecrethistoriesf
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
+
+  - name: Combine Vagabond's Maps into Port Noon Anecdotes
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-f
+
+  - name: Combine Unresolved Ambiguities into Vagabond's Maps
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-e
+
+  - name: Combine Forbidden Epics into Unresolved Ambiguities
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-d
+
+  - name: Combine Forgotten Chronicles into Forbidden Epics
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-c
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-b
+
+  - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-a
+
+  - name: Explore the Evening Isles
+    operation:
+      name: Find vaults in the Evening Isles
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesg

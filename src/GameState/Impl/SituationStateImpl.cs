@@ -1,8 +1,11 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Assets.TabletopUi;
+    using SecretHistories.Entities;
+    using SecretHistories.Enums;
+    using SecretHistories.UI;
 
     /// <summary>
     /// Implements the state of a situation from a situation controller.
@@ -10,57 +13,89 @@ namespace Autoccultist.GameState.Impl
     internal class SituationStateImpl : GameStateObject, ISituationState
     {
         private readonly string situationId;
+        private readonly StateEnum state;
         private readonly bool isOccupied;
         private readonly string currentRecipe;
+        private readonly string slottedRecipe;
         private readonly float? recipeTimeRemaining;
+        private readonly IReadOnlyCollection<ISituationSlot> recipeSlots;
         private readonly IReadOnlyCollection<ICardState> storedCards;
-        private readonly IReadOnlyCollection<ICardState> slottedCards;
         private readonly IReadOnlyCollection<ICardState> outputCards;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SituationStateImpl"/> class.
         /// </summary>
         /// <param name="situation">The situation to represent the state of.</param>
-        public SituationStateImpl(SituationController situation)
+        public SituationStateImpl(Situation situation)
         {
             // Precalculate all state data, as we represent a snapshot and do not want the state to change from under us.
-            this.situationId = situation.GetTokenId();
-            this.isOccupied = situation.SituationClock.State != SituationState.Unstarted;
+            this.situationId = situation.VerbId;
+            this.state = situation.State.Identifier;
+            this.isOccupied = this.state != StateEnum.Unstarted;
 
-            var clock = situation.SituationClock;
-            if (clock.State == SituationState.FreshlyStarted || clock.State == SituationState.Ongoing)
+            /*
+            Do not be confused by Situation.CurrentRecipe, as that shows shows the 'next' recipe for the current slots once the warmup is done.
+            Effectively, it shows the alt recipe that will be followed.
+            Our idea of the current recipe is what we are currently working on, not what the next will be.
+            */
+
+            if (this.state == StateEnum.Unstarted || this.state == StateEnum.RequiringExecution)
             {
-                this.currentRecipe = clock.RecipeId;
-                this.recipeTimeRemaining = clock.TimeRemaining;
+                this.currentRecipe = situation.CurrentRecipeId;
+                this.slottedRecipe = situation.CurrentRecipeId;
+                this.recipeTimeRemaining = null;
+            }
+            else if (this.state == StateEnum.Ongoing)
+            {
+                this.currentRecipe = situation.RecipeId;
+                this.slottedRecipe = situation.CurrentRecipeId;
+                this.recipeTimeRemaining = situation.TimeRemaining;
+            }
+            else if (this.state == StateEnum.Complete)
+            {
+                // Recipe is complete, we want to know the thing we chose.
+                this.currentRecipe = situation.CurrentRecipeId;
+                this.slottedRecipe = situation.CurrentRecipeId;
+                this.recipeTimeRemaining = situation.TimeRemaining;
             }
             else
             {
                 this.currentRecipe = null;
+                this.slottedRecipe = null;
                 this.recipeTimeRemaining = null;
             }
 
-            var window = situation.situationWindow;
+            var slots =
+                from sphere in situation.GetCurrentThresholdSpheres()
+                select new SituationSlotImpl(sphere, this.situationId);
 
             // We can create new ICardState states here, as IGameState only creates states for tabled cards, of which these are not.
             var stored =
-                from stack in window.GetStoredStacks()
-                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Stored)
-                select card;
-            var slotted =
-                from stack in window.GetStartingSlots().Concat(window.GetOngoingSlots()).Select(x => x.GetElementStackInSlot())
-                where stack != null
-                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Slotted)
+                from sphere in situation.GetSpheresByCategory(SphereCategory.SituationStorage)
+                from stack in sphere.GetElementStacks()
+                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Stored, this.situationId)
                 select card;
 
             // Consider output stacks to be tabletop, as they are immediately grabbable.
             var output =
-                from stack in situation.situationWindow.GetOutputStacks()
-                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
+                from spheres in situation.GetSpheresByCategory(SphereCategory.Output)
+                from stack in spheres.GetElementStacks()
+                from card in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop, null)
                 select card;
 
-            this.storedCards = stored.ToArray();
-            this.slottedCards = slotted.ToArray();
-            this.outputCards = output.ToArray();
+            this.recipeSlots = new HashCalculatingCollection<ISituationSlot>(slots);
+            this.storedCards = new HashCalculatingCollection<ICardState>(stored);
+            this.outputCards = new HashCalculatingCollection<ICardState>(output);
+        }
+
+        /// <inheritdoc/>
+        public StateEnum State
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.state;
+            }
         }
 
         /// <inheritdoc/>
@@ -94,12 +129,50 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
+        public string SlottedRecipe
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.slottedRecipe;
+            }
+        }
+
+        /// <inheritdoc/>
+        public string CurrentRecipePortal
+        {
+            get
+            {
+                this.VerifyAccess();
+                var recipe = Watchman.Get<Compendium>().GetEntityById<Recipe>(this.currentRecipe);
+                if (recipe == null)
+                {
+                    return null;
+                }
+
+                // Looks like the game is setting up to support multiple of these.
+                // Should make this system be able to target any one of them.
+                return recipe.PortalEffect;
+            }
+        }
+
+        /// <inheritdoc/>
         public float? RecipeTimeRemaining
         {
             get
             {
                 this.VerifyAccess();
                 return this.recipeTimeRemaining;
+            }
+        }
+
+        // <inheritdoc/>
+        public IReadOnlyCollection<ISituationSlot> RecipeSlots
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.recipeSlots;
             }
         }
 
@@ -114,16 +187,6 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<ICardState> SlottedCards
-        {
-            get
-            {
-                this.VerifyAccess();
-                return this.slottedCards;
-            }
-        }
-
-        /// <inheritdoc/>
         public IReadOnlyCollection<ICardState> OutputCards
         {
             get
@@ -131,6 +194,19 @@ namespace Autoccultist.GameState.Impl
                 this.VerifyAccess();
                 return this.outputCards;
             }
+        }
+
+        protected override int ComputeContentHash()
+        {
+            return HashUtils.Hash(
+                this.situationId,
+                this.state,
+                this.isOccupied,
+                this.currentRecipe,
+                (int)Math.Round(this.recipeTimeRemaining ?? 0),
+                this.recipeSlots,
+                this.storedCards,
+                this.outputCards);
         }
     }
 }

@@ -8,39 +8,23 @@ An experimental automaton for playing Cultist Simulator.
 
 The purpose of this mod is to provide a means of making Cultist Simulator play itself. Either though individual ongoing tasks (EG: Obtain, work, and submit a commission, and sell a Spintria if funds are low), or through a higher level list of tasks.
 
-## Compatibility
-
-This mod is NOT compatible with the current release of the game.  It needs to be reworked to support the recent rewrite of the cultist simulator engine.
-
 ## Demo
 
 You can watch the bot play and complete a power ascension [here](https://www.youtube.com/watch?v=UKe9wqMd32I)
 
 ## Usage
 
-First, you must configure the behaviors you want. See [configuration](#configuration). You can then hit F10 to open the control panel when in a game.
+This mod adds a button to the top left of the game, which will open a panel showing all available automations.
 
-### The diagnostic panel
+There are two automation type:
+- Goals
+  Goals are automations for specific tasks in the game
+- Arcs
+  Arcs are full automated playthroughs, from new game all the way to completion.
 
-The panel has these options:
+Starting either of these will create a new verb block on the table representing the task.
 
-If there were errors reading the config, the panel will say how many, and reveal a button to view those errors.
-
-The `Mechanical Heart` checkbox acts as the master switch for this mod. Nothing will happen without this checkbox checked.
-A `Step heart` button is also available. This makes the mod perform exactly one action then stop. Useful for debugging.
-
-The `Task Driver` checkbox enables reading the main `brain.yml` file and running all tasks. This is intended for full game play automation, you can ignore it if you just want the mod to automate a few tasks.
-
-The `Toggle goals list` button opens up a new window containing the goals panel. This is where you will be able to start the mod performing specific tasks.
-
-### The goals panel
-
-This is where you can turn on or off individual automations (called "goals") for the mod, and is particularly useful for people who just want to automate one or two tasks without having the mod take over the game entirely.
-
-The top of the window shows your active goals. Click `Cancel` on these goals to cancel them.
-Depending on how you set up the goal, the goal may run forever, or may run until it has completed its designated task.
-
-The button of the panel shows available goals. Click the `Activate` button on goals you want to start.
+Additionally, a button will appear on hover for all other verbs which will allow inspecting ongoing automations for that verb, disabling automations temporarily for manual use, or starting specific one-shot automations on that verb.
 
 ## Installation
 

@@ -1,23 +1,37 @@
-namespace Autoccultist.Brain
+namespace AutoccultistNS.Brain
 {
-    using Assets.CS.TabletopUI;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A solution to a situation recipe.
     /// </summary>
-    public interface IRecipeSolution : IGameStateCondition
+    public interface IRecipeSolution
     {
+        /// <summary>
+        /// Gets a dictionary of slot names to card choices.
+        /// </summary>
+        IReadOnlyDictionary<string, ISlotCardChooser> SlotSolutions { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether we should re-run this solution if a card is stolen from us while we're working on it.
+        /// </summary>
+        bool RerunOnTheft { get; }
+
         /// <summary>
         /// Gets the solution for the mansus choice of this recipe, if any.
         /// </summary>
         IMansusSolution MansusChoice { get; }
 
         /// <summary>
-        /// Gets the card for the given slot.
+        /// Gets a value indicating whether this recipe solution should end the operation after this recipe solution execitues.
+        /// This will release the situation from this operation, and allow other targetOngoing operations to target it.
         /// </summary>
-        /// <param name="slot">The slot to fill.</param>
-        /// <returns>The card state of the card chosen, or null if the slot should remain empty.</returns>
-        // FIXME: Should receive IGameState and return a IConsumedCard
-        ICardChooser ResolveSlotCard(RecipeSlot slot);
+        bool EndOperation { get; }
+
+        /// <summary>
+        /// Gets a collection of card choices that must all be satisfied for this recipe solution to start.
+        /// </summary>
+        /// <returns>A collection of card choices that must be satisified to start this recipe solution.</returns>
+        IEnumerable<ICardChooser> GetRequiredCards();
     }
 }

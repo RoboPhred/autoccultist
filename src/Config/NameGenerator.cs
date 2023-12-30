@@ -1,4 +1,4 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     using YamlDotNet.Core;
 
@@ -15,8 +15,8 @@ namespace Autoccultist.Config
         /// <returns>A name for the object.</returns>
         public static string GenerateName(string filePath, Mark start)
         {
-            var relFile = FilesystemHelpers.GetRelativePath(filePath, AutoccultistPlugin.AssemblyDirectory);
-            if (start != null)
+            var relFile = FilesystemHelpers.GetRelativePath(filePath, Autoccultist.AssemblyDirectory);
+            if (start.Line > 1)
             {
                 return $"{relFile}:{start.Line}";
             }

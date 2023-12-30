@@ -1,0 +1,13 @@
+anyOf:
+  - elementId: rose_a
+  - elementId: rose_b
+  - elementId: rose_c
+  - elementId: rose_d
+  - elementId: victor_a
+  - elementId: victor_b
+  - elementId: victor_c
+  - elementId: victor_d
+  - elementId: elridge_a
+  - elementId: elridge_b
+  - elementId: elridge_c
+  - elementId: elridge_d

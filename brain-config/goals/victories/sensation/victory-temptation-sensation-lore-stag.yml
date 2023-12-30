@@ -1,0 +1,144 @@
+name: Acquire the Stag Door and prepare for the Thiatic Invocation
+ui: false
+requirements:
+  cardSet:
+    - elementId: waywhite
+    - elementId: fragmentforge
+    - elementId: fragmentforge
+    - elementId: fragmentforgeb
+    - elementId: fragmentknock
+    - elementId: fragmentlantern
+    - elementId: fragmentlantern
+    - elementId: fragmentlanternb
+    - elementId: fragmentmoth
+    - elementId: fragmentmoth
+    - elementId: fragmentmothb
+    - elementId: fragmentwinter
+    - elementId: fragmentwinterc
+completedWhen:
+  allOf:
+    - elementId: waystag_after
+    - elementId: fragmentgraild
+imperatives:
+  - name: Acquire the Stag Riddle
+    forbidders:
+      anyOf:
+        - elementId: waystagbefore_1
+        - elementId: waystagbefore_2
+        - elementId: waystagbefore_3
+        - elementId: waystagbefore_4
+        - elementId: waystagbefore_5
+        - elementId: waystag_after
+    operation: mansus/stag/aquire-way-stag-riddle
+  - name: Answer Ghirbi's riddle on Moth
+    operation: mansus/stag/aquire-way-stag-riddle-1
+  - name: Answer Ghirbi's riddle on Lantern
+    operation: mansus/stag/aquire-way-stag-riddle-2
+  - name: Answer Ghirbi's riddle on Grail
+    operation: mansus/stag/aquire-way-stag-riddle-3
+  - name: Answer Ghirbi's riddle on Knock
+    operation: mansus/stag/aquire-way-stag-riddle-4
+
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders:
+      anyOf:
+        - elementId: glimmering
+          # It takes 60 seconds for the operation to get to a point where it needs this.
+          #  TODO: Should let the operation itself state this requirement.
+          lifetimeRemaining:
+            greaterThan: 60
+    operation: passion/study-passion
+
+  # Begin Knock C
+  - name: Subvert Sexton's Secret to Knock
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentknockb
+            - elementId: fragmentknockb
+        - elementId: fragmentknockc
+    operation: lore/knock/lore-subvert-winter-knock-a
+  - name: Break down Operation of Declining Sun
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentwinterb
+            - elementId: fragmentwinterb
+        - elementId: fragmentknockc
+    operation: lore/winter/lore-breakdown-winter-c
+  - name: Subvert A White Ceremony to Knock
+    requirements:
+      elementId: waystagbefore_4
+    forbidders:
+      elementId: fragmentknockc
+    operation: lore/knock/lore-subvert-winter-knock-b
+  # End Knock C
+
+  # Begin Grail C
+  # Always do this even if this isn't the riddle, as we need it for the ascension
+  - name: Combine A Megalesian Incantation
+    forbidders:
+      elementId: fragmentgrailc
+    operation: lore/grail/lore-combine-grail-b
+  - name: Combine A Red Secret
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentgrailb
+            - elementId: fragmentgrailb
+        - elementId: fragmentgrailc
+    operation: lore/grail/lore-combine-grail-a
+  # End Grail C
+
+  # Begin Secret Histories C
+  - name: Combine A Furtive Truth
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      elementId: fragmentsecrethistoriesc
+    operation: lore/secrethistories/lore-combine-secrethistories-b
+  - name: Combine An Occult Scrap
+    requirements:
+      elementId: waystagbefore_5
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentsecrethistoriesb
+            - elementId: fragmentsecrethistoriesb
+        - elementId: fragmentsecrethistoriesc
+    operation: lore/secrethistories/lore-combine-secrethistories-a
+  # End Secret Histories C
+
+  # Begin Lantern C
+  - name: Combine A Watchman's Secret
+    priority: goal
+    requirements:
+      elementId: waystagbefore_2
+    forbidders:
+      anyOf:
+        - cardSet:
+            - elementId: fragmentlanternb
+            - elementId: fragmentlanternb
+        - elementId: fragmentlanternc
+    operation: lore/lantern/lore-combine-lantern-a
+  - name: Combine An Iguvine Rite
+    priority: goal
+    requirements:
+      elementId: waystagbefore_2
+    forbidders:
+      anyOf:
+        - elementId: fragmentlanternc
+    operation: lore/lantern/lore-combine-lantern-b
+  # End Lantern C
+
+  # heartc + grailc = graild
+  - name: Subvert A Waking Chant for Thiatic Invocation
+    priority: goal
+    forbidders:
+      elementId: waystagbefore_3
+    operation: lore/grail/lore-subvert-heart-grail-c

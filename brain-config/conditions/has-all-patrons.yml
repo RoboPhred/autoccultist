@@ -1,0 +1,25 @@
+allOf:
+  - anyOf:
+      - elementId: jannings
+      - elementId: janningsready
+      - elementId: janningsaway
+  - anyOf:
+      - elementId: poppy
+      - elementId: poppyready
+      - elementId: poppycommission
+      - elementId: poppycommissionready
+      - elementId: poppyaway
+      - situation: poppytime
+  - anyOf:
+      - elementId: aladim
+      - elementId: aladimready
+      - elementId: aladimaway
+  - anyOf:
+      - elementId: bechet
+      - elementId: bechetready
+      - elementId: bechetaway
+  - anyOf:
+      - elementId: sulochana
+      - elementId: marinette.enroute
+      - elementId: marinette
+      - elementId: apostlegrail.pillar4

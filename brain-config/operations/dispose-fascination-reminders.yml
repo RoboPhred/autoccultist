@@ -1,8 +1,10 @@
-name: Achieve Composure
+name: Achieve Composure from Fascination, using Fleeting Remeniscence
 situation: dream
 startingRecipe:
   slots:
     dream:
       elementId: fascination
+      ageBias: youngest
     reminders:
       elementId: fleeting
+      ageBias: oldest

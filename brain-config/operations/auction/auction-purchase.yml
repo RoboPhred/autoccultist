@@ -1,0 +1,57 @@
+name: Purchase any item at Oriflamme's Auction House
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+ongoingRecipes:
+  auctionbidmatched:
+    slots:
+      Bid:
+        elementId: funds
+conditionalRecipes:
+  - condition:
+      allOf:
+        # Decide whether to bid when we first see the thing.
+        - situation: explore
+          recipe: auctionbuy
+        # Do not bid if we don't need the thing
+        - noneOf:
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    elementId: textbooklatin
+                - elementId: scholarlatin
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    elementId: textbookgreek
+                - elementId: scholargreek
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    elementId: textbooksanskrit
+                - elementId: scholarsanskrit
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    elementId: textbookpassion
+                - anyOf:
+                    - aspects: { passionskill: 4 }
+                    - cardSet:
+                        - elementId: textbookpassion
+                        - elementId: textbookpassion
+                        - elementId: textbookpassion
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    elementId: textbookreason
+                - anyOf:
+                    - aspects: { reasonskill: 4 }
+                    - cardSet:
+                        - elementId: textbookreason
+                        - elementId: textbookreason
+                        - elementId: textbookreason
+    slots:
+      Bid:
+        elementId: funds

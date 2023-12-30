@@ -1,0 +1,65 @@
+name: Upgrade all Grail lore
+ui:
+  homeSituation: study
+  icon: aspect:grail
+completedWhen:
+  anyOf:
+    - elementId: fragmentgrailg
+    - noneOf:
+        - cardSet:
+            - elementId: fragmentgrail
+            - elementId: fragmentgrail
+        - cardSet:
+            - elementId: fragmentgrailb
+            - elementId: fragmentgrailb
+        - cardSet:
+            - elementId: fragmentgrailc
+            - elementId: fragmentgrailc
+        - cardSet:
+            - elementId: fragmentgraild
+            - elementId: fragmentgraild
+        - allOf:
+            - cardSet:
+                - elementId: fragmentgraile
+                - elementId: fragmentgraile
+            - anyOf:
+                - elementId: skillpassiond_folly
+                - aspects: { sanctuary: 1 }
+        - allOf:
+            - cardSet:
+                - elementId: fragmentgrailf
+                - elementId: fragmentgrailf
+            - anyOf:
+                - elementId: skillpassiond_folly
+                - aspects: { sanctuary: 1 }
+imperatives:
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
+    operation: passion/study-passion
+
+  - name: Combine Grail A
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-combine-grail-a
+
+  - name: Combine Grail B
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-combine-grail-b
+
+  - name: Combine Grail C
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-combine-grail-c
+
+  - name: Combine Grail D
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-combine-grail-d
+
+  - name: Combine Grail E
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-combine-grail-e
+
+  - name: Combine Grail F
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    forbidders:
+      elementId: fragmentgrailg
+    operation: lore/grail/lore-combine-grail-f

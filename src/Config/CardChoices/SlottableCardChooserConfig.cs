@@ -1,6 +1,6 @@
-namespace Autoccultist.Config.CardChoices
+namespace AutoccultistNS.Config.CardChoices
 {
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// A config file for specifying cards that are slottable.
@@ -8,9 +8,15 @@ namespace Autoccultist.Config.CardChoices
     public class SlottableCardChooserConfig : CardChooserConfig, ISlottableCardChoiceConfig
     {
         /// <inheritdoc/>
+        public bool Optional { get; set; }
+
+        /// <inheritdoc/>
         protected override bool AdditionalFilter(ICardState card)
         {
-            return card.IsSlottable;
+            // Note: We are now treating cards in verbs that have not consumed them yet to still be slottale.
+            // This is in preperation to let cards be stolen by other operations, as an advanced technique
+            // to pause the decay timer on cards (see: sulochana in talk verb with influences)
+            return card.Location == CardLocation.Tabletop && card.IsSlottable;
         }
     }
 }

@@ -1,0 +1,18 @@
+name: Explore a Vault with literally any follower
+priority: goal
+forbidders:
+  anyOf:
+    - elementId: notoriety
+    - elementId: evidence
+    - elementId: evidenceb
+operation:
+  name: Explore a Vault
+  extends: !import /operations/vaults/continue-vault-any.yml
+  startingRecipe:
+    slots:
+      explore:
+        aspects: { vault: 1 }
+      expeditionmember:
+        aspects: { follower: 1 }
+      expeditionfunds:
+        elementId: funds

@@ -1,13 +1,9 @@
-namespace Autoccultist.Config
+namespace AutoccultistNS.Config
 {
     /// <summary>
     /// Defines a configuration node with a human friendly display name.
     /// </summary>
-    public interface INamedConfigObject : IConfigObject
+    public interface INamedConfigObject : IConfigObject, INamedObject
     {
-        /// <summary>
-        /// Gets or sets the human-friendly display name of this goal.
-        /// </summary>
-        string Name { get; set; }
     }
 }

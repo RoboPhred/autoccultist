@@ -1,0 +1,8 @@
+name: Sell a textbook on Sanskrit
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+    Sell:
+      elementId: textbooksanskrit

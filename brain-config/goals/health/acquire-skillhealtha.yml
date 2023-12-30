@@ -1,0 +1,11 @@
+name: Acquire a Strong Physique through Excersize
+ui:
+  homeSituation: work
+  icon: element:skillhealtha
+requirements:
+  elementId: health
+completedWhen:
+  aspects: { healthskill: 1 }
+imperatives:
+  - !import /impulses/maint-vitality-from-health.yml
+  - !import /impulses/goal-learn-lesson-vitality.yml

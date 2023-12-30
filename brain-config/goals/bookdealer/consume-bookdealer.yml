@@ -1,0 +1,10 @@
+name: Purchase Morland books
+ui:
+  homeSituation: explore
+  icon: element:locationbookdealer
+requirements:
+  elementId: locationbookdealer
+completedWhen:
+  elementId: genericrubbishbook
+imperatives:
+  - !import /impulses/books/buy-morland-books.yml

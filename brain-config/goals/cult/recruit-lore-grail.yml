@@ -1,0 +1,18 @@
+name: Recruit acquaintances, by invoking Grail
+ui:
+  homeSituation: talk
+  icon: aspect:grail
+requirements:
+  aspects:
+    society: 1
+    venerationgrail: 1
+completedWhen:
+  noneOf:
+    - aspects: { acquaintance: 1 }
+imperatives:
+  - name: Recruit an acquaintance, by burning Restlessness
+    priority: goal
+    operation: cult/recruit-influence-restlessness
+  - name: Recruit an acquaintance, by invoking Grail
+    priority: goal
+    operation: cult/recruit-lore-grail

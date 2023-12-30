@@ -1,0 +1,24 @@
+name: Reenforce an expedition with a Knock follower
+priority: maintenance
+requirements:
+  allOf:
+    - situation: explore
+      containsAspects: { seal: 1 }
+forbidders:
+  anyOf:
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: seal_wardeddoor
+          containsAspects: { forge: 10 }
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: seal_hiddendoor
+          containsAspects: { lantern: 10 }
+    - allOf:
+        - situation: explore
+          containsAspects: { knock: 10 }
+operation: vaults/continue-vault-follower-knock

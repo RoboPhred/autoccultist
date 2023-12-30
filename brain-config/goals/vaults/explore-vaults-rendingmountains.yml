@@ -1,0 +1,119 @@
+name: Explore Vaults in the Rending Mountains
+completedWhen:
+  noneOf:
+    - aspects: { vaultrendingmountains: 1 }
+imperatives:
+  - name: Explore the Hunter's Pits
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Hunter's Pits
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultrendingmountains1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+      conditionalRecipes:
+        # We specifically want edge after forge, as that solves the next 2 challenges
+        - condition:
+            situation: explore
+            containsAspects: { edge: -10 }
+          slots:
+            Assistance:
+              aspects: { follower: 1, edge: 2 }
+              aspectWeightBias: highest
+  - name: Explore the Mausoleum of Wolves
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Mausoleum of Wolves
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultrendingmountains4
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, winter: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, winter: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Snow's Keeper
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Snow's Keeper
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultrendingmountains2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, winter: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, winter: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Eye of Ikirmawi
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Eye of Ikirmawi
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultrendingmountains3
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore the Tombs of the Shadowless Kings
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore the Tombs of the Shadowless Kings
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultrendingmountainsdefault
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds

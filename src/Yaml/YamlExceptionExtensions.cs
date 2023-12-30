@@ -1,4 +1,4 @@
-namespace Autoccultist.Yaml
+namespace AutoccultistNS.Yaml
 {
     using System;
     using YamlDotNet.Core;
@@ -8,6 +8,17 @@ namespace Autoccultist.Yaml
     /// </summary>
     public static class YamlExceptionExtensions
     {
+        public static YamlFileException GetInnermostFileException(this YamlException ex)
+        {
+            while (ex.InnerException != null && ex.InnerException is YamlFileException fileEx)
+            {
+                ex = fileEx;
+            }
+
+            var asFile = ex as YamlFileException;
+            return asFile ?? null;
+        }
+
         /// <summary>
         /// Gets the innermost non-YamlException message.
         /// </summary>

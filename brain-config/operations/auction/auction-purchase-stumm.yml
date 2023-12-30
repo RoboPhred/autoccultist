@@ -1,0 +1,14 @@
+name: Purchase STUMM! at auction
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+conditionalRecipes:
+  - condition:
+      situation: explore
+      storedCardsMatch:
+        elementId: stumm
+    slots:
+      Bid:
+        elementId: funds

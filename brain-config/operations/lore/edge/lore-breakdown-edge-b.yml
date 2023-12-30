@@ -1,0 +1,8 @@
+name: "Break down lore: Chiliarch's Lesson"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      elementId: fragmentedgeb
+    with:
+      elementId: reason

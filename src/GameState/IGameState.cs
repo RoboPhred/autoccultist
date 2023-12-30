@@ -1,31 +1,45 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
 
     /// <summary>
     /// Represents the current state of the game.
     /// </summary>
-    public interface IGameState
+    public interface IGameState : IContentHashable
     {
+        /// <summary>
+        /// Gets a collection of all cards known to the game.
+        /// </summary>
+        IReadOnlyCollection<ICardState> AllCards { get; }
+
         /// <summary>
         /// Gets a collection of cards on the tabletop.
         /// </summary>
-        ICollection<ICardState> TabletopCards { get; }
+        IReadOnlyCollection<ICardState> TabletopCards { get; }
+
+        /// <summary>
+        /// Gets a collection of cards that are currently en route to somewhere.
+        /// </summary>
+        IReadOnlyCollection<ICardState> EnRouteCards { get; }
+
+        /// <summary>
+        /// Get a collection of cards in the codex mod, if installed.
+        /// </summary>
+        IReadOnlyCollection<ICardState> CodexCards { get; }
 
         /// <summary>
         /// Gets a collection of situations currently present in the game.
         /// </summary>
-        ICollection<ISituationState> Situations { get; }
+        IReadOnlyCollection<ISituationState> Situations { get; }
+
+        /// <summary>
+        /// Gets the bot's memories.
+        /// </summary>
+        IReadOnlyDictionary<string, int> Memories { get; }
 
         /// <summary>
         /// Gets the mansus state.
         /// </summary>
-        IMansusState Mansus { get; }
-
-        /// <summary>
-        /// Gets an enumerable of all cards in the game.
-        /// </summary>
-        /// <returns>An enumerable of all cards in the game.</returns>
-        IEnumerable<ICardState> GetAllCards();
+        IPortalState Mansus { get; }
     }
 }

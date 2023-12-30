@@ -1,8 +1,12 @@
 name: Form the Unflinching Order
+ui:
+  homeSituation: talk
+  icon: element:cultforge_1
 requirements:
   aspects: { acquaintance: 1 }
 completedWhen:
   aspects: { society: 1 }
-impulses:
-  - !import ../../impulses/cult/goal-form-cult-doctrine-forge.yml
-  - !import ../../impulses/cult/goal-form-cult-recruit.yml
+  location: tabletop
+imperatives:
+  - !import /impulses/cult/goal-form-cult-doctrine-forge.yml
+  - !import /impulses/cult/goal-form-cult-recruit.yml

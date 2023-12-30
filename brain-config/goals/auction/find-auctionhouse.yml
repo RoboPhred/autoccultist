@@ -1,0 +1,17 @@
+name: Find Oriflamme's
+ui:
+  homeSituation: explore
+  icon: element:locationauctionhouse
+requirements:
+  allOf:
+    - situation: explore
+    - anyOf:
+        - aspects: { follower: 1 }
+        - elementId: health
+completedWhen:
+  elementId: locationauctionhouse
+imperatives:
+  - name: Explore the city with a follower
+    operation: explore/explore-city-follower
+  - name: Explore the city with health
+    operation: explore/explore-city-health

@@ -1,0 +1,51 @@
+name: Find Grail lore at Morlands
+ui:
+  homeSituation: explore
+  icon: aspect:grail
+requirements:
+  elementId: locationbookdealer
+completedWhen:
+  aspects:
+    lore: 1
+    grail:
+      greaterThanOrEqualTo: 1
+imperatives:
+  - name: Find grail lore at Morlands
+    requirements:
+      cardSet:
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+        - elementId: funds
+          location: tabletop
+    forbidders:
+      anyOf:
+        - allOf:
+            - elementId: orchidtransfigurations1latin
+            - anyOf:
+                - elementId: textbooklatin
+                - elementId: scholarlatin
+        - elementId: orchidtransfigurations1
+        - allOf:
+            - elementId: orchidtransfigurations2latin
+            - anyOf:
+                - elementId: textbooklatin
+                - elementId: scholarlatin
+        - elementId: orchidtransfigurations2
+        - elementId: skeletonsongs
+    operation: buy-book-from-morland
+  - !import /impulses/books/maint-translate-books-latin.yml
+  - !import /impulses/books/maint-read-lore.yml

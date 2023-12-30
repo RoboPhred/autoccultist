@@ -1,0 +1,16 @@
+name: Work at the Instutute
+requirements:
+  elementId: legacyphysicianjob
+completedWhen:
+  anyOf:
+    - elementId: bequestintro
+    - situation: time
+imperatives:
+  - name: Work at the Institute
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacyphysicianjob

@@ -1,9 +1,9 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
     /// <summary>
     /// An action that closes a situation window.
     /// </summary>
-    public class CloseSituationAction : IAutoccultistAction
+    public class CloseSituationAction : SyncActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseSituationAction"/> class.
@@ -19,21 +19,27 @@ namespace Autoccultist.Actor.Actions
         /// </summary>
         public string SituationId { get; }
 
+        public override string ToString()
+        {
+            return $"CloseSituationAction(SituationId = {this.SituationId})";
+        }
+
         /// <inheritdoc/>
-        public void Execute()
+        protected override bool OnExecute()
         {
             if (GameAPI.IsInMansus)
             {
-                return;
+                return false;
             }
 
             var situation = GameAPI.GetSituation(this.SituationId);
-            if (situation == null)
+            if (situation == null || situation.Token.Defunct || !situation.IsOpen)
             {
-                return;
+                return false;
             }
 
-            situation.CloseWindow();
+            situation.Close();
+            return true;
         }
     }
 }

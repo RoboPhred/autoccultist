@@ -1,0 +1,177 @@
+name: Achieve the Seventh Mark of Power
+requirements:
+  allOf:
+    - elementId: ascensionpowerf
+    - elementId: wayspider
+    - elementId: waystag_after
+    - elementId: ritefollowerconsumeinfluence
+    - aspects: { lore: 1, forge: 10 }
+    - aspects: { follower: 1, lantern: 2 }
+completedWhen:
+  aspects: { desire: 7 }
+
+imperatives:
+  - name: Labor for Funds
+    forbidders:
+      anyOf:
+        # At a certain point, we just dont need any more funds.
+        # Things will go faster in real-time if we aren't constantly cycling this verb.
+        - fromAll:
+            - elementId: funds
+              location: tabletop
+          aspect: "@count"
+          value: 10
+        # Don't occupy the Work Verb when we're ready to ascend.
+        - allOf:
+            - anyOf:
+                - elementId: spirit_forgee_edge
+                - elementId: pre.spirit_forgee_edge
+            - aspects: { influence: 1, forge: 15 }
+    priority: maintenance
+    operation: work-skillhealth
+
+  - name: Get a prisoner
+    forbidders:
+      anyOf:
+        - situation: work
+          recipe: minorforgevictory_overture
+        - elementId: influenceforgeg
+        - aspects: { prisoner: 1 }
+        # Try to avoid notoriety game overs from this.
+        #  In practice, this hasn't been a problem since we win so quickly.  However, there have been
+        #  close calls...
+        - !import /conditions/has-suspicion.yml
+    operation:
+      name: Get a prisoner
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            aspects: { hq: 1 }
+          Cellar:
+            aspects: { follower: 1, mortal: 1 }
+
+  - name: Enter the spider door
+    forbidders:
+      anyOf:
+        - situation: work
+          recipe: minorforgevictory_overture
+        - aspects: { influence: 1, forge: 15 }
+    operation:
+      name: Enter the spider door
+      situation: dream
+      startingRecipe:
+        slots:
+          dream:
+            elementId: wayspider
+      ongoingRecipes:
+        dreamusespiderway:
+          slots:
+            Ascent:
+              aspects: { prisoner: 1 }
+        dreamenterspider:
+          mansusChoice:
+            deck: mansus_spiderdoor1
+
+  - name: Counter Notariety
+    requirements:
+      elementId: notoriety
+    operation:
+      name: Counter Notariety with Heart
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            aspects: { follower: 1, heart: 1 }
+            aspectWeightBias: highest
+      ongoingRecipes:
+        talktofollower:
+          slots:
+            Subject:
+              aspects: { society: 1 }
+
+  - name: Sustain the Forge Influence
+    priority: goal
+    forbidders:
+      allOf:
+        - aspects: { influence: 1, forge: 15 }
+        - elementId: spirit_forgee_edge
+        - situation: work
+          state: idle
+    operation:
+      name: Talk to Sulochana about the Forge Influence
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: sulochana
+      ongoingRecipes:
+        sulochanachat:
+          slots:
+            Subject:
+              aspects: { influence: 1, forge: 15 }
+
+  - name: Mansus-Grind for Knock Influence
+    priority: goal
+    requirements:
+      allOf:
+        # Wait until we have the influence
+        - aspects: { influence: 1, forge: 15 }
+    forbidders:
+      anyOf:
+        - situation: work
+          recipe: minorforgevictory_overture
+        # Dont search if we already have king crucible, or the relevant Knock Influence
+        - elementId: spirit_forgee_edge
+        - elementId: pre.spirit_forgee_edge
+        - elementId: spirit_forgee_edge.defunct
+          lifetimeRemaining: 30
+        - aspects: { influence: 1, knock: 5 }
+    operation: mansus/use-stag-normal
+
+  - name: Summon King Crucible
+    priority: goal
+    forbidders:
+      # There Can Only Be One
+      anyOf:
+        - elementId: spirit_forgee_edge
+        - elementId: spirit_forgee_edge.defunct
+        - elementId: pre.spirit_forgee_edge
+    operation:
+      name: Summon King Crucible
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            aspects: { follower: 1, lantern: 2 }
+          Offering:
+            aspects: { influence: 1, knock: 5 }
+            ageBias: oldest
+      ongoingRecipes:
+        summoninglosingcontrol:
+          # We aren't resource constrained, so dismiss and try again if needed
+          slots:
+            Effort:
+              elementId: reason
+
+  - name: Ascend
+    priority: goal
+    operation:
+      name: Ascend
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: ritefollowerconsumeinfluence
+          Invocation:
+            aspects: { lore: 1, forge: 10 }
+          Assistant:
+            elementId: spirit_forgee_edge
+          Offering:
+            elementId: influenceforgeg
+          Desire:
+            elementId: ascensionpowerf

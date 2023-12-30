@@ -1,0 +1,30 @@
+name: Explore a Vault
+priority: goal
+forbidders:
+  anyOf:
+    - elementId: notoriety
+    - elementId: evidence
+    - elementId: evidenceb
+operation:
+  name: Explore a Vault
+  extends: !import /operations/vaults/continue-vault-any.yml
+  startingRecipe:
+    slots:
+      explore:
+        aspects: { vault: 1 }
+      expeditionmember:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          forge:
+            greaterThanOrEqualTo: 2
+      expeditionmember2:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          forge:
+            greaterThanOrEqualTo: 2
+      expeditionfunds:
+        elementId: funds
+      expeditionfunds2:
+        elementId: funds

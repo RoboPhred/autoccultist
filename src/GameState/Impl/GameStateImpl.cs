@@ -1,5 +1,6 @@
-namespace Autoccultist.GameState.Impl
+namespace AutoccultistNS.GameState.Impl
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -8,26 +9,69 @@ namespace Autoccultist.GameState.Impl
     /// </summary>
     internal class GameStateImpl : GameStateObject, IGameState
     {
-        private readonly ICollection<ICardState> tabletopCards;
-        private readonly ICollection<ISituationState> situations;
+        private static int prevHash = 0;
 
-        private readonly IMansusState mansus;
+        private readonly Lazy<IReadOnlyCollection<ICardState>> allCards;
+        private readonly IReadOnlyCollection<ICardState> tabletopCards;
+        private readonly IReadOnlyCollection<ICardState> enRouteCards;
+        private readonly IReadOnlyCollection<ICardState> codexCards;
+        private readonly IReadOnlyCollection<ISituationState> situations;
+        private readonly IReadOnlyDictionary<string, int> memories;
+        private readonly IPortalState mansus;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameStateImpl"/> class.
         /// </summary>
         /// <param name="tabletopCards">The tabletop cards in this state.</param>
+        /// <param name="enRouteCards">The en route cards in this state.</param>
+        /// <param name="codexCards">The codex cards in this state.</param>
         /// <param name="situations">The situations in this state.</param>
         /// <param name="mansus">The mansus state.</param>
-        public GameStateImpl(ICollection<ICardState> tabletopCards, ICollection<ISituationState> situations, IMansusState mansus)
+        public GameStateImpl(
+            IEnumerable<ICardState> tabletopCards,
+            IEnumerable<ICardState> enRouteCards,
+            IEnumerable<ICardState> codexCards,
+            IEnumerable<ISituationState> situations,
+            IReadOnlyDictionary<string, int> memories,
+            IPortalState mansus)
         {
-            this.tabletopCards = tabletopCards;
-            this.situations = situations;
+            this.tabletopCards = new HashCalculatingCollection<ICardState>(tabletopCards);
+            this.enRouteCards = new HashCalculatingCollection<ICardState>(enRouteCards);
+            this.codexCards = new HashCalculatingCollection<ICardState>(codexCards);
+            this.situations = new HashCalculatingCollection<ISituationState>(situations);
+
+            this.allCards = new Lazy<IReadOnlyCollection<ICardState>>(() =>
+            {
+                var allCards = this.TabletopCards.Concat(this.EnRouteCards).Concat(this.Situations.SelectMany(s => s.StoredCards.Concat(s.GetSlottedCards()).Concat(s.OutputCards))).Concat(this.CodexCards);
+                switch (this.Mansus.State)
+                {
+                    case PortalActiveState.AwaitingCollection:
+                        allCards = allCards.Concat(new[] { this.Mansus.OutputCard });
+                        break;
+                    case PortalActiveState.AwaitingSelection:
+                        allCards = allCards.Concat(this.Mansus.DeckCards.Values);
+                        break;
+                }
+
+                return new HashCalculatingCollection<ICardState>(allCards);
+            });
+
+            this.memories = memories;
             this.mansus = mansus;
         }
 
         /// <inheritdoc/>
-        public ICollection<ICardState> TabletopCards
+        public IReadOnlyCollection<ICardState> AllCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.allCards.Value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<ICardState> TabletopCards
         {
             get
             {
@@ -37,7 +81,27 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public ICollection<ISituationState> Situations
+        public IReadOnlyCollection<ICardState> EnRouteCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.enRouteCards;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<ICardState> CodexCards
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.codexCards;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<ISituationState> Situations
         {
             get
             {
@@ -47,7 +111,17 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public IMansusState Mansus
+        public IReadOnlyDictionary<string, int> Memories
+        {
+            get
+            {
+                this.VerifyAccess();
+                return this.memories;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IPortalState Mansus
         {
             get
             {
@@ -57,17 +131,28 @@ namespace Autoccultist.GameState.Impl
         }
 
         /// <inheritdoc/>
-        public IEnumerable<ICardState> GetAllCards()
+        protected override int ComputeContentHash()
         {
-            this.VerifyAccess();
+            return PerfMonitor.Monitor(
+                "GameStateImpl Hash",
+                () =>
+                {
+                    var hash = HashUtils.Hash(
+                        this.tabletopCards,
+                        this.enRouteCards,
+                        this.codexCards,
+                        this.situations,
+                        HashUtils.HashAllUnordered(this.memories.Select(x => $"{x.Key}={x.Value}")),
+                        this.mansus);
 
-            var allCards = this.tabletopCards.Concat(this.situations.SelectMany(s => s.StoredCards.Concat(s.SlottedCards).Concat(s.OutputCards)));
-            if (this.mansus.IsActive)
-            {
-                allCards = allCards.Concat(this.mansus.DeckCards.Values);
-            }
+                    if (hash != prevHash)
+                    {
+                        PerfMonitor.AddCount("GameStateImpl New Hash");
+                        prevHash = hash;
+                    }
 
-            return allCards;
+                    return hash;
+                });
         }
     }
 }

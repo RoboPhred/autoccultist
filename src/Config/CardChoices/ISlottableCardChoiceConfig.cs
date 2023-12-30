@@ -1,13 +1,13 @@
-namespace Autoccultist.Config.CardChoices
+namespace AutoccultistNS.Config.CardChoices
 {
-    using Autoccultist.Yaml;
+    using AutoccultistNS.Yaml;
 
     /// <summary>
     /// A card choice in a recipe solution.
     /// </summary>
     [DuckTypeCandidate(typeof(SlottableCardChooserConfig))]
     [DuckTypeCandidate(typeof(MultipleSlottableCardChoiceConfig))]
-    public interface ISlottableCardChoiceConfig : ICardChooser
+    public interface ISlottableCardChoiceConfig : ISlotCardChooser
     {
     }
 }

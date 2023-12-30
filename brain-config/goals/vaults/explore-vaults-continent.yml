@@ -1,0 +1,152 @@
+name: Explore Vaults on the Continent
+completedWhen:
+  noneOf:
+    - aspects: { vaultcontinent: 1 }
+imperatives:
+  - name: Explore Chateau Raveline
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Chateau Raveline
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinent1
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, lantern: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Fermier Abbey
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Fermier Abbey
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinent2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, moth: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, moth: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Forman House
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Forman House
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinent5
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, edge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, edge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Key-Hunter's Garret
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Key-Hunter's Garret
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinent6
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, knock: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, knock: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore Orthos Woods
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Orthos Woods
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinent3
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore The Vanderschaaf Collection
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore The Vanderschaaf Collection
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinent4
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds
+  - name: Explore The Unnumbered Stones
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore The Unnumbered Stones
+      extends: !import /operations/vaults/continue-vault-any.yml
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaultcontinentdefault
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, moth: 2 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, moth: 2 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds

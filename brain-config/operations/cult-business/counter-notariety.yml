@@ -1,0 +1,12 @@
+name: Counter Notariety with Heart
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { follower: 1, heart: 1 }
+      aspectWeightBias: highest
+ongoingRecipes:
+  talktofollower:
+    slots:
+      Subject:
+        aspects: { society: 1 }

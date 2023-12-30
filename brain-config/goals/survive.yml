@@ -1,5 +1,8 @@
 name: Survive
+ui:
+  homeSituation: dream
+  icon: element:health
 requirements:
   situation: time
-impulseSets:
-  - !import ../impulse-sets/survive.yml
+imperatives:
+  - !import /impulse-sets/survive.yml

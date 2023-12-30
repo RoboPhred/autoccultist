@@ -1,0 +1,11 @@
+anyOf:
+  # Do not include unrecruited renira
+  #- elementId: renira_a
+  - elementId: renira_b
+  - elementId: renira_c
+  - elementId: renira_d
+  # Do not include unrecruited renira
+  # - elementId: saliba_a
+  - elementId: saliba_b
+  - elementId: saliba_c
+  - elementId: saliba_d

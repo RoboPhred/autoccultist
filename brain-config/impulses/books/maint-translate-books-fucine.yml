@@ -6,7 +6,6 @@ operation:
   startingRecipe:
     slots:
       study:
-        elementId: scholargreek
+        elementId: scholarfucine
       Text:
-        aspects: {textgreek: 1}
-  
+        aspects: { textfucine: 1 }

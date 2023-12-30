@@ -1,7 +1,7 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
+    using AutoccultistNS.GameState;
 
     /// <summary>
     /// Describes a class that can determine if a card matches its specifications.
@@ -12,7 +12,9 @@ namespace Autoccultist
         /// Choose a card from the given candidates.
         /// </summary>
         /// <param name="cards">An enumerable of candidate cards to choose from.</param>
-        /// <returns>The chosen card, or null if none are chosen.</returns>
-        ICardState ChooseCard(IEnumerable<ICardState> cards);
+        /// <param name="state">The current game state.</param>
+        /// <param name="hints">Hints about how the consumer will use the result.</param>
+        /// <returns>An enumerable of card that can be chosen in order of priority.</returns>
+        IEnumerable<ICardState> SelectChoices(IEnumerable<ICardState> cards, IGameState state, CardChooserHints hints = CardChooserHints.None);
     }
 }

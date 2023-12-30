@@ -1,0 +1,84 @@
+name: "Aspirant: Evening Falls"
+legacy: aspirant
+
+ui:
+  homeSituation: null
+  icon: element:gloverandgloverjob
+
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - legacy/aspirant/begin-intro
+  - name: Study the bequest and unlock verbs
+    # Note: Not needed for crime free. Needed here to unlock explore
+    primaryGoals:
+      # Need the two below
+      - legacy/aspirant/study-bequest-passion
+      # Need explore to find a hireling
+      - bookdealer/find-bookdealer-map
+      # Need talk to set them on alden
+      - legacy/aspirant/find-collaborator
+  - name: Hit the gym
+    primaryGoals:
+      # 3 health so we can explore
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+    supportingGoals:
+      - survive
+      - funds/work-labor
+  - name: Hit the books
+    primaryGoals:
+      - reason/acquire-skillreasona
+      # Our reason actually refreshes right as alden demands more, so we are fine with 2
+      # - reason/acquire-skillreasonb
+      # - reason/acquire-skillreasonc
+    supportingGoals:
+      - survive
+      - funds/work-labor
+  - name: Get a job, await Alden
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+      - glover/acquire-job-glover-standard
+    supportingGoals:
+      - survive
+  - name: Dispose of alden
+    primaryGoals:
+      - name: Dispose of Alden
+        completedWhen:
+          anyOf:
+            - elementId: gloverandglover_difficultbossa_gone_job
+            - elementId: gloverandgloverjob
+            - elementId: gloverandgloverjob_youngerglovergone
+            - elementId: gloverandgloverseniorjob
+            - elementId: gloverandgloverseniorjob_youngerglovergone
+            - elementId: gloverandglovertopjob
+            - elementId: gloverandglovertopjob_tainted
+        imperatives:
+          - name: Find a devious or potent minion
+            # We want to look for a mid-level minion here, as I think it will be faster to go for the 70% success chance than try with the 30%
+            forbidders:
+              anyOf:
+                - !import /conditions/has-suspicion.yml
+                - aspects: { hireling: 1 }
+            operation: explore/explore-city-criminal-potent
+          - name: Re-hire a minion
+            operation: hirelings/rehire-hireling-any
+          - name: Dispose of Alden with moth
+            priority: goal
+            operation: annoyance/madden-annoyance
+          - name: Dispose of Alden with edge
+            priority: goal
+            operation: annoyance/murder-annoyance
+    supportingGoals:
+      - survive
+      - glover/work-glover
+  - name: This is my life, now
+    primaryGoals:
+      - name: Such as it is
+        imperatives:
+          - name: Better get used to it
+            priority: goal
+            operation: glover/work-glover-acceptance
+    supportingGoals:
+      - survive
+      - glover/work-glover

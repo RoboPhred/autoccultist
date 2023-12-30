@@ -1,0 +1,14 @@
+name: Madden an Annoyance
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspectWeightBias: highest
+      aspects:
+        follower: 1
+        moth: 1
+ongoingRecipes:
+  talktofollower:
+    slots:
+      Subject:
+        aspects: { annoyance: 1 }

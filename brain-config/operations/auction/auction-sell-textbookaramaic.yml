@@ -1,0 +1,8 @@
+name: Sell a textbook on Aramaic
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      elementId: locationauctionhouse
+    Sell:
+      elementId: textbookaramaic

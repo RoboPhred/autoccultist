@@ -1,0 +1,4 @@
+name: Get vitality to cure affliction
+priority: critical
+requirements: !import /conditions/affliction-unsatisfied.yml
+operation: health/study-health

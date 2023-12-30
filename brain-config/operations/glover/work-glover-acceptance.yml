@@ -1,0 +1,13 @@
+name: Accept Glover and Glover as our life's work
+situation: work
+startingRecipe:
+  slots:
+    work:
+      elementId: gloverandgloverseniorjob
+    Devotion:
+      elementId: reason
+ongoingRecipes:
+  gloverandgloverseniorwork_retirementoption:
+    slots:
+      Acceptance:
+        elementId: passion

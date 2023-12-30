@@ -1,0 +1,43 @@
+name: "Aspirant: Evening Falls (no crime)"
+legacy: aspirant
+
+ui:
+  homeSituation: null
+  icon: element:gloverandgloverjob
+
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - legacy/aspirant/begin-intro
+  - name: Hit the gym
+    primaryGoals:
+      # Just need 2 to fend off sickness.
+      - health/acquire-skillhealtha
+    supportingGoals:
+      - survive
+      - funds/work-labor
+  - name: Hit the books
+    primaryGoals:
+      # Our reason actually refreshes right as alden demands more, so we are fine with 2
+      - reason/acquire-skillreasona
+      # - reason/acquire-skillreasonb
+      # - reason/acquire-skillreasonc
+    supportingGoals:
+      - survive
+      - funds/work-labor
+  - name: Get a job, await Alden
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+      - glover/acquire-job-glover-standard
+    supportingGoals:
+      - survive
+  - name: This is my life, now
+    primaryGoals:
+      - name: Such as it is
+        imperatives:
+          - name: Better get used to it
+            priority: goal
+            operation: glover/work-glover-acceptance
+    supportingGoals:
+      - survive
+      - glover/work-glover

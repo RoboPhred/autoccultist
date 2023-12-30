@@ -1,5 +1,6 @@
 anyOf:
   - aspects: { text: 1 } # Non-translatable books
+    location: tabletop
     forbiddenAspects:
       - textlatin
       - textgreek
@@ -20,61 +21,81 @@ anyOf:
       - textbookfucine
       - textbookmandaic
       - textbookvak
+      - stumm # Not a book.  Anyway, our consume books logic wont handle it.
       - genericrubbishbook
   - allOf: # greek book that is translatable
       - aspects: { textgreek: 1 }
+        location: tabletop
       - elementId: scholargreek
   - allOf: # latin book that is translatable
       - aspects: { textlatin: 1 }
+        location: tabletop
       - elementId: scholarlatin
   - allOf: # sanskrit book that is translatable
       - aspects: { textsanskrit: 1 }
+        location: tabletop
       - elementId: scholarsanskrit
   - allOf: # aramaic book that is translatable
       - aspects: { textaramaic: 1 }
+        location: tabletop
       - elementId: scholararamaic
   - allOf: # phrygian book that is translatable
       - aspects: { textphrygian: 1 }
+        location: tabletop
       - elementId: scholarphrygian
   - allOf: # fucine book that is translatable
       - aspects: { textfucine: 1 }
+        location: tabletop
       - elementId: scholarfucine
   - allOf: # mandaic book that is translatable
       - aspects: { textmandaic: 1 }
+        location: tabletop
       - elementId: scholarmandaic
   - allOf: # vak book that is translatable
       - aspects: { textvak: 1 }
+        location: tabletop
       - elementId: scholarvak
   - anyOf: # textbook for a language we don't know
       - allOf:
           - elementId: textbookgreek
+            location: tabletop
           - noneOf:
-            - elementId: scholargreek
+              - elementId: scholargreek
       - allOf:
           - elementId: textbookaramaic
+            location: tabletop
           - noneOf:
-            - elementId: scholararamaic
+              - elementId: scholararamaic
       - allOf:
           - elementId: textbooksanskrit
+            location: tabletop
           - noneOf:
-            - elementId: scholarsanskrit
+              - elementId: scholarsanskrit
       - allOf:
           - elementId: textbooklatin
+            location: tabletop
           - noneOf:
-            - elementId: scholarlatin
+              - elementId: scholarlatin
       - allOf:
-          - elementId: textbookmandaic
+          - elementId: textbookmandaicaramaic
+            location: tabletop
           - noneOf:
-            - elementId: scholarmandaic
+              - elementId: scholarmandaic
       - allOf:
-          - elementId: textbookfucine
+          - anyOf:
+              - elementId: textbookfucine
+                location: tabletop
+              - elementId: textbookfucinelatin
+                location: tabletop
           - noneOf:
-            - elementId: scholarfucine
+              - elementId: scholarfucine
       - allOf:
           - elementId: textbookphrygian
+            location: tabletop
           - noneOf:
-            - elementId: scholarphrygian
+              - elementId: scholarphrygian
       - allOf:
           - elementId: textbookvak
+            location: tabletop
           - noneOf:
-            - elementId: scholarvak
+              - elementId: scholarvak

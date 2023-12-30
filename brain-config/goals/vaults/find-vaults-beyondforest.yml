@@ -1,0 +1,66 @@
+name: Find Vaults beyond the Forest
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waystag_after
+
+completedWhen:
+  memory: has_all_vaults_beyondforest
+  value: 1
+
+imperatives:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultlandbeyondforestdefault
+    reactions:
+      - remember: has_all_vaults_beyondforest
+        label: Has All Vaults beyond the Forest
+        description: We have found everything of interest beyond the Forest.
+
+  - name: Collect Secret Histories from the Stag Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesd
+              - aspects: { vaultlandbeyondforest: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
+    operation: mansus/use-stag-secrethistories
+
+  - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-a
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-b
+
+  # Get a glimmering so we can combine secret histories c
+  - extends: !import /impulses/norm-glimmering-from-passion.yml
+    requirements:
+      allOf:
+        - *has-needed-secret-histories
+        - cardSet:
+            - elementId: fragmentsecrethistoriesc
+            - elementId: fragmentsecrethistoriesc
+    forbidders:
+      elementId: glimmering
+
+  - name: Combine Forgotten Chronicles into Forbidden Epics
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-c
+
+  - name: Explore Beyond the Forest
+    operation:
+      name: Find vaults Beyond the Forest
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesd

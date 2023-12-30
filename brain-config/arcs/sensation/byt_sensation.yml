@@ -1,0 +1,261 @@
+# As it is, rng can kill it from getting too many sicknesses or dreads, forcing it to burn money to satisfy them.
+# Should look into rushing high passion and using painting.
+name: "Bright Young Thing: Sensation Ascension"
+legacy: brightyoungthing
+
+ui:
+  homeSituation: null
+  icon: element:ascensionsensationf
+
+#TODO: Improve selection hint?
+selectionHint:
+  anyOf:
+    - elementId: legacybytjob
+    - elementId: legacybytjobmatured
+    - elementId: legacydiarylastcharacter
+    - elementId: ascensionsensationa
+    - elementId: ascensionsensationbf
+    - elementId: ascensionsensationbm
+    - elementId: ascensionsensationc
+    - elementId: ascensionsensationd
+    - elementId: ascensionsensatione
+    - elementId: ascensionsensationf
+
+motivations:
+  - name: Begin the game
+    primaryGoals:
+      - legacy/begin-byt
+  - name: Get beefy
+    primaryGoals:
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
+    supportingGoals:
+      - followers/attract-followers-memory
+      - survive
+      - funds/work-labor
+  - name: Get a job
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+    supportingGoals:
+      - survive
+  - name: Establish the Order of the Bloody Cup
+    primaryGoals:
+      - cult/form-cult-doctrine-grail
+    supportingGoals:
+      - followers/attract-followers-memory
+      - survive
+      - glover/work-glover
+  - name: Get smart
+    primaryGoals:
+      # Get skillreasona to make Alden easier to deal with
+      # We need all the way up to c, as we expect dry soul curse to steal one.
+      - reason/acquire-skillreasona
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+    supportingGoals:
+      - followers/attract-followers-memory
+      - survive
+      - glover/work-glover
+      - bookdealer/find-bookdealer-explore
+  - name: Be sure we've got that book dealer
+    primaryGoals:
+      - bookdealer/find-bookdealer-explore
+    supportingGoals:
+      - followers/attract-followers-memory
+      - survive
+      - glover/work-glover
+  - name: Find grail lore, get passionate
+    primaryGoals:
+      - bookdealer/consume-bookdealer-grail
+      - passion/acquire-skillpassiona
+      - passion/acquire-skillpassionb
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - lore/consume-books-lore-waitmorland
+      - bookdealer/consume-bookdealer
+      - followers/attract-grail-follower
+      - patrons/find-sulochana
+      - cult/recruit-grail-lore-grail
+      - cult/recruit-heart-lore-grail
+  - name: Find a Grail believer, meet Sulochana
+    primaryGoals:
+      - followers/attract-grail-follower
+      - patrons/find-sulochana
+    supportingGoals:
+      - cult/recruit-lore-grail
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
+      - survive
+      - glover/work-glover
+  - name: Recruit all Grail and Heart followers
+    primaryGoals:
+      - cult/recruit-grail-lore-grail
+      - cult/recruit-heart-lore-grail
+    supportingGoals:
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
+      - survive
+      - glover/work-glover
+  - name: Dispose of Alden
+    primaryGoals:
+      - glover/glover-remove-boss-seduction
+    supportingGoals:
+      - funds/work-labor
+      - survive
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
+  - name: Go on a date
+    primaryGoals:
+      - romance/gain-relationship-grail
+    supportingGoals:
+      - glover/work-glover
+      - survive
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
+  - name: Finish Morlands
+    primaryGoals:
+      - bookdealer/consume-bookdealer
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - lore/consume-books-lore-waitmorland
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+  - name: Find STUMM!
+    primaryGoals:
+      - auction/acquire-stumm-passive
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+      - lore/consume-books-lore-waitmorland
+      - auction/attend-auction
+  - name: Watch STUMM!
+    primaryGoals:
+      - name: Watch Stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        imperatives:
+          - operation: watch-stumm
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+      - lore/consume-books-lore-waitmorland
+  - name: Acquire the Wood and White Door
+    primaryGoals:
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - lore/consume-books-lore-waitmorland
+  - name: Raid the hospital
+    primaryGoals:
+      - vaults/st-agnes-hospital
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - lore/consume-books-lore-waitmorland
+  - name: Move into Morlands
+    primaryGoals:
+      - headquarters/move-hq-library
+    supportingGoals:
+      - survive
+      - romance/maintain-relationships
+      - glover/work-glover
+      - cult/recruit-away-influences
+      - lore/consume-books-lore-waitmorland
+  - name: Read the books from St. Agnes
+    primaryGoals:
+      - lore/consume-books-lore-waitmorland
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+  - name: Acquire the Stag Door
+    primaryGoals:
+      #      - victories/sensation/victory-temptation-sensation-lore-stag
+      - victories/sensation/acquire-lore-stag
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+  - name: Subvert all Edge lore to Winter
+    primaryGoals:
+      - lore/subvert-all-edge-to-winter
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+  - name: Subvert all Winter lore to Heart
+    primaryGoals:
+      - lore/subvert-all-winter-to-heart
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+  - name: Subvert all Heart lore to Grail
+    primaryGoals:
+      - lore/subvert-all-heart-to-grail
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - followers/attract-followers-memory
+  - name: Upgrade all Grail lore to the highest we can
+    primaryGoals:
+      - lore/upgrade-all-grail
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+      - cult/recruit-away-influences
+      - followers/attract-followers-memory
+  - name: Promote Grail believers, dedicate to horny
+    primaryGoals:
+      - cult/promote-grail-with-grail
+      - victories/sensation/acquire-dedication-sensation
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+  - name: Honour our Interested Disciple
+    primaryGoals:
+      - victories/sensation/honour-interested-disciple
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+  - name: Prepare a Cyprian and achieve the Marks of Sensation
+    primaryGoals:
+      - cult/exalt-grail-special
+      - victories/sensation/acquire-ascension-sensation
+    supportingGoals:
+      - survive
+      - glover/work-glover
+      - romance/maintain-relationships
+  - name: Acquire the Seventh mark of Sensation
+    primaryGoals:
+      - victories/sensation/acquire-mark-sensation-7
+    supportingGoals:
+      - survive
+      - romance/maintain-relationships

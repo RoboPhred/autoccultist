@@ -1,0 +1,11 @@
+name: Chat with Sulochana about a Grail Influence
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      elementId: sulochana
+ongoingRecipes:
+  sulochanachat:
+    slots:
+      Subject:
+        aspects: { influence: 1, grail: 6 }

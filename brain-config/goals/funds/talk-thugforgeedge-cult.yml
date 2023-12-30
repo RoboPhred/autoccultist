@@ -1,0 +1,73 @@
+name: Produce funds with the bombmaker
+ui:
+  homeSituation: talk
+  icon: element:thugforgeedge
+requirements:
+  allOf:
+    - elementId: locationauctionhouse
+    - aspects: { society: 1 }
+imperatives:
+  - name: Find a bombmaker
+    requirements:
+      # Need money to make money
+      cardSet:
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+        - elementId: funds
+    forbidders:
+      elementId: thugforgeedge
+    priority: maintenance
+    operation: explore/explore-city-criminal-bombmaker
+
+  - name: Send bombmaker on cult business
+    priority: maintenance
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: thugforgeedge
+      ongoingRecipes:
+        talktofollower:
+          slots:
+            Subject:
+              aspects: { society: 1 }
+
+  - name: Rehire a bombmaker
+    requirements:
+      elementId: thugforgeedge
+      lifetimeRemaining:
+        lessThan: 15
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: thugforgeedge
+      ongoingRecipes:
+        talktofollower:
+          slots:
+            Subject:
+              elementId: funds
+
+  - name: Sell proceeds of bombmaking
+    priority: maintenance
+    operation:
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: locationauctionhouse
+          Sell:
+            oneOf:
+              - elementId: jumble
+              - elementId: compensation
+              - elementId: compensationb
+              # Some of this stuff might be useful... We may need variants of this goal to keep some.
+              - elementId: ingredientedgeb
+              - elementId: ingredientforgeb
+              - elementId: ingredientgrailb
+              - elementId: ingredientheartb
+              - elementId: ingredientknockb
+              - elementId: ingredientmothb

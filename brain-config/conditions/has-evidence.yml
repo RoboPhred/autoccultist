@@ -1,0 +1,7 @@
+anyOf:
+  # Don't do this if there is evidence against us, as a further notoriety will be game over.
+  - elementId: evidence
+  - elementId: evidenceb
+  # Dont do this if we already have notoriety on the board, as two suspicion seasons in quick succession
+  # with two notoriety could lead to a game over
+  - elementId: notoriety

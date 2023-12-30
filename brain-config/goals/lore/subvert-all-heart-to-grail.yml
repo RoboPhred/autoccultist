@@ -1,0 +1,101 @@
+name: "Subvert all lore: Heart to Grail"
+ui:
+  homeSituation: study
+  icon: aspect:grail
+completedWhen:
+  noneOf:
+    - elementId: fragmentheart
+    - elementId: fragmentheartb
+    - elementId: fragmentheartc
+# TODO: Add more levels of Heart lore as their operations are added.
+imperatives:
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
+    operation: passion/study-passion
+
+  - name: Combine Heart A
+    requirements:
+      allOf:
+        - aspects: { lore: 1, grail: 4 }
+        - !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/heart/lore-combine-heart-a
+
+  - name: Combine Heart B
+    requirements:
+      allOf:
+        - aspects: { lore: 1, grail: 6 }
+        - !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/heart/lore-combine-heart-b
+
+  - name: Subvert Heart to Grail
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-subvert-heart-grail-c
+
+  - name: Downgrade Heart C
+    forbidders:
+      anyOf:
+        - elementId: fragmentheartb
+        - aspects: { lore: 1, grail: 6 }
+    operation: lore/heart/lore-breakdown-heart-c
+
+  - name: Downgrade Grail B
+    requirements:
+      elementId: fragmentheart
+    forbidders:
+      anyOf:
+        - elementId: fragmentgrail
+        - elementId: fragmentheartb
+    operation: lore/grail/lore-breakdown-grail-b
+
+  - name: Downgrade Grail C
+    requirements:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+    forbidders:
+      anyOf:
+        - elementId: fragmentgrailb
+        - elementId: fragmentheartc
+    operation: lore/grail/lore-breakdown-grail-c
+
+  - name: Subvert Heart B to Grail
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-subvert-heart-grail-b
+
+  - name: Downgrade Heart B
+    forbidders:
+      anyOf:
+        - elementId: fragmentheart
+        - aspects: { lore: 1, grail: 4 }
+    operation: lore/heart/lore-breakdown-heart-b
+
+  - name: Subvert Heart to Grail
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    operation: lore/grail/lore-subvert-heart-grail-a
+
+  - name: Combine Grail A
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    forbidders:
+      elementId: fragmentheart
+    operation: lore/grail/lore-combine-grail-a
+
+  - name: Combine Grail B
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    forbidders:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+    operation: lore/grail/lore-combine-grail-b
+
+  - name: Downgrade Grail D
+    requirements:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentheartb
+        - elementId: fragmentheartc
+    forbidders:
+      anyOf:
+        - elementId: fragmentgrailc
+        - elementId: fragmentheartd
+    operation: lore/grail/lore-breakdown-grail-d

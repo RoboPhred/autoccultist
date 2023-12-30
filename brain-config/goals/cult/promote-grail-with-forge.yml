@@ -1,0 +1,17 @@
+name: Promote a Grail believer, by invoking Forge
+ui:
+  homeSituation: talk
+  icon: aspect:forge
+requirements:
+  aspects:
+    society: 1
+    venerationforge: 1
+completedWhen:
+  aspects: { follower: 1, disciple: 1, grail: 5 }
+imperatives:
+  - name: Promote a Believer, while burning Restlessness
+    priority: goal
+    operation: cult/promote-grail-believer-forge-restlessness
+  - name: Promote a Believer, by invoking Forge
+    priority: goal
+    operation: cult/promote-grail-believer-forge

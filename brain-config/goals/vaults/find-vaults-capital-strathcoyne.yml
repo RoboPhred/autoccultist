@@ -1,0 +1,49 @@
+name: Find Strathcoyne's Residence
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywood
+
+completedWhen:
+  memory: has_all_vaults_capital_strathcoyne
+  value: 1
+
+imperatives:
+  - name: Remember our discovery
+    requirements:
+      anyOf:
+        - elementId: vaultcapitaldefault
+        - elementId: vaultcapital1
+    reactions:
+      - remember: has_all_vaults_capital_strathcoyne
+        label: Found Strathcoyne's Residence
+        description: We have found Strathcoyne's Residence.
+
+  - name: Collect Secret Histories from the Wood
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistories
+              - aspects: { vaultcapital: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
+    operation: mansus/use-wood-secrethistories
+
+  - name: Break down Furtive Truths into Occult Scraps
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    forbidders:
+      elementId: fragmentsecrethistories
+    operation: lore/secrethistories/lore-breakdown-secrethistories-b
+
+  - name: Explore the Capital
+    operation:
+      name: Find Capital vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistories

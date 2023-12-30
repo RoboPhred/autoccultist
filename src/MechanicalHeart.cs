@@ -1,8 +1,8 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System;
-    using Autoccultist.Actor;
-    using Autoccultist.Brain;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Update manager for all Autoccultist mechanisms.
@@ -17,6 +17,15 @@ namespace Autoccultist
         }
 
         /// <summary>
+        /// Raised when the mechanical heart beats.
+        /// </summary>
+        public static event EventHandler<EventArgs> OnBeat;
+
+        public static event EventHandler<EventArgs> OnStart;
+
+        public static event EventHandler<EventArgs> OnStop;
+
+        /// <summary>
         /// Gets a value indicating whether the mechanical heart is running in time with the standard heart.
         /// </summary>
         public static bool IsRunning { get; private set; } = false;
@@ -29,19 +38,20 @@ namespace Autoccultist
             // Don't run if the game isn't running.
             if (!GameAPI.IsRunning)
             {
-                AutoccultistPlugin.Instance.LogTrace("Ignoring Mechanical Heart start: game not running.");
+                Autoccultist.LogWarn("Ignoring Mechanical Heart start: game not running.");
                 return;
             }
 
             if (IsRunning)
             {
-                AutoccultistPlugin.Instance.LogTrace("Ignoring Mechanical Heart start: already running.");
+                Autoccultist.LogWarn("Ignoring Mechanical Heart start: already running.");
                 return;
             }
 
-            AutoccultistPlugin.Instance.LogTrace("Starting Mechanical Heart.");
+            Autoccultist.LogTrace("Starting Mechanical Heart.");
 
             IsRunning = true;
+            OnStart?.Invoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -54,9 +64,10 @@ namespace Autoccultist
                 return;
             }
 
-            AutoccultistPlugin.Instance.LogTrace("Stopping Mechanical Heart.");
+            Autoccultist.LogTrace("Stopping Mechanical Heart.");
 
             IsRunning = false;
+            OnStop?.Invoke(null, EventArgs.Empty);
         }
 
         /// <summary>
@@ -66,6 +77,36 @@ namespace Autoccultist
         {
             Stop();
             TriggerMechanicalBeat();
+        }
+
+        public static async Task AwaitStart(CancellationToken cancellationToken)
+        {
+            await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnStart += h, h => OnStart -= h, cancellationToken);
+        }
+
+        public static async Task AwaitBeatIfStopped(CancellationToken cancellationToken)
+        {
+            if (!IsRunning)
+            {
+                await AwaitBeat(cancellationToken);
+            }
+        }
+
+        public static async Task AwaitBeat(CancellationToken cancellationToken)
+        {
+            await EventHandlerExtensions.AwaitEvent<EventArgs>(h => OnBeat += h, h => OnBeat -= h, cancellationToken);
+        }
+
+        public static async Task AwaitBeat(CancellationToken cancellationToken, TimeSpan delay)
+        {
+            if (delay == TimeSpan.Zero)
+            {
+                throw new ArgumentException("Delay must be greater than zero.", nameof(delay));
+            }
+
+            // Wait out the delay, then wait for the next beat
+            await RealtimeDelay.Of(delay, cancellationToken);
+            await AwaitBeat(cancellationToken);
         }
 
         /// <summary>
@@ -86,14 +127,21 @@ namespace Autoccultist
 
         private static void TriggerMechanicalBeat()
         {
-            if (!GameAPI.IsRunning)
+            if (!GameAPI.IsInteractable)
             {
                 return;
             }
 
-            NucleusAccumbens.Update();
-            AutoccultistActor.Update();
-            SituationOrchestrator.Update();
+            try
+            {
+                OnBeat?.Invoke(null, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.LogWarn($"Error in Mechanical Heart: {ex.Message}");
+                NoonUtility.LogException(ex);
+                MechanicalHeart.Stop();
+            }
         }
     }
 }

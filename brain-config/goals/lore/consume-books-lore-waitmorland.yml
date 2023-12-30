@@ -1,0 +1,18 @@
+name: Read and translate lore books until Morland is closed
+# This is a specialist goal that is intended not to turn off until both morlands is exhausted and we have no more books to read
+ui: false
+requirements: !import /conditions/readable-or-translatable-books.yml
+completedWhen:
+  allOf:
+    - cardSet:
+        - elementId: genericrubbishbook
+    - noneOf:
+        # locationbookdealer_exhausted can become our hq, which is then lost if we switch hq.  Since we cannot rely on the presense of locationbookdealer_exhausted, we have
+        # to rely on the absence of locationbookdealer
+        - elementId: locationbookdealer
+    - noneOf:
+        - !import /conditions/readable-or-translatable-books.yml
+imperatives:
+  - !import /impulses/books/maint-read-lore.yml
+  - !import /impulse-sets/learn-languages.yml
+  - !import /impulse-sets/translate-books.yml

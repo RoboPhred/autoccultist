@@ -1,0 +1,20 @@
+name: Acquire a Steely Physique through Excersize
+ui:
+  homeSituation: work
+  icon: element:skillhealthc
+requirements:
+  aspects: { healthskill: 2 }
+completedWhen:
+  aspects: { healthskill: 3 }
+imperatives:
+  - extends: !import /impulses/goal-learn-lesson-vitality.yml
+    forbidders:
+      # Stop using our skill card when we have enough lessons
+      cardSet:
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+  - !import /impulses/maint-vitality-from-health.yml
+  - name: Upgrade Hardened Physique to Steely Physique
+    priority: goal
+    operation: health/upgrade-skillhealthb

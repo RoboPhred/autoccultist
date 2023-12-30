@@ -1,0 +1,31 @@
+name: Promote Heart believers, by invoking Forge
+ui:
+  homeSituation: talk
+  icon: aspect:forge
+requirements:
+  allOf:
+    - aspects: { society: 1, venerationforge: 1 }
+    - aspects: { lore: 1, forge: 8 }
+    - anyOf:
+        - elementId: clovette_a
+        - elementId: clovette_b
+        - elementId: dorothy_a
+        - elementId: dorothy_b
+        - elementId: leo_a
+        - elementId: leo_b
+completedWhen:
+  noneOf:
+    # Promote until we have no more Heart followers who are not promoted
+    - anyOf:
+        - elementId: clovette_a
+        - elementId: clovette_b
+    - anyOf:
+        - elementId: dorothy_a
+        - elementId: dorothy_b
+    - anyOf:
+        - elementId: leo_a
+        - elementId: leo_b
+imperatives:
+  - name: Promote a Heart Believer, by invoking Forge
+    priority: goal
+    operation: cult/promote-heart-believer-forge

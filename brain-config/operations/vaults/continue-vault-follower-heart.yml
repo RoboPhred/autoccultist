@@ -1,0 +1,13 @@
+name: Reenforce an expedition with a Heart follower
+situation: explore
+targetOngoing: true
+startCondition: currentRecipeSatisfied
+conditionalRecipes:
+  - endOperation: true
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          heart:
+            greaterThanOrEqualTo: 2

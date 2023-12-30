@@ -1,0 +1,9 @@
+name: Maintain relationships
+ui:
+  homeSituation: talk
+  icon: verb:rose
+imperatives:
+  - !import /impulses/romance/maint-continue-relationship-sensation.yml
+  - !import /impulses/romance/maint-continue-relationship-power.yml
+  - !import /impulses/romance/maint-continue-relationship-enlightenment.yml
+  - !import /impulses/romance/maint-continue-relationship-change.yml

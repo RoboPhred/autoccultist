@@ -1,0 +1,38 @@
+name: "Combine lore: Formulae Voluptuous"
+situation: study
+startingRecipe:
+  slots:
+    study:
+      oneOf:
+        - elementId: fragmentgraile
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraile
+    with:
+      oneOf:
+        - elementId: fragmentgraile
+          aspects: { challenge.intuition: -1 }
+        - elementId: fragmentgraile
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering
+  studyresearch.attemptsolve.challenge.practical:
+    slots:
+      solvechallenge:
+        elementId: health
+  studyresearch.attemptsolve.challenge.paradox:
+    slots:
+      solvechallenge:
+        oneOf:
+          - elementId: skillpassiond_folly
+          - aspects: { sanctuary: 1 }
+#          - condition:
+#              noneOf:
+#                - situation: study
+#                  storedCardsMatch:
+#                    aspects: { sanctuary: 1 }
+#            choice:
+#              elementId: passion

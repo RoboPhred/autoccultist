@@ -1,6 +1,20 @@
 name: Work at Glover & Glover
+ui:
+  homeSituation: work
+  icon: element:gloverandgloverjob
 requirements:
   anyOf:
+    - allOf:
+        # Must be able to get our job back if we lost it.
+        - elementId: passion
+        - anyOf:
+            - elementId: gloverandgloverjob_demotion
+            - elementId: gloverandgloverjob_youngerglovergone_demotion
+            - elementId: gloverandgloverjuniorjob_demotion
+            - elementId: gloverandgloverjuniorjob_nodifficultbossa_demotion
+            - elementId: gloverandglovertopjob_tainted_demotion
+            - elementId: gloverandglovertopjob_tainted
+    # Or, we must have a job
     - elementId: gloverandgloverjuniorjob
     - elementId: gloverandgloverjuniorjob_nodifficultbossa
     - elementId: gloverandglover_difficultbossa_job
@@ -10,20 +24,36 @@ requirements:
     - elementId: gloverandgloverseniorjob
     - elementId: gloverandgloverseniorjob_youngerglovergone
     - elementId: gloverandglovertopjob
-    - elementId: gloverandglovertopjob_tainted
-impulses:
+completedWhen: !import /conditions/has-enough-funds.yml
+imperatives:
+  - name: Work diligently at junior job at Glover & Glover
+    priority: maintenance
+    requirements:
+      cardSet:
+        - elementId: reason
+        - elementId: reason
+    operation: glover/work-glover-junior-dilligent
   - name: Work a junior job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-junior.yml
+    operation: glover/work-glover-junior
   - name: Work at Glover & Glover under Alden
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-alden.yml
+    operation: glover/work-glover-alden
   - name: Work at Glover & Glover with dilligence
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-diligence.yml
+    operation: glover/work-glover-diligence
   - name: Work a senior job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/work-glover-senior.yml
+    operation: glover/work-glover-senior
+  # Sometimes, we might not have reason available.  If this is the case, we
+  # still need to show up to work to keep our job.
+  - name: Work at Glover & Glover under Alden without reason
+    priority: maintenance
+    requirements:
+      elementId: gloverandglover_difficultbossa_job
+      lifetimeRemaining:
+        lessThan: 5
+    operation: glover/work-glover-alden-noreason
   - name: Plead for job at Glover & Glover
     priority: maintenance
-    operation: !import ../../operations/glover/plead-glover.yml
+    operation: glover/plead-glover

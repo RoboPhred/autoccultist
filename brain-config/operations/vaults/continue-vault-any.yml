@@ -1,0 +1,277 @@
+name: Reenforce an expedition
+situation: explore
+targetOngoing: true
+startCondition: currentRecipeSatisfied
+conditionalRecipes:
+  # Funds (emergency)
+  - condition:
+      allOf:
+        # Must have stuff left to do
+        - anyOf:
+            - situation: explore
+              containsAspects: { peril: 1 }
+            - situation: explore
+              containsAspects: { guardian: 1 }
+            - situation: explore
+              containsAspects: { seal: 1 }
+            - situation: explore
+              containsAspects: { curse: 1 }
+        # Must need money right now.
+        - noneOf:
+            - situation: explore
+              storedCardsMatch:
+                cardSet:
+                  - elementId: funds
+    slots:
+      Assistance:
+        elementId: funds
+  # Peril => Forge
+  - condition:
+      allOf:
+        - situation: explore
+          storedCardsMatch:
+            aspects: { peril: 1 }
+        - noneOf:
+            - allOf:
+                - situation: explore
+                  containsAspects: { forge: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_desert
+                  containsAspects: { grail: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_forest
+                  containsAspects: { moth: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_mountains
+                  containsAspects: { winter: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_sea
+                  containsAspects: { heart: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: peril_treacherousground
+                  containsAspects: { lantern: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          forge:
+            greaterThanOrEqualTo: 2
+  # Guardian => Edge
+  - condition:
+      allOf:
+        - situation: explore
+          storedCardsMatch:
+            aspects: { guardian: 1 }
+        - noneOf:
+            # Soucouyants require Moth or Lantern, and can't be beaten with Edge.
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_soucouyants
+            # Long requires Moth or Grail, and can't be beaten with Edge.
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_long
+            - allOf:
+                - situation: explore
+                  containsAspects: { edge: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_dead
+                  containsAspects: { winter: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_watchers
+                  containsAspects: { grail: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_watchers
+                  containsAspects: { moth: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_monks
+                  containsAspects: { moth: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: guardian_serpent
+                  containsAspects: { knock: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          edge:
+            greaterThanOrEqualTo: 2
+  # Soucouyants => Moth
+  - condition:
+      allOf:
+        - anyOf:
+            - situation: explore
+              storedCardsMatch:
+                elementId: guardian_soucouyants
+            - situation: explore
+              storedCardsMatch:
+                elementId: guardian_long
+        - noneOf:
+            - allOf:
+                - situation: explore
+                  containsAspects: { grail: 10 }
+            - allOf:
+                - situation: explore
+                  containsAspects: { lantern: 10 }
+            - allOf:
+                - situation: explore
+                  containsAspects: { moth: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          moth:
+            greaterThanOrEqualTo: 2
+  # Curse => Heart
+  - condition:
+      allOf:
+        - situation: explore
+          storedCardsMatch:
+            aspects: { curse: 1 }
+        - noneOf:
+            # Curse of Nowhere requires Moth or Lantern, and can't be repelled with Heart.
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: curse_nowhere
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: curse_affliction
+                  containsAspects: { grail: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: curse_dread
+                  containsAspects: { lantern: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: curse_visions
+                  containsAspects: { winter: 10 }
+            - allOf:
+                - situation: explore
+                  containsAspects: { heart: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          heart:
+            greaterThanOrEqualTo: 2
+  # Seal => Knock
+  - condition:
+      allOf:
+        - situation: explore
+          containsAspects: { seal: 1 }
+        - noneOf:
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: seal_wardeddoor
+                  containsAspects: { forge: 10 }
+            - allOf:
+                - situation: explore
+                  storedCardsMatch:
+                    cardSet:
+                      - elementId: seal_hiddendoor
+                  containsAspects: { lantern: 10 }
+            - allOf:
+                - situation: explore
+                  containsAspects: { knock: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          knock:
+            greaterThanOrEqualTo: 2
+  # Curse/Guardian/Special => Moth
+  - condition:
+      anyOf:
+        # Curse of Nowhere
+        - allOf:
+            - situation: explore
+              storedCardsMatch:
+                elementId: curse_nowhere
+            - noneOf:
+                - allOf:
+                    - situation: explore
+                      containsAspects: { lantern: 10 }
+                - allOf:
+                    - situation: explore
+                      containsAspects: { moth: 10 }
+    slots:
+      Assistance:
+        aspectWeightBias: highest
+        aspects:
+          follower: 1
+          moth:
+            greaterThanOrEqualTo: 2
+  # Funds (idle)
+  - condition:
+      value:
+        fromAll:
+          - location: stored
+            situation: explore
+            aspects: { peril: 1 }
+          - location: stored
+            situation: explore
+            aspects: { guardian: 1 }
+          - location: stored
+            situation: explore
+            aspects: { seal: 1 }
+          - location: stored
+            situation: explore
+            aspects: { curse: 1 }
+        aspect: "@count"
+      greaterThan:
+        fromAll:
+          - elementId: funds
+            location: stored
+            situation: explore
+        aspect: "@count"
+    slots:
+      Assistance:
+        elementId: funds

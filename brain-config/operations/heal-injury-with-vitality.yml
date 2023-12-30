@@ -1,9 +1,9 @@
-name: Heal injury
+name: Heal an Injury with Vitality
 situation: dream
 startingRecipe:
   slots:
     dream:
       elementId: injury
-    medicines:
+    vitality:
       elementId: vitality
       ageBias: oldest

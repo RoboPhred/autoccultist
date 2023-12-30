@@ -2,8 +2,10 @@
 /externals_gateofhorn/
 /obj/
 /bin/
+/build/
 /.vs/
 /.vscode/
 /src/Experiments/
 /brain-config/net471 - Shortcut.lnk
 /autoccultist.sln
+*.lnk

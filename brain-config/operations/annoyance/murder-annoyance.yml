@@ -1,0 +1,14 @@
+name: Murder an Annoyance
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspectWeightBias: highest
+      aspects:
+        follower: 1
+        edge: 1
+ongoingRecipes:
+  talktofollower:
+    slots:
+      Subject:
+        aspects: { annoyance: 1 }

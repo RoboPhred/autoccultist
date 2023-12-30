@@ -1,0 +1,36 @@
+name: Work at the Station
+requirements:
+  anyOf:
+    - elementId: legacydetectivejob
+    - elementId: legacydetectivejob_matured
+
+imperatives:
+  - name: Build up some evidence
+    forbidders:
+      anyOf:
+        - elementId: myevidence
+        - elementId: myevidenceb
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob_matured
+          target:
+            aspects: { suspicious: 1, independent: 1 }
+          meticulous:
+            elementId: reason
+
+  - name: Study some evidence
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob_matured
+          target:
+            oneOf:
+              - elementId: myevidenceb
+              - elementId: myevidence
+          meticulous:
+            elementId: reason

@@ -1,0 +1,13 @@
+name: Recruit Grail acquaintances, by invoking Grail
+ui:
+  homeSituation: talk
+  icon: aspect:grail
+requirements:
+  aspects:
+    society: 1
+    venerationgrail: 1
+completedWhen: !import /conditions/has-grail-follower.yml
+imperatives:
+  - name: Recruit a grail acquaintance, by invoking Grail
+    priority: goal
+    operation: cult/recruit-grail-lore-grail

@@ -1,0 +1,36 @@
+name: Acquire Stumm
+ui:
+  homeSituation: explore
+  icon: element:stumm
+requirements:
+  allOf:
+    - elementId: locationauctionhouse
+    - elementId: genericrubbishbook
+completedWhen:
+  anyOf:
+    - elementId: stumm
+      location: tabletop
+    - elementId: ritefollowerconsumeinfluence
+imperatives:
+  - name: Purchase STUMM! at auction
+    priority: goal
+    forbidders:
+      anyOf:
+        - elementId: stumm
+          location: tabletop
+        - elementId: ritefollowerconsumeinfluence
+        # Don't peek into the auction when we have yet to exhaust the bookdealer, or it might spawn
+        # unique books we want from the dealer that will never appear again.
+        - elementId: locationbookdealer
+    operation:
+      situation: explore
+      targetOngoing: true
+      startCondition: currentRecipeSatisfied
+      conditionalRecipes:
+        - condition:
+            situation: explore
+            storedCardsMatch:
+              elementId: stumm
+          slots:
+            Bid:
+              elementId: funds

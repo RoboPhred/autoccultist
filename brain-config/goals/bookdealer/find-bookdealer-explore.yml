@@ -1,0 +1,14 @@
+name: Find Miss Morland's
+ui:
+  homeSituation: explore
+  icon: verb:explore
+completedWhen:
+  anyOf:
+    - elementId: locationbookdealer
+    - elementId: genericrubbishbook
+    - elementId: locationbookdealer_exhausted
+imperatives:
+  - name: Explore the city with a follower
+    operation: explore/explore-city-follower
+  - name: Explore the city with health
+    operation: explore/explore-city-health

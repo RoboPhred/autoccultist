@@ -1,0 +1,107 @@
+name: "Subvert all lore: Winter to Heart"
+ui:
+  homeSituation: study
+  icon: aspect:heart
+completedWhen:
+  noneOf:
+    - elementId: fragmentwinter
+    - elementId: fragmentwinterb
+    - elementId: fragmentwinterc
+# TODO: Add more levels of Winter lore as their operations are added.
+imperatives:
+  - name: Ensure we have glimmering
+    priority: maintenance
+    forbidders: !import /conditions/can-answer-challenge-intuition.yml
+    operation: passion/study-passion
+
+  - name: Ensure we have erudition
+    priority: maintenance
+    forbidders: !import /conditions/can-answer-challenge-knowledge.yml
+    operation: reason/study-reason
+
+  - name: Talk to Sulochana about a Glimmering
+    priority: maintenance
+    requirements:
+      allOf:
+        - situation: study
+          recipe: studyresearch.entrypoint
+          storedCardsMatch:
+            aspects: { challenge.intuition: 1 }
+        - situation: study
+          recipe: studyresearch.entrypoint
+          storedCardsMatch:
+            aspects: { challenge.knowledge: 1 }
+    operation: sulochana/chat-glimmering
+
+  - name: Subvert Winter B to Heart
+    priority: goal
+    requirements:
+      allOf:
+        - anyOf:
+            - elementId: fragmentheartb
+              aspects: { challenge.intuition: -1 }
+            - !import /conditions/can-answer-challenge-intuition.yml
+        - anyOf:
+            - elementId: fragmentwinterb
+              aspects: { challenge.knowledge: -1 }
+            - !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/heart/lore-subvert-winter-heart-b
+
+  - name: Combine Heart A
+    requirements: !import /conditions/can-answer-challenge-intuition.yml
+    forbidders:
+      elementId: fragmentwinter
+    operation: lore/heart/lore-combine-heart-a
+
+  - name: Combine Winter A
+    requirements:
+      allOf:
+        - !import /conditions/can-answer-challenge-knowledge.yml
+        - anyOf:
+            - elementId: fragmentheartb
+            - elementId: fragmentheartc
+    operation: lore/winter/lore-combine-winter-a
+
+  - name: Subvert Winter A to Heart
+    requirements:
+      allOf:
+        - anyOf:
+            - elementId: fragmentheart
+              aspects: { challenge.intuition: -1 }
+            - !import /conditions/can-answer-challenge-intuition.yml
+        - anyOf:
+            - elementId: fragmentwinter
+              aspects: { challenge.knowledge: -1 }
+            - !import /conditions/can-answer-challenge-knowledge.yml
+    operation: lore/heart/lore-subvert-winter-heart-a
+
+  - name: Downgrade Heart B
+    requirements:
+      elementId: fragmentwinter
+    forbidders:
+      anyOf:
+        - elementId: fragmentheart
+        - elementId: fragmentwinterb
+        - cardSet:
+            - elementId: fragmentwinter
+            - elementId: fragmentwinter
+    operation: lore/heart/lore-breakdown-heart-b
+
+  - name: Downgrade Winter C
+    operation: lore/winter/lore-breakdown-winter-c
+
+  - name: Downgrade Heart C
+    requirements:
+      anyOf:
+        - elementId: fragmentwinter
+        - elementId: fragmentwinterb
+    forbidders:
+      elementId: fragmentheartb
+    operation: lore/heart/lore-breakdown-heart-c
+
+  - name: Downgrade Winter B
+    requirements:
+      elementId: fragmentheart
+    forbidders:
+      aspects: { lore: 1, heart: 4 }
+    operation: lore/winter/lore-breakdown-winter-b

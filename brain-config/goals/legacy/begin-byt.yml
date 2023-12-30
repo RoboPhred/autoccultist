@@ -1,0 +1,49 @@
+name: Begin the Bright Young Thing Legacy
+ui:
+  homeSituation: work
+  icon: element:legacybytjob
+requirements:
+  anyOf:
+    - elementId: legacybytjob
+    - elementId: legacybytjobmatured
+    - elementId: legacydiarylastcharacter
+completedWhen:
+  situation: talk
+
+imperatives:
+  - name: Work the intro job
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacybytjob
+
+  - name: Work the (second) intro job
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacybytjobmatured
+
+  - name: Study the ciphered diary
+    priority: goal
+    operation:
+      situation: study
+      startingRecipe:
+        slots:
+          study:
+            elementId: legacydiarylastcharacter
+
+  # Just until we've finished the intro and we have all the cards we need to really begin.
+  - name: Work like a plebe
+    priority: maintenance
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: health

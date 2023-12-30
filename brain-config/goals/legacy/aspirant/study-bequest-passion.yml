@@ -1,0 +1,22 @@
+name: Study Bequest with Passion
+ui:
+  homeSituation: study
+  icon: element:bequestintro
+requirements:
+  elementId: bequestintro
+completedWhen:
+  anyOf:
+    - aspects:
+        desire: 1
+imperatives:
+  - name: Study the Bequest
+    priority: goal
+    operation:
+      name: Study the Bequest with Passion
+      situation: study
+      startingRecipe:
+        slots:
+          study:
+            elementId: bequestintro
+          Approach:
+            elementId: passion

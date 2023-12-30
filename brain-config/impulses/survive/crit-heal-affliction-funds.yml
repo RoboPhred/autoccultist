@@ -1,3 +1,29 @@
-name: Heal affliction with funds
+name: Heal affliction with funds if vitality is not available
 priority: critical
-operation: !import ../../operations/heal-affliction-with-funds.yml
+forbidders:
+  # Forbid this if we have a vitality to cure the affliction, and are studying health / could study health for a vitality and we only have one pending affliction
+  # but not if we dont have enough time, or this is our only health
+  # We could be even more aggressive here and forbid if there's enough time for the current non-studyhealth to
+  # complete to allow the studyhealth crit impulse to kick in
+  allOf:
+    - noneOf:
+        # Do not forbid if our affliction is too soon to be cured by a vitality created by another 60 second process
+        - elementId: affliction
+          lifetimeRemaining:
+            lessThan: 65
+        # Do not forbid if this is our only source of health and we have no spares
+        - noneOf:
+            - elementId: health
+        # Do not forbid if we have enough spare cash that it doesn't matter
+        - !import /conditions/has-slushfund-major.yml
+    - anyOf:
+        # Forbid if we are generating a vitality
+        - situation: study
+          recipe: studyhealth
+        # Forbid if we have a vitality ready to go
+        - elementId: vitality
+          location: tabletop
+        # Forbid if study is idle (leave it to crit-affliction-emergency-vitality)
+        - situation: study
+          state: idle
+operation: heal-affliction-with-funds

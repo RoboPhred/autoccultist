@@ -1,0 +1,12 @@
+name: Study notes from a Previous Patient
+# priority: goal
+requirements:
+  elementId: legacyphysiciannotes
+imperatives:
+  - name: Study Notes
+    operation:
+      situation: study
+      startingRecipe:
+        slots:
+          study:
+            elementId: legacyphysiciannotes

@@ -1,0 +1,44 @@
+name: Find Vaults in the Shires
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywood
+
+completedWhen:
+  memory: has_all_vaults_shires
+  value: 1
+
+imperatives:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultshiresdefault
+    reactions:
+      - remember: has_all_vaults_shires
+        label: Has All Vaults in the Shires
+        description: We have found everything of interest in the Shires.
+
+  - name: Collect Secret Histories from the Wood
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesb
+              - aspects: { vaultshires: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 6 # 6 total locations
+    operation: mansus/use-wood-secrethistories
+
+  - name: Combine Occult Scraps into Furtive Truths
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-a
+
+  - name: Explore the Shires
+    operation:
+      name: Find Shire vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesb

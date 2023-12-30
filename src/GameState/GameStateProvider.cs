@@ -1,10 +1,9 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
-    using Assets.CS.TabletopUI;
-    using Assets.TabletopUi.Scripts.Infrastructure;
-    using Autoccultist.GameState.Impl;
+    using AutoccultistNS.GameState.Impl;
 
     /// <summary>
     /// A static class for producing <see cref="IGameState"/> states.
@@ -29,6 +28,20 @@ namespace Autoccultist.GameState
             }
         }
 
+        public static IGameState Empty
+        {
+            get
+            {
+                return new GameStateImpl(
+                    new ICardState[0],
+                    new ICardState[0],
+                    new ICardState[0],
+                    new ISituationState[0],
+                    new Dictionary<string, int>(),
+                    PortalStateImpl.FromCurrentState());
+            }
+        }
+
         /// <summary>
         /// Invalidates the current game state.
         /// </summary>
@@ -45,19 +58,55 @@ namespace Autoccultist.GameState
         {
             GameStateObject.CurrentStateVersion++;
 
-            var tabletopCards =
-                from stack in GameAPI.GetTabletopCards()
-                from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop)
-                select cardState;
+            if (!GameAPI.IsRunning)
+            {
+                return GameStateProvider.Empty;
+            }
 
-            var situations =
-                from controller in GameAPI.GetAllSituations()
-                let state = new SituationStateImpl(controller)
-                select state;
+            try
+            {
+                return PerfMonitor.Monitor("GameStateProvider.FromCurrentState", () =>
+                {
+                    var tabletopCards =
+                        from stack in GameAPI.TabletopSphere.GetElementStacks()
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Tabletop, null)
+                        select cardState;
 
-            var mansus = new MansusStateImpl(Registry.Get<MapController>());
+                    // Things whizzing around.
+                    var enRouteCards =
+                        from enroute in GameAPI.GetEnRouteSpheres()
+                        from stack in enroute.GetElementStacks()
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.EnRoute, null)
+                        select cardState;
 
-            return new GameStateImpl(tabletopCards.ToArray(), situations.ToArray(), mansus);
+                    // FIXME: Spams the console with errors when not present.
+                    /*
+                    var codexCards =
+                        from stack in GameAPI.CodexSphere.GetElementStacks()
+                        from cardState in CardStateImpl.CardStatesFromStack(stack, CardLocation.Codex)
+                        select cardState;
+                    */
+
+                    var situations =
+                        from situation in GameAPI.GetSituations()
+                        let state = new SituationStateImpl(situation)
+                        select state;
+
+                    return new GameStateImpl(
+                        tabletopCards,
+                        enRouteCards,
+                        new ICardState[0],
+                        situations,
+                        Hippocampus.GetAllMemoriesFromGame(),
+                        PortalStateImpl.FromCurrentState());
+                });
+            }
+            catch (Exception ex)
+            {
+                Autoccultist.LogWarn($"Exception in GameStateProvider.FromCurrentState: {ex.ToString()}");
+                NoonUtility.LogException(ex);
+                throw;
+            }
         }
     }
 }

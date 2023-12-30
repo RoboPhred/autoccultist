@@ -1,0 +1,21 @@
+name: Explore the city for a potent criminal
+situation: explore
+startingRecipe:
+  slots:
+    explore:
+      oneOf:
+        - aspects: { follower: 1 }
+        # Can hirelings explore the city too?
+        - elementId: health
+conditionalRecipes:
+  - condition:
+      anyOf:
+        - situation: explore
+          storedCardsMatch:
+            aspects: { hireling: 1, edge: 5 }
+        - situation: explore
+          storedCardsMatch:
+            aspects: { hireling: 1, moth: 5 }
+    slots:
+      Payment:
+        elementId: funds

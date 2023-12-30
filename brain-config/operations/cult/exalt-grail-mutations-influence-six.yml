@@ -1,0 +1,12 @@
+name: Exalt a special Grail disciple with a sixth-order influence
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { society: 1, venerationgrail: 1 }
+    Associate:
+      aspects: { follower: 1, disciple: 1, grail: 7, potential: 1 }
+    Ceremony:
+      aspects: { lore: 1, grail: 8 }
+    Trappings:
+      aspects: { influence: 1, grail: 6 }

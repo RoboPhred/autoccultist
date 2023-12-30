@@ -1,0 +1,13 @@
+anyOf:
+  - elementId: clovette_a
+  - elementId: clovette_b
+  - elementId: clovette_c
+  - elementId: clovette_d
+  - elementId: leo_a
+  - elementId: leo_b
+  - elementId: leo_c
+  - elementId: leo_d
+  - elementId: dorothy_a
+  - elementId: dorothy_b
+  - elementId: dorothy_c
+  - elementId: dorothy_d

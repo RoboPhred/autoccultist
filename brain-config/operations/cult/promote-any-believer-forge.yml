@@ -1,0 +1,13 @@
+name: Promote Any believer by invoking Forge
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects: { society: 1, venerationforge: 1 }
+    Associate:
+      aspects: { follower: 1, disciple: -1 }
+      forbiddenElementIds:
+        # These go insane
+        - generic_b_moth
+    Ceremony:
+      aspects: { lore: 1, forge: 8 }

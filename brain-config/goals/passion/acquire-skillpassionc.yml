@@ -1,0 +1,20 @@
+name: Acquire a Fevered Imagination
+ui:
+  homeSituation: study
+  icon: element:skillpassionc
+requirements:
+  aspects: { passionskill: 2 }
+completedWhen:
+  aspects: { passionskill: 3 }
+imperatives:
+  - extends: !import /impulses/goal-learn-lesson-glimmering.yml
+    forbidders:
+      # Do not monopolize study when we have glimmering lessons to study
+      cardSet:
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+        - elementId: glimmeringplus
+  - !import /impulses/norm-glimmering-from-passion.yml
+  - name: Upgrade Wild Imagination to Fevered Imagination
+    priority: goal
+    operation: passion/upgrade-skillpassionb

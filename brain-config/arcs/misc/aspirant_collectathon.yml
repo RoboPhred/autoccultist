@@ -1,0 +1,303 @@
+name: "Aspirant: Collectathon"
+legacy: aspirant
+
+ui:
+  homeSituation: null
+  icon: element:toolknockf
+
+motivations:
+  survive:
+    name: Survive
+    primaryGoals:
+      - survive
+
+  counter_suspicion:
+    name: Counteract suspicion
+    primaryGoals:
+      - hunters/counter-suspicion
+
+  # Begin jobs
+  get_gg:
+    name: Get a job
+    requires:
+      - begin_game
+      # Don't start time until time starts naturally.
+      - study_bequest
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+
+  work_gg:
+    name: Work at Glover and Glover
+    requires:
+      - get_gg
+    blocks:
+      # glover and glover is more lucrative than labor, so stop doing labor when it is available.
+      - work_labor
+    primaryGoals:
+      - glover/work-glover
+      - glover/acquire-job-glover-standard
+
+  work_labor:
+    name: Work with physical labor
+    requires:
+      - begin_game
+      # Don't start time until time starts naturally.
+      - study_bequest
+    primaryGoals:
+      - funds/work-labor
+  # End jobs
+
+  begin_game:
+    name: Begin the game
+    primaryGoals:
+      - legacy/aspirant/begin-intro
+
+  study_bequest:
+    name: Study bequest with Passion
+    requires:
+      - begin_game
+    primaryGoals:
+      - legacy/aspirant/study-bequest-passion
+
+  study_bequest_contents:
+    name: Study bequest contents
+    requires:
+      - study_bequest
+    primaryGoals:
+      - bookdealer/find-bookdealer-map
+      - legacy/aspirant/find-collaborator
+
+  # Begin skills
+  get_buff:
+    name: Get a stronger physique
+    requires:
+      - begin_game
+      - study_bequest # We need the study verb
+    blocks:
+      # Block GG while doing this, so we fall back on labor for the extra vitality.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
+
+  get_scholarship_minor:
+    name: Get a scholarship
+    requires:
+      # Wait until we finish leveling up our health skill so we dont conflict over study.
+      - get_buff
+    blocks:
+      # Block GG while doing this, so we dont fight for our limited reason.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - reason/acquire-skillreasona
+
+  get_scholarship_major:
+    name: Get a profound scholarship
+    requires:
+      - get_scholarship_minor
+    primaryGoals:
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+
+  get_passion:
+    name: Get passionate
+    requires:
+      # Wait until we finish leveling up reason so we don't conflict with study.
+      - get_scholarship_minor
+    primaryGoals:
+      - passion/acquire-skillpassiona
+      - passion/acquire-skillpassionb
+
+  get_rarefied_mind:
+    name: Get a Rarefied Mind
+    # Do this whenever we end up with the right amount of textbooks
+    # This is so we can keep our study verb busy when we are waiting to get enough money to spend at morlands.
+    # Danger: if our goal requirements drop off, this can disable and stop the motivation, which deadlocks the bot.
+    # Even a brief moment of disabling can allow read_all_lore to trigger again, taking over the study verb and causing our
+    # precious eruditionplus to decay.
+    # If this is unreliable, remove this, and require read_all_lore and drain_morland instead
+    requirePrimaryGoals: true
+    requires:
+      # Wait until things that use study are done so we don't conflict with them.
+      - get_scholarship_major
+      - get_passion
+    blocks:
+      # Disable other usages of the study verb, as once we start this process we cannot get sidetracked until it is complete due to erudition lesson decay.
+      - read_all_lore
+    primaryGoals:
+      - reason/acquire-skillreasond-illumination
+  # End skills
+
+  # Begin cult establishment
+  establish_cult:
+    name: Establish Society of St. Hydra
+    # Do this whenever we can.
+    requirePrimaryGoals: true
+    primaryGoals:
+      - cult/form-cult-doctrine-secrethistories
+
+  find_recruits:
+    name: Find all followers
+    requires:
+      # We need to have explore and talk
+      - study_bequest_contents
+      # We might want to wait until we get the second reason here, as we need at least one to talk to patrons.
+      # Apparently we can never permenantly miss patrons though, as we can with followers.
+    primaryGoals:
+      # We are going to disciple everyone, which means we are going to loose our moth follower.
+      - followers/attract-followers-memory
+
+  recruit_when_needed:
+    name: Recruit away restlessness
+    requires:
+      - establish_cult
+    primaryGoals:
+      - cult/recruit-away-influences
+
+  move_into_library:
+    name: Move into the bookshop
+    requires:
+      - establish_cult
+      - drain_morlands
+    primaryGoals:
+      - headquarters/move-hq-library
+  # End cult establishment
+
+  sell_rubbish:
+    name: Sell rubbish
+    primaryGoals:
+      - auction/sell-rubbish
+
+  drain_morlands:
+    name: Buy all books from Morlands
+    requires:
+      # We need explore
+      - study_bequest_contents
+    primaryGoals:
+      # We only buy here, we do not read.  This is so we can hold off reading until we up our skills (see read_all_lore)
+      - bookdealer/consume-bookdealer
+
+  drain_auctionhouse:
+    name: Buy and read books from Oriflamme
+    requires:
+      # We need explore
+      - study_bequest_contents
+      # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
+      - drain_morlands
+    primaryGoals:
+      - auction/find-auctionhouse
+      - auction/acquire-everything
+      - name: Watch Stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        imperatives:
+          - operation: watch-stumm
+
+  read_all_lore:
+    name: Read all lore books
+    # This can turn on and off over time as we acquire more lore books from vaults
+    requires:
+      # Don't do this until we have the skills so we are not monopolizing the study verb
+      # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
+      - get_buff
+      - get_scholarship_major
+    requirePrimaryGoals: true
+    primaryGoals:
+      - lore/consume-lore
+
+  acquire_early_doors:
+    name: Acquire the Wood and White Door
+    # Don't start until any of our primary goals can start.
+    # This lets us start as soon as the relevant lore is available from morlands.
+    # Note: It is possible for this to start and stop twice if only one goal is available and we complete it.
+    requirePrimaryGoals: true
+    primaryGoals:
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor
+
+  acquire_doors_and_fissive:
+    name: Acquire latter doors and Formula Fissive
+    requires:
+      - acquire_early_doors
+      - drain_morlands
+      - read_all_lore
+      - get_rarefied_mind
+      # Don't need stumm for this, even though it gives us a winter lore.
+    primaryGoals:
+      - victories/power/victory-temptation-power-lore-stag-spider
+
+  disciple_all_followers:
+    name: Disciple all followers
+    requires:
+      - establish_cult
+      - acquire_doors_and_fissive
+    primaryGoals:
+      - cult/promote-any-with-forge
+
+  find_vaults_capital:
+    name: Find locations in the Capital
+    requires:
+      - establish_cult
+      # Wait until we acquire the stag door, as that might need secret histories lore
+      - acquire_doors_and_fissive
+    primaryGoals:
+      - vaults/find-vaults-capital
+
+  find_vaults_shires:
+    name: Find locations in the Shires
+    requires:
+      - find_vaults_capital
+    primaryGoals:
+      - vaults/find-vaults-shires
+
+  find_vaults_continent:
+    name: Find locations on the Continent
+    requires:
+      - find_vaults_shires
+    primaryGoals:
+      - vaults/find-vaults-continent
+
+  find_vaults_beyondforest:
+    name: Find locations beyond the Forest
+    requires:
+      - find_vaults_continent
+    primaryGoals:
+      - vaults/find-vaults-beyondforest
+
+  find_vaults_rendingmountains:
+    name: Find locations in the Rending Mountains
+    requires:
+      - find_vaults_beyondforest
+    primaryGoals:
+      - vaults/find-vaults-rendingmountains
+
+  find_vaults_loneandlevelsands:
+    name: Find locations in the Lone and Level Sands
+    requires:
+      - find_vaults_rendingmountains
+    primaryGoals:
+      - vaults/find-vaults-loneandlevelsands
+
+  find_vaults_eveningisles:
+    name: Find locations in the Evening Isles
+    requires:
+      - find_vaults_loneandlevelsands
+    primaryGoals:
+      - vaults/find-vaults-eveningisles
+
+  explore_vaults:
+    name: Explore Vaults
+    requires:
+      # We want disciples to deal with anything vaults can bring
+      - disciple_all_followers
+    primaryGoals:
+      - vaults/explore-vaults-capital
+      - vaults/explore-vaults-shires
+      - vaults/explore-vaults-continent
+      - vaults/explore-vaults-beyondforest
+      - vaults/explore-vaults-rendingmountains
+      - vaults/explore-vaults-loneandlevelsands
+      - vaults/explore-vaults-eveningisles

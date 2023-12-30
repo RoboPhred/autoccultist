@@ -1,0 +1,14 @@
+name: Satisfy Poppy
+ui:
+  homeSituation: poppytime
+  icon: element:poppyready
+requirements:
+  situation: poppytime
+completedWhen:
+  anyOf:
+    - elementId: poppycommission
+    - elementId: poppycommissionready
+    - elementId: poppyaway
+imperatives:
+  - name: Feed Poppy
+    operation: patrons/feed-poppy

@@ -1,0 +1,52 @@
+name: Find The Vanderschaaf Collection
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywhite
+
+completedWhen:
+  memory: has_vault_continent_vanderschaaf
+  value: 1
+
+imperatives:
+  - name: Remember our discovery
+    requirements:
+      anyOf:
+        - elementId: vaultcontinentdefault
+        - elementId: vaultcontinent4
+    reactions:
+      - remember: has_vault_continent_vanderschaaf
+        label: Has the Vanderschaaf Collection
+        description: We have found the Vanderschaaf Collection.
+
+  - name: Collect Secret Histories from the White Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesc
+              - aspects: { vaultcontinent: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 7
+    operation: mansus/use-white-secrethistories
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-b
+
+  - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-a
+
+  - name: Explore the Continent
+    operation:
+      name: Find Continent vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesc

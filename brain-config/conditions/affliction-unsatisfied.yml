@@ -1,0 +1,9 @@
+# Affliction is unsatisfied if we do not have a means of curing it (money or vitality).
+allOf:
+  # We have an affliction
+  - elementId: affliction
+  # We can't immediately cure it
+  - noneOf:
+      - elementId: funds
+        location: tabletop
+      - elementId: vitality

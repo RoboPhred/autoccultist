@@ -1,0 +1,43 @@
+name: Reenforce an expedition with a Forge follower
+priority: maintenance
+requirements:
+  allOf:
+    - situation: explore
+      storedCardsMatch:
+        aspects: { peril: 1 }
+forbidders:
+  anyOf:
+    - allOf:
+        - situation: explore
+          containsAspects: { forge: 10 }
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_desert
+          containsAspects: { grail: 10 }
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_forest
+          containsAspects: { moth: 10 }
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_mountains
+          containsAspects: { winter: 10 }
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_sea
+          containsAspects: { heart: 10 }
+    - allOf:
+        - situation: explore
+          storedCardsMatch:
+            cardSet:
+              - elementId: peril_treacherousground
+          containsAspects: { lantern: 10 }
+operation: vaults/continue-vault-follower-forge

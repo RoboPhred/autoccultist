@@ -1,0 +1,17 @@
+name: Recruit a Heart acquaintance, by invoking Grail
+situation: talk
+startingRecipe:
+  slots:
+    talk:
+      aspects:
+        society: 1
+        venerationgrail: 1
+    Associate:
+      oneOf:
+        - elementId: clovette_a
+        - elementId: leo_a
+        - elementId: dorothy_a
+    Ceremony:
+      aspects:
+        lore: 1
+        grail: 1

@@ -1,0 +1,9 @@
+name: "Detective: Startup"
+legacy: detective
+selectionHint:
+  anyOf:
+    - elementId: legacydetectivejob
+motivations:
+  - name: Begin the Game
+    primaryGoals:
+      - legacy/detective/begin

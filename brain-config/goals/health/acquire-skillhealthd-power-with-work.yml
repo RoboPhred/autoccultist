@@ -1,0 +1,33 @@
+name: Acquire a Matchless Physique through Labor
+ui:
+  homeSituation: work
+  icon: element:skillhealthd_strength
+requirements:
+  aspects: { healthskill: 3 }
+completedWhen:
+  aspects: { healthskill: 4 }
+imperatives:
+  - name: Skilled physical work
+    priority: goal
+    forbidders:
+      # Stop using our skill card when we have enough lessons
+      cardSet:
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - aspects: { lore: 1, forge: 2 }
+    operation: work-skillhealth
+  - extends: !import /impulses/goal-learn-lesson-vitality.yml
+    forbidders:
+      # Stop using our skill card when we have enough lessons
+      cardSet:
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+        - aspects: { lore: 1, forge: 2 }
+  - name: Upgrade Steely Physique with Forge
+    priority: goal
+    operation: health/upgrade-skillhealthc-strength
+  - !import /impulse-sets/procure-vitality.yml

@@ -1,0 +1,13 @@
+name: Begin the power apostle ascension
+
+completedWhen:
+  elementId: apostleforge.mentor
+
+imperatives:
+  - name: Start the game
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacyapostleforgejob

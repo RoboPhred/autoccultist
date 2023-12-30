@@ -1,11 +1,11 @@
 # This set of impulses deals with translating books.
 # In general, they should all be maint, to defer to anything
 # more important to do with the books or the Study Verb.
-- !import ../impulses/books/maint-translate-books-fucine.yml
-- !import ../impulses/books/maint-translate-books-vak.yml
-- !import ../impulses/books/maint-translate-books-greek.yml
-- !import ../impulses/books/maint-translate-books-phrygian.yml
-- !import ../impulses/books/maint-translate-books-mandaic.yml
-- !import ../impulses/books/maint-translate-books-latin.yml
-- !import ../impulses/books/maint-translate-books-aramaic.yml
-- !import ../impulses/books/maint-translate-books-sanskrit.yml
+- !import /impulses/books/maint-translate-books-fucine.yml
+- !import /impulses/books/maint-translate-books-vak.yml
+- !import /impulses/books/maint-translate-books-greek.yml
+- !import /impulses/books/maint-translate-books-phrygian.yml
+- !import /impulses/books/maint-translate-books-mandaic.yml
+- !import /impulses/books/maint-translate-books-latin.yml
+- !import /impulses/books/maint-translate-books-aramaic.yml
+- !import /impulses/books/maint-translate-books-sanskrit.yml

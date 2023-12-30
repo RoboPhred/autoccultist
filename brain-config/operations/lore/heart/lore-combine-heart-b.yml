@@ -1,0 +1,21 @@
+name: "Combine lore: Words that Walk"
+situation: study
+startingRecipe:
+  cardRequirements:
+    - oneOf:
+      - aspects: { sanctuary: 1 }
+      - elementId: glimmering
+        lifetimeRemaining:
+          greaterThan: 60
+  slots:
+    study:
+      elementId: fragmentheartb
+    with:
+      elementId: fragmentheartb
+ongoingRecipes:
+  studyresearch.attemptsolve.challenge.intuition:
+    slots:
+      solvechallenge:
+        oneOf:
+          - aspects: { sanctuary: 1 }
+          - elementId: glimmering

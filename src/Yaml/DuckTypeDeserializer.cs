@@ -1,4 +1,4 @@
-namespace Autoccultist.Yaml
+namespace AutoccultistNS.Yaml
 {
     using System;
     using System.Collections.Generic;
@@ -25,9 +25,11 @@ namespace Autoccultist.Yaml
             }
 
             // Things get gnarly here, as we might be parsing an !import tag.
+            // We will have to peek into the import file, figure out what type it is of all our ducks, then parse it as that type.
+            // This is safe to cache as the file should always be that type.
             if (ImportDeserializer.TryConsumeImport(reader, out var filePath))
             {
-                value = Deserializer.WithFileParser(filePath, importParser =>
+                value = Deserializer.DeserializeFromParser(filePath, importParser =>
                 {
                     // Expecting a basic, non fragment single document file.
                     importParser.Consume<StreamStart>();

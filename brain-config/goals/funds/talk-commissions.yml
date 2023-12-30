@@ -1,0 +1,223 @@
+name: Get commissions from, and submit them to, patrons
+ui:
+  homeSituation: talk
+  icon: aspect:compensationvalue
+requirements: !import /conditions/has-any-patrons.yml
+imperatives:
+  # Get Commissions
+  - name: Get a commission from Poppy
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: poppycommissionready
+
+  - name: Get a commission from Count Jannings
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: janningsready
+
+  - name: Get a commission from Madame Bechet
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: bechetready
+
+  - name: Get a commission from Dr. al-Adim
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: aladimready
+
+  # Submit Commissions
+  - name: Fulfil a Lantern Commission for Dr al-Adim
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: aladim
+          Commission:
+            oneOf:
+              - elementId: commissionarticlelanternc
+              - elementId: commissionarticlelanternb
+              - elementId: commissionarticlelantern
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              lantern:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Secret Histories Commission for Dr al-Adim
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: aladim
+          Commission:
+            oneOf:
+              - elementId: commissionarticlesecrethistoriesc
+              - elementId: commissionarticlesecrethistoriesb
+              - elementId: commissionarticlesecrethistories
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              secrethistories:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil an Edge Commission for Count Jannings
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: jannings
+          Commission:
+            oneOf:
+              - elementId: commissionarticleedgec
+              - elementId: commissionarticleedgeb
+              - elementId: commissionarticleedge
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              edge:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Heart Commission for Count Jannings
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: jannings
+          Commission:
+            oneOf:
+              - elementId: commissionarticleheartc
+              - elementId: commissionarticleheartb
+              - elementId: commissionarticleheart
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              heart:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Winter Commission for Poppy
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: poppycommission
+          Commission:
+            oneOf:
+              - elementId: commissionarticlewinterc
+              - elementId: commissionarticlewinterb
+              - elementId: commissionarticlewinter
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              winter:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Knock Commission for Poppy
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: poppycommission
+          Commission:
+            oneOf:
+              - elementId: commissionarticleknockc
+              - elementId: commissionarticleknockb
+              - elementId: commissionarticleknock
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              knock:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Forge Commission for Madame Bechet
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: bechet
+          Commission:
+            oneOf:
+              - elementId: commissionarticleforgec
+              - elementId: commissionarticleforgeb
+              - elementId: commissionarticleforge
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              forge:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Grail Commission for Madame Bechet
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: bechet
+          Commission:
+            oneOf:
+              - elementId: commissionarticlegrailc
+              - elementId: commissionarticlegrailb
+              - elementId: commissionarticlegrail
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              grail:
+                greaterThanOrEqualTo: 2
+
+  - name: Fulfil a Moth Commission for Madame Bechet
+    priority: goal
+    operation:
+      situation: talk
+      startingRecipe:
+        slots:
+          talk:
+            elementId: bechet
+          Commission:
+            oneOf:
+              - elementId: commissionarticlemothc
+              - elementId: commissionarticlemothb
+              - elementId: commissionarticlemoth
+          Manuscript:
+            aspectWeightBias: highest
+            aspects:
+              article: 1
+              moth:
+                greaterThanOrEqualTo: 2

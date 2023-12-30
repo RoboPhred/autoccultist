@@ -1,0 +1,43 @@
+name: Start the Detective Legacy
+requirements:
+  elementId: legacydetectivejob
+completedWhen:
+  allOf:
+    - elementId: legacydetectivejob_matured
+    - situation: dream
+    - situation: study
+imperatives:
+  - name: Work at the Station (the first time)
+    priority: goal
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob
+
+  - name: Build up some evidence
+    forbidders:
+      elementId: myevidence
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob_matured
+          target:
+            aspects: { suspicious: 1, independent: 1 }
+          meticulous:
+            elementId: reason
+
+  - name: Study some evidence
+    operation:
+      situation: work
+      startingRecipe:
+        slots:
+          work:
+            elementId: legacydetectivejob_matured
+          target:
+            elementId: myevidence
+          meticulous:
+            elementId: reason

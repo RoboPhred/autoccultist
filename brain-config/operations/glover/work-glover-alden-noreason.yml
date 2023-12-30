@@ -1,0 +1,21 @@
+name: Work at Glover & Glover under Alden (do not require reason)
+situation: work
+startingRecipe:
+  slots:
+    work:
+      oneOf:
+        - elementId: gloverandglover_difficultbossa_job
+        - elementId: gloverandglover_difficultbossa_gone_job
+ongoingRecipes:
+  gloverandglover_difficultbossa_overtime_initial:
+    slots:
+      Attention:
+        # Use it if available, but don't let it stop us working.
+        optional: true
+        elementId: reason
+  gloverandglover_difficultbossa_overtime:
+    slots:
+      Attention:
+        # Use it if available, but don't let it stop us working.
+        optional: true
+        elementId: reason

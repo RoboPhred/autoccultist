@@ -1,0 +1,37 @@
+name: Explore Fort Geryk
+
+completedWhen:
+  # We set the memory when we start exploring, in case the bot halts or exits before it completes and we loose track of it.
+  # So make sure we really explored it and that it does not exist on the table anymore.
+  anyOf:
+    - noneOf:
+        - elementId: vaulteveningisles2
+    - memory: explored_vault_eveningisles_geryk
+      value: 1
+
+imperatives:
+  - name: Explore Fort Geryk
+    requirements: !import /conditions/has-slushfund-major.yml
+    forbidders: !import /conditions/has-evidence.yml
+    operation:
+      name: Explore Fort Geryk
+      extends: !import /operations/vaults/continue-vault-any.yml
+      onStart:
+        - remember: explored_vault_eveningisles_geryk
+          label: Explored Fort Geryk
+          description: We have explored Fort Geryk.
+      targetOngoing: false
+      startingRecipe:
+        slots:
+          explore:
+            elementId: vaulteveningisles2
+          expeditionmember:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 5 }
+          expeditionmember2:
+            aspectWeightBias: highest
+            aspects: { follower: 1, forge: 5 }
+          expeditionfunds:
+            elementId: funds
+          expeditionfunds2:
+            elementId: funds

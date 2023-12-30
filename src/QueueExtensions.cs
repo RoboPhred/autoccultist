@@ -1,4 +1,4 @@
-namespace Autoccultist
+namespace AutoccultistNS
 {
     using System.Collections.Generic;
 
@@ -21,6 +21,16 @@ namespace Autoccultist
             }
 
             return queue.Dequeue();
+        }
+
+        public static T PeekOrDefault<T>(this Queue<T> queue)
+        {
+            if (queue.Count == 0)
+            {
+                return default;
+            }
+
+            return queue.Peek();
         }
     }
 }

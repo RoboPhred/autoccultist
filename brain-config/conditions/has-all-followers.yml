@@ -90,6 +90,9 @@ allOf:
       - elementId: generic_c_moth
       - elementId: generic_p_moth
       - elementId: generic_r_moth
+      - elementId: poppycommission
+      - elementId: poppycommissionready
+      - elementId: poppyaway
   - anyOf:
       - elementId: generic_a_winter
       - elementId: generic_b_winter

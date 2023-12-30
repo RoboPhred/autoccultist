@@ -1,3 +1,8 @@
 name: Refresh health
 priority: maintenance
-operation: !import ../operations/refresh-health.yml
+requirements:
+  elementId: fatigue
+  lifetimeRemaining:
+    greaterThan: 30
+forbidders: !import /conditions/despair-unsatisfied.yml
+operation: health/refresh-health

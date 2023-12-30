@@ -1,12 +1,18 @@
-namespace Autoccultist.Actor.Actions
+namespace AutoccultistNS.Actor.Actions
 {
-    using Autoccultist.Brain;
-    using Autoccultist.GameState;
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoccultistNS.Brain;
+    using AutoccultistNS.GameState;
+    using AutoccultistNS.Tasks;
+    using SecretHistories.Tokens.Payloads;
 
     /// <summary>
     /// An action that closes a situation window.
     /// </summary>
-    public class ChooseMansusCardAction : IAutoccultistAction
+    public class ChooseMansusCardAction : ActionBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChooseMansusCardAction"/> class.
@@ -22,32 +28,127 @@ namespace Autoccultist.Actor.Actions
         /// </summary>
         public IMansusSolution MansusSolution { get; }
 
-        // FIXME: Clean up all this reflection!  Move stuff into GameAPI or IGameState.
+        public override string ToString()
+        {
+            return $"ChooseMansusCardAction(MansusSolution = {this.MansusSolution})";
+        }
 
         /// <inheritdoc/>
-        public void Execute()
+        protected override async Task<bool> OnExecute(CancellationToken cancellationToken)
         {
-            var gameState = GameStateProvider.Current;
-
-            if (!gameState.Mansus.IsActive)
+            if (!GameAPI.IsInMansus)
             {
                 throw new ActionFailureException(this, "ChooseMansusCardAction: No mansus visit is in progress.");
             }
 
-            if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { gameState.Mansus.FaceUpCard }) != null)
+            await this.AwaitMansusReady(cancellationToken);
+
+            this.ChooseCard();
+
+            await this.AcceptCard(cancellationToken);
+
+            return true;
+        }
+
+        private async Task AwaitMansusReady(CancellationToken cancellationToken)
+        {
+            try
             {
-                // This is the card we want.
-                GameAPI.ChooseMansusCard(gameState.Mansus.FaceUpCard.ToElementStack());
+                await RealtimeDelay.Timeout(c => GameAPI.AwaitInteractable(c), TimeSpan.FromSeconds(10), cancellationToken);
             }
-            else if (gameState.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
+            catch (TimeoutException)
             {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Timed out waiting for game to become interactable.");
+            }
+
+            // Give the mansus some time to animate its cards into being.
+            // FIXME: Should include this in the Interactable check.
+            await RealtimeDelay.Of(1000, cancellationToken);
+        }
+
+        private void ChooseCard()
+        {
+            var state = GameStateProvider.Current;
+
+            if (state.Mansus.State != PortalActiveState.AwaitingSelection)
+            {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Mansus is not awaiting selection.");
+            }
+
+            if (this.MansusSolution.FaceUpCard?.ChooseCard(new[] { state.Mansus.FaceUpCard }, state) != null)
+            {
+                Autoccultist.LogTrace("Choosing face up card from mansus.");
+
                 // This is the card we want.
-                GameAPI.ChooseMansusCard(card.ToElementStack());
+                GameAPI.ChooseMansusDeck(state.Mansus.FaceUpDeck);
+            }
+            else if (state.Mansus.DeckCards.TryGetValue(this.MansusSolution.Deck, out var card))
+            {
+                Autoccultist.LogTrace($"Choosing deck {this.MansusSolution.Deck} from mansus.");
+
+                // This is the card we want.
+                GameAPI.ChooseMansusDeck(this.MansusSolution.Deck);
             }
             else
             {
-                throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", gameState.Mansus.DeckCards.Keys)}");
+                throw new ActionFailureException(this, $"ChooseMansusCardAction: Deck {this.MansusSolution.Deck} is not available.  Available decks: {string.Join(", ", state.Mansus.DeckCards.Keys)}");
             }
+        }
+
+        private async Task AcceptCard(CancellationToken cancellationToken)
+        {
+            Ingress ingress;
+            try
+            {
+                ingress = await RealtimeDelay.Timeout(c => GameAPI.AwaitTabletopIngress(c), TimeSpan.FromSeconds(5), cancellationToken);
+            }
+            catch (TimeoutException)
+            {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Timed out waiting for ingress to appear.");
+            }
+
+            if (ingress == null)
+            {
+                throw new ActionFailureException(this, "ChooseMansusCardAction: Failed to find ingress.");
+            }
+
+            var sphere = GameAPI.GetMansusEgressSphere();
+
+            if (sphere == null)
+            {
+                throw new ActionFailureException(this, "Failed to find mansus egress sphere.");
+            }
+
+            // Let's wait a bit to calm this down
+            await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+
+            if (sphere.Tokens.Count > 0 && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
+            {
+                var shroudedTokens = sphere.Tokens.Where(x => x.Shrouded).ToArray();
+                foreach (var token in shroudedTokens)
+                {
+                    token.Unshroud();
+                }
+
+                if (shroudedTokens.Length > 0)
+                {
+                    await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);
+                }
+
+                sphere.EvictAllTokens(new Context(Context.ActionSource.PlayerDumpAll));
+            }
+
+            // In theory we should be Defunct immediately on evicting the token.
+            // However, its possible for a greedy slot to yoink our token out from under us, and the ingress will not close if that happens.
+            ingress.Conclude();
+
+            // Seems we get a lvl 3 unpause when the mansus completes.  Let's reassert the pause
+            // so that the actor keeps control.
+            GameAPI.ReassertPause();
+
+            // Unpause from the user's perspective, so the game will resume once the actor
+            // is done with its actions.
+            GameAPI.UserUnpause();
         }
     }
 }

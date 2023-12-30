@@ -1,14 +1,13 @@
-namespace Autoccultist.Config.Conditions
+namespace AutoccultistNS.Config.Conditions
 {
     using System.Collections.Generic;
-    using Autoccultist.GameState;
-    using Autoccultist.Yaml;
+    using AutoccultistNS.GameState;
     using YamlDotNet.Core;
 
     /// <summary>
     /// A set of CardChoice matchers.  All card choices must be matched with no overlap for this condition to pass.
     /// </summary>
-    public class CardSetCondition : ICardConditionConfig, IAfterYamlDeserialization
+    public class CardSetCondition : ConditionConfig, ICardConditionConfig
     {
         /// <summary>
         /// Gets or sets a list of cards, all of which must be present at the same time to meet this condition.
@@ -19,54 +18,37 @@ namespace Autoccultist.Config.Conditions
         public List<CardExistsCondition> CardSet { get; set; } = new List<CardExistsCondition>();
 
         /// <inheritdoc/>
-        public void AfterDeserialized(Mark start, Mark end)
+        public override ConditionResult IsConditionMet(IGameState state)
         {
+            return this.CardsMatchSet(state.AllCards, state);
+        }
+
+        /// <inheritdoc/>
+        public ConditionResult CardsMatchSet(IEnumerable<ICardState> cards, IGameState state)
+        {
+            var result = this.CardSet.ChooseAll(cards, state, out var unsatisfiedChooser);
+            if (unsatisfiedChooser != null)
+            {
+                return AddendedConditionResult.Addend(CardChoiceResult.ForFailure(unsatisfiedChooser), $"when looking for a set of {this.CardSet.Count} cards");
+            }
+
+            if (result == null)
+            {
+                return AddendedConditionResult.Addend(ConditionResult.Failure, $"when looking for a set of {this.CardSet.Count} cards");
+            }
+
+            return ConditionResult.Success;
+        }
+
+        /// <inheritdoc/>
+        public override void AfterDeserialized(Mark start, Mark end)
+        {
+            base.AfterDeserialized(start, end);
+
             if (this.CardSet == null || this.CardSet.Count == 0)
             {
                 throw new InvalidConfigException("CardSet must have card choices.");
             }
-        }
-
-        /// <inheritdoc/>
-        public bool IsConditionMet(IGameState state)
-        {
-            var remaining = new HashSet<ICardState>(state.GetAllCards());
-            foreach (var chooser in this.CardSet)
-            {
-                // TODO: Each chooser individually chooses a card, so its possible for a chooser
-                // to have multiple choices, but choose the one that is the only viable card for another chooser.
-                // We should get all candidates for all choosers and try to satisfy them all.
-                var choice = chooser.ChooseCard(remaining);
-                if (choice == null)
-                {
-                    return false;
-                }
-
-                remaining.Remove(choice);
-            }
-
-            return true;
-        }
-
-        /// <inheritdoc/>
-        public bool CardsMatchSet(IReadOnlyCollection<ICardState> cards)
-        {
-            var remaining = new HashSet<ICardState>(cards);
-            foreach (var chooser in this.CardSet)
-            {
-                // TODO: Each chooser individually chooses a card, so its possible for a chooser
-                // to have multiple choices, but choose the one that is the only viable card for another chooser.
-                // We should get all candidates for all choosers and try to satisfy them all.
-                var choice = chooser.ChooseCard(remaining);
-                if (choice == null)
-                {
-                    return false;
-                }
-
-                remaining.Remove(choice);
-            }
-
-            return true;
         }
     }
 }

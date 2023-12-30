@@ -1,0 +1,145 @@
+# This arc advances the game as much as possible without starting a cult or exploring any locations.
+name: "Aspirant: Complete early game [no cult]"
+legacy: aspirant
+selectionHint:
+  anyOf:
+    - elementId: introjob
+    - elementId: bequestintro
+motivations:
+  survive_forever:
+    name: Survive
+    primaryGoals:
+      - survive
+
+  # Begin jobs
+  get_gg:
+    name: Get a job
+    requires:
+      - begin_game
+      # Don't start time until time starts naturally.
+      - study_bequest
+    primaryGoals:
+      - glover/acquire-job-glover-junior
+
+  work_gg:
+    name: Work at Glover and Glover
+    requires:
+      - get_gg
+    blocks:
+      # glover and glover is more lucrative than labor, so stop doing labor when it is available.
+      - work_labor
+    primaryGoals:
+      - glover/work-glover
+      - glover/acquire-job-glover-standard
+
+  work_labor:
+    name: Work with physical labor
+    requires:
+      - begin_game
+      # Don't start time until time starts naturally.
+      - study_bequest
+    primaryGoals:
+      - funds/work-labor
+  # End jobs
+
+  begin_game:
+    name: Begin the game
+    primaryGoals:
+      - legacy/aspirant/begin-intro
+
+  study_bequest:
+    name: Study bequest
+    requires:
+      - begin_game
+    primaryGoals:
+      - legacy/aspirant/study-bequest-passion
+
+  study_bequest_contents:
+    name: Study bequest contents
+    requires:
+      - study_bequest
+    primaryGoals:
+      - bookdealer/find-bookdealer-map
+      - legacy/aspirant/find-collaborator
+
+  # Begin skills
+  get_buff:
+    name: Get a stronger physique
+    requires:
+      - begin_game
+      - study_bequest # We need the study verb
+    blocks:
+      # Block GG while doing this, so we fall back on labor for the extra vitality.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - health/acquire-skillhealtha
+      - health/acquire-skillhealthb
+      - health/acquire-skillhealthc
+  get_scholarship_minor:
+    name: Get a scholarship
+    requires:
+      # Wait until we finish leveling up our health skill so we dont conflict over study.
+      - get_buff
+    blocks:
+      # Block GG while doing this, so we dont fight for our limited reason.
+      - get_gg
+      - work_gg
+    primaryGoals:
+      - reason/acquire-skillreasona
+
+  get_scholarship_major:
+    name: Get a profound scholarship
+    requires:
+      - get_scholarship_minor
+    primaryGoals:
+      - reason/acquire-skillreasonb
+      - reason/acquire-skillreasonc
+  # End skills
+
+  find_recruits:
+    name: Finding people to recruit
+    requires:
+      # We need to have explore and talk
+      - study_bequest_contents
+    primaryGoals:
+      - followers/attract-followers-memory
+
+  drain_morlands:
+    name: Buy and read books from Morlands
+    requires:
+      # We need explore
+      - study_bequest_contents
+      # Don't do this until we have the skills so we are not monopolizing the study verb
+      # We could remove these if we tweak priorities, as these two motivations are time-critical and should come first.
+      - get_buff
+      - get_scholarship_major
+    primaryGoals:
+      - bookdealer/consume-bookdealer
+      - lore/consume-books-lore-waitmorland
+
+  drain_auctionhouse:
+    name: Buy and read books from Oriflamme
+    requires:
+      # We need explore
+      - study_bequest_contents
+      # Books can appear in auctions that also appear in morlands, so wait for morland to empty first
+      - drain_morlands
+    primaryGoals:
+      - auction/find-auctionhouse
+      - auction/acquire-everything
+      - name: Watch Stumm
+        completedWhen:
+          elementId: ritefollowerconsumeinfluence
+        imperatives:
+          - operation: watch-stumm
+
+  acquire_early_doors:
+    name: Acquire the Wood and White Door
+    # Don't start until any of our primary goals can start.
+    # This lets us start as soon as the relevant lore is available from morlands.
+    # Note: It is possible for this to start and stop twice if only one goal is available and we complete it.
+    requirePrimaryGoals: true
+    primaryGoals:
+      - mansus/acquire-way-wood
+      - mansus/acquire-way-whitedoor

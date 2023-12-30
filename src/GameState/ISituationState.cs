@@ -1,6 +1,7 @@
-namespace Autoccultist.GameState
+namespace AutoccultistNS.GameState
 {
     using System.Collections.Generic;
+    using SecretHistories.Enums;
 
     /// <summary>
     /// Represents the state of a situation.
@@ -13,14 +14,31 @@ namespace Autoccultist.GameState
         string SituationId { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the situation is busy performing a verb.
+        /// Gets the current state of the situation.
+        /// </summary>
+        StateEnum State { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the situation is busy performing a recipe.
         /// </summary>
         bool IsOccupied { get; }
 
         /// <summary>
         /// Gets the current recipe this situation is working on, if any.
+        /// Note that this will be the base recipe before cards are slotted.
+        /// If we have cards slotted, SlottedRecipe will show the recipe we will execute.
         /// </summary>
         string CurrentRecipe { get; }
+
+        /// <summary>
+        /// Gets the recipe that will activate given the current slotted cards.
+        /// </summary>
+        string SlottedRecipe { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the current recipe is a Mansus recipe.
+        /// </summary>
+        string CurrentRecipePortal { get; }
 
         /// <summary>
         /// Gets the time remaining on the current recipe, if any.
@@ -28,15 +46,14 @@ namespace Autoccultist.GameState
         float? RecipeTimeRemaining { get; }
 
         /// <summary>
+        /// Gets the slots for the current recipe, if any.
+        /// </summary>
+        IReadOnlyCollection<ISituationSlot> RecipeSlots { get; }
+
+        /// <summary>
         /// Gets a collection of cards stored inside this situation.
         /// </summary>
         IReadOnlyCollection<ICardState> StoredCards { get; }
-
-        /// <summary>
-        /// Gets a collection of slotted cards in this situation.
-        /// Typically, these are ongoing slots.
-        /// </summary>
-        IReadOnlyCollection<ICardState> SlottedCards { get; }
 
         /// <summary>
         /// Gets a collection of cards pending output in the situation.

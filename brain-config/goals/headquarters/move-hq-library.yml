@@ -1,0 +1,13 @@
+name: Change Premises to Library
+ui:
+  homeSituation: explore
+  icon: element:hq.bookshop
+requirements:
+  cardSet:
+    - elementId: locationbookdealer_exhausted
+    - aspects: { hq: 1 }
+completedWhen:
+  elementId: hq.bookshop
+imperatives:
+  - name: Change Premises to Library
+    operation: hq/move-hq-library

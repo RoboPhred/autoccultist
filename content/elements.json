@@ -1,0 +1,11 @@
+{
+  "elements": [
+    {
+      "id": "autoccultist_memory",
+      "label": "A Mechanical Memory",
+      "description": "The primitive remembrance of a mechenical contrivance.",
+      "icon": "playernote",
+      "unique": true
+    }
+  ]
+}

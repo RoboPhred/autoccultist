@@ -1,0 +1,18 @@
+name: Read and translate lore books and Stumm
+ui:
+  homeSituation: study
+  icon: aspect:text
+requirements:
+  anyOf:
+    - !import /conditions/readable-or-translatable-books.yml
+    - elementId: stumm
+completedWhen:
+  noneOf:
+    - !import /conditions/readable-or-translatable-books.yml
+    - elementId: stumm
+imperatives:
+  - !import /impulses/books/maint-read-lore.yml
+  - !import /impulse-sets/learn-languages.yml
+  - !import /impulse-sets/translate-books.yml
+  - name: Watch Stumm
+    operation: watch-stumm

@@ -1,11 +1,57 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Target Name="CheckEnvironmentVars">
+    <Error Text="Please set the CSDir environment variable." Condition="'$(CSDir)' == ''" ContinueOnError="false" />
+  </Target>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <CSDataDir>$([System.IO.Path]::Combine($(CSDir), 'cultistsimulator_Data'))</CSDataDir>
+    <CSModDir>$([System.IO.Path]::Combine($(USERPROFILE), 'AppData\LocalLow\Weather Factory\Cultist Simulator\mods'))</CSModDir>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <CSDataDir>$([System.IO.Path]::Combine($(CSDir), 'OSX.app\Contents\Resources\Data'))</CSDataDir>
+    <CSModDir>$([System.IO.Path]::Combine($(HOME), 'Library\Application Support\Weather Factory\Cultist Simulator\mods'))</CSModDir>
+  </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <LangVersion>preview</LangVersion>
-    <RootNamespace>Autoccultist</RootNamespace>
-        <CodeAnalysisRuleSet>./StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <CodeAnalysisRuleSet>./StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AutoccultistNS</RootNamespace>
+    <AssemblyName>Autoccultist</AssemblyName>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutDir>$([System.IO.Path]::Combine($(CSModDir), 'Autoccultist\dll'))</OutDir>
+    <PublishDir>$([System.IO.Path]::Combine($(CSModDir), 'Autoccultist\dll'))</PublishDir>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutDir>$([System.IO.Path]::Combine($(CSModDir), 'Autoccultist\dll'))</OutDir>
+    <PublishDir>$([System.IO.Path]::Combine($(CSModDir), 'Autoccultist\dll'))</PublishDir>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,39 +60,74 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>.\externals\Assembly-CSharp.dll</HintPath>
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\Assembly-CSharp.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Noon.Core.Enums">
-      <HintPath>.\externals\Noon.Core.Enums.dll</HintPath>
+    <Reference Include="SecretHistories.Constants">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\SecretHistories.Constants.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>.\externals\BepInEx.dll</HintPath>
+    <Reference Include="SecretHistories.Enums">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\SecretHistories.Enums.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
-        <Reference Include="0Harmony">
-      <HintPath>.\externals\0Harmony.dll</HintPath>
+    <Reference Include="SecretHistories.Interfaces">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\SecretHistories.Interfaces.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SecretHistories.Main">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\SecretHistories.Main.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>.\externals\UnityEngine.dll</HintPath>
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.dll'))</HintPath>
+      <HintPath>$(STEAMAPPS)\common\Cultist Simulator\cultistsimulator_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>.\externals\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.CoreModule.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>.\externals\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>.\externals\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>.\externals\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.UI.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>.\externals\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.UIModule.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\Unity.InputSystem.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.IMGUIModule.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.TextRenderingModule.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.ScreenCaptureModule.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\UnityEngine.ImageConversionModule.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TMPro">
+      <HintPath>$([System.IO.Path]::Combine($(CSDataDir), 'Managed\Unity.TextMeshPro.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TheRoostMachine">
+      <HintPath>$([System.IO.Path]::Combine($(CSModDir), 'Roost\dll\TheRoostMachine.dll'))</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="All" />
-    <PackageReference Include="YamlDotNet" Version="8.1.2" />
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,20 @@
+name: Acquire a Hardened Physique through Excersize
+ui:
+  homeSituation: work
+  icon: element:skillhealthb
+requirements:
+  aspects: { healthskill: 1 }
+completedWhen:
+  aspects: { healthskill: 2 }
+imperatives:
+  - !import /impulses/maint-vitality-from-health.yml
+  - name: "Learn Lesson: Vitality"
+    extends: !import /impulses/goal-learn-lesson-vitality.yml
+    forbidders:
+      # Do not monopolize study when we have vitality lessons to study
+      cardSet:
+        - elementId: vitalityplus
+        - elementId: vitalityplus
+  - name: Upgrade Stronger Physique to Hardened Physique
+    priority: goal
+    operation: health/upgrade-skillhealtha

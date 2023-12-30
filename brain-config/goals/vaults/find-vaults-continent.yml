@@ -1,0 +1,50 @@
+name: Find Vaults on the Continent
+
+requirements:
+  allOf:
+    - situation: explore
+    - situation: dream
+    - elementId: waywhite
+
+completedWhen:
+  memory: has_all_vaults_continent
+  value: 1
+
+imperatives:
+  - name: Remember our discovery
+    requirements:
+      elementId: vaultcontinentdefault
+    reactions:
+      - remember: has_all_vaults_continent
+        label: Has All Vaults on the Continent
+        description: We have found everything of interest on the Continent.
+
+  - name: Collect Secret Histories from the White Door
+    requirements: &has-needed-secret-histories
+      noneOf:
+        - value:
+            fromAll:
+              - elementId: fragmentsecrethistoriesc
+              - aspects: { vaultcontinent: 1 }
+            aspect: "@count"
+          greaterThanOrEqualTo: 7
+    operation: mansus/use-white-secrethistories
+
+  - name: Combine Furtive Truths into Forgotten Chronicles
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-b
+
+  - name: Combine Occult Scraps into Furtive Truths
+    priority: maintenance
+    requirements: *has-needed-secret-histories
+    operation: lore/secrethistories/lore-combine-secrethistories-a
+
+  - name: Explore the Continent
+    operation:
+      name: Find Continent vaults
+      situation: explore
+      startingRecipe:
+        slots:
+          explore:
+            elementId: fragmentsecrethistoriesc
