@@ -14,7 +14,7 @@ The purpose of this mod is to provide a means of making Cultist Simulator play i
 
 ## Demo
 
-You can watch the bot play and complete a power ascension [here](https://www.youtube.com/watch?v=UKe9wqMd32I)
+You can watch the bot play and complete a power ascension [here](https://www.youtube.com/watch?v=1OMqMpp9jJc).
 
 ## Usage
 
