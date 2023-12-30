@@ -28,17 +28,19 @@ Additionally, a button will appear on hover for all other verbs which will allow
 
 ## Installation
 
-This mod uses BepInEx 5.2.
+This mod uses the Cultist Simulator built in dll mod loading.
 
-- Install the x86 version of BepInEx [version 5.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.2) or later by extracting the zip file into your Cultist Simulator install location
-- Run the game once, to let BepInEx create its folder structure.
-- Extract the autoccultist folder from the download into `Cultist Simulator/BepInEx/Plugins`
+To use it, you will have to create your own mod file and configure it to execute the compiled Autoccultist.dll as a standard dll mod.
+
+At the moment, there is no pre-bundled file for this; this mod is DIY.
 
 ## Configuration
 
 This automata is entirely configurable by yaml files.
 
-**WARNING**: This documentation is incomplete, and does not explain how to write the config files. More detailed documentation is forthcoming. Until then, inspect the config files included with the mod for examples.
+**WARNING**: This documentation is woefully incomplete, and major overhauls have been made since this was written.  Some of it is still relevant, but you should study the config files included with the source rather than relying on this.
+
+Despite this, some of the documentation below is still somewhat accurate, and might provide some additional hints on how the system works.
 
 ### BrainConfig (brain.yml)
 
