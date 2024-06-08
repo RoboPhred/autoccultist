@@ -27,12 +27,12 @@ namespace AutoccultistNS.Actor.Actions
 
             var outputTokens = situation.GetSpheresByCategory(SphereCategory.Output).SelectMany(s => s.GetTokens()).ToList();
 
-            var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
+            var shroudedTokens = outputTokens.Where(x => x.Payload.IsShrouded).ToArray();
             if (shroudedTokens.Length > 0)
             {
                 foreach (var token in shroudedTokens)
                 {
-                    token.Unshroud();
+                    token.Payload.Unshroud();
                 }
 
                 return Task.FromResult(true);

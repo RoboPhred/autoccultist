@@ -135,7 +135,7 @@ namespace AutoccultistNS.Actor.Actions
             {
                 var itinerary = slotSphere.GetItineraryFor(stack.Token);
 
-                itinerary.WithDuration(0.1f).Depart(stack.Token, new Context(Context.ActionSource.DoubleClickSend));
+                itinerary.WithDuration(0.1f).Depart(stack.Token, new Context(Context.ActionSource.PlayerDrag));
 
                 try
                 {
@@ -150,7 +150,7 @@ namespace AutoccultistNS.Actor.Actions
             else
             {
                 // Even though we passed CanAcceptToken above, we should be gentle and re-try.
-                if (!slotSphere.TryAcceptToken(stack.Token, new Context(Context.ActionSource.DoubleClickSend)))
+                if (!slotSphere.TryAcceptToken(stack.Token, new Context(Context.ActionSource.PlayerDrag)))
                 {
                     throw new ActionFailureException(this, $"Recipe {this.RecipeName} slot {slotId} on situation {this.SituationId} cannot accept card {card.ElementId}.");
                 }

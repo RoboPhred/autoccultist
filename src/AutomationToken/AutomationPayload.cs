@@ -122,7 +122,7 @@ namespace AutoccultistNS.Tokens
         public bool Metafictional => false;
 
         [DontEncaust]
-        public Dictionary<string, int> Mutations => throw new NotImplementedException();
+        public Dictionary<string, int> Mutations => new Dictionary<string, int>();
 
         // TODO: What uses this?  Should we make use of it for our window?
         [DontEncaust]
@@ -130,6 +130,9 @@ namespace AutoccultistNS.Tokens
 
         [DontEncaust]
         public bool IsSealed => false;
+
+        [DontEncaust]
+        public bool IsShrouded => false;
 
         public bool ApplyExoticEffect(ExoticEffect exoticEffect)
         {
@@ -308,6 +311,14 @@ namespace AutoccultistNS.Tokens
         }
 
         public void OnTokenMoved(TokenLocation toLocation)
+        {
+        }
+
+        public void Shroud(bool instant = false)
+        {
+        }
+
+        public void Unshroud(bool instant = false)
         {
         }
 

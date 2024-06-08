@@ -112,6 +112,7 @@ namespace AutoccultistNS.UI
                 pair.Elements.RunningIcon.SetActive(pair.IsRunning);
             }
         }
+
         public class ImperativeUIElements
         {
             public HorizontalLayoutGroupWidget Row { get; set; }

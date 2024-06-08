@@ -58,12 +58,12 @@ namespace AutoccultistNS.Actor.Actions
 
             if (AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
-                var shroudedTokens = outputTokens.Where(x => x.Shrouded).ToArray();
+                var shroudedTokens = outputTokens.Where(x => x.Payload.IsShrouded).ToArray();
                 if (shroudedTokens.Length > 0)
                 {
                     foreach (var token in shroudedTokens)
                     {
-                        token.Unshroud();
+                        token.Payload.Unshroud();
                     }
 
                     await MechanicalHeart.AwaitBeat(cancellationToken, AutoccultistSettings.ActionDelay);

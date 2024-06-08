@@ -124,10 +124,10 @@ namespace AutoccultistNS.Actor.Actions
 
             if (sphere.Tokens.Count > 0 && AutoccultistSettings.ActionDelay > TimeSpan.Zero)
             {
-                var shroudedTokens = sphere.Tokens.Where(x => x.Shrouded).ToArray();
+                var shroudedTokens = sphere.Tokens.Where(x => x.Payload.IsShrouded).ToArray();
                 foreach (var token in shroudedTokens)
                 {
-                    token.Unshroud();
+                    token.Payload.Unshroud();
                 }
 
                 if (shroudedTokens.Length > 0)
